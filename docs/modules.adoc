@@ -57,7 +57,7 @@ TODO: There should be a module jump table somewhere.
 
 If there is no DOS error, the module should execute.
 
-TIP: A `file not found` DOS error is written to the system error log as a `load error`.
+TIP: A `file not found` DOS error is written to the system error log (`e.errlog`, viewable with kbd:[VF], as a `load error`.
 
 .Module Types
 [options="header,autowidth"]
