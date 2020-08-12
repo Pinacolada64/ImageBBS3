@@ -1,0 +1,47 @@
+== What's New
+
+Many new features have been added and improvements have been made in existing features for Image BBS 3.0.
+
+=== Sysop Features
+
+. Convert from 1.2, 1.3, and 2.0 BBS configurations
+. Online kbd:[IM] BBS configuration
+.. Access group data changes no longer require a reboot
+. Configurable time zones for BBS and caller
+. "`Graphic`" menus with hotkey item selection
+. "`General Files`" (`GF`) section replaces `MF`, `PF`, `RF` and `TF`
+.. A single directory can include multiple file types or sub-boards
+. More file transfer protocols
+
+==== Lightbar
+
+. Expanded to 8 pages
+. Configurable text and boot-up defaults
+. Many new functions added
+
+=== User Features
+
+. Text word-wraps for console and caller
+. "`More`" prompt can automatically pause text output
+. Terminal bell sent when nearing idle time limit
+
+==== Text Editor
+
+. New text editor dot commands:
+.. .Banner text
+.. .Text Transfer mode
+.. .Use Signature (kbd:[PS] edits them)
+. `/` is an alias for `.`
+. New MCI commands:
+.. left/right margin set (``&pound;<``_nn_ and ``&pound;>``_nn_)
+.. floating point variable display (``&pound;!``_n_)
+
+=== Programming Features
+
+. `im` line numbering restructured
+. More module types
+. New `&` functions
+.. Structures (RAM block manipulation, load, save)
+.. Sounds
+... New "`gong`" sound
+.. _repeat_ parameter

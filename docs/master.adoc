@@ -1,0 +1,11 @@
+= Image BBS 3.0 Sysop Manual
+Ryan Sherwood <sym.rsherwood@gmail.com>
+v0.1, 2020-08-12
+:experimental:
+:toc:
+
+NOTE: Preliminary start on documentation. Feedback welcome!
+
+include::whats-new.adoc[]
+
+include::modules.adoc[]
