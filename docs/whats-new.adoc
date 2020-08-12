@@ -33,8 +33,8 @@ Many new features have been added and improvements have been made in existing fe
 .. .Use Signature (kbd:[PS] edits them)
 . `/` is an alias for `.`
 . New MCI commands:
-.. left/right margin set (``&pound;<``_nn_ and ``&pound;>``_nn_)
-.. floating point variable display (``&pound;!``_n_)
+.. left/right margin set (``£<``_nn_ and ``£>``_nn_)
+.. floating point variable display (``£!``_n_)
 
 === Programming Features
 
