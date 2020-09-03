@@ -44,4 +44,4 @@ Many new features have been added and improvements have been made in existing fe
 .. Structures (RAM block manipulation, load, save)
 .. Sounds
 ... New "`gong`" sound
-.. _repeat_ parameter
+... _repeat_ parameter

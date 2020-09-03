@@ -33,7 +33,7 @@ Depending on the Image 1.3 emulation status, system disk 5 is either your `i` mo
 
 - You can also type the device number, a comma, and the drive number to run a module from a specific device and drive. Devices 8-29 and drives 0-254 [TODO: check this] are supported.
 
-TIP: In Lt.Kernal hard drive DOS terminology, the drive number refers to the _Logical Unit_ or LU; in Creative Micro Designs`' (CMD`'s) hardware's DOS, it is the _partition_).
+TIP: In Xetec's Lt.Kernal hard drive DOS terminology, the drive number refers to the _Logical Unit_ or LU; in Creative Micro Designs`' (CMD`'s) DOS, it is the _partition_).
 
 ### Value of Variable
 
