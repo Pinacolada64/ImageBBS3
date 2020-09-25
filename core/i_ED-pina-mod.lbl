@@ -55,16 +55,16 @@
 ' Sorry, this ED only works with Image BBS
 ' v3.0 and above.
 	&,5:if lp<3 then lp=1:&"Sorry, this ED only works with Image BBS v3.0 and above.":return
-	&,27:gosub {:100}:&,28:goto 1811
+	&,27:gosub {:_100}:&,28:goto 1811
 
 {nice:5}
 {:sub.change_prompt}
 	&" # to change (1-{pound}!i): {pound}i1"
 ' TODO: possible addition, although "0" to quit might not work anymore
-'	gosub {:sub.normalize_a}:on -(a>1 or a<i) goto {:sub.change_prompt}:return
+'	gosub {:sub.str_to_int}:on -(a>1 or a<i) goto {:sub.change_prompt}:return
 
 {nice:5}
-{:sub.normalize_a}
+{:sub.str_to_int}
 	a=abs(int(val(an$))):return
 
 {nice:5}
@@ -97,59 +97,58 @@
 ' +------------------- Day       1-7      (1=Sunday, 7=Saturday)
 
 ' stolen from +.MM.ld
-{:901}
-	&"{f6}Edit last "
-	if op=6  then b$="date"
+{:_901}
+	&"{f6}Edit last ":if op=6 then b$="date"
 	if op=22 then b$="call"
-	&"{pound}$b:{f6}{$04}"+c$+"{f6:2}Add or subtract how many days{f6}(-999 to 999)?{f6:2}"
-	p$="Last "+b$:gosub 1005
-{:904}
-	a=int(val(an$)):if tr%<1 then return
-{:906}
-	on -(a=.) goto {:932}:if a<-999 or a>999 then:&"{f6}Out of range!{f6}":goto {:901}
-{:908}
+	lp=1:&"{pound}$b:{f6}{$04}"+c$+"{f6:2}Add or subtract how many days{f6}(-999 to 999)?{f6:2}"
+	p$="Last "+b$:&,1,32
+{:_904}
+	gosub {:sub.str_to_int}:if tr%<1 then return
+{:_906}
+	on -(a=.) goto {:_932}:if a<-999 or a>999 then:&"{f6}Out of range!{f6}":goto {:_901}
+{:_908}
 	b=val(left$(c$,1))+a:c=val(mid$(c$,2,2)):d=val(mid$(c$,4,2))
-{:910}
+{:_910}
 	e=val(mid$(c$,6,2))+a:a$="{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}"
-{:912}
-	if e<=asc(mid$(a$,d)) then {:918}
-{:914}
-	e=e-asc(mid$(a$,d)):d=d+1:if d<13 then {:912}
-{:916}
-	d=1:c=c+1:goto {:912}
-{:918}
-	if e>. then {:924}
-{:920}
-	d=d-1:e=e+asc(mid$(a$,d-12*(d=.))):if d>. then {:918}
-{:922}
-	d=12:c=c-1:goto {:918}
-{:924}
-	if b>7 then b=b-7:goto {:924}
-{:926}
-	if b<1 then b=b+7:goto {:926}
-{:928}
+{:_912}
+	if e<=asc(mid$(a$,d)) then {:_918}
+{:_914}
+	e=e-asc(mid$(a$,d)):d=d+1:if d<13 then {:_912}
+{:_916}
+	d=1:c=c+1:goto {:_912}
+{:_918}
+	if e>. then {:_924}
+{:_920}
+	d=d-1:e=e+asc(mid$(a$,d-12*(d=.))):if d>. then {:_918}
+{:_922}
+	d=12:c=c-1:goto {:_918}
+{:_924}
+	if b>7 then b=b-7:goto {:_924}
+{:_926}
+	if b<1 then b=b+7:goto {:_926}
+{:_928}
 	a$=right$("0"+mid$(str$(c),2),2)+right$("0"+mid$(str$(d),2),2)
-{:930}
+{:_930}
 	c$=chr$(48+b)+a$+right$("0"+mid$(str$(e),2),2)+right$(c$,4)
 ' show new date:
-	gosub {:934}
-{:932}
+	gosub {:_934}
+{:_932}
 	&"{f6}Change time?: ":gosub 1902:if a=. then return
-{:936}
+{:_936}
 	&"{f6}Enter time in this format:{f6:2}Example:  9:20 AM--920A{f6}"
-{:938}
+{:_938}
 	&"{pound}{back arrow}0911:23 PM--1123P{f6:2}"
-{:940}
+{:_940}
 	&"Last {pound}$b time: {pound}i1":a$=right$(an$,1):if an$="" or tr%<1 then return
-{:942}
-	an$=left$(an$,len(an$)-1):if (a$<>"A" and a$<>"P") or val(right$(an$,2))>59 then {:936}
-{:944}
-	if val(an$)>1259 or val(an$)<100 then {:936}
-{:946}
+{:_942}
+	an$=left$(an$,len(an$)-1):if (a$<>"A" and a$<>"P") or val(right$(an$,2))>59 then {:_936}
+{:_944}
+	if val(an$)>1259 or val(an$)<100 then {:_936}
+{:_946}
 	t=-(a$="P")*8000
-{:948}
+{:_948}
 	c$=left$(c$,7)+right$("0"+mid$(str$(val(an$)+t),2),4)
-{:934}
+{:_934}
 	tt$(op)=c$:&"{f6}Last {pound}$b date:{f6}{$04}"+c$+"M{f6:2}":return
 	rem time/date editor copr.1990 new image 01/02/90
 
@@ -171,7 +170,7 @@
 	&"TODO: finish the thing!{f6}":return
 
 {nice:100}
-{:100}	
+{:_100}	
 ' update cm$ for +.er "Pfile" area, and update "Area" window if screen mask enabled
 ' ----+----+----+----+-
 ' User Account Editor
@@ -185,7 +184,7 @@
 ' ECS command must not ignore extra
 	a=int(val(mid$(an$,3,3))):if a then:&"TODO: Edit user {pound}!a":goto {:got_param}
 
-{:102}
+{:_102}
 	&"{white}{clear}{f6}{pound}{back arrow}05{white}{rvrs on} Image BBS User Account Editor {f6}"
 
 {ifdef:show_build_date}
@@ -200,10 +199,10 @@
 	p$="User Edit":gosub 6:if an$="" then return
 ' look up user:
 {:got_param}
-	gosub {:sub.normalize_a}:x=a:if x<=ur and x>. then {:110}
+	gosub {:sub.str_to_int}:x=a:if x<=ur and x>. then {:_110}
 ' look up user
-	gosub 546:x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{pound}w2":goto {:102}
-{:110}
+	gosub 546:x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{pound}w2":goto {:_102}
+{:_110}
 	gosub 35:gosub 1:for i=1 to 24:&,2,2:if asc(a$+nl$)=32 then a$=mid$(a$,2)
 ' handle copied into tt$ to check if changed
 	tt$(i)=a$:next:tt$=tt$(1):close 2
@@ -297,13 +296,13 @@
 
 {:input}
 ' original code:
-' 214={:sub.change_prompt}, 2={:sub.normalize_a}
+' 214={:sub.change_prompt}, 2={:sub.str_to_int}
 ' 120 next:&"{f6}":gosub 214:&"{f6}":gosub 2:if tr%<1 then 1811
 ' 122 if an$="N" {$ce} then p=1-p:goto 112
 
 	&"{f6}":gosub {:sub.change_prompt}
 	if an$="N" then p=1-p:goto {:header}
-	on -(tr%<1)-2*(a<1 or a>24) goto 1811,{:132}
+	on -(tr%<1)-2*(a<1 or a>24) goto 1811,{:_132}
 
 ' changing password with/without permission:
 ' if not sysop, display "Sorry, restricted function." from e.text:
@@ -329,7 +328,7 @@
 	tt$(op)=tt$(op)+chr$(48+cd%):goto {:header}
 
 {:computer_type}
-	if a=10 then gosub {:142}:goto {:header}
+	if a=10 then gosub {:_142}:goto {:header}
 
 ' TODO: encode screen height/width like this: ll%+mp%*256
 	if a=11 then gosub {:sub.todo}:goto {:default_proto}
@@ -352,38 +351,38 @@
 ' general purpose edit:
 	p$=ed$(a):w$=tt$(a):&,1,32:if an$="" or an$=tt$(a) then gosub {:sub.no_change}:goto {:header}
 ' handle or access group edited:
-	tt$(a)=an$:tz=.:on-(a=1)-(a=7)*2 goto {:148},{:154}:goto {:header}
-{:132}
-	on tz goto {:102}:&"{f6}Save changes? ":gosub 1902:if a=. then {:102}
+	tt$(a)=an$:tz=.:on-(a=1)-(a=7)*2 goto {:_148},{:_154}:goto {:header}
+{:_132}
+	on tz goto {:_102}:&"{f6}Save changes? ":gosub 1902:if a=. then {:_102}
 	&"{clear}{f6}Writing to user data files..."
-	if tt$(1)<>"{up arrow}" and tt$(1)<>"RES" and tt$(1)<>tt$ then gosub {:206} ':gosub {:sub.write_stats}:goto {:102}
-	gosub {:sub.write_stats}:if tt$(1)="RES" and tt$<>"{up arrow}" and tt$<>"RES" then {:166}
-	goto {:102}
-{:142}
+	if tt$(1)<>"{up arrow}" and tt$(1)<>"RES" and tt$(1)<>tt$ then gosub {:_206} ':gosub {:sub.write_stats}:goto {:_102}
+	gosub {:sub.write_stats}:if tt$(1)="RES" and tt$<>"{up arrow}" and tt$<>"RES" then {:_166}
+	goto {:_102}
+{:_142}
 ' 10 - computer type:
 	&"{f6}":for t=1 to 9:&"{f6}{pound}!t) "+co$(t):next
-	w$=tt$(10):p$="Computer Type":&,1,32:gosub {:sub.normalize_a}:if tr%<1 then return
-	on -(a<1 or a>9) goto {:142}:tt$(10)=str$(a):tz=.:return
+	w$=tt$(10):p$="Computer Type":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
+	on -(a<1 or a>9) goto {:_142}:tt$(10)=str$(a):tz=.:return
 
 {nice:10}
 {:sub.xfer_proto}
 ' FIXME: get protos from s.m.protos: gosub 1666
 ' 12 - transfer protocol:
 	&"{f6}1) Punter{f6}2) Xmodem{f6}3) Copier{f6}4) Relaxed Punter{f6:2}"
-	w$=tt$(12):p$="Protocol":&,1,32:gosub {:sub.normalize_a}:if tr%<1 then return
+	w$=tt$(12):p$="Protocol":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
 	on -(a<1 or a>4) goto {:sub.xfer_proto}:tt$(12)=str$(a):tz=.:return
 
 {nice:10}
 {:edit_user_flags}
 	gosub {:sub.todo}:return
 
-{:148}
+{:_148}
 ' deleted (^) or REServed users:
-	on -(an$="{f8}")-(an$="RES")*2 goto {:160},{:res_pw}:g=x:gosub 546:x=g
+	on -(an$="{f8}")-(an$="RES")*2 goto {:_160},{:res_pw}:g=x:gosub 546:x=g
 ' FIXME: always reports used by DE23 - 546 above destroys i and a%
 	if i then:&"{f6:2}Handle already used by {pound}vn{pound}!i{pound}w2":tt$(1)=tt$
 	goto {:header}
-{:154}
+{:_154}
 ' TODO: update access group flags from e.access instead
 '	tt$(23)=fl$(val(tt$(7))):goto {:header}
 	&"TODO: update access group flags from {f5}e.access{f5}":goto {:header}
@@ -392,19 +391,19 @@
 ' write to e.stats:
 	gosub 30:a$="":for i=1 to 24:a$=a$+tt$(i)+r$:next:gosub 1
 	print# 2,a$;:close 2:return
-{:160}
+{:_160}
 ' 94 calls "Are You Sure?: [No]" routine:
-	b$=tt$:&"{f6:2}Delete {f5}{pound}$b{f5}{f6}":gosub 94:if a=. then {:102}
+	b$=tt$:&"{f6:2}Delete {f5}{pound}$b{f5}{f6}":gosub 94:if a=. then {:_102}
 	an$=tt$:gosub 1034
 	tt$(1)="{up arrow}":tt$(2)="d":for i=3 to 24:tt$(i)="0":next:gosub {:sub.write_stats}
 ' 1063: open e.data, adjust next available user account (L1):
-	on -(x>l1) goto {:166}:&"(Updating next available user account)"
+	on -(x>l1) goto {:_166}:&"(Updating next available user account)"
 	l1=x:x=31:gosub 1063:gosub 1:print# 2,l1:close 2
-{:166}
+{:_166}
 ' if user email exists, decrease current total # of emails in BAR stats:
 	a$="r":gosub 32:close 2:if e%=. then gosub 30:i=-1:x=25:gosub 16:close 2
 ' scratch forced mail, regular mail:
-	dr=2:b$=left$(tt$,13):a$="f."+b$:gosub 19:a$="m."+b$:gosub 19:goto {:102}
+	dr=2:b$=left$(tt$,13):a$="f."+b$:gosub 19:a$="m."+b$:gosub 19:goto {:_102}
 {:res_pw}
 ' this is for creating a REServed user's pw:
 ' inform of default password:
@@ -424,14 +423,14 @@
 {:sub.show_access_flags}
 	&"{clear}":for i=1 to 20:b$=mid$(tt$(23),i,1):a%=i:c$=ed$(i+23)
 ' credit ratio:
-	if i=2 then b$=b$+"/1":goto {:186}
+	if i=2 then b$=b$+"/1":goto {:_186}
 ' max editor lines:
-	if i=6 then b$=mid$(str$((val(b$)+1)*10),2):goto {:186}
+	if i=6 then b$=mid$(str$((val(b$)+1)*10),2):goto {:_186}
 ' calls per day (2 bytes)
-	if i=18 then b$=mid$(tt$(23),i,2):i=19:goto {:186}
+	if i=18 then b$=mid$(tt$(23),i,2):i=19:goto {:_186}
 ' all others bools:
 	b$=mid$("YesNo",(1-a)*3+1,3)
-{:186}
+{:_186}
 	&"{pound}#2{pound}# {pound}%a) {pound}$c{pound}{back arrow}21: {pound}$b{f6}":next:gosub {:sub.change_prompt}
 	i=a:on -(tr%<1) goto 1811:if a<1 or a>20 then return
 ' credit ratio:
@@ -441,14 +440,14 @@
 ' input time per call
 ' toggle bool flag:
 	b$=mid$(str$(1-val(mid$(tt$(23),a,1))),2)
-{:196}
+{:_196}
 	tt$(23)=left$(tt$(23),a-1)+b$+mid$(tt$(23),a+1)
 {:edit_access_flags}
 ' TODO: change to yes/no for most options?
 	&"{f6}":p$=ed$(i+23):w$=b$:&,1,32:on -(tr%<1)-2*(an$="") goto 1811,{:edit_access_flags}
-'	b$=left$(an$,1):on-(a<>6)goto {:196}:b$=mid$(str$(int(val(an$)/10)-1),2,1)
+'	b$=left$(an$,1):on-(a<>6)goto {:_196}:b$=mid$(str$(int(val(an$)/10)-1),2,1)
 	b$=left$(an$,1):if a<>6 then b$=mid$(str$(int(val(an$)/10)-1),2,1)
-	goto {:196}
+	goto {:_196}
 
 ' show access flags
 {:3196}
@@ -494,7 +493,7 @@
 	p$=dt$(a):b$=mid$(q$,a,1):w$=b$:pl=1:&,1,32:if an$<>"" then b$=an$
 	return
 
-{:206}
+{:_206}
 ' handle change: rename forced mail and regular mail files:
 	dr=2:gosub 3:a$="f.":for i=1 to 2
 	print# 15,"r"dr$a$left$(tt$(1),13)"="a$left$(tt$,13):a$="m.":next
