@@ -1,37 +1,59 @@
+== Why a New Version?
+
+While Image BBS 2.0 was a big step forward in overhauling the Image BBS infrastructure, the biggest shortcoming was its lack of free memory.
+This put a hard limit of 30 messages in a sub-board, files in the upload/download areas, or directory entries in other subsystems.
+The developers felt they had done almost all they wanted to do with that version, and turned their attention to the newer 3.0 infrastructure.
+
+With a different philosophy behind the core `im` file, several improvements became obvious:
+
+. line numbering was flipped from 1.2/1.3's 1000- to 3.0's shorter 1-999 scheme
+. grouping related subroutines together was improved
+. more external `im.` modules were written to reduce including the same code in multiple files whenever possible
+. a module call "`stack`" was implemented, so calling a second (or third, or fourth...) `im.` module from the first would reload and return to the previous `im.` module
+
+While 3.0's modules now start with an `i` prefix instead of 1.2/1.3's `+` prefix, you can still run modules meant for those older versions of the BBS through an included emulation (or to be more precise, a _redirection_) layer.
+
+TODO
+
 == What's New
 
 Many new features have been added and improvements have been made in existing features for Image BBS 3.0.
 
 === Sysop Features
 
-. Convert from 1.2, 1.3, and 2.0 BBS configurations
+. First time setup is built in, no separate `config` program needed
+. Convert from previous 1.2, 1.3, and 2.0 BBS configurations
 . Online kbd:[IM] BBS configuration
 .. Access group data changes no longer require a reboot
-. Configurable time zones for BBS and caller
+.. Programmable function keys: kbd:[Ctrl+f1] ... kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
+. Configurable time zones for both the BBS and the caller show the caller's local time if the BBS is in a different time zone
 . "`Graphic`" menus with hotkey item selection
-. "`General Files`" (`GF`) section replaces `MF`, `PF`, `RF` and `TF`
+. "`General Files`" (`GF`) section replaces Image 1.2`'s separate `MF`, `PF`, `RF` and `TF` subsystems
 .. A single directory can include multiple file types or sub-boards
-. More file transfer protocols
+. More file transfer protocols TODO: Ymodem? list them
 
 ==== Lightbar
 
 . Expanded to 8 pages
+. kbd:[f2] puts a Commodore 128 running in 64 mode into 2 mHz mode
 . Configurable text and boot-up defaults
+. NetMail can be triggered at specific times
+. Alarms can set, clear, or toggle checkmarks at specified times
 . Many new functions added
 
 === User Features
 
-. Text word-wraps for console and caller
-. "`More`" prompt can automatically pause text output
+. Text word-wraps to 40 columns for C64 console and caller's terminal line length
+. Optional "`More`" prompt can automatically pause text output
 . Terminal bell sent when nearing idle time limit
 
 ==== Text Editor
 
 . New text editor dot commands:
-.. .Banner text
-.. .Text Transfer mode
-.. .Use Signature (kbd:[PS] edits them)
-. `/` is an alias for `.`
+.. kbd:[.B]anner text
+.. kbd:[.T]ext Transfer mode
+.. kbd:[.U]se Signature (kbd:[PS] edits them)
+. kbd:[/] is an alias for kbd:[.] for those used to that command character
 . New MCI commands:
 .. left/right margin set (``£<``_nn_ and ``£>``_nn_)
 .. floating point variable display (``£!``_n_)
@@ -43,5 +65,6 @@ Many new features have been added and improvements have been made in existing fe
 . New `&` functions
 .. Structures (RAM block manipulation, load, save)
 .. Sounds
-... New "`gong`" sound
-... _repeat_ parameter
+... New "`gong`" sound (`&,25,3`)
+... _repeat_ parameter: 1-254=repeat count, 255=infinite repeat
+. Image 1.2/1.3 emulation layer so their `+.` files can be run
