@@ -1,0 +1,318 @@
+:experimental:
+
+[appendix]
+== Lightbar Quick Reference
+
+TODO: Quick summaries of lightbar flags in 3-column tables. Find out how to balance `Left` and `Right` column widths.
+
+.Lightbar, page 1
+[width="100%",cols="8*^"]
+|====================
+| `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D` 
+|====================
+
+[width="100%",options="header", options="autowidth"]
+|====================
+| Option | Left | Right 
+
+| `Sys`
+| Enable sysop chat availability. If kbd:[C] typed at any major prompt, alerts will sound. Chat reason logged to `e.log _weekday_`.
+| x
+
+| `Acs`
+| Change access level of user. kbd:[f3] increases level, wraps from 9 to 0. kbd:[f5] decreases level, wraps
+from 0 to 9. kbd:[f7] exits.
+| Disable 300 baud users from logging in.
+
+| `Loc`
+| x
+| x
+
+| `Tsr`
+| x
+| x
+
+| `Cht`
+| x
+| x
+
+| `New`
+| x
+| x
+
+| `Prt`
+| x
+| x
+
+| `U/D`
+| x
+| x
+
+|====================
+
+
+     Sysop Available to Chat    0 Sys 1    Background Page Enable
+     Edit User's Access         2 Acs 3    Block 300 Baud Callers
+     Local Mode (No Modem I/O)  4 Loc 5    ZZ (Pseudo-Local) Mode
+     Edit User's Time Left      6 Tsr 7    Prime Time Enabled
+     Enter/Exit Chat Mode       8 Cht 9    Disable Modem Input
+     Disallow New Users        10 New 11   Enable Screen Blanking
+     Print Spooling            12 Prt 13   Print Log Entries
+     Disable U/D Section       14 U/D 15   300 Baud U/D Lockout
+
+.Lightbar, page 2
+[width="100%",cols="8*^"]
+|====================
+| `Asc` | `Ans` | `Exp` | `Unv` | `Trc` | `Bel` |  `Net` | `Mac` 
+|====================
+
+[width="100%",options="header", options="autowidth"]
+|====================
+| Option | Left | Right
+
+| Asc
+| x
+| x
+
+| Ans
+| x
+| x
+
+| Exp
+| x
+| x
+
+| Unv
+| x
+| x
+
+| Trc
+| Enable BASIC line execution trace. Slow down with kbd:[Shift] or kbd:[Shift-Lock]. Normally only used for debugging.
+| Undefined.
+
+| Bel
+| x
+| x
+
+| Net
+| x
+| x
+
+| Mac
+| x
+| x
+
+|====================
+
+
+     ASCII Translation         16 Asc 17   Line Feed After Return
+     ANSI Color Enable         18 Ans 19   ANSI Graphics Enable
+     Expert Mode Enable        20 Exp 21   Disallow Double Calls
+     No Immediate U/D Credits  22 Unv 23   Allow Auto-Logoff
+     On-Screen Trace Enable    24 Trc 25   Undefined
+     Local Bells Enable        26 Bel 27   Local Beeps Disable
+     NetMail Enable            28 Net 29   NetMail Trigger
+     Macros On/Off             30 Mac 31   MCI Disable in Editor
+
+.Lightbar, page 3
+[width="100%",cols="8*^"]
+|====================
+| `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`  
+|====================
+
+[width="100%",options="header", options="autowidth"]
+|====================
+| Option | Left | Right
+
+| Chk
+| x
+| Excessive chat logoff. If the user requests more unanswered chat pages than there are `s.chat _x_` screens, the user is logged off as soon as possible.
+
+| Mor
+| x
+| x
+
+| Frd
+| x
+| x
+
+| Sub
+| x
+| x
+
+| Res
+| x
+| x
+
+| Mnt
+| x
+| x
+
+| Mnu
+| x
+| x
+
+| Xpr
+| x
+| x
+
+|====================
+
+
+ Enable MailCheck at Logon     32 Chk 33   Excessive Chat Logoff
+ More Prompt On                34 Mor 35   More Prompt Not Available
+ Full-Color Read Disable       36 Frd 37   Undefined
+ Message Bases Closed (SB)     38 Sub 39   Files Section Closed (GF)
+ System Reserved (Default PW)  40 Res 41   Network Reserve
+ Undefined                     42 Mnt 43   Modem Answer Disabled
+ Is User in Menu Mode?         44 Mnu 45   Are Menus Available on BBS?
+ Enable Express Logon          46 Xpr 47   Use s.detect Files
+
+.Lightbar, page 4
+[width="100%",cols="8*^"]
+|====================
+| `Em3` | `Sc2` | `Scp` | `Alt` | `$38` | `$3a` | `$3c` | `$3e` 
+|====================
+
+[width="100%", options="header", options="autowidth"]
+|====================
+| Option | Left | Right
+
+| Em3
+| x
+| x
+
+| Sc2
+| x
+| x
+
+| Scp
+| x
+| x
+
+| Alt
+| x
+| x
+
+| $38
+| x
+| x
+
+| $3a
+| x
+| x
+
+| $3c
+| x
+| x
+
+| $3e
+| x
+| x
+
+|====================
+
+
+  Title   Em3  |  Sc2  |  Scp  |  Alt  |  $38  |  $3a  |  $3c  |  $3e
+
+ Emulate Image 1.2/1.3 mode    48 Em3 49   Undefined
+ Disable 2nd Security Check    50 Sc2 51   Undefined
+ SuperCPU Present              52 Scp 53   Turbo Mode On
+ Alt last 10 callers display   54 Alt 55   Undefined
+ Disable Troubleshooting Mode  56 $38 57   Undefined
+
+[width="100%", options="header", options="autowidth"]
+|====================
+| Option | Left | Right
+
+| Em3
+| x
+| x
+
+| Sc2
+| x
+| x
+
+| Scp
+| x
+| x
+
+| Alt
+| x
+| x
+
+| $38
+| x
+| x
+
+| $3a
+| x
+| x
+
+| $3c
+| x
+| x
+
+| $3e
+| x
+| x
+
+|====================
+
+.Lightbar, page 5
+[width="100%",cols="7*^"]
+|====================
+| `$40`  |  `$42`  |  `$44`  |  `$46`  |  `$48`  |  `$4a`  |  `$4c`  |  `$4e`  
+|====================
+
+.Lightbar, page 6
+[width="100%",cols="7*^"]
+|====================
+| `$50`  | `$52`  | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e` 
+|====================
+
+Pages 5 and 6 are undefined and available for your own use.
+
+.Lightbar, page 7
+[width="100%",cols="7*^"]
+|====================
+| `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
+|====================
+
+[width="100%",options="header", options="autowidth"]
+|====================
+| Option | Left | Right
+
+| At1
+| x
+| x
+
+| At2
+| x
+| x
+
+| At3
+| x
+| x
+
+| At4
+| x
+| x
+
+| At5
+| x
+| x
+
+| At6
+| x
+| x
+
+| At7
+| x
+| x
+
+| At8
+| x
+| x
+
+|====================
