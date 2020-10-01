@@ -12,3 +12,5 @@ include::whats-new.adoc[]
 include::lightbar.adoc[]
 
 include::modules.adoc[]
+
+include::appendix-lightbar-quick-reference.adoc[]
