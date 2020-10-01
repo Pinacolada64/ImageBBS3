@@ -1,0 +1,93 @@
+= Lightbar Reference
+
+== Numbering
+
+.Lightbar, page 1
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `Sys`  |  `Acs`  |  `Loc`  |  `Tsr`  |  `Cht`  |  `New`  |  `Prt`  |  `U/D`  
+| Decimal | 00&nbsp;01 | 02&nbsp;03 | 04&nbsp;05 | 06&nbsp;07 | 08&nbsp;09 | 10&nbsp;11 | 12&nbsp;13 | 14&nbsp;15
+| Hex     | $00&nbsp;01 | 02&nbsp;03 | 04&nbsp;05 | 06&nbsp;07 | 08&nbsp;09 | 0a&nbsp;0b | 0c&nbsp;0d | 0e&nbsp;0f
+|====================
+
+.Lightbar, page 2
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `Asc`  |  `Ans`  |  `Exp`  |  `Unv`  |  `Trc`  |  `Bel`  |  `Net`  |  `Mac`  
+| Decimal | 16&nbsp;17 | 18&nbsp;19 | 20&nbsp;21 | 22&nbsp;23 | 24&nbsp;25 | 26&nbsp;27 | 28&nbsp;29 | 30&nbsp;31
+| Hex     | $10&nbsp;11 | 12&nbsp;13 | 14&nbsp;15 | 16&nbsp;17 | 18&nbsp;19 | 1a&nbsp;1b | 1c&nbsp;1d | 1e&nbsp;1f
+|====================
+
+.Lightbar, page 3
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`  
+| Decimal |  32&nbsp;33 | 34&nbsp;35 | 36&nbsp;37 | 38&nbsp;39 | 40&nbsp;41 | 42&nbsp;43 | 44&nbsp;45 | 46&nbsp;47
+| Hex     | $20&nbsp;21 | 22&nbsp;23 | 24&nbsp;25 | 26&nbsp;27 | 28&nbsp;29 | 2a&nbsp;2b | 2c&nbsp;2d | 2e&nbsp;2f 
+|====================
+
+.Lightbar, page 4
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `Em3`  |  `Sc2`  |  `Scp`  |  `Alt`  |  `$38`  |  `$3a`  |  `$3c`  |  `$3e`  
+| Decimal | 48&nbsp;49 | 50&nbsp;51 | 52&nbsp;53 | 54&nbsp;55 | 56&nbsp;57 | 58&nbsp;59 | 60&nbsp;61 | 62&nbsp;63
+| Hex     |$30&nbsp;31 | 32&nbsp;33 | 34&nbsp;35 | 36&nbsp;37 | 38&nbsp;39 | 3a&nbsp;3b | 3c&nbsp;3d | 3e&nbsp;3f
+|====================
+
+.Lightbar, page 5
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `$40`  |  `$42`  |  `$44`  |  `$46`  |  `$48`  |  `$4a`  |  `$4c`  |  `$4e`  
+| Decimal | 64&nbsp;65 | 66&nbsp;67 | 68&nbsp;69 | 70&nbsp;71 | 72&nbsp;73 | 74&nbsp;75 | 76&nbsp;77 | 78&nbsp;79
+| Hex     |$40&nbsp;41 | 42&nbsp;43 | 44&nbsp;45 | 46&nbsp;47 | 48&nbsp;49 | 4a&nbsp;4b | 4c&nbsp;4d | 4e&nbsp;4f
+|====================
+
+.Lightbar, page 6
+[width="100%",cols="1*<,8*^"]
+|====================
+|  Title |  `$50`  |  `$52`  |  `$54`  |  `$56`  |  `$58`  |  `$5a`  |  `$5c`  |  `$5e` 
+|Decimal | 80&nbsp;81 | 82&nbsp;83 | 84&nbsp;85 | 86&nbsp;87 | 88&nbsp;89 | 90&nbsp;91 | 92&nbsp;93 | 94&nbsp;95
+|    Hex | $50&nbsp;51 | 52&nbsp;53 | 54&nbsp;55 | 56&nbsp;57 | 58&nbsp;59 | 5a&nbsp;5b | 5c&nbsp;5d | 5e&nbsp;5f
+|====================
+
+.Lightbar, page 7
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
+| Decimal | 96&nbsp;97 | 98&nbsp;99 | 100&nbsp;101 | 102&nbsp;103 | 104&nbsp;105 | 106&nbsp;107 | 108&nbsp;109 | 110&nbsp;111 
+| Hex     | $60&nbsp;61 | 62&nbsp;63 | $64&nbsp;$65 | $66&nbsp;$67 | $68&nbsp;$69 | $6a&nbsp;$6b | $6c&nbsp;$6d | $6e&nbsp;$6f 
+|====================
+
+## `&,52` Commands
+
+### Lightbar `&` Command [[ampersand-lightbar]]
+
+`&,52,_position_,_mode_`
+
+`position` ranges from 0-119 decimal ($00-$78 hexadecimal--`&,52,$30,0`, for example, is allowed). 
+
+`mode` is 0-4 as used by BASIC.
+
+[options="autowidth"]
+|====================
+| `0` | clear checkmark at _position_
+| `1` | set checkmark at _position_
+| `2` | toggle checkmark at _position_
+| `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on 
+| `4` | move "`lit`" portion of lightbar to position 0-55 [FIXME: or 1-56?] 
+|====================
+
+ 
+Mode 5 is reserved for use by ML routines, and is the equivalent of `&,52,_x_,3` in BASIC. `ldx` with the flag to check, `jsr chkflags`, and the result (0 or 1) is returned in `.a`.
+
+.checkflag.asm
+[source,6502]
+----
+; FIXME: can it do 6502 highlighting?
+ldx #$04
+jsr chkflags; does "lda #5", falls through to "chkflag"
+            ; returns flag status in .a
+cmp #1      ; is flag on?
+bne flag_on
+beq flag_off
+----
