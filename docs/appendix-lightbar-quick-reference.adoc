@@ -258,13 +258,13 @@ from 0 to 9. kbd:[f7] exits.
 |====================
 
 .Lightbar, page 5
-[width="100%",cols="7*^"]
+[width="100%",cols="8*^"]
 |====================
 | `$40`  |  `$42`  |  `$44`  |  `$46`  |  `$48`  |  `$4a`  |  `$4c`  |  `$4e`  
 |====================
 
 .Lightbar, page 6
-[width="100%",cols="7*^"]
+[width="100%",cols="8*^"]
 |====================
 | `$50`  | `$52`  | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e` 
 |====================
@@ -278,7 +278,7 @@ from 0 to 9. kbd:[f7] exits.
 Pages 5-7 are undefined and are available for your own use.
 
 .Lightbar, page 8
-[width="100%",cols="7*^"]
+[width="100%",cols="8*^"]
 |====================
 | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
 |====================
