@@ -1,7 +1,8 @@
+:experimental:
 == Why a New Version?
 
 While Image BBS 2.0 was a big step forward in overhauling the Image BBS infrastructure, the biggest shortcoming was its lack of free memory.
-This put a hard limit of 30 messages in a sub-board, files in the upload/download areas, or directory entries in other subsystems.
+This put a hard limit of 30 messages in a sub-board, 30 files in the upload/download areas, or 30 directory entries in other subsystems.
 The developers felt they had done almost all they wanted to do with that version, and turned their attention to the newer 3.0 infrastructure.
 
 With a different philosophy behind the core `im` file, several improvements became obvious:
@@ -13,7 +14,7 @@ With a different philosophy behind the core `im` file, several improvements beca
 
 While 3.0's modules now start with an `i` prefix instead of 1.2/1.3's `+` prefix, you can still run modules meant for those older versions of the BBS through an included emulation (or to be more precise, a _redirection_) layer.
 
-TODO
+TODO: I forgot what I was going to put here.
 
 == What's New
 
@@ -25,11 +26,12 @@ Many new features have been added and improvements have been made in existing fe
 . Convert from previous 1.2, 1.3, and 2.0 BBS configurations
 . Online kbd:[IM] BBS configuration
 .. Access group data changes no longer require a reboot
-.. Programmable function keys: kbd:[Ctrl+f1] ... kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
+.. Programmable function keys: kbd:[Ctrl+f1] - kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
 . Configurable time zones for both the BBS and the caller show the caller's local time if the BBS is in a different time zone
 . "`Graphic`" menus with hotkey item selection
 . "`General Files`" (`GF`) section replaces Image 1.2`'s separate `MF`, `PF`, `RF` and `TF` subsystems
 .. A single directory can include multiple file types or sub-boards
+.. Subdirectory level is now remembered and returned to after executing a module
 . More file transfer protocols TODO: Ymodem? list them
 
 ==== Lightbar
@@ -50,10 +52,10 @@ Many new features have been added and improvements have been made in existing fe
 ==== Text Editor
 
 . New text editor dot commands:
-.. kbd:[.B]anner text
-.. kbd:[.T]ext Transfer mode
-.. kbd:[.U]se Signature (kbd:[PS] edits them)
-. kbd:[/] is an alias for kbd:[.] for those used to that command character
+.. kbd:[.B]anner text: Create large text for fun or emphasis in messages
+.. kbd:[.T]ext Transfer mode: Disables echoing of text while pasting text in from a terminal buffer
+.. kbd:[.U]se Signature (kbd:[PS] edits them): Add "`taglines`" to your posts
+. kbd:[/] is an alias for kbd:[.] for those used to that command character from other BBS programs
 . New MCI commands:
 .. left/right margin set (``£<``_nn_ and ``£>``_nn_)
 .. floating point variable display (``£!``_n_)
@@ -63,8 +65,14 @@ Many new features have been added and improvements have been made in existing fe
 . `im` line numbering restructured
 . More module types
 . New `&` functions
-.. Structures (RAM block manipulation, load, save)
+.. Structures (`&,60` and `&,68`: RAM block manipulation, load, save, search, store/retrieve bytes and strings, and more) can replace using BASIC arrays
 .. Sounds
 ... New "`gong`" sound (`&,25,3`)
 ... _repeat_ parameter: 1-254=repeat count, 255=infinite repeat
 . Image 1.2/1.3 emulation layer so their `+.` files can be run
+. BASIC keyword extensions
+.. Hexadecimal values can be used in `POKE`, `PEEK`, `SYS` and `&` commands. `POKE $D004,$0c` is the equivalent of `POKE 53252,12`
+.. `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an additional purpose--specifying the segment of memory to load a particular file to
+.. `NEW _line_number_-` erases that portion of the BASIC program to prepare for ``LOAD``ing a new module
+
+New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.

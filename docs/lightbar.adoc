@@ -119,21 +119,31 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Loc` right: _ZZ (Pseudo-Local) Mode_
 
+---
+
 `Tsr` left: _Edit User's Time Left_
 
 `Tsr` right: _Prime Time Enabled_
+
+---
 
 `Cht` left: _Enter/Exit Chat Mode_
 
 `Cht` right: _Disable Modem Input_
 
+---
+
 `New` left: _Disallow New Users_
 
 `New` right: _Enable Screen Blanking_
 
+---
+
 `Prt` left: _Print Spooling_
 
 `Prt` right:  _Print Log Entries_
+
+---
 
 `U/D` left: _Disable U/D Section_
 
@@ -149,29 +159,43 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Asc` right: _Line Feed After Return_
 
+---
+
 `Ans` left: _ANSI Color Enable_
 
 `Ans` right: _ANSI Graphics Enable_
+
+---
 
 `Exp` left: _Expert Mode Enable_
 
 `Exp` right: _Disallow Double Calls_
 
+---
+
 `Unv` left: _No Immediate U/D Credits_
 
 `Unv` right: _Allow Auto-Logoff_
+
+---
 
 `Trc` left: _On-Screen Trace Enable_
 
 `Trc` right: _Undefined_
 
+---
+
 `Bel` left: _Local Bells Enable_
 
 `Bel` right: _Local Beeps Disable_
 
+---
+
 `Net` left: _NetMail Enable_
 
 `Net` right: _NetMail Trigger_
+
+---
 
 `Mac` left: _Macros On/Off_
 
@@ -193,29 +217,43 @@ _Related:_
 
 * `Cht` left: _Enter/Exit Chat Mode_
 
+---
+
 `Mor` left: _More Prompt On_
 
 `Mor` right: _More Prompt Not Available_
+
+---
 
 `Frd` left: _Full-Color Read Disable_
 
 `Frd` right: _Undefined_
 
+---
+
 `Sub` left: _Message Bases Closed (SB)_
 
 `Sub` right: _Files Section Closed (GF)_
+
+---
 
 `Res` left: _System Reserved (Default PW)_
 
 `Res` right: _Network Reserve_
 
+---
+
 `Mnt` left: _Undefined_
 
 `Mnt` right: _Modem Answer Disabled_
 
+---
+
 `Mnu` left: _Is User in Menu Mode?_
 
 `Mnu` right: _Are Menus Available on BBS?_
+
+---
 
 `Xpr` left: _Enable Express Logon_
 
@@ -233,29 +271,43 @@ TODO: DCD/DSR checkmarks got put somewhere
 
 `Em3` right: _Undefined_
 
+---
+
 `Sc2` left: _Disable 2nd Security Check_
 
 `Sc2` right: _Undefined_
+
+---
 
 `Scp` left: _SuperCPU Present_
 
 `Scp` right: _Turbo Mode On_
 
+---
+
 `Alt` left: _Alt last 10 callers display_
 
 `Alt` right: _Undefined_
+
+---
 
 `$38` left: _Disable Troubleshooting Mode_
 
 `$38` right: _Undefined_
 
+---
+
 `$3a` left: _Undefined_
 
 `$3a` right: _Undefined_
 
+---
+
 `$3c` left: _Undefined_
 
 `$3c` right: _Undefined_
+
+---
 
 `$3e` left: _Undefined_
 
@@ -273,9 +325,15 @@ TODO: DCD/DSR checkmarks got put somewhere
 | `$50` | `$52` | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e` 
 |====================
 
-Pages 5-6 are undefined and are available for your own use.
-
 .Lightbar, page 7
+[width="100%",cols="8*^"]
+|====================
+| `$60` | `$62` | `$64` | `$66` | `$68` | `$6a` | `$6c` | `$6e` 
+|====================
+
+Pages 5-7 are undefined and are available for your own use.
+
+.Lightbar, page 8
 [width="100%",cols="8*^"]
 |====================
 | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
@@ -285,29 +343,43 @@ Pages 5-6 are undefined and are available for your own use.
 
 `At1` right: _Default Alarm 1 Trigger_
 
+---
+
 `At2` left: _Default Alarm 2 Enable_
 
 `At2` right: _Default Alarm 2 Trigger_
+
+---
 
 `At3` left: _Default Alarm 3 Enable_
 
 `At3` right: _Default Alarm 3 Trigger_
 
+---
+
 `At4` left: _Default Alarm 4 Enable_
 
 `At4` right: _Default Alarm 4 Trigger_
+
+---
 
 `At5` left: _Default Alarm 5 Enable_
 
 `At5` right: _Default Alarm 5 Trigger_
 
+---
+
 `At6` left: _Default Alarm 6 Enable_
 
 `At6` right: _Default Alarm 6 Trigger_
 
+---
+
 `At7` left: _Default Alarm 7 Enable_
 
 `At7` right: _Default Alarm 7 Trigger_
+
+---
 
 `At8` left: _Default Alarm 8 Enable_
 
@@ -321,11 +393,11 @@ TODO
 
 TODO
 
-### Lightbar `&` Command [[ampersand-lightbar]]
+### Lightbar Interface: `&,52`  [[ampersand-lightbar]]
 
 `&,52,_position_,_mode_`
 
-`position` ranges from 0-119 decimal ($00-$78 hexadecimal--`&,52,$30,0`, for example, is allowed). 
+`position` ranges from 0-127 decimal ($00-$7f hexadecimal--`&,52,$30,0`, for example, is allowed). 
 
 `mode` is 0-4 as used by BASIC. Mode 5 is reserved for use by ML routines, and discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
 

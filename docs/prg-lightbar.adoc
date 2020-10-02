@@ -53,14 +53,22 @@
 .Lightbar, page 7
 [width="100%",cols="1*<,8*^"]
 |====================
-| Title   | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
-| Decimal | 96&nbsp;97 | 98&nbsp;99 | 100&nbsp;101 | 102&nbsp;103 | 104&nbsp;105 | 106&nbsp;107 | 108&nbsp;109 | 110&nbsp;111 
-| Hex     | $60&nbsp;61 | 62&nbsp;63 | $64&nbsp;$65 | $66&nbsp;$67 | $68&nbsp;$69 | $6a&nbsp;$6b | $6c&nbsp;$6d | $6e&nbsp;$6f 
+|  Title |  `$60`  |  `$62`  |  `$64`  |  `$66`  |  `$68`  |  `$6a`  |  `$6c`  |  `$6e` 
+|Decimal | 96&nbsp;97 | 98&nbsp;99 | 100&nbsp;101 | 102&nbsp;103 | 104&nbsp;105 | 106&nbsp;107 | 108&nbsp;109 | 110&nbsp;111
+|    Hex | $60&nbsp;61 | 62&nbsp;63 | 64&nbsp;65 | 66&nbsp;67 | 68&nbsp;69 | 6a&nbsp;6b | 6c&nbsp;6d | 6e&nbsp;6f
 |====================
 
-## `&,52` Commands
+.Lightbar, page 8
+[width="100%",cols="1*<,8*^"]
+|====================
+| Title   | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
+| Decimal | 112&nbsp;113 | 114&nbsp;115 | 116&nbsp;117 | 118&nbsp;119 | 120&nbsp;121 | 122&nbsp;123 | 124&nbsp;125 | 126&nbsp;127 
+| Hex     | $70&nbsp;71 | 72&nbsp;73 | 74&nbsp;75 | 76&nbsp;77 | 78&nbsp;79 | 7a&nbsp;7b | 7c&nbsp;7d | 7e&nbsp;7f 
+|====================
 
-### Lightbar `&` Command [[ampersand-lightbar]]
+## Lightbar Interface: `&,52`
+
+### BASIC `&,52` Commands [[ampersand-lightbar]]
 
 `&,52,_position_,_mode_`
 
@@ -84,10 +92,8 @@ Mode 5 is reserved for use by ML routines, and is the equivalent of `&,52,_x_,3`
 [source,6502]
 ----
 ; FIXME: can it do 6502 highlighting?
-ldx #$04
-jsr chkflags; does "lda #5", falls through to "chkflag"
-            ; returns flag status in .a
-cmp #1      ; is flag on?
+ldx #$04	; lightbar flag number
+jsr chkflag	; returns flag status (0=off, 1=on) in .a
 bne flag_on
 beq flag_off
 ----
