@@ -1,6 +1,6 @@
-= Lightbar Reference
+== Lightbar Reference
 
-== Numbering
+=== Lightbar Numbering
 
 .Lightbar, page 1
 [width="100%",cols="1*<,8*^"]
@@ -66,9 +66,9 @@
 | Hex     | $70&nbsp;71 | 72&nbsp;73 | 74&nbsp;75 | 76&nbsp;77 | 78&nbsp;79 | 7a&nbsp;7b | 7c&nbsp;7d | 7e&nbsp;7f 
 |====================
 
-## Lightbar Interface: `&,52`
+=== Lightbar Interface: `&,52`
 
-### BASIC `&,52` Commands [[ampersand-lightbar]]
+==== BASIC `&,52` Commands [[ampersand-lightbar]]
 
 `&,52,_position_,_mode_`
 
@@ -85,7 +85,10 @@
 | `4` | move "`lit`" portion of lightbar to position 0-55 [FIXME: or 1-56?] 
 |====================
 
- 
+==== Assembly Example
+
+FIXME
+
 Mode 5 is reserved for use by ML routines, and is the equivalent of `&,52,_x_,3` in BASIC. `ldx` with the flag to check, `jsr chkflags`, and the result (0 or 1) is returned in `.a`.
 
 .checkflag.asm
