@@ -37,7 +37,7 @@ kbd:[f2]: Toggles between `FAST` and `SLOW` modes on a Commodore 128 in 64 mode.
 
 NOTE: These are the default lightbar titles. You may change the three-character lightbar labels by editing the file `s.lightdefs`. 
 
-NOTE: The decimal/hexadecimal values of each lightbar position are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_. 
+NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_. 
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
@@ -71,63 +71,129 @@ If there is no file for that attempt number, the _Excessive Chat Attempt_ lightb
 
 *Disabled*: When a user types kbd:[C], they are told the sysop is unavailable for chat.
 
-_Related:_
+[.text-right]
+pass:q[<u>Related Checkmarks:</u>]
 
-* `Sys` Right: _Background Page Enable_
-* `Chk` Right: _Excessive Chat Logoff_
-* `Cht` Left: _Enter/Exit Chat Mode_
+[.text-right]
+`Sys` Right: _Background Page Enable_
+[.text-right]
+`Chk` Right: _Excessive Chat Logoff_
+[.text-right]
+`Cht` Left: _Enter/Exit Chat Mode_
 
 `Sys` Right: _Background Page Enable_
 
 When the sysop is available for chat and the user has entered a reason for chat, the chat page sound will continue playing in the background until the sysop enters chat mode or the user logs off.
 
-_Related:_
+[.text-right]
+pass:q[<u>Related Checkmarks:</u>]
 
 // would be nice to use icon:checkmark[] here
 
-* `Sys` Left: _Sysop Available to Chat_
-* `Chk` Right: _Excessive Chat Logoff_
-* `Cht` Left: _Enter/Exit Chat Mode_
+[.text-right]
+`Sys` Left: _Sysop Available to Chat_
+[.text-right]
+`Chk` Right: _Excessive Chat Logoff_
+[.text-right]
+`Cht` Left: _Enter/Exit Chat Mode_
 
 ---
 
 `Acs` left: _Edit User's Access_
 
-Change access level of user.
-
-TODO: f1=0, f2=9?
+Change the access group of the user who is online. This changes a portion of the bottom screen mask, `A=_x_` (_x_ being the user`'s access group).
 
 [options="autowidth"]
 |==========
-| kbd:[f3] | increase access level, wraps around from 9 to 0
-| kbd:[f5] | decrease level, wraps around
-from 0 to 9
-| kbd:[f7] | exit
+| kbd:[f1] | sets access group to `A=0`
+| kbd:[f2] | sets access group to `A=9`
+| kbd:[f3] / kbd:[f4] | raises access one group (wraps around from `A=0`-`A=9`)
+| kbd:[f5] / kbd:[f6] | lowers access one group (wraps around `A=9`-`A=0`)
+| kbd:[f7] | gives the user the selected access level, exiting this function
 |==========
 
-The new access group flags are loaded from `e.access` at the earliest available opportunity.
+If the access group was changed, the new access group flags are loaded from `e.access` at the earliest available opportunity.
 
 `Acs` right: _Block 300 Baud Callers_
 
 Prevent 300 baud users from logging in. When one tries, they are told:
 
- Sorry, the system is currently not accepting 300 baud callers.
+ SORRY, NO CALLS LESS THAN 1200 BPS ARE CURRENTLY BEING ACCEPTED.
 
 ---
 
 `Loc` left: _Local Mode (No Modem I/O)_
 
+Log in to the BBS from the C64.
+This is a true local login, with Sysop access enabled--as compared to a "`pseudo-local`" login, or kbd:[ZZ] mode being enabled at a prompt, where the caller is given local mode access to perform maintenance tasks.
+
+TODO: See _Logging On From the Console_ for more information.
+
+[.text-right]
+pass:q[<u>Related Checkmark:</u>]
+
+[.text-right]
 `Loc` right: _ZZ (Pseudo-Local) Mode_
+
+`Loc` right: _ZZ (Pseudo-Local) Mode_
+
+Once a user is online, you can grant them pseudo-local mode access in order to perform maintenance tasks if they don't have the *Local Maint* access flag set.
+
+[.text-right]
+pass:q[<u>Related Checkmark:</u>]
+
+[.text-right]
+`Loc` left: _Local Mode (No Modem I/O)_
 
 ---
 
 `Tsr` left: _Edit User's Time Left_
 
+Adjust time remaining for the user online. The time remaining is shown in the bottom right hand corner of the screen, and is always visible. 
+
+[options="autowidth"]
+|==========
+|`f1` | zeroes time (log off at earliest opportunity)
+|`f2` | gives unlimited time (`--:00` displays)
+|`f3` | +1 minute
+|`f4` | +10 minutes
+|`f5` | -1 minute
+|`f6` | -10 minutes
+|`f7` | gives the user the selected time limit, exiting this function
+|==========
+
 `Tsr` right: _Prime Time Enabled_
+
+Toggle Prime Time (limiting all callers to a certain time limit during peak usage hours) for every user.
+
+    * If it's currently Prime Time, ignore it at logon
+    * If not, enable Prime Time
+
+If no Prime Time is designated for your BBS, this has no effect.
 
 ---
 
 `Cht` left: _Enter/Exit Chat Mode_
+
+Enters chat mode when a user is online. It first displays the customizable "`entering chat`" message. By default it is:
+
+```
+ * Entering Chat Mode *
+```
+
+then allows the sysop and user to type anything they wish back and forth to each other for the duration of the chat.
+
+Pressing kbd:[f7] again ends chat mode, displaying the customizable "`exiting chat`" message. By default it is:
+
+```
+* Exiting Chat Mode *
+```
+
+Then the user is returned to the area and prompt they were at before entering chat mode. If the user was in the BBS text editor, the BBS displays
+
+```
+* Returning to Editor *
+```
 
 `Cht` right: _Disable Modem Input_
 
@@ -135,19 +201,35 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `New` left: _Disallow New Users_
 
+Makes the BBS private, and will not allow new users to sign up.
+They are told that the BBS is not accepting new users at this time.
+
 `New` right: _Enable Screen Blanking_
+
+At the BBS console`'s idle screen, if no keys are hit or no incoming calls are detected, after a certain time period the screen will go blank to prevent screen burn-in.
+The screen remains off until a key is hit or  an incoming call is detected.
 
 ---
 
 `Prt` left: _Print Spooling_
 
+Sends all text output to the printer and the screen.
+
 `Prt` right:  _Print Log Entries_
+
+Prints all log entries to the printer as well as the disk log.
 
 ---
 
 `U/D` left: _Disable U/D Section_
 
+Users cannot access the UD/UX area.
+They are told the area is closed temporarily.
+
 `U/D` right: _300 Baud U/D Lockout_
+
+300 baud users cannot access the UD/UX area.
+They are told that they do not have access to that area at this time.
 
 .Lightbar, page 2
 [width="100%",cols="8*^"]
@@ -157,29 +239,63 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Asc` left: _ASCII Translation_
 
+Enables ASCII translation for the user.
+Character layout differs between Commodore and ASCII standards, most notably by reversing the position of upper- and lowercase letters.
+
 `Asc` right: _Line Feed After Return_
+
+Enables linefeeds for the user.
+In ASCII mode, terminals need a carriage return to move the cursor to the beginning of the current line.  
+However, they may also need a linefeed character to move the cursor to the next line.
+(Without one, the user will probably complain that "`everything displays on one line.`"
+
+TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] to resolve this problem.
 
 ---
 
 `Ans` left: _ANSI Color Enable_
 
+Enables ANSI escape sequences to output color instead of Commodore color characters.
+
 `Ans` right: _ANSI Graphics Enable_
+
+Enables ANSI graphics characters, many of which have similarities with the Commodore character set, and other special symbols for the user.
+
+These are a standardized way to set character colors, plus "`screen management`" things like scrolling, windowing, clearing to end-of-line, and more (which really aren't utilized on this Commodore 64 BBS).
+
+The cursor controls can be used with the new _Graphic Menu_ system, if it`'s enabled.
 
 ---
 
 `Exp` left: _Expert Mode Enable_
 
+Enables Expert Mode, which skips many entry screens seen when entering subsystems or changing areas within that subsystem.
+
 `Exp` right: _Disallow Double Calls_
+
+Disables users from calling twice in a row. If a user tries, they are told:
+
+ Sorry, no back-to-back calls allowed. Try Again Later!
 
 ---
 
 `Unv` left: _No Immediate U/D Credits_
 
+*Enabled*: User receives credit when an upload is validated.  
+
+*Disabled*: Credit is received after the completion of the upload.
+
 `Unv` right: _Allow Auto-Logoff_
+
+Enables asking the user whether they wish to log off after a file transfer is complete.
 
 ---
 
 `Trc` left: _On-Screen Trace Enable_
+
+Enables a tracing feature that will show, at the bottom of the screen, `L=` and the BASIC line number currently executing.
+Execution can be slowed down with the kbd:[Shift] or kbd:[Shift-Lock] keys to read line numbers more easily.
+This is only meant as a debugging tool, and is normally left disabled.
 
 `Trc` right: _Undefined_
 
@@ -187,7 +303,11 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Bel` left: _Local Bells Enable_
 
+Enables the bell sound, so you hear bells the console plays.
+
 `Bel` right: _Local Beeps Disable_
+
+Disables the beep sound, so you don't hear the console beeps.
 
 ---
 
@@ -199,7 +319,11 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Mac` left: _Macros On/Off_
 
+Users can see "`macros`"--a short saying presented before the main prompt.  (Users can toggle them on/off with the kbd:[MA] command, or add their own with the ME command.)
+
 `Mac` right: _MCI Disable in Editor_
+
+Disables the use of the Message Command Interpreter in the BBS text editor.
 
 .Lightbar, page 3
 [width="100%",cols="8*^"]
@@ -209,23 +333,41 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
 `Chk` left: _Enable MailCheck at Logon_
 
+Enables a logon option (kbd:[M]) for the user to check whether they have any mail waiting.
+They can then choose whether to continue logging on or not.
+
 `Chk` right: _Excessive Chat Logoff_
 
 If the user requests more unanswered chat pages than there are `s.chat _x_` screens, the user is logged off as soon as possible.
 
-_Related:_
+[.text-right]
+pass:q[<u>Related Checkmark:</u>]
 
-* `Cht` left: _Enter/Exit Chat Mode_
+[.text-right]
+`Cht` left: _Enter/Exit Chat Mode_
 
 ---
 
 `Mor` left: _More Prompt On_
 
+Enables the BBS to pause text after the user`'s specified screen height fills up with text.
+The `...More? (Y/n)` prompt is output.
+
+* If kbd:[Y]es (or any other key than kbd:[Y], uppercase indicates it`'s the default) is hit, text will continue to output.
+* If another key is hit, the BBS attempts to abort text output. (This might not always work, there may not be code present to handle aborting output.)
+
 `Mor` right: _More Prompt Not Available_
+
+Enables the BBS to continually output text, and rely on the user to hit kbd:[Home] or kbd:[Ctrl+S] to pause text.
+Most keys (kbd:[Home] or kbd:[Ctrl+Q] being fairly standard) resume output.
+
+While text output is paused, `P` displays in the bottom status line, between the current time and time remaining.
 
 ---
 
 `Frd` left: _Full-Color Read Disable_
+
+TIP: This lightbar position is a homage to Fred Dart, Image BBS support guru and programmer.
 
 `Frd` right: _Undefined_
 
@@ -233,13 +375,24 @@ _Related:_
 
 `Sub` left: _Message Bases Closed (SB)_
 
+When enabled, users cannot access the sub-boards.
+
 `Sub` right: _Files Section Closed (GF)_
+
+When enabled, users cannot access the General Files section.
 
 ---
 
 `Res` left: _System Reserved (Default PW)_
 
+If enabled, the BBS is considered "`reserved`" and a password must be entered to access it.
+At the idle screen, hit kbd:[7] to set or clear a reservation.
+You can set the reservation for kbd:[N]one (which clears the reservation), kbd:[O]ne call, or kbd:[A]ll calls.
+
 `Res` right: _Network Reserve_
+
+This is usually set during the Network Maintenance period.
+If a call connects during this time, they are told to call back when network transfers are done.
 
 ---
 
@@ -247,17 +400,27 @@ _Related:_
 
 `Mnt` right: _Modem Answer Disabled_
 
+When enabled, the BBS will not answer an incoming call.
+
 ---
 
 `Mnu` left: _Is User in Menu Mode?_
 
+The Graphic Menu system uses this flag to check whether the user is currently in Graphic Menu mode.
+
 `Mnu` right: _Are Menus Available on BBS?_
+
+If enabled, Graphic Menus are available to users.
 
 ---
 
 `Xpr` left: _Enable Express Logon_
 
+If enabled, when the user first connects to the BBS, they have the option kbd:[X]_press Login_ available so they can skip login modules and get to the main prompt quickly.
+
 `Xpr` right: _Use `s.detect` Files_
+
+If enabled, the user will see a file called `s.detect` at login instead of a specific message about their graphics mode.
 
 TODO: DCD/DSR checkmarks got put somewhere
 
@@ -269,11 +432,18 @@ TODO: DCD/DSR checkmarks got put somewhere
 
 `Em3` left: _Emulate Image 1.2/1.3 mode_
 
+When enabled, you can run Image 1.2/1.3 `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls. 
+
+TIP: The main prompt kbd:[R]un command will check this lightbar flag and prompt for the appropriate module type.
+For more information, see  <<modules.adoc#emulation-mode,Image 1.2/1.3 Emulation Mode>>.
+
 `Em3` right: _Undefined_
 
 ---
 
 `Sc2` left: _Disable 2nd Security Check_
+
+If enabled, the user is only prompted for their account password, not their first and last names or their email address.
 
 `Sc2` right: _Undefined_
 
@@ -281,17 +451,25 @@ TODO: DCD/DSR checkmarks got put somewhere
 
 `Scp` left: _SuperCPU Present_
 
+If enabled, the CMD SuperCPU is connected to the system.
+
 `Scp` right: _Turbo Mode On_
+
+If enabled, the CMD SuperCPU is operating in 20 mHz mode.
 
 ---
 
 `Alt` left: _Alt last 10 callers display_
+
+If enabled, this displays the idle screen last ten callers display in different colors.
 
 `Alt` right: _Undefined_
 
 ---
 
 `$38` left: _Disable Troubleshooting Mode_
+
+If enabled, the programmable window will not display variable values for debugging.
 
 `$38` right: _Undefined_
 
@@ -393,7 +571,7 @@ TODO
 
 TODO
 
-### Lightbar Interface: `&,52`  [[ampersand-lightbar]]
+### Lightbar Interface: `&,52` [[lightbar-interface]]
 
 `&,52,_position_,_mode_`
 
