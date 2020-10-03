@@ -7,6 +7,8 @@ v0.1, 2020-09-26
 
 NOTE: Preliminary start on documentation. Feedback welcome!
 
+include::preface.adoc[]
+
 include::whats-new.adoc[]
 
 include::lightbar.adoc[]
