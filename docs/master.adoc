@@ -9,6 +9,8 @@ NOTE: Preliminary start on documentation. Feedback welcome!
 
 include::preface.adoc[]
 
+include::setting-up.adoc[]
+
 include::whats-new.adoc[]
 
 include::lightbar.adoc[]

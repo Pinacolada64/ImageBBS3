@@ -8,3 +8,39 @@ Thank you for downloading Image BBS v3.0 © NISSA BBS Software.
 
 [.text-right]
 --Al DeRosa
+
+== Special Thanks
+
+Special thanks go out to:
+
+Larry Hedman:: 
+For which none of this would be possible today. For his programming skills and his teaching himself a fully new system to which we now have 3.0.
+
+Ryan Sherwood::
+For his ML programming and knowledge of the ML used by Image BBS.
+
+Jack Followay::
+For doing the major rewrite of the first set of 3.0 files known then as 2.0.
+
+Bob Sisco::
+For taking the helm and working with Jack in the late 90’s trying to get 2.0 out the door.
+
+The next few guys I am going to mention are what have made Image BBS what it was and what it is today. 
+
+Ray Kelm::
+For coming out of retirement to fix the issues with the ML and creating a full source code to be able to be mod and rebuild anytime anyone wants. Ray has been amazing me with his programming skills for 30 years and he never ceases to amaze me. Thank You Ray!!
+
+== In Memoriam
+
+Last but not least the men who we have lost over the years for without whom Image BBS would never be where it is today!
+
+John Moore::
+For the original 2.0 Sub-boards and network files.
+
+Don Gladden::
+Nothing would be possible here without the original 1.0 Image BBS.
+
+Fred Dart::
+My friend, my business partner, my confidante. The man who made me a better programmer when I was programming non-stop in the 80’s and 90’s
+
+These three guys made Image what is was then and what it is today!
