@@ -72,7 +72,7 @@
 
 `&,52,_position_,_mode_`
 
-`position` ranges from 0-119 decimal ($00-$78 hexadecimal--`&,52,$30,0`, for example, is allowed). 
+`position` ranges from 0-127 decimal ($00-$7f hexadecimal--`&,52,$30,0`, for example, is allowed). 
 
 `mode` is 0-4 as used by BASIC.
 
@@ -82,7 +82,7 @@
 | `1` | set checkmark at _position_
 | `2` | toggle checkmark at _position_
 | `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on 
-| `4` | move "`lit`" portion of lightbar to position 0-55 [FIXME: or 1-56?] 
+| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?] 
 |====================
 
 ==== Assembly Example
