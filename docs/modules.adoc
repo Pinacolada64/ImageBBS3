@@ -1,17 +1,17 @@
+:experimental:
 ## Running Modules
 
-Like Image 1.2 BBS before it, Image 3.0 can run modules from the main prompt by typing 
-kbd:[R]. However, there are more types of modules available in this version of 
-Image.
+Like Image 1._x_ (1._x_ stands for 1.0, 1.1, and 1.2) BBS before it, Image 3.0 can run modules from the main prompt by typing kbd:[R].
+However, there are more types of modules available in this version of Image.
 
-### Image 1.2/1.3 Emulation Mode [[emulation-mode]]
+### Image 1._x_ Emulation Mode [[emulation-mode]]
 
 When kbd:[R] is typed from the main prompt, Image checks to see whether you are 
-in Image 1.3 emulation mode (when the left side of `Em3` on the 
+in Image 1._x_ emulation mode (when the left side of `Em3` on the 
 lightbar is checked).
-If this is enabled, an "`emulation layer`" loads, which uses Image 1.2/1.3`'s `im` line numbers. You can then run plus files for those older versions instead.
+If this is enabled, an "`emulation layer`" loads, which uses Image 1._x_`'s `im` line numbers. You can then run plus files for those older versions instead.
 
-If Image 1.3 emulation mode is disabled, you can load Image 3.0 `i` modules. There are several types of these, with differing filename prefixes and starting line numbers. The following section discusses the additional prompts specifying options for which module type to run.
+If Image 1._x_ emulation mode is disabled, you can load Image 3.0 `i` modules. There are several types of these, with differing filename prefixes and starting line numbers. The following section discusses the additional prompts specifying options for which module type to run.
 
 ### Command Classes
 
@@ -31,7 +31,7 @@ First, you are prompted for the _command class_. A number, 3-5, is required here
 Next, you are prompted for the device and drive to run the module from.
 
 - Typing a single number from 1-6 specifies one of the six Image system disks.
-Depending on the Image 1.3 emulation status, system disk 5 is either your `i` module (Image 3.0) or `+` file (Image 1.3 emulation) disk.
+Depending on the Image 1._x_ emulation status, system disk 5 is either your `i` module (Image 3.0) or `+` file (using Image 1._x_ emulation) disk.
 
 - You can also type the device number, a comma, and the drive number to run a module from a specific device and drive. Devices 8-29 and drives 0-254 [TODO: check this] are supported.
 
@@ -50,7 +50,7 @@ Each type of module uses a different variable within the BASIC code to control w
 | 5     | `im`       
 |====================
 
-TODO: There should be a module jump table somewhere.
+TODO: There is a module jump table in the _Image 3.0 Programmer`'s Reference Guide_.
 
 If there is no DOS error, the module should execute.
 
@@ -60,12 +60,12 @@ TIP: A `file not found` DOS error is written to the system error log (`e.errlog`
 [options="header,autowidth"]
 |====================
 | Prefix    |  Starting line | Purpose 
-| `+.`      |  1     | Image 1.2 plus file
+| `+.`      |  1     | Image 1._x_ plus file
 | `i.`      |  3000  | Image 3.0 module
 | `i/`      |  4000  | Image 3.0 sub-module
-| `i.XX/YY` |  x     | Image 3.0 module YY of XX
+| `i.XX/YY` |  3000  | Image 3.0 sub-module YY of XX
 | `i/lo.`   |  3000  | Idle command 
-| `i/lo/`   |  x     | Automaint module
+| `i/lo/`   |  4000  | Automaint module
 | `i/lo-`   |  4500  | Login module  
 | `i/XX.YY` |  4000  | Sub-module YY of XX
 | `sub.*`   |  60000 | Common BBS code called by various files 
