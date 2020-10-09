@@ -1,0 +1,26 @@
+# Image BBS 3.0 Programmer`'s Reference Guide
+Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
+v0.1, 2020-09-26
+:experimental:
+:toc: left
+:icons: font
+
+NOTE: Preliminary start on documentation. Feedback welcome!
+
+Welcome to the _Image BBS 3.0 Programmer's Reference Guide_.
+
+## Programming Image BBS 3.0
+### Overall Description
+### `im` Subroutines
+### `&` Calls
+### Modules
+### Variable Handling
+### Image BBS Output Routine
+
+`&"bla","bla"` and `&"bla &pound;!x"`
+
+### POKEs and Machine Language Routines
+
+#TODO#: POKEs are going away in favor of `&,20` and `&,21` interface read/write commands.
+
+include::prg-lightbar.adoc[]
