@@ -1,0 +1,433 @@
+:toc: left
+
+# Image BBS 3.0 table of contents mock-up
+
+NOTE: This is just a plain text version of the in-progress Image 1.2b sysop guide, to remind me which sections belong where.
+It is being updated for Image BBS 3.0.
+A short idea of who wrote which sections or what goes in new sections goes here too, for team feedback.
+
+NOTE: The commands listed in headings are just temporary. They will be transferred to both the #TODO# Command Reference appendix and relevant chapters.
+
+NOTE: It would be _really_ nice to use conditional includes (which ASCIIdoc can do!) of sysop-level commands/chapters and be able to output an _Image BBS 3.0 User`'s Guide_ with only user-level commands.
+
+NOTE: I have decided to remove the `'-ing'` suffix (Read, View, Edit instead) from most entries because it`'s easier to read.
+
+// https://businesswriting.com/guide-to-capitalizing-words-in-titles-and-headings/
+
+## Preface
+### Special Thanks
+### In Memoriam
+
+Al wrote these.
+
+### Product Information
+## Why a New Version?
+## What`'s New
+### Sysop Features
+### User Features
+### Programming Features
+
+Ryan is writing these.
+
+## Setting Up Image BBS 3.0
+### Supported Hardware
+#### Disk Drives
+#### Mass Storage
+##### CMD HD
+##### Lt. Kernal HD
+##### SD2IEC
+##### 1541 Ultimate
+### Image BBS Drive Numbers
+### Modems
+### RS-232 Bridges
+### Printers
+### Interfaces
+### RS-232 Interfaces
+#### GGlabs GLink232-LT
+#### 1541 Ultimate II+ SwiftLink Emulation
+### Fastload Options
+#### JiffyDOS
+
+A lot of this is from 1.2, some newer hardware will be talked about.
+
+## Setting Up Image BBS 3.0
+### Upgrading From Previous Versions
+#### Upgrading From 1.x
+##### Modifying Files
+#### Upgrading From 2.0
+### Setting Up 3.0 From Scratch
+#### BBS/Sysop Information
+#### Clock Set Method
+### Shared Image BBS 3.0 Setup
+
+Since a lot of steps are shared between different upgrade options, I chose to add `"Shared Image BBS 3.0 Setup`" to cut down on a few pages of duplicate instructions.
+#TODO#: Verify the steps are in fact word-for-word duplicates.
+
+### GGlabs GLink232-LT
+
+#TODO#: This will incorporate Larry`'s docs plus re-use additional information in the expanded 1.2b docs.
+Give URL of GGlabs order page.
+This needs work to be fully converted to ASCIIdoctor still.
+
+### Final Notes
+
+## Booting Up
+### Startup Files
+### Idle Screen Display
+
+#TODO# More stuff here later.
+
+## The Lightbar
+### Lightbar Defaults
+### Lightbar Function Keys
+### Lightbar Functions
+#### Alarm Triggers
+#### NetMail Triggers
+### Lightbar Interface: `&,52`
+
+This probably should be in the Programmer`'s Reference Guide.
+
+## Running Modules
+### Image 1._x_ Emulation Mode
+### Command Classes
+### Device,Drive Prompt
+### Value of Variable
+## Complete Module Type Listing
+
+### Support Channels
+#### NISSA BBSes
+
+List them, addresses
+
+#### Social Media
+
+Facebook, Brent's forum, Google Hangouts?
+
+#### imagebbs.net
+
+Online documentation, someday.
+
+#FIXME# Some items here duplicate those of "Setting Up Image BBS 3.0" section. Combine them somehow.
+
+## Getting Things Going
+### Designating Drives
+### Copying Files
+### Boot Disk
+
+IMPORTANT: Copy `im` to `i*` module disk for error recovery.
+
+### Configuring Your BBS
+#### Setting Up a New System
+##### Clock Set Method
+##### Device/Drive Assignments
+##### Entering BBS Information
+#### Upgrading from Image 1._x_
+#### Upgrading from Image 2.0
+#### Shared Image 3.0 Setup
+### The `IM` Configuration Editor
+
+#TODO#: Cross-reference more in-depth `IM` chapter.
+
+#### Modem/Telnet Bridge Setup
+
+##### Telnet BBSes and Bridge Software
+##### `tcpser 1.1rc1`
+
+#TODO#: mention jbrain GitHub repo, not FozzTexx repo
+ (Ray tested that, it didn't work as well?)
+ 
+##### `tcpser4j`
+#### BBS Server
+#### #TODO# VSPE - Al
+#### #TODO# any others?
+
+### Booting Up
+### The Idle Screen
+### The Bottom Screen Mask
+### The Bottom Status Line
+### Setting The Time Manually
+### Idle Mode Command Keys
+### The Lightbar
+### `e.idle _weekday_` Logging
+
+## Logging On
+### Console Logon
+### Remote Logon
+### Graphics Modes
+### Logon Options
+#### Instant Logon
+#### Logoff
+#### Mail Check
+#### Redetect Graphics Mode
+#### #TODO# Toggle Linefeeds
+### BBS Reservations
+#### Network Reservation
+#### Sysop Reservation
+### `NEW` Users
+### `RES` Users
+### `VISITOR` Account
+### Security Questions
+### Login Modules
+### The Bottom Screen Mask After Logon
+### What Now?
+#### Editing System Info Files
+#### RELedit: Editing Sub-Boards/Libraries
+
+IMPORTANT: Make these the first 2 chapters.
+Maintenance and configuration are really important sysop tasks.
+
+## Main Prompt Maintenance Commands
+### `CP`    Online File Copier
+### `DE`    Direct download editor (DX)
+### `ECS`   Extended Command Set Editor
+### `ED`    User Editor
+### `IM`    Image Configuration
+### `MENU`  Menu Editor
+### `MU`    Message Move Utility
+### `NW`    Edit/Kill/View/Weed Netwall
+### `R`     Run i* or +.* File
+### `RELRD` RELative File Reader
+### `RF`    Read PRG/SEQ/REL Files
+### `RP`    Read Program File
+### `RS`    Reserve an Account
+### `SF`    Sysop`'s File Editor
+### `UU`    User View (Graphic Menu)
+### `VL`    Variable List
+
+## All Level Maintenance Commands
+### `BFx,y` Blocks Free              
+### `CA`    Add Credits To User      
+### `DCx,y` Disk Command             
+### `DRx,y` Disk Directory           
+### `FG`    Force Garbage Collect    
+### `ME`    Change ID to another User
+### `MM`    Memory Management        
+### `RDx,y` Read SEQ File                
+### `RF` Read REL File
+### `RS` Reserve an Account
+### `VF` View Feedback + Logs
+### `WF` Write/Edit File #FIXME: Missing from menu?#
+### `ZZ` Toggle Pseudo-Local Mode
+
+### Weeding Old Users
+### Nightly AutoMaint
+### Hourly NetMaint
+
+## Main Level Commands
+### `CM` Credit Mall
+### `DX` Direct Download
+### `JA` Jerk Award
+### `UB` User Biographies
+
+## All Level Commands
+### `?`	Help Menus
+### `AT` C/G-ASCII-ANSI Mode Translation
+### `BA` Board Activity Register
+### `C`	Chat Request/Chat Mode
+### `CF` System Information
+### `EP` Edit Parameters
+#### `I` Info
+#### `P` Parameters
+### `F`	Feedback
+### `LD` Last Call Date
+### `LG` Activity Log
+### `LN` List NetNodes/Show Maps
+### `MN` Toggle Cursor Menu Mode
+### `MP` Toggle "...More (Y/n)?" Prompt
+### `MX` Make/Edit Personal Macros
+### `NU` New User Message
+### Logging Off
+#### `O!` Instant Logoff
+#### `O%` Save Last Call Date
+#### `O%!` Instant + Save Last Call Date
+### `PM` Toggle Prompt Mode
+### `PS` Personal Signatures
+### `PW` Change Your Password
+### `QM` Quick Mail
+### `ST` Status
+### `SY` Read a Saying
+### `T` Time and Date
+### `TT` Top Ten Users
+### `TZ` Select a Time Zone
+### `XP` Toggle Expert Mode
+
+### Entering/Changing Subsystems
+
+### Command Stacking
+
+## Sub-Boards
+### Message Base System
+### Moving to Another Sub-Board
+### `L`  `Lx` Listing Sub-Boards
+### `Sx` `SA` `SN` Scanning Bulletins
+#### Bulletin Status Indicators
+### `A`  `Ax` About Bulletins
+### `RA` `RN` Reading Bulletins
+### New Messages
+### `P` Posting New Bulletins
+#### `^` Frozen Bulletins
+### `Kx` Killing Bulletins
+### `Ex` Editing Bulletins
+
+#### Subop Commands
+##### `KO` / `KA` Kill Old/Kill All Messages
+
+### Anonymous/Password/Non-Anonymous Boards
+
+## Upload/Download/Exchange Subsystem
+### Moving to Another Library
+### PR      Upload/Download Protocol
+### U       Single File Upload
+### UM      Upload Multiple files
+### D       Single file download
+### DM      Download Multiple files
+### L  Lx   List files
+### Kx Ex   Kill Directory Entry/Scratch File
+### Ex      Edit File Details
+### Rx      Read SEQuential/PRoGgram Files
+### Vx	Validate files
+### Copy/move files
+### Subops
+
+### UX  Full disk exchange libraries
+### Free UD/UX library
+
+## Electronic Mail Subsystem
+### #, Return  Read E-mail
+### D Delete e-mail
+### FR Personal file storage
+### L List e-mail
+### R  Rx   Respond To a Message
+### S Send Private E-mail
+### V Verify User`'s E-mail
+### VE Verify/Edit E-mail
+### FM Write/Erase Forced E-mail
+### NetMail Commands
+#### LN List Active Nodes
+#### NA List All Nodes
+#### NIx Node _x_ Information
+#### NM Network Node Map
+#### NS Send NetMail
+
+## News Subsystem
+### `A` Add a news file
+### `R`, `Return` Read next news item
+### `K`, `Kx` Kill news files
+### `E`, `Ex` Edit news files
+### `L`, `Lx` Listing news files
+
+## General Files Libraries
+### Movie file library
+### Modules library
+### RLE file library
+### Text file library
+### d.name  Making Subdirectories
+### A Add a File
+### # Enter a Subdirectory or run a file
+### K  Kx   Kill a Subdirectory or File
+### E  Ex   Edit a Subdirectory or file
+### L  Lx   List Files
+
+## BBS Database Subsystem
+### A Add a BBS
+### D Display BBS notes
+### E Edit BBS flags
+### L List BBSes
+### R Remove a BBS
+
+## Voting Booth subsystem
+### A Add a Topic
+### K Kill a Topic
+### _#_ Vote/view Results
+### L List Topics
+
+## User List Subsystem
+### Q Quick Listing
+### R Regular Listing
+
+## Image Text Editor
+### Entering text
+### Editing Control Keys
+### Dot commands
+#### New dot command prefix: `/`
+#### Line Ranges
+### .A / .Q Exiting the editor
+### .R / .M Reading what you have typed
+### .L Listing lines
+### .Q Querying buffer
+### Manipulating text
+#### .B Banner Text
+#### .C Column width
+#### .D Delete line (range)
+#### .E Edit line (range)
+#### .Y Move line (range)
+#### .Z Copy line (range)
+### Editor modes
+#### .I Line Insert mode
+#### .O Line Numbering mode
+#### .T Text transfer mode
+### .J Justify text
+#### Center
+#### Expand
+#### Indent
+#### Packed
+#### Left
+#### Right
+#### Un-Indent
+### .N Starting over
+### .F / .K Searching for or replacing text
+### Disk Access
+#### .G / .P Get/Put File
+#### .S Save Text
+#### .& Read Text File
+#### .! DOS Command #FIXME# still available?
+### .? / .H Getting Help
+### Message Command Interpreter (MCI)
+
+## Online Terminals
+### Image Term
+#### Terminal Menus
+##### The Phone Book
+##### File Operations
+### `MT` Mini Terminal
+
+## Miscellaneous Modules
+
+`i.alpha/ind`
+
+## Credit Pool
+### Setup
+### AutoMaint module
+
+## Offline Utilities
+### `copy-all.64l`
+### `edata edit`
+### `fcopy+`
+### `image mod maker`
+### `image seq reader`
+### `rel copier`
+### `uconfig edit`
+
+## Image BBS Networking
+### Planning a Network
+### Joining an Existing Network
+### Network Utilities
+#### `i.NM/util`
+
+## VersatIle Commodore Emulator
+### RS232 Options
+### Serial I/O Options
+#### FD4000 ROMs
+
+#TODO# Incorporate Jay Campey`'s Facebook post on how to set this up.
+
+#### JiffyDOS ROMs
+
+#TODO# Mention http://www.go4retro.com is a licensed distributor of physical JiffyDOS and emulator ROM images.
+
+## Appendices
+### Command Summary
+### Lightbar Summary
+### Troubleshooting, Q&A
+
+## Index
