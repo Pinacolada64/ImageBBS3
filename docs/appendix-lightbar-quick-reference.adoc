@@ -11,26 +11,51 @@ TODO: Quick summaries of lightbar flags in 3-column tables. Find out how to bala
 | `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D` 
 |====================
 
-[width="100%",options="header", options="autowidth"]
+// cols="2a" enables nested tables (for function keys) in that column
+
+[width="100%",options="header", options="autowidth", cols="1,2a,3"]
 |====================
 | Option | Left | Right 
 
 | `Sys`
-| Enable sysop chat availability. If kbd:[C] typed at any major prompt, alerts will sound. Chat reason logged to `e.log _weekday_`.
-| x
+| Enable sysop chat availability.
+If kbd:[C] typed at any major prompt, alerts will sound.
+Chat reason logged to `e.log _weekday_`.
+| Background page enable. Chat page plays continually until chat page answered or user logs off
 
 | `Acs`
-| Change access level of user. kbd:[f3] increases level, wraps from 9 to 0. kbd:[f5] decreases level, wraps
-from 0 to 9. kbd:[f7] exits.
+| Change user access level.
+
+// Nested table
+[cols="1,2",options="autowidth"]
+!===
+! kbd:[f3] ! increases level, wraps from 9 to 0.
+! kbd:[f5] ! decreases level, wraps from 0 to 9.
+! kbd:[f7] ! exits.
+!===
+
 | Disable 300 baud users from logging in.
 
 | `Loc`
-| x
-| x
+| Local mode login. Log in to the BBS from the C64.
+| Pseudo-local mode. Enables maintenance commands.
 
 | `Tsr`
-| x
-| x
+| Change time remaining.
+
+// Nested table
+[cols="1,2",options="autowidth"]
+!===
+! kbd:[f1] ! zeroes time
+! kbd:[f2] ! unlimited time (`--:00` displays)
+! kbd:[f3] ! +1 minute
+! kbd:[f4] ! +10 minutes
+! kbd:[f5] ! -1 minute
+! kbd:[f6] ! -10 minutes
+! kbd:[f7] ! sets selected time limit
+!===
+
+| Toggle Prime Time
 
 | `Cht`
 | x
@@ -87,8 +112,10 @@ from 0 to 9. kbd:[f7] exits.
 | x
 
 | Trc
-| Enable BASIC line execution trace. Slow down with kbd:[Shift] or kbd:[Shift-Lock]. Normally only used for debugging.
-| Undefined.
+| Enable BASIC line execution trace.
+Slow down with kbd:[Shift] or kbd:[Shift-Lock]. 
+Normally only used for debugging.
+| _Undefined_
 
 | Bel
 | x
@@ -126,7 +153,8 @@ from 0 to 9. kbd:[f7] exits.
 
 | Chk
 | x
-| Excessive chat logoff. If the user requests more unanswered chat pages than there are `s.chat _x_` screens, the user is logged off as soon as possible.
+| Excessive chat logoff.
+If user requests more unanswered chat pages than `s.chat _x_` screens, user is logged off as soon as possible.
 
 | Mor
 | x
@@ -171,7 +199,7 @@ from 0 to 9. kbd:[f7] exits.
 .Lightbar, page 4
 [width="100%",cols="8*^"]
 |====================
-| `Em3` | `Sc2` | `Scp` | `Alt` | `$38` | `$3a` | `$3c` | `$3e` 
+| `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e` 
 |====================
 
 [width="100%", options="header", options="autowidth"]
@@ -179,83 +207,48 @@ from 0 to 9. kbd:[f7] exits.
 | Option | Left | Right
 
 | Em3
-| x
-| x
+| Run Image 1._x_ `+` files
+| _Undefined_
 
 | Sc2
-| x
-| x
+| Second login security question asked
+| _Undefined_
 
 | Scp
-| x
-| x
+| CMD SuperCPU connected to system
+| CMD SuperCPU operating in 20 mHz mode
 
 | Alt
-| x
-| x
+| Display idle screen last ten callers in different colors
+| _Undefined_
 
-| $38
-| x
-| x
+| Trb
+| Checked: Don`'t display values of variables in programmable window for troubleshooting purposes
+| _Undefined_
 
-| $3a
-| x
-| x
+| DCD
+| #TODO#
+| #TODO#
 
-| $3c
-| x
-| x
+| DSR
+| #TODO#
+| #TODO#
 
 | $3e
-| x
-| x
+| _Undefined_
+| _Undefined_
 
 |====================
 
 
- Emulate Image 1.2/1.3 mode    48 Em3 49   Undefined
+ Emulate Image 1.x mode        48 Em3 49   Undefined
  Disable 2nd Security Check    50 Sc2 51   Undefined
  SuperCPU Present              52 Scp 53   Turbo Mode On
  Alt last 10 callers display   54 Alt 55   Undefined
- Disable Troubleshooting Mode  56 $38 57   Undefined
-
-[width="100%", options="header", options="autowidth"]
-|====================
-| Option | Left | Right
-
-| Em3
-| x
-| x
-
-| Sc2
-| x
-| x
-
-| Scp
-| x
-| x
-
-| Alt
-| x
-| x
-
-| $38
-| x
-| x
-
-| $3a
-| x
-| x
-
-| $3c
-| x
-| x
-
-| $3e
-| x
-| x
-
-|====================
+ Disable Troubleshooting Mode  56 Trb 57   Undefined
+ TODO                          58 DCD 59   TODO
+ TODO                          60 DSR 61   TODO
+ 
 
 .Lightbar, page 5
 [width="100%",cols="8*^"]

@@ -153,13 +153,13 @@ Adjust time remaining for the user online. The time remaining is shown in the bo
 
 [options="autowidth"]
 |==========
-|`f1` | zeroes time (log off at earliest opportunity)
-|`f2` | gives unlimited time (`--:00` displays)
-|`f3` | +1 minute
-|`f4` | +10 minutes
-|`f5` | -1 minute
-|`f6` | -10 minutes
-|`f7` | gives the user the selected time limit, exiting this function
+| kbd:[f1] | zeroes time (log off at earliest opportunity)
+| kbd:[f2] | gives unlimited time (`--:00` displays)
+| kbd:[f3] | +1 minute
+| kbd:[f4] | +10 minutes
+| kbd:[f5] | -1 minute
+| kbd:[f6] | -10 minutes
+| kbd:[f7] | gives the user the selected time limit, exiting this function
 |==========
 
 `Tsr` right: _Prime Time Enabled_
@@ -250,6 +250,8 @@ However, they may also need a linefeed character to move the cursor to the next 
 (Without one, the user will probably complain that "`everything displays on one line.`"
 
 TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] to resolve this problem.
+
+#TODO# Add `Toggle Linefeeds` option to `i/lo.login`
 
 ---
 
@@ -422,7 +424,6 @@ If enabled, when the user first connects to the BBS, they have the option kbd:[X
 
 If enabled, the user will see a file called `s.detect` at login instead of a specific message about their graphics mode.
 
-#TODO#: DCD/DSR checkmarks got put somewhere
 
 .Lightbar, page 4
 [width="100%",cols="8*^"]
@@ -461,29 +462,29 @@ If enabled, the CMD SuperCPU is operating in 20 mHz mode.
 
 `Alt` left: _Alt last 10 callers display_
 
-If enabled, this displays the idle screen last ten callers display in different colors.
+If enabled, this displays the idle screen last ten callers list in different colors.
 
 `Alt` right: _Undefined_
 
 ---
 
-`$38` left: _Disable Troubleshooting Mode_
+`Trb` left: _Disable Troubleshooting Mode_
 
 If enabled, the programmable window will not display variable values for debugging.
 
-`$38` right: _Undefined_
+`Trb` right: _Undefined_
 
 ---
 
-`$3a` left: _Undefined_
+`DCD` left: #TODO#
 
-`$3a` right: _Undefined_
+`DCD` right: #TODO#
 
 ---
 
-`$3c` left: _Undefined_
+`DSR` left: #TODO#
 
-`$3c` right: _Undefined_
+`DSR` right: #TODO#
 
 ---
 
@@ -565,19 +566,20 @@ Pages 5-7 are undefined and are available for your own use.
 
 ### Alarm Triggers
 
-TODO
+#TODO#
 
 ### NetMail Triggers
 
-TODO
+#TODO#
 
 ### Lightbar Interface: `&,52` [[lightbar-interface]]
 
 `&,52,_position_,_mode_`
 
-`position` ranges from 0-127 decimal ($00-$7f hexadecimal--`&,52,$30,0`, for example, is allowed). 
+`position` ranges from 0-127 decimal (`$00`-`$7f` hexadecimal--for example, `&,52,$30,0` is allowed). 
 
-`mode` is 0-4 as used by BASIC. Mode 5 is reserved for use by ML routines, and discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
+`mode` is 0-4 as used by BASIC.
+Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
 
 [options="autowidth"]
 |====================
@@ -585,5 +587,5 @@ TODO
 | `1` | set checkmark at _position_
 | `2` | toggle checkmark at _position_
 | `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on 
-| `4` | move "`lit`" portion of lightbar to position 0-55 [FIXME: or 1-56?] 
+| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?] 
 |====================

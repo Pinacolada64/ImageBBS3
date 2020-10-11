@@ -4,9 +4,9 @@
 ## Setting Up Image BBS 3.0
 
 Setting up your BBS should be very simple, as long as you follow the instructions.
-We suggest you read this chapter carefully and then setup your system step by step, keeping the manual handy for reference.
+We suggest you read this chapter carefully and then set up your system step by step, keeping the manual handy for reference.
 
-The configuration section also has built in help to get you configured fast and easily.
+// The configuration section also has built in help to get you configured fast and easily.
 
 ### Hardware Considerations
 
@@ -16,7 +16,7 @@ Image BBS v3.0 was tested on the following hardware:
 
 * Lt. Kernal (or Rear Admiral) hard drive with SwiftLink or normal User Port configurations using BBS Server as the "`modem`".
 
-* Creative Micro Designs`' (or ThunderDrive) Hard Drive with SwiftLink and normal User Port Configurations using BBS Server as the "`modem`".
+* Creative Micro Designs`' (or ThunderDrive) Hard Drive with SwiftLink, and normal User Port configurations using BBS Server as the "`modem`".
 
 * uIEC/SD by Jim Brain as a mass storage device.
 
@@ -24,8 +24,8 @@ Although we have not tested this software on a great deal of other hardware, it 
 
 ### Getting Started
 
-Now that you are ready to set up your IMAGE BBS, we recommend that the first thing you do is back up the file(s) you received the BBS Software in, then keep them in a safe place.
-Copying the files out of the original disk images we recommend you use FCOPY+ for all the PRG, SEQ files, and COPY-ALL.64L written by Jim Butterfield for the REL files.
+Now that you are ready to set up your IMAGE BBS, we recommend that the first thing you do is back up the file(s) you received the BBS software in, then keep them in a safe place.
+Copying the files out of the original disk images we recommend you use `fcopy+` for all the PRG, SEQ files, and `copy-all.64l` written by Jim Butterfield for the REL files.
 
 ### Designating Drives
 
@@ -45,68 +45,66 @@ A 1581 drive allows 296 directory entries, while an SFD allows 224, etc.
 Check your drive manual to see what the limitation is.
 "`Drive space`" or "`blocks free`" mentioned here will refer to actual blocks used/unused on the drive.
 
-When referring to “Image Drive” we are talking about the six “Image Drive” assignments.
-Each “Image Drive” will be assigned a device number and a drive number.
+#### Image Drive Numbers
 
-Now you will want to plan out which disks you want to use for which functions on the BBS.
-There are six "Image Drives" for system functions.
-These can be combined in any form on any drive or number of drives.
-They are described as follows:
+The term "`Image drive`" refers to six categories of files used by Image BBS for system functions.
+Each Image drive may be assigned to separate disks or partitions, or several Image drives can be combined onto a single disk or partition.
+Your drive layout will depend on the type and capacity of your storage devices.
+
+The six "`Image drives`" are described as follows:
 
 [start=1]
 . The "`System Disk`"
 
-Contains mostly sequential text files that do _not_ change often.
+Contains mostly SEQuential (text) files that do _not_ change often.
 Menu files, board entry files, and board data files are all included on this disk.
 Also, system news files will be located here.
 Will not use too much directory or drive space.
-All files on this disk will have a prefix of `s.`, except news files, which will be prefixed with `n.`.
+Most files on this disk have a prefix of `s.`, except news files, which are prefixed with `n.`.
 
 [start=2]
-. The "E-Mail Disk”
+. The "`E-Mail Disk`"
 
-Contains all user Email and forced mail files.
+Contains all user e-mail and forced mail files.
 Will use much more directory space than disk space.
-All mail files are stored with a prefix of `m.`, while forced mail files use a prefix of `f.`.
-If the BBS is networked, all `nm.` files will also be stored here.
+All mail files have a prefix of `m.`, while forced mail files have a prefix of `f.`.
+If the BBS is networked, network mail files with a prefix of `nm.` are also stored here.
 
 [start=3]
 . The "`Etcetera Disk`"
 
-Contains miscellaneous files used to supply the system with information.
+All files on this disk are prefixed with `e.`.
+They contain miscellaneous files used to supply the system with information.
 Many online games and functions use one or more `e.` files to store data.
 Some of these files are RELative files, and most of them change frequently.
-All files on this disk are prefixed with an `e.`.
 Storage depends on the number and type of online games and programs you are using.
 If no online programs use the Etcetera disk, it will not use too much disk or directory space.
 
 [start=4]
-. The Directory Disk
+. The "`Directory Disk`"
 
-Contains all directories used on the system, whether for sub-boards, U/D libraries, general
-file libraries, or whatever. 
-These files begin with a `d.`.
+Contains all directories used on the system, whether for sub-boards, U/D libraries, general file libraries, or whatever.
+These files have a prefix of `d.`.
 These files change often, and this disk will use a fair amount of directory space, but not too much disk space.
 
 [start=5]
-. The "Program Disk"
+. The "`Program Disk`"
 
-Contains all system module files needed to run the system.
-These are BASIC or ML modules that load in when needed to execute functions.
-These files are all the files found on the IMAGE 3.0 D1 disk.
-They are the main operating system of the BBS and use several prefixes which will be explained in more detail in the #TODO# Sysop Guide section of this manual.
-They do not change, unless modified off line. 
+Contains module files--BASIC or ML programs--that load in when needed to execute functions.
+They are the main operating system of the BBS and use several prefixes (`i`, `sub.` and `++`) which will be explained in more detail in the #TODO# Sysop Guide section of this manual.
+They do not change, unless modified offline. 
+
+These are all the files found on the `IMAGE 3.0 D1` disk.
 
 [start=6]
-. The "User Disk"
+. The "`User Disk`"
 
 Contains all user data files, which are expanded as needed.
-These are one relative file (`u.config`) and two program files (`u.index` and `u.weedinfo`) that keep all user information available to the system.
-These files begin with a "u.".
+There is one REL file (`u.config`) and two PRG files (`u.index` and `u.weedinfo`) that keep all user information available to the system.
 Three directory entries, a little over one block per user total.
 
-NOTE: Different devices and drives can also be assigned to each sub-board in the SB section, U/D library in the U/D section, U/X drive in the U/X section, and any file defined as accessible from the GF section such as games, text files, movie files, etc.
-These need not be the same as any of the system functions, but may be included within those drives if so desired.
+NOTE: Device and drive numbers other than the six Image drives can be assigned to individual sub-boards in the SB section, U/D or U/X libraries in the U/D or U/X sections, and items in the GF section (games, text files, movie files, etc).
+As an example, you can assign a movie file entry in the GF section to device 11, drive 6 instead of Image drive 1 (the `s.` disk) if you had more storage space available there, or wanted to put your movie files on a separate partition.
 
 ## Configuration Options
 
@@ -132,13 +130,13 @@ You`'ll probably want another drive or partition for the message boards and anot
 
 2.	Either convert the three .d81 and two .d64 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-3.	Use `fcopy+` included on the 3.0 UTILS disk for copying all the files from disk 1 to your “Program Disk”. 
+3.	Use `fcopy+` included on the 3.0 UTILS disk for copying all the files from disk 1 to your "`Program Disk`". 
 
-4. 	I recommend using COPY-ALL.64L, also included on the 3.0 UTILS disk for copying all the e. files from disk 2 to your “Etcetera Disk”.
+4. 	I recommend using COPY-ALL.64L, also included on the 3.0 UTILS disk for copying all the e. files from disk 2 to your "`Etcetera Disk`".
 
-5.	Use `fcopy+` to copy all the s.files to your “System Disk” and the nm.times file to your “E-Mail Disk”.
+5.	Use `fcopy+` to copy all the s.files to your "`System Disk`" and the nm.times file to your "`E-Mail Disk`".
 
-TIP: If you wish to run the Today in History logon module, copy all the `today.*` files to your “Etcetera Disk”.
+TIP: If you wish to run the Today in History logon module, copy all the `today.*` files to your "`Etcetera Disk`".
 
 6. The file `sub.modem` is customized for use with BBS Server using DTR as carrier detect.
 Line 60080 contains `print#131,chr$(27)` for setting the Hayes ATtention character to Escape (this was done to avoid BBS Server hanging up when it saw `+++`).
@@ -149,7 +147,7 @@ If you intend to use a SwiftLink, Turbo232, or a clone of these on the cartridge
 
 ### Installation
 
-1.	Access the device and drive of your “Program Disk” then type: `load"boot",_x_,1`  (_x_= device # of your boot drive)
+1.	Access the device and drive of your "`Program Disk`" then type: `load"boot",_x_,1`  (_x_= device # of your boot drive)
 2.  When prompted type kbd:[1] to Configure a New BBS.  
 3.	Image will begin collecting information needed to configure 3.0.
 4.	Part I: Sysop Information - Enter the information asked for. 
@@ -277,7 +275,7 @@ Select RS232 Interface Type: 0
 Is Caller ID Available (Both Modem AND Phone Line): 0
 ----
 
-The BBS will create a file on the “Etcetera Disk” then display a Setup Completed message.
+The BBS will create a file on the "`Etcetera Disk`" then display a Setup Completed message.
 Ignore the statement about doing customized result codes. 
 Then hit a key to return to the Modem Config page.
 Review your settings and if any changes need to be made, type the corresponding number (such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type 2 and select E).
@@ -325,7 +323,7 @@ NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work 
 
 1.	Make a complete backup of all your Image 1.2 drives.
 2.	You will need two new Image drives (partitions) or use two locations not already assigned as Image 1.2 drives.
-They will be used for your Image 3.0 “Program Disk” (DR5) and your 3.0 “System Disk” (DR1).
+They will be used for your Image 3.0 "`Program Disk`" (DR5) and your 3.0 "`System Disk`" (DR1).
 
 IMPORTANT: _Do not_ delete any of your Image 1.2 files unless otherwise told to do so.
 
@@ -333,11 +331,11 @@ Alternately, if you have enough hard drive space, such as on a CMD hard drive, y
 
 3.	Either convert the two .d81 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-4.	Either use fcopy+ included on the 3.0 UTILITIES disk or log onto your 1.2 system in local mode and use +.CP for copying all the files from disk 1 to your NEW 3.0 “Program Disk”.  Copy all e. files EXCEPT for the rel files from IMAGE 3.0 D2 to your “Etcetera Disk”.
+4.	Either use fcopy+ included on the 3.0 UTILITIES disk or log onto your 1.2 system in local mode and use +.CP for copying all the files from disk 1 to your NEW 3.0 "`Program Disk`".  Copy all e. files EXCEPT for the rel files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
 
-5.	Use fcopy+ or +.CP to copy all the s.files to your NEW 3.0 “SYSTEM Disk” and the  nm.times file to your EXISTING 1.2 mail drive.
+5.	Use fcopy+ or +.CP to copy all the s.files to your NEW 3.0 "`SYSTEM Disk`" and the  nm.times file to your EXISTING 1.2 mail drive.
 
-If you want to keep your existing news files and canned message files, copy the `n.*` and `s.can*` files from your 1.2 system drive to your 3.0 “System Disk”. 
+If you want to keep your existing news files and canned message files, copy the `n.*` and `s.can*` files from your 1.2 system drive to your 3.0 "`System Disk`". 
 
 IMPORTANT: How to edit your `bd.data` file.
 
@@ -349,7 +347,7 @@ Lines 1 through 12 identify your Image drive assignments.
 4. Edit line 9 and 10 for your NEW 3.0 Program Device and Drive numbers.
 5. Edit any other drive assignments that may have changed. 
 6. List the file and make sure everything is correct.
-SAVE that file as `d.data` (__not__ `bd.data`) to your NEW 3.0 “Program Disk”.
+SAVE that file as `d.data` (__not__ `bd.data`) to your NEW 3.0 "`Program Disk`".
 
 6.	IMPORTANT STEP – 
 
@@ -367,9 +365,9 @@ Then shut down your computer.
 NOTE: heading, idunno. transfer correct info here?
 
 a.  	The file `sub.modem` is customized for use with BBS Server using DTR as carrier detect.  Line 60080 contains print#131,chr$(27) for *lowering DTR #FIXME#*. If you are using a virtual modem such as tcpser and need to use escape codes for disconnecting the caller from the BBS, you may need to change the (27) to (43).
-b.	The file “im” line 3082 is preconfigured for running Image 3.0 from the User port. If you intend to run from the cartridge port using a Swiftlink clone change &,16,. at the end of that line to &,16,1
-c.	The file “im” line 3074 is preconfigured to run from drive 0. This is the default partition on most drives but if running on a Lt. Kernal and your boot LU is not LU0, change the “0” in line 3074 to the number of your boot LU.
-1.	Turn on your computer and go to your new 3.0 “Program Disk”. Type:  load"boot",x,1  (x= device # of your “Program Disk”)
+b.	The file `im` line 3082 is preconfigured for running Image 3.0 from the User port. If you intend to run from the cartridge port using a Swiftlink clone change &,16,. at the end of that line to &,16,1
+c.	The file `im` line 3074 is preconfigured to run from drive 0. This is the default partition on most drives but if running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line 3074 to the number of your boot LU.
+1.	Turn on your computer and go to your new 3.0 "`Program Disk`". Type:  load"boot",x,1  (x= device # of your "`Program Disk`")
 2.  	When prompted, type 2 to Convert from Image 1.2.
 3.	Clock setting: - You will be asked to select a method of setting Image Time automatically during boot up.  For this installation method, select (1) Manually. You will be able to change that later during configuration.
 4.	At this point, Image will create several files needed for its own operation.  It will read the Image drive assignments and access group information from "d.data" and use that information to create a new "bd.data" file on its own Program Disk, modify the existing e.data file with expanded 3.0 information and create a new file called "e.access".  When finished, Image will self boot to the call waiting screen.
@@ -377,7 +375,7 @@ c.	The file “im” line 3074 is preconfigured to run from drive 0. This is the
 ### Configuration
 
 1.	At the System Idle screen, hit the number 1 key to set the time. Image will perform auto maintenance and return to the Idle screen.
-2.	Press the f1 key to go to full screen mode then press the f7 key to log on. Press the “I” key for Instant Login. 
+2.	Press the f1 key to go to full screen mode then press the f7 key to log on. Press the "`I`" key for Instant Login. 
 3.	If asked, type your password. The BBS will greet you with a welcome message and then prompt you to select your time zone.
 4.	Select your time zone (7=EST, 6=CST, 5=MST, 4=PST)
 5.	Enter the number of lines per screen (suggest 23)
@@ -439,7 +437,7 @@ This will ask any user who is still configured with a phone number in their `u.c
 
 20.	Type kbd:[Q] to quit back to the Main prompt.
 
-21.	If you had macros defined in your 1.2 system and want to keep them, you will need to edit the `e.macros` file, otherwise, just delete it. To edit the `e.macros` file, use the RF command at the Main prompt to read the Relative File `e.data`. Read “All” the records to see how many macros you have defined. Then read “e.macros” again and view record 1. Edit record 1 by changing it to a number equal to 1 less than the total number of macros you previously viewed.
+21.	If you had macros defined in your 1.2 system and want to keep them, you will need to edit the `e.macros` file, otherwise, just delete it. To edit the `e.macros` file, use the RF command at the Main prompt to read the Relative File `e.data`. Read "`All`" the records to see how many macros you have defined. Then read "`e.macros`" again and view record 1. Edit record 1 by changing it to a number equal to 1 less than the total number of macros you previously viewed.
 22.	Read the <<final-notes>> on the last page of these instructions.
 
 From here, explore and become familiar with the new features. 
@@ -461,23 +459,23 @@ Other ways may work but have not been tested.
 Since you are already running Image 2.0, keep the same Image drive assignments for the 3.0 upgrade.
 
     1. Make a complete backup of all your Image 2.0 drives.
-    2. Copy `bd.data` from your programs drive to your “Etcetera Disk”.
-    3. Remove all your 2.0 boot and program files from your “Program Disk”.
-4. Copy all the files from IMAGE 3.0 D1 to your “Program Disk”.
+    2. Copy `bd.data` from your programs drive to your "`Etcetera Disk`".
+    3. Remove all your 2.0 boot and program files from your "`Program Disk`".
+4. Copy all the files from IMAGE 3.0 D1 to your "`Program Disk`".
 
-5. Copy `bd.data` from the “Etcetera Disk” to the “Program Disk” and rename it to “d.data”.
+5. Copy `bd.data` from the "`Etcetera Disk`" to the "`Program Disk`" and rename it to "`d.data`".
 
-6. Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your “Etcetera Disk” replacing the existing files of the same name.
-    7. Remove all the Image 2.0 s. files from your “System Disk”.
+6. Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your "`Etcetera Disk`" replacing the existing files of the same name.
+    7. Remove all the Image 2.0 s. files from your "`System Disk`".
     
 CAUTION: What if you've written custom board entry files or login screens?
 
 [start=8]
-8. Copy all the s. files from IMAGE 3.0 D2 to your System Disk”.
+8. Copy all the s. files from IMAGE 3.0 D2 to your System Disk`".
 
-9. If you want to run the “Today in History” login module in 3.0, copy all the “today.*” files from IMAGE 3.0 D2 to your “Etcetera Disk”.
+9. If you want to run the "`Today in History`" login module in 3.0, copy all the "`today.*`" files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
 
-10. From your “Program Disk”, type `load”boot”,8,1` (or the Lt. Kernal or the JiffyDOS equivalent `%boot`)
+10. From your "`Program Disk`", type `load`"boot`",8,1` (or the Lt. Kernal or the JiffyDOS equivalent `%boot`)
 
 11. When prompted, type kbd:[3] to _Convert a 2.0 system_.
 
@@ -495,7 +493,7 @@ CAUTION: What if you've written custom board entry files or login screens?
 
 18. Configure your Lightbar Defs. 
 
-19. When back at the IM Configuration Editor, select the option for “Base Editors”. This will take you to the menu page that used to be called by the SM command in 2.0. You shouldn’t have to do anything there but you can look around if you want to. When done, use the Quit option to go back to the Configuration Editor and Quit from there back to the Main prompt.
+19. When back at the IM Configuration Editor, select the option for "`Base Editors`". This will take you to the menu page that used to be called by the SM command in 2.0. You shouldn’t have to do anything there but you can look around if you want to. When done, use the Quit option to go back to the Configuration Editor and Quit from there back to the Main prompt.
 
 20. Enter NF to go to the News files and configure any news files needing to be edited, added or configured. (`n.$Welcome!`) Quit back to the Main prompt when done.
 

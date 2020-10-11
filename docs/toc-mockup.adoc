@@ -1,6 +1,6 @@
 :toc: left
 
-# Image BBS 3.0 table of contents mock-up
+# Image BBS 3.0 Table of Contents Mock-Up
 
 NOTE: This is just a plain text version of the in-progress Image 1.2b sysop guide, to remind me which sections belong where.
 It is being updated for Image BBS 3.0.
@@ -20,31 +20,44 @@ NOTE: I have decided to remove the `'-ing'` suffix (Read, View, Edit instead) fr
 
 Al wrote these.
 
-### Product Information
-## Why a New Version?
-## What`'s New
-### Sysop Features
-### User Features
-### Programming Features
+## Product Information
+### Why a New Version?
+### What`'s New
+#### Sysop Features
+#### User Features
+#### Programming Features
+### Support Channels
+#### NISSA BBSes
+
+List them, addresses
+
+#### Social Media
+
+Facebook, Brent's forum, Google Hangouts?
+
+#### imagebbs.net
+
+Online documentation, someday.
 
 Ryan is writing these.
 
-## Setting Up Image BBS 3.0
-### Supported Hardware
-#### Disk Drives
-#### Mass Storage
-##### CMD HD
-##### Lt. Kernal HD
-##### SD2IEC
-##### 1541 Ultimate
-### Image BBS Drive Numbers
+### No Warranty
+
+## Supported Hardware
+### Disk Drives
+#### Image Drives
+### Mass Storage
+#### CMD HD
+#### Lt. Kernal HD
+#### SD2IEC
+#### 1541 Ultimate
 ### Modems
-### RS-232 Bridges
-### Printers
+#### RS-232 Bridges
+#### TelBBS Cable
 ### Interfaces
-### RS-232 Interfaces
 #### GGlabs GLink232-LT
-#### 1541 Ultimate II+ SwiftLink Emulation
+### Printers
+### 1541 Ultimate II+ SwiftLink Emulation
 ### Fastload Options
 #### JiffyDOS
 
@@ -60,10 +73,12 @@ A lot of this is from 1.2, some newer hardware will be talked about.
 #### Clock Set Method
 ### Shared Image BBS 3.0 Setup
 
-Since a lot of steps are shared between different upgrade options, I chose to add `"Shared Image BBS 3.0 Setup`" to cut down on a few pages of duplicate instructions.
+Since a lot of steps are shared between different upgrade options, I chose to add "`Shared Image BBS 3.0 Setup`" to cut down on a few pages of duplicate instructions.
 #TODO#: Verify the steps are in fact word-for-word duplicates.
 
 ### GGlabs GLink232-LT
+
+SwiftLink clone
 
 #TODO#: This will incorporate Larry`'s docs plus re-use additional information in the expanded 1.2b docs.
 Give URL of GGlabs order page.
@@ -93,19 +108,6 @@ This probably should be in the Programmer`'s Reference Guide.
 ### Device,Drive Prompt
 ### Value of Variable
 ## Complete Module Type Listing
-
-### Support Channels
-#### NISSA BBSes
-
-List them, addresses
-
-#### Social Media
-
-Facebook, Brent's forum, Google Hangouts?
-
-#### imagebbs.net
-
-Online documentation, someday.
 
 #FIXME# Some items here duplicate those of "Setting Up Image BBS 3.0" section. Combine them somehow.
 
