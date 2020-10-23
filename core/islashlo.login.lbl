@@ -89,7 +89,7 @@
 	&"{f6}Additional Information:{f6}":a=int(rnd(1)*3)+1:p=.:onagosub{:4010},{:4012},{:4014}
 	ifpthenpl=.:poke53252,78:&,1,32:c$=an$
 	ifpthenon-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto{:4194},4200
-	&"{f6:2}":gosub 6:c$=an$:on-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto{:4194},4200
+	&"{f6:2}":gosub 6:c$=an$:on-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto{:4194},{:4200}
 {:4193}
 	ifpw$=z$then{:4200}
 {:4194}
