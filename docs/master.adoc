@@ -1,8 +1,9 @@
 = Image BBS 3.0 Sysop Manual
 Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2020-09-26
+v0.1, 2020-10-23
 :experimental:
 :toc: left
+:toclevels: 10
 :icons: font
 
 NOTE: Preliminary start on documentation. Feedback welcome!
