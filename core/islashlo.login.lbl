@@ -13,7 +13,7 @@
 {assign: 4500=4500}                                                                                  
 
 {number:4000}
-	rem"** i.lo.login **  6/08/95 JLF           User Login Routine           "
+	rem"** i/lo.login **  6/08/95 JLF           User Login Routine"
 	goto{:4100}
 {:4004}
 	dr=5:b$="i/lo!"+a$:a$=b$:gosub 4:close2:ife%then:&"{f6}{white}[Module {pound}$b Failed]{f6}":return
