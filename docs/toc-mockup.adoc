@@ -59,6 +59,8 @@ Only trouble is "`for profit`" phrasing.
 #### Lt. Kernal HD, Rear Admiral
 #### SD2IEC
 #### 1541 Ultimate II
+### Real-Time Clocks
+#### Dallas Semiconductor DS12C887 Emulation
 ### Modems
 #### RS-232 Bridges
 #### Telnet BBS Cable
