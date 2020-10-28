@@ -98,6 +98,8 @@ This needs work to be fully converted to ASCIIdoctor still.
 ## Boot Up
 ### Startup Files
 ### Idle Screen Display
+### Status Line
+#### Status Indicators
 
 #TODO# More stuff here later.
 

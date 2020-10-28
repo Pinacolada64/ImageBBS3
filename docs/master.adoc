@@ -14,6 +14,8 @@ include::setting-up.adoc[]
 
 include::whats-new.adoc[]
 
+include::boot-up.adoc[]
+
 include::lightbar.adoc[]
 
 include::modules.adoc[]

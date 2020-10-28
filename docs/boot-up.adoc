@@ -1,7 +1,13 @@
-## Bottom Status Line
+:toc: left
+
+## Boot Up
+### Startup Files
+### Idle Screen Display
+### Status Line
+#### Status Indicators
 
 .Function Indicators
-[width="100%",options="header,autowidth"]
+[options="autowidth",options="header"]
 |====================
 | Character | Purpose
 | `A` | Text output aborted 
@@ -12,7 +18,7 @@
 |====================
 
 .File transfer indicators
-[width="100%",options="header,autowidth"]
+[options="autowidth",options="header"]
 |====================
 | Character | Purpose
 | `F` | RS232 flow control asserted 

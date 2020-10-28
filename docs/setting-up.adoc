@@ -164,11 +164,11 @@ kbd:[3] Lt. Kernal Port 1
 
 kbd:[4] Lt. Kernal Port 2
 
-If you select kbd:[1] you will have to set the date and time after every reboot.
+If you select kbd:[1], you need to set the date and time after every reboot.
 
-If you select (2) the program will ask which device has the Creative Micro Designs Real-Time Clock option. Enter the device number of your CMD device.
+If you select kbd:[2], you are asked which device has the Creative Micro Designs Real-Time Clock option. Enter the device number of your CMD device.
 
-Options (3) and (4) are for use with Lloyd Sponenbirgh’s Real Time Clock module attached.
+Options kbd:[3] and kbd:[4] are for use with Lloyd Sponenburgh’s Real-Time Clock module attached.
 
 [start=6]
 6.	Part III: Device/Drive Settings
