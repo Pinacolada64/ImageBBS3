@@ -1,0 +1,22 @@
+## Bottom Status Line
+
+.Function Indicators
+[width="100%",options="header,autowidth"]
+|====================
+| Character | Purpose
+| `A` | Text output aborted 
+| `G` | Garbage collection occurring
+| `L` | Lt. Kernal port lock
+| `P` | Text output paused
+| `S` | Swapping data
+|====================
+
+.File transfer indicators
+[width="100%",options="header,autowidth"]
+|====================
+| Character | Purpose
+| `F` | RS232 flow control asserted 
+| `I` | Interrupts disabled
+| `L` | Loading data?
+| `O` | Overrun
+|====================
