@@ -428,14 +428,14 @@ If enabled, the user will see a file called `s.detect` at login instead of a spe
 .Lightbar, page 4
 [width="100%",cols="8*^"]
 |====================
-| `Em3` | `Sc2` | `Scp` | `Alt` | `$38` | `$3a` | `$3c` | `$3e` 
+| `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e` 
 |====================
 
 `Em3` left: _Emulate Image 1.x mode_
 
 When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls. 
 
-TIP: The main prompt kbd:[R]un command will check this lightbar flag and prompt for the appropriate module type.
+TIP: The main prompt kbd:[R]un command checks this lightbar flag and prompts for the appropriate module type.
 For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mode>>.
 
 `Em3` right: _Undefined_
@@ -470,21 +470,38 @@ If enabled, this displays the idle screen last ten callers list in different col
 
 `Trb` left: _Disable Troubleshooting Mode_
 
-If enabled, the programmable window will not display variable values for debugging.
+If enabled, the programmable window will not display variable values for debugging purposes.
 
 `Trb` right: _Undefined_
 
 ---
 
-`DCD` left: #TODO#
+`DCD` left: _Invert DCD Signal_
 
-`DCD` right: #TODO#
+*Enabled:* The modem hangs up when an inverted (asserted when high) Data Carrier Detect signal is received from the modem.
+
+*Disabled:* The modem hangs up when a normal (asserted when low) Data Carrier Detect signal is received from the modem.
+
+`DCD` right: _Carrier Present_
+
+When enabled, there is either a DCD or DSR carrier signal present.
+This can be checked for in BASIC using `&,52,$3c,3:if a% then ...`.
 
 ---
 
-`DSR` left: #TODO#
+`DSR` left: _DCD/DSR select_
 
-`DSR` right: #TODO#
+You can choose whether loss of Data Carrier Detect or Data Set Ready signals indicates there is no user connected, therefore the BBS should hang up.
+
+*Enabled*: If there is no Data Set Ready signal present, then hang up.  
+
+*Disabled*: If there is no Data Carrier Detect signal, then hang up.
+
+`DSR` right: _Show Rx/Tx Windows_
+
+If enabled, show data being received/transmitted in receive/transmit windows.
+
+TIP: At higher bits per second rates, the data is not shown to achieve maximum throughput.
 
 ---
 
