@@ -29,7 +29,7 @@
 .Lightbar, page 4
 [width="100%",cols="1*<,8*^"]
 |====================
-| Title   | `Em3`  |  `Sc2`  |  `Scp`  |  `Alt`  |  `$38`  |  `$3a`  |  `$3c`  |  `$3e`  
+| Title   | `Em3`  |  `Sc2`  |  `Scp`  |  `Alt`  |  `Trb`  |  `DCD`  |  `DSR`  |  `$3e`  
 | Decimal | 48&nbsp;49 | 50&nbsp;51 | 52&nbsp;53 | 54&nbsp;55 | 56&nbsp;57 | 58&nbsp;59 | 60&nbsp;61 | 62&nbsp;63
 | Hex     |$30&nbsp;31 | 32&nbsp;33 | 34&nbsp;35 | 36&nbsp;37 | 38&nbsp;39 | 3a&nbsp;3b | 3c&nbsp;3d | 3e&nbsp;3f
 |====================
@@ -87,7 +87,7 @@
 
 ==== Assembly Example
 
-FIXME
+#FIXME#
 
 Mode 5 is reserved for use by ML routines, and is the equivalent of `&,52,_x_,3` in BASIC. `ldx` with the flag to check, `jsr chkflags`, and the result (0 or 1) is returned in `.a`.
 
