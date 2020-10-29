@@ -144,10 +144,6 @@ Line 60080 contains `print#131,chr$(27)` for setting the Hayes AT escape charact
 
 NOTE: If you are using a virtual modem such as `tcpser` and need to use escape codes instead of DTR for disconnecting the caller from the BBS, you may need to change the 27 (`Escape`) to 43 (`+`) and set `ats2=43`.
 
-[start=7]
-7.	Line 3082 in `im` is preconfigured for running Image 3.0 from the user port.
-If you intend to use a SwiftLink, Turbo232, or a clone of these on the cartridge port, change `&,16,.` (which initializes user port RS232) at the end of that line to `&,16,1` (this initializes cartridge port RS232 instead).
-
 ### Installation
 
 1.	Access the device and drive of your "`Program Disk`" then type: `load"boot",_x_,1`  (_x_= device # of your boot drive)
@@ -176,20 +172,27 @@ Options kbd:[3] and kbd:[4] are for use with Lloyd Sponenburgh’s Real-Time Clo
 Configure your Image Drive assignments.
 
 [start=7]
-7.	Part IV:  BBS Information
+7.	Part IV: BBS Information
 
 Enter the customized information asked for pertaining to your BBS.
 
 At this point, Image creates several files needed for its own operation.
 When finished, Image displays a message for you to read and asks you to `Hit any key`.
+
+You are then prompted for the RS232 interface type you have connected to the C64.
+
+If you have an OmniTronix or similar user port interface, type kbd:[0].
+
+If you have a SwiftLink, Turbo232, or a clone of these on the cartridge port, type kbd:[1].
+
 Hit a key, and you are taken to the System Idle  screen.
 
 ### Set the Clock
 
 * If the time has been set using a real-time clock, Image performs AutoMaintenance.
 
-* If not already set by a real-time clock, the Bottom Status Line continues to flash until the time is set.
-Hit kbd:[1] to set the time. You are taken through several prompts to set the time and date.
+* If not already set by a real-time clock, the bottom Status Line continues to flash until the time is set.
+Hit kbd:[1] to set the time. You are taken through several prompts to set the time and date:
 
 [start=1]
 . Weekday
@@ -210,6 +213,8 @@ Hit kbd:[1] to set the time. You are taken through several prompts to set the ti
 [start=2]
 . Year
 
+Enter only the last two digits of the year here.
+
 [start=3]
 . Month
 
@@ -222,12 +227,11 @@ Hit kbd:[1] to set the time. You are taken through several prompts to set the ti
 [start=6]
 . Minute
 
-You are prompted `Select No ... or Yes to start clock`. #FIXME#
+The current date and time is displayed, and you are prompted `Select Yes to Start Clock, or Select No to Change`.
 
 kbd:[Y]es logs the time and date to `e.data` and sets the system clock.
 
 kbd:[N]o restarts the clock setting questions.
-
 
 Image may or my not perform AutoMaintenance again and return to the System Idle screen.
 
@@ -426,8 +430,7 @@ Shut down your computer and reboot the BBS.
 NOTE: Transfer previous copy here?
 
 a.  	The file `sub.modem` is customized for use with BBS Server using DTR as carrier detect.  Line 60080 contains print#131,chr$(27) for #lowering DTR FIXME#. If you are using a virtual modem such as tcpser and need to use escape codes for disconnecting the caller from the BBS, you may need to change the (27) to (43).
-b.	The file `im` line 3082 is preconfigured for running Image 3.0 from the User port. If you intend to run from the cartridge port using a Swiftlink clone change &,16,. at the end of that line to &,16,1
-c.	The file `im` line 3074 is preconfigured to run from drive 0. This is the default partition on most drives but if running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line 3074 to the number of your boot LU.
+b.	The file `im` line 3074 is preconfigured to run from drive 0. This is the default partition on most drives but if running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line 3074 to the number of your boot LU.
 1.	Turn on your computer and go to your new 3.0 "`Program Disk`". Type:  load"boot",x,1  (x= device # of your "`Program Disk`")
 2.  	When prompted, type 2 to Convert from Image 1.2.
 3.	Clock setting: - You are asked to select a method of setting the system clock automatically during boot up.
