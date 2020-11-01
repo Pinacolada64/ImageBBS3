@@ -398,7 +398,14 @@ If a call connects during this time, they are told to call back when network tra
 
 ---
 
-`Mnt` left: _Undefined_
+`Mnt` left: _Zero_ `tr%` _at_ `Hit Backspace`
+
+If `Mnt` right (_Modem Answer Disabled_) is active and a call comes in, incoming bytes from the connect process are held in the RS232 receive buffer.
+When `Mnt` right is disabled, that buffered data causes the BBS to connect and go to the `Hit Backspace` prompt.
+Since there is nobody online, the BBS waits for 6 minutes until `tr%` counts down to 0, then resets back to the idle screen.
+
+Or, sometimes a real caller (or a bot) connects to the BBS and does nothing at the `Hit Backspace` prompt.
+If the sysop is around and sees it happen, they can zero `tr%` to reset the time remaining to `0`, shortcutting the reset back to the idle screen.
 
 `Mnt` right: _Modem Answer Disabled_
 

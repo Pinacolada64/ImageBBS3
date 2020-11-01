@@ -187,6 +187,9 @@ CMD HD, CMD FD 2000/4000, Lt.Kernal Clock
 ### `NEW` Users
 ### `RES` Users
 ### `VISITOR` Account
+
+This is checked for.
+
 ### Security Questions
 #### Disable Second Security Question
 ### Login Modules
@@ -471,13 +474,17 @@ IMPORTANT: Mention ``.P``ut instead of ``.S``ave required when ``.G``etting a fi
 ### AutoMaint module
 
 ## Offline Utilities
-### `copy-all.64l`
-### `edata edit`
+### `copy-all.64l` #TODO# not included
+### `edata edit 3.0`
 ### `fcopy+`
-### `image mod maker`
-### `image seq reader`
-### `rel copier`
-### `uconfig edit`
+### `renumber.49152`
+### `image reader`
+### `image modmaker`
+### `mcopy`
+### `chksum`
+### `sdp900705`
+### `sdp900705.doc`
+### `set hd clock`
 
 ## Image BBS Networking
 ### Planning a Network

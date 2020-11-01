@@ -1,14 +1,14 @@
 :experimental:
 :toc:
 
-## Setting Up Image BBS 3.0
+## Set Up Image BBS 3.0
 
 Setting up your BBS should be very simple, as long as you follow the instructions.
 We suggest you read this chapter carefully and then set up your system step by step, keeping the manual handy for reference.
 
 // The configuration section also has built in help to get you configured fast and easily.
 
-### Hardware Considerations
+### Supported Hardware
 
 Image BBS v3.0 was tested on the following hardware:
 
@@ -22,32 +22,42 @@ Image BBS v3.0 was tested on the following hardware:
 
 Although we have not tested this software on a great deal of other hardware, it should run with no issues on just about any hardware.
 
-### Getting Started
+### Get Started
 
 Now that you are ready to set up your IMAGE BBS, we recommend that the first thing you do is back up the file(s) you received the BBS software in, then keep them in a safe place.
 Copying the files out of the original disk images we recommend you use `fcopy+` for all the PRG and SEQ files, and `copy-all.64l` written by Jim Butterfield for the REL files.
 
-### Designating Drives
+### Designate Drives
 
 The Commodore 64 is designed to use up to eight devices on the serial port.
 However, we recommend not using more than six due to current limitations of the serial port driver.
 It will support single or dual drives, or logical units (LU`'s) 0 through 9 on a Lt. Kernal (IMAGE will not access LU 10 on a Lt. Kernal).
 You will want to plan your setup on what space you have available, so read the following information carefully to help you in this regard. 
 Although it is possible to run IMAGE BBS v3.0 using only two 1581 disk drives, we highly recommend you use multiple drives, since you will find that disk space and directory space gets used quickly.
-When referring to "`device`" in this chapter, we are talking about the device number assigned to the particular drive (_i.e._ one drive online is usually set to device 8, two to 8 and 9, etc.).
 
-When referring to "`drive`", we are talking about the drive number.
-(0 on a single drive, 0 or 1 on a dual drive, 0 through 9 on a Lt. Kernal hard drive, 1 through 254 on a CMD HD or ThunderDrive).
+_Device_ refers to the device number assigned to the particular drive (_i.e._ one drive online is usually set to device 8, two to 8 and 9, etc.).
+
+#FIXME#
+_Drive_ refers to the number of available separate storage spaces available on a device.
+
+- 0 on a single drive (such as a 1541 or 1571--the count begins at zero)
+- 0 or 1 on a dual drive (such as a 2031)
+- 0 through 9 on a Lt. Kernal or Rear Admiral hard drive
+- 1 through 254 on a Creative Micro Designs (or ThunderDrive)
+
 If you have multiple drives, there may either be a switch somewhere on the drives to change device numbers, or in the case of CMD and Rear Admiral drives, a "`Swap`" button in addition to rear panel switches. 
 
-"`Directory space`" refers to the number of directory entries possible on the drive, which is usually limited, depending on the type of disk drive.
-A 1581 drive allows 296 directory entries, while an SFD allows 224, etc.
+_Directory space_ refers to the number of directory entries possible on the drive. The limit depends on the type of disk drive.
+A 1581 drive allows 296 directory entries, while an SFD 1001 allows 224, etc.
 Check your drive manual to see what the limitation is.
-"`Drive space`" or "`blocks free`" mentioned here will refer to actual blocks used/unused on the drive.
+
+#TODO# 1541 limit? LtK limit? Other limits?
+
+_Drive space_ refers to blocks used, while _blocks free_ refers to blocks unused on the drive.
 
 #### Image Drive Numbers
 
-The term "`Image drive`" refers to six categories of files used by Image BBS for system functions.
+The term _Image drive_ refers to six categories of files used by Image BBS for system functions.
 Each Image drive may be assigned to separate disks or partitions, or several Image drives can be combined onto a single disk or partition.
 Your drive layout will depend on the type and capacity of your storage devices.
 
@@ -103,31 +113,41 @@ Contains all user data files, which are expanded as needed.
 There is one REL file (`u.config`) and two PRG files (`u.index` and `u.weedinfo`) that keep all user information available to the system.
 Three directory entries, a little over one block per user total.
 
-NOTE: Device and drive numbers other than the six Image drives can be assigned to individual sub-boards in the SB section, U/D or U/X libraries in the U/D or U/X sections, and items in the GF section (games, text files, movie files, etc).
-As an example, you can assign a movie file entry in the GF section to device 11, drive 6 instead of Image drive 1 (the `s.` disk) if you had more storage space available there, or wanted to put your movie files on a separate partition.
+NOTE: Device and drive numbers other than the six Image drives can be assigned to individual sub-boards in the `SB` section, U/D or U/X libraries in the `UD` or `UX` sections, and items in the `GF` section (games, text files, movie files, etc.).
+As an example, you can assign a movie file entry in the `GF` section to device 11, drive 6 instead of Image drive 1 (the `s.` disk) if you had more storage space available there, or wanted to put your movie files on a separate partition.
 
 ## Configuration Options
 
 Image 3.0 has three methods of installation:
 
-    1. Configure a New BBS
-    2. Convert from 1.2
-    3. Convert from 2.0
-    4. Abort
+kbd:[1] Configure a New BBS
+
+kbd:[2] Convert from 1.2
+
+kbd:[3] Convert from 2.0
+
+kbd:[4] Abort
     
-Option `4` is there in case you change your mind--it does a C64 cold start.
+Option kbd:[4] is there in case you change your mind--it does a C64 cold start.
 
 Each method is explained separately.
 Please refer to the installation instructions for the method you intend to use.
 
 NOTE: There are <<shared-setup-steps>> to take no matter if you are upgrading from a previous version or a new install.
 
-### Installing a New System
+### Configure a New BBS[[configure-new-bbs]]
 
 1.	Configure your hard drive and/or other system hardware for your Image drive assignments.
-It's recommended you use separate partitions or drives for Image drives 1 (System), 2 (Mail), 5 (Program) and combining 3 (Etcetera), 4 (Directory) and 6 (User) drives to a different drive or partition.
+
+It`'s recommended that you:
+
+- Use separate partitions or drives for Image drives 1 (System), 2 (Mail), and 5 (Program)
+- Combine 3 (Etcetera), 4 (Directory) and 6 (User) drives to 
+a different drive or partition.
+
 You'll probably want two additional drives or partitions for message boards and Upload/Download sections.
 
+[start=2]
 2.	Either convert the three .d81 and two .d64 files to floppy disk or use some other method of getting the files onto your Image drives.
 
 3.	Use `fcopy+` included on the 3.0 UTILS disk for copying all the files from disk 1 to your "`Program Disk`". 
@@ -154,22 +174,23 @@ NOTE: If you are using a virtual modem such as `tcpser` and need to use escape c
 
 kbd:[1] Manually
 
+You need to set the date and time after every reboot.
+
 kbd:[2] CMD Device w/RTC Option
+
+You are asked which device has the Creative Micro Designs Real-Time Clock option.
+Enter the device number of your CMD device.
 
 kbd:[3] Lt. Kernal Port 1
 
 kbd:[4] Lt. Kernal Port 2
 
-If you select kbd:[1], you need to set the date and time after every reboot.
-
-If you select kbd:[2], you are asked which device has the Creative Micro Designs Real-Time Clock option. Enter the device number of your CMD device.
-
-Options kbd:[3] and kbd:[4] are for use with Lloyd Sponenburgh’s Real-Time Clock module attached.
+These are for use with Lloyd Sponenburgh’s Real-Time Clock module attached.
 
 [start=6]
 6.	Part III: Device/Drive Settings
 
-Configure your Image Drive assignments.
+Configure your Image drive assignments.
 
 [start=7]
 7.	Part IV: BBS Information
@@ -181,9 +202,9 @@ When finished, Image displays a message for you to read and asks you to `Hit any
 
 You are then prompted for the RS232 interface type you have connected to the C64.
 
-If you have an OmniTronix or similar user port interface, type kbd:[0].
+- If you have an OmniTronix or similar user port interface, type kbd:[0].
 
-If you have a SwiftLink, Turbo232, or a clone of these on the cartridge port, type kbd:[1].
+- If you have a SwiftLink, Turbo232, or a clone of these on the cartridge port, type kbd:[1].
 
 Hit a key, and you are taken to the System Idle  screen.
 
@@ -192,7 +213,8 @@ Hit a key, and you are taken to the System Idle  screen.
 * If the time has been set using a real-time clock, Image performs AutoMaintenance.
 
 * If not already set by a real-time clock, the bottom Status Line continues to flash until the time is set.
-Hit kbd:[1] to set the time. You are taken through several prompts to set the time and date:
+Hit kbd:[1] to set the time.
+You are taken through several prompts to set the time and date:
 
 [start=1]
 . Weekday
@@ -345,7 +367,7 @@ Ignore the statement about doing customized result codes.
 Then hit a key to return to the Modem Config page.
 Review your settings and if any changes need to be made, type the corresponding number (such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type 2 and select E).
 
-NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under Installing a New System.
+NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<configure-new-bbs,Configure a New BBS>>.
 
 When finished configuring your modem, type kbd:[X] to _Exit Modem Config_ and answer `Update Modem Flags?` kbd:[Y]es.
 
@@ -353,17 +375,18 @@ The remaining configuration options are custom settings for your BBS and will no
 
 ## RELedit
 
-.	Type kbd:[N] to go to the Base Editors.
+.	Type kbd:[N] to go to the `Base Editors`.
 
-.	Cursor to or type kbd:[G] for Editor Utils.
+.	Cursor to or type kbd:[G] for `Editor Utils`.
 
 .	Type kbd:[A] to Run RELedit.
-Here you will define your Subs, U/D`'s, U/X`'s and SIG`'s the same way it is done in Image 1.2a.
+Here you will define your Subs, U/Ds, U/Xs and SIGs the same way it is done in Image 1.2a.
 You _must_ define at least one SIG and add your SB, UD and UX assignments.
 
-When finished with RELedit, exit using the kbd:[Return] key until you end up back at the Base Editor Programs Menu.
+When finished with RELedit, exit using the kbd:[Return] key until you end up back at the `Base Editor` menu.
 
-16.	The remaining items in the Base Editor Programs are Sysop Utilities for maintaining the BBS.
+The remaining items in the `Base Editor` menu are sysop utilities for maintaining the BBS.
+
 #TODO#: Refer to the IM Configuration Editor section for further information.
 
 17.	Select kbd:[K] to return to the Configuration Editor.
@@ -378,9 +401,15 @@ Much has changed since Image 1.2 and 2.0. The best way to learn is to experiment
 
 You`'ll probably be confused and make mistakes along the way, but the learning experience is necessary for any new system.
 
-More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as user-friendly as possible. 
+#FIXME#: that's not helpful wording. We don't want documentation to be user-hostile. -rs
 
-As in previous versions of Image BBS software, menus are displayed with `?` and a Local Command menu is displayed to level 9 users with pseudo-Local mode access by typing `??`.
+Cross-reference [[cross-reference]] set.
+
+a <<cross-reference,cross-reference>> mentioned.
+
+More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible. 
+
+As in previous versions of Image BBS software, menus are displayed with kbd:[?] and a Local Command menu is displayed to level 9 users with pseudo-Local mode access by typing kbd:[??].
 
 ### Converting a 1.2 System
 
@@ -388,38 +417,50 @@ NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work 
 
 1.	Make a complete backup of all your Image 1.2 drives.
 2.	You will need two new Image drives (partitions) or use two locations not already assigned as Image 1.2 drives.
-They are used for your Image 3.0 "`Program Disk`" (DR5) and your 3.0 "`System Disk`" (DR1).
+They are used for your Image 3.0 "`Program Disk`" (drive 5) and your 3.0 "`System Disk`" (drive 1).
 
 IMPORTANT: _Do not_ delete any of your Image 1.2 files unless otherwise told to do so.
 
 Alternately, if you have enough hard drive space, such as on a CMD hard drive, you could make new partitions for all your Image drives and copy everything except the 1.2 boot and program drives to the new partitions. This method would allow you to revert back to 1.2 at any time in the condition it was last in.
 
-3.	Either convert the two .d81 files to floppy disk or use some other method of getting the files onto your Image drives.
+[start=3]
+.	Either convert the two .d81 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-4.	Either use fcopy+ included on the 3.0 UTILITIES disk or log onto your 1.2 system in local mode and use +.CP for copying all the files from disk 1 to your NEW 3.0 "`Program Disk`".  Copy all e. files EXCEPT for the rel files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
+[width="100%"]
+|====================
+| Either use `fcopy+` (included on the 3.0 UTILITIES disk) or log onto your 1.2 system in local mode and use `CP` for the following steps:
+|====================
 
-5.	Use fcopy+ or +.CP to copy all the s.files to your NEW 3.0 "`SYSTEM Disk`" and the  nm.times file to your EXISTING 1.2 mail drive.
+[start=4]
+. Copy all the files from disk 1 to your new 3.0 "`Program Disk`".
 
-If you want to keep your existing news files and canned message files, copy the `n.*` and `s.can*` files from your 1.2 system drive to your 3.0 "`System Disk`". 
+. Copy all `e.` files _except_ for the REL files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
+
+. Copy all the `s.*` files to your NEW 3.0 "`SYSTEM Disk`" and the `nm.times` file to your EXISTING 1.2 mail drive.
+
+If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 "`System Disk`". 
 
 ### Edit Your `bd.data` File
 
 1. Log on to your 1.2 system.
 
-2. Enter the 1.2 WF editor and ``.G``et the file `bd.data` from your 1.2 boot drive.
-Lines 1 through 12 identify your Image drive assignments.
-3. ``.E``dit lines 1 and 2 for your new 3.0 System Disk device and drive numbers.
-4. ``.E``dit lines 9 and 10 for your new 3.0 Program Disk device and drive numbers.
-5. ``.E``dit any other drive assignments that may have changed. 
-6. ``.L``ist the file and make sure everything is correct.
-``.P``ut that as ``d.data`` (__not__ ``bd.data``) to your new 3.0 Program Disk.
+2. Enter the 1.2 kbd:[WF] editor and kbd:[.G]et the file `bd.data` from your 1.2 boot drive.
 
-7.	IMPORTANT STEP – 
+Lines 1 through 12 identify your Image drive assignments.
+
+[start=3]
+3. kbd:[.E]dit lines 1 and 2 for your new 3.0 System Disk device and drive numbers.
+4. kbd:[.E]dit lines 9 and 10 for your new 3.0 Program Disk device and drive numbers.
+5. kbd:[.E]dit any other drive assignments that may have changed. 
+6. kbd:[.L]ist the file and make sure everything is correct.
+7. kbd:[.P]ut the file as ``d.data`` (__not__ ``bd.data``) to your new 3.0 Program Disk.
+
+8.	IMPORTANT STEP – 
 
 8.  #FIXME#
 9.  #FIXME#
 
-10.	Scratch the file `e.last` from your 1.2 system.
+10.	Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0's `e.last` file is in a different format.)
 
 Shut down your computer and reboot the BBS.
 
@@ -432,7 +473,7 @@ NOTE: Transfer previous copy here?
 a.  	The file `sub.modem` is customized for use with BBS Server using DTR as carrier detect.  Line 60080 contains print#131,chr$(27) for #lowering DTR FIXME#. If you are using a virtual modem such as tcpser and need to use escape codes for disconnecting the caller from the BBS, you may need to change the (27) to (43).
 b.	The file `im` line 3074 is preconfigured to run from drive 0. This is the default partition on most drives but if running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line 3074 to the number of your boot LU.
 1.	Turn on your computer and go to your new 3.0 "`Program Disk`". Type:  load"boot",x,1  (x= device # of your "`Program Disk`")
-2.  	When prompted, type 2 to Convert from Image 1.2.
+2.  When prompted, type kbd:[2] to __Convert from Image 1.2__.
 3.	Clock setting: - You are asked to select a method of setting the system clock automatically during boot up.
 For this installation method, select (1) Manually. You are able to change that later during configuration.
 4.	At this point, Image will create several files needed for its own operation.
@@ -448,31 +489,50 @@ TIP: Duplicate section. Old formatting.
 3.	If asked, type your password. The BBS will greet you with a welcome message and then prompt you to select your time zone.
 4.	Select your time zone (7=EST, 6=CST, 5=MST, 4=PST)
 5.	Enter the number of lines per screen (suggest 23)
-6.	At the main prompt, type EP to Edit your Parameters. 
-	Select kbd:[P]arameters
-	Set your Computer Type and any other Terminal Parameters you want. 
-	Set Cursor Menu Mode On
-	Hit RETURN to exit.
-	At the main prompt, type EP to Edit your Parameters. 
-	Select Info
-	Change your phone number to your email address
-	Hit RETURN to exit
-7.	At this point, it is suggested you log off using the O command and answer Yes to Update User File? This will save your new parameters to your user file. You can then log back on in any mode you choose.
+6.	At the main prompt, type kbd:[EP] to Edit your Parameters. 
+a.	Select kbd:[P]arameters.
+b.	Set your Computer Type and any other Terminal Parameters you want. 
+c.	(_Optional_) Set Cursor Menu Mode On.
+d.	Hit kbd:[Return] to exit.
+e.	At the main prompt, type kbd:[EP] to Edit your Parameters. 
+f.	Select kbd:[I]nfo.
+g.	Change your phone number to your email address.
+h.	Type kbd:[Return] to exit.
+7.	At this point, it is suggested you log off using the kbd:[O] command and answer `Update User File?` with kbd:[Y]es. This saves the new parameters to your account. You can then log back on in any mode you choose.
 
-NOTE:  Always log off with the O, O! or O%! command. Logging off with the f7 key will bypass the module which updates the last 10 callers and cause errors in the time used.
+NOTE: Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] command.
+Logging off with the kbd:[f7] key will bypass the module which updates the last 10 callers and cause errors in the time used.
 
-8.	Log back on to the BBS. At the main prompt, type IM - You are taken to the Image BBS Configuration Editor
-9.	You can use cursor controls or just type E for Access Groups. All group names and flags should be the same as your 1.2 system was. Edit any access group Name and Flags per your preference. Enter RETURN to exit, saving changes. You are returned to the Configuration Editor.
-10.	Enter I for Misc. Features - At minimum, you will need to set the Time Zone and the System ID. If you are running on a Lt. Kernal, use option A to set to your Lt. K device number. Enter M to configure your Chat messages for entering and leaving chat. Edit any other parameter you wish to set.  When finished, type N to Quit back to the Configuration Editor.
+[start=8]
+.	Log back on to the BBS. At the main prompt, type kbd:[IM].
+
+You are taken to the Image BBS Configuration Editor.
+
+[start=9]
+.	You can use cursor controls or just type kbd:[E] for Access Groups. All group names and flags should be the same as your 1.2 system was. Edit any access group Name and Flags per your preference.
+
+Type kbd:[Return] to exit, saving changes. You are returned to the Configuration Editor.
+
+[start=10]
+.	Enter kbd:[I] for __Misc. Features__.
+
+.. At minimum, you will need to set the _Time Zone_ and the __System ID__.
+.. If you are running on a Lt. Kernal, use option kbd:[A] to set to your Lt. Kernal device number.
+.. Type kbd:[M] to configure your Entering and Exiting Chat messages.
+.. Edit any other parameters you wish to set.
+.. When finished, type kbd:[N] to Quit back to the Configuration Editor.
+
+[start=11]
 11.	Enter J for Modem Config. Enter B for Setup/Import Modem Config.  Enter 1 to Setup New Modem Config.  Answer Yes to the next two questions. The following will guide you through how to set up a gglabs glink232 (or Swiftlink) modem interfaced to BBS Server:
 
 NOTE: If the BBS is configured for a Lt. Kernal, entering the modem configuration will allow you to configure not only the port your host adapter is set for but any other ports which might be multiplexed. 
 
+----
 Enter Modem Brand/Name: GLINK232
 Enter Author (Return=New Image): GGLABS
 Enter Custom Init String: Just hit RETURN
 What is the Max. Connection Rate For This Modem?  6
-Select Hand-Up Method For This Modem: D
+Select Hang-Up Method For This Modem: D
 Auto-Answer (ATS)=1): A
 Use an ATH After ESCape Codes?: H
 When In Local Mode, Should Phone Be: H
@@ -483,31 +543,36 @@ Is DTR on This Modem Normal or Reverse?: N
 Select CCITT or Bell Labs Standard: 0
 Select RS232 Interface Type: 1
 Is Caller ID Available (Both Modem AND Phone Line): 0
+----
 
-The BBS will create a file on the etc drive then display a Setup Completed message. Ignore the statement about doing customized result codes. Then Hit a Key to return to the Modem Config page. Review your settings and if any changes need to be made, type the corresponding number such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type 2 and select E.
+The BBS will create a file on the Etcetera drive then display a Setup Completed message. Ignore the statement about doing customized result codes. Then Hit a Key to return to the Modem Config page. Review your settings and if any changes need to be made, type the corresponding number such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type 2 and select E.
 
 NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under Installing a New System.
 
-When finished configuring your modem, type X to Exit Modem Config and Yes to Update Modem Flags?
-12. Enter D to go to the Logon Editor. 
-13.	Type kbd:[A] for Logon Mods and type kbd:[H]elp for instructions on how to configure your logon modules.
-Configure them for your preference.
-Since this is a conversion from 1.2 to 3.0, I highly recommend including `i/lo-email` as a forced module in your login mods.
-This will ask any user who is still configured with a phone number in their `u.config` file to change it to an email address.
+When finished configuring your modem, type kbd:[X] to _Exit Modem Config_. Answer `Update Modem Flags?` with kbd:[Y]es.
 
-14.	Enter B for Maint Mods and configure your nightly Maintenance modules.
-15.	Configure any other items you need to get started.
-16.	When back at the Configuration Editor, type N to go to the Base Editors.
-17.	Cursor to or type G for Editor Utils.
-18.	Enter A to Run RELedit. Here you should find your Subs, U/D`'s, U/X`'s and SIG`'s the same way it was configured in Image 1.2a. Verify everything is correct or make changes as needed. If your 1.2 system was networked, you will need to go into each netsub you have defined. No changes need to be made from within the netsub but when you exit each netsub, they are updated with the Image 3.0 load address for the structures type file they are stored in. When finished with RELedit, exit out using the RETURN key. The BBS will then perform a series of operations to convert all your 1.2 Sigs to 3.0 format. And end back at the Base Editor Menu.
+12. Type kbd:[D] to enter the __Logon Editor__ sub-menu.
+13.	Type kbd:[A] for _Logon Mods_.
+.. Type kbd:[H]elp for instructions on how to configure your logon modules.
+.. Configure them for your preference.
 
-19.	This would be a good time to check your CMD Clock and Set Time Device \# of your CMD drive if you want to use it for setting Image time during boot up. Use the available menu selections.
+IMPORTANT: Since this is a conversion from 1.2 to 3.0, it`'s highly recommended you include `i/lo-email` as a forced module in your login mods.
+This asks any user whose account is still configured with a phone number to change it to an email address.
 
-19.	Type kbd:[K] to quit back to the Configuration Editor.
+[start=14]
+.	Type kbd:[B] for _Maint Mods_ to configure your nightly AutoMaintenance modules.
+2.	Configure any other items you need to get started.
+3.	When back at the Configuration Editor, type N to go to the Base Editors.
+4.	Cursor to or type G for Editor Utils.
+5.	Enter A to Run RELedit. Here you should find your Subs, U/D`'s, U/X`'s and SIG`'s the same way it was configured in Image 1.2a. Verify everything is correct or make changes as needed. If your 1.2 system was networked, you will need to go into each netsub you have defined. No changes need to be made from within the netsub but when you exit each netsub, they are updated with the Image 3.0 load address for the structures type file they are stored in. When finished with RELedit, exit out using the RETURN key. The BBS will then perform a series of operations to convert all your 1.2 Sigs to 3.0 format. And end back at the Base Editor Menu.
 
-20.	Type kbd:[Q] to quit back to the Main prompt.
+6.	This would be a good time to check your CMD Clock and Set Time Device \# of your CMD drive if you want to use it for setting Image time during boot up. Use the available menu selections.
 
-21.	If you had macros defined in your 1.2 system and want to keep them, you will need to edit the `e.macros` file, otherwise, just delete it. To edit the `e.macros` file, use the RF command at the Main prompt to read the Relative File `e.data`. Read "`All`" the records to see how many macros you have defined. Then read "`e.macros`" again and view record 1. Edit record 1 by changing it to a number equal to 1 less than the total number of macros you previously viewed.
+7.	Type kbd:[K] to quit back to the Configuration Editor.
+
+8.	Type kbd:[Q] to quit back to the Main prompt.
+
+9.	If you had macros defined in your 1.2 system and want to keep them, you will need to edit the `e.macros` file, otherwise, just delete it. To edit the `e.macros` file, use the RF command at the Main prompt to read the Relative File `e.data`. Read "`All`" the records to see how many macros you have defined. Then read "`e.macros`" again and view record 1. Edit record 1 by changing it to a number equal to 1 less than the total number of macros you previously viewed.
 22.	Read the <<final-notes>> on the last page of these instructions.
 
 From here, explore and become familiar with the new features. 
