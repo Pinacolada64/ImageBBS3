@@ -66,6 +66,7 @@ You are asked to select a method of setting the system clock automatically durin
 For this installation method, select kbd:[1] Manually.
 You can change that later during further configuration.
 
+[start=6]
 . At this point, Image will create several files needed for its own operation.
 
 It reads the Image drive assignments and access group information from `d.data`, and uses that information to create a new `bd.data` file on its own Program Disk, modify the existing `e.data` file with expanded 3.0 information, and create a new file called `e.access`.

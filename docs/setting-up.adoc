@@ -12,7 +12,7 @@ We suggest you read this chapter carefully and then set up your system step by s
 
 Image BBS v3.0 was tested on the following hardware:
 
-* WinVice using both 1581 and FD4000 disk drives, normal User Port communications with both `tcpser` and BBS Server/VSPE configurations.
+* WinVice using both 1581 and FD-4000 disk drives, normal User Port communications with both `tcpser` and BBS Server/VSPE configurations.
 
 * Lt. Kernal (or Rear Admiral) hard drive with SwiftLink or normal User Port configurations using BBS Server as the "`modem`".
 
@@ -31,8 +31,10 @@ Copying the files out of the original disk images we recommend you use `fcopy+` 
 
 The Commodore 64 is designed to use up to eight devices on the serial port.
 However, we recommend not using more than six due to current limitations of the serial port driver.
-It will support single or dual drives, or logical units (LU`'s) 0 through 9 on a Lt. Kernal (IMAGE will not access LU 10 on a Lt. Kernal).
+It will support single or dual drives, or logical units (LUs) 0 through 9 on a Lt. Kernal (IMAGE will not access LU 10 on a Lt. Kernal).
+
 You will want to plan your setup on what space you have available, so read the following information carefully to help you in this regard. 
+
 Although it is possible to run IMAGE BBS v3.0 using only two 1581 disk drives, we highly recommend you use multiple drives, since you will find that disk space and directory space gets used quickly.
 
 _Device_ refers to either the physical unit, or the device number(s) assigned to the particular device (_i.e._ one device online is usually set to 8, two devices to 8 and 9, etc.).
@@ -63,7 +65,7 @@ They are referred to by the numbers 1-6, since standard Commodore device numbers
 TIP: _Technically,_ device 0 is the keyboard, 1 is the Datasette, 2 is user port RS232, 3 is the screen, 4-5 are printers, and 6 is a plotter.
 
 Each Image drive may be assigned to separate disks, LUs or partitions.
-Or, several Image drives can be combined onto a single disk, LU or partition.
+As an alternative, several Image drives can be combined onto a single disk, LU or partition.
 Your drive layout will depend on the type and capacity of your storage device(s).
 
 The six Image drives are described as follows:
@@ -140,7 +142,7 @@ There are three directory entries, a little over one block per user total.
 NOTE: Device and drive numbers other than the six Image drives can be assigned to individual sub-boards in the `SB` section, U/D or U/X libraries in the `UD` or `UX` sections, and items in the `GF` section (games, text files, movie files, etc.).
 As an example, you can assign a movie file entry in the `GF` section to device 11, drive 6 instead of Image drive 1 (the `s.` disk) if you had more storage space available there, or wanted to put your movie files on a separate partition.
 
-## Configuration Options
+### Configuration Options
 
 Image 3.0 has three methods of installation:
 
@@ -159,15 +161,14 @@ Please refer to the installation instructions for the method you intend to use.
 
 NOTE: There are <<Shared Image BBS 3.0 Setup>> steps to take no matter if you are upgrading from a previous version or a new install.
 
-### Configure a New BBS
+#### Configure a New BBS
 
 1.	Configure your hard drive and/or other system hardware for your Image drive assignments.
 
 It`'s recommended that you:
 
 - Use separate partitions or drives for Image drives 1 (System), 2 (Mail), and 5 (Program)
-- Combine 3 (Etcetera), 4 (Directory) and 6 (User) drives to 
-a different drive or partition.
+- Combine 3 (Etcetera), 4 (Directory) and 6 (User) drives to a different drive or partition.
 
 You'll probably want two additional drives or partitions for message boards and Upload/Download sections.
 
@@ -180,22 +181,26 @@ You'll probably want two additional drives or partitions for message boards and 
 
 5.	Use `fcopy+` to copy all the `s.` files to your "`System Disk`" and the `nm.times` file to your "`E-Mail Disk`".
 
-TIP: If you wish to run the Today in History logon module, copy all the `today.*` files to your "`Etcetera Disk`".
+TIP: If you wish to run the "`Today in History`" logon module, copy all the `today.*` files to your Etcetera Disk.
 
 [start=6]
+
 include::includes\sub_modem-config.adoc[]
 
-### Installation
+#### Installation
 
-1.	Access the device and drive of your "`Program Disk`" then type: `load"boot",_x_,1`  (_x_= device # of your boot drive)
-2.  When prompted type kbd:[1] to Configure a New BBS.  
+NOTE: Intro here
+
+include::includes\boot-command.adoc[]
+
+2.  When prompted type kbd:[1] to `Configure a New BBS`.
 3.	Image begins collecting information needed to configure 3.0.
 4.	Part I: Sysop Information
 
 Enter the information asked for. 
 
 [start=5]
-5.	Part II: Clock Setting
+5.	Part II: Set Clock
 
 You are asked to select a method of setting the system clock automatically during boot up.
 
@@ -239,9 +244,11 @@ Hit a key, and you are taken to the System Idle screen.
 
 ### Set the Clock
 
-* If the time has been set using a real-time clock, Image performs AutoMaintenance.
+If the time has been set using a real-time clock, Image performs AutoMaintenance.
 
-* If not already set by a real-time clock, the bottom Status Line continues to flash until the time is set.
+#### Manual Set
+
+If not already set by a real-time clock, the bottom Status Line continues to flash until the time is set.
 Hit kbd:[1] to set the time.
 You are taken through several prompts to set the time and date:
 
@@ -268,15 +275,10 @@ Enter only the last two digits of the year here.
 
 [start=3]
 . Month
-
-[start=4]
 . Day
-
-[start=5]
 . Hour
-
-[start=6]
 . Minute
+. AM/PM
 
 The current date and time is displayed, and you are prompted `Select Yes to Start Clock, or Select No to Change`.
 
@@ -286,19 +288,27 @@ kbd:[N]o restarts the clock setting questions.
 
 Image may or my not perform AutoMaintenance again and return to the System Idle screen.
 
-### Instant Login
+### Console Login
 
 #FIXME#: I don`'t think hitting f1 to go to full screen mode will let you hit f7. I might be wrong.
 
-[start=2]
-2.	#Press kbd:[f1] to go to full screen mode then# 
-Use kbd:[f3] and kbd:[f5] to make sure the lightbar highlight is on `Loc`, then press kbd:[f7] to put a check mark on the left of `Loc`. This starts a console BBS login.
+[start=1]
+.	#Press kbd:[f1] to go to full screen mode then# 
+. Use kbd:[f3] (move highlight left) and kbd:[f5] (move highlight right) to move the lightbar highlight to `Loc`.
+. Press kbd:[f7] to put a check mark on the left of `Loc`.
 
-3. Press kbd:[I] for Instant Login. 
+This starts a console BBS login.
 
-3.	When asked, type your sysop password.
+### Instant Login
 
-### Configuration
+The BBS copyright message is displayed, and 
+
+
+. Press kbd:[I] for Instant Login. 
+
+. When asked, type your sysop password.
+
+### Online Configuration
 
 The BBS greets you with a welcome message and prompts you to select your time zone.
 
@@ -334,7 +344,7 @@ They help set up features specific to Image 3.0.
 . At the Main Prompt, type kbd:[IM].
 You are taken to the Image BBS Configuration Editor.
 
-##### Access Groups
+#### Access Groups
 
 You can use the cursor keys to move the highlight, or type kbd:[E] for `Access Groups`.
 The BBS will load the access group information.
@@ -344,8 +354,6 @@ The BBS will load the access group information.
 | #TODO:# Why not change `i/su.config` to do this:
 |====================
 
-// Duplicated at line 460.
-
 The Group 9 flags should already be set for full sysop access.
 Type kbd:[9] and change the group name to `Sysop`.
 
@@ -354,9 +362,9 @@ kbd:[Return] exits, saving changes.
 You are returned to the Configuration Editor.
 
 . Type kbd:[I] for ``Misc. Features``.
-.. At minimum, you will need to set the Time Zone and the System ID.
-..  If you are running on a Lt. Kernal, use option kbd:[A] to set to your Lt. Kernal device number.
-.. Enter kbd:[M] to configure your Chat messages for entering and leaving chat.
+.. At minimum, you will need to set the `Time Zone` and the `System ID`.
+..  If you are running on a Lt. Kernal, type kbd:[A] to set your Lt. Kernal device number.
+.. Type kbd:[M] to configure your Chat messages for entering and leaving chat.
 .. Edit any other parameter you wish to set.
 .. When finished, type kbd:[N] to `Quit` back to the Configuration Editor.
 
@@ -367,13 +375,9 @@ You are returned to the Configuration Editor.
 .. Type kbd:[1] for `Setup New Modem Config`.
 .. Answer kbd:[Y]es to the next two questions. #FIXME#: what are they?
 
-### GGlabs GLink232-LT
-
-The following will guide you through how to set up a GGlabs GLink232-LT interface connected to BBS Server.
+###### GGlabs GLink232-LT
 
 include::includes\im-gglabs-modem-config.adoc[]
-
-NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<Configure a New BBS>>.
 
 When finished configuring your modem, type kbd:[X] to `Exit Modem Config` and answer `Update Modem Flags?` kbd:[Y]es.
 
