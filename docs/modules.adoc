@@ -56,24 +56,25 @@ If there is no DOS error, the module should execute.
 
 TIP: A `file not found` DOS error is written to the system error log (`e.errlog`, viewable with kbd:[VF]) as a `load error`.
 
+### Module Types
+
 .Module Types
 [options="header,autowidth"]
 |====================
 | Prefix    |  Starting line | Purpose 
 | `+.`      |  1     | Image 1._x_ plus file
-| `i.`      |  3000  | Image 3.0 module
+| `++`      | _n/a_  | Image 3.0 ML module
+| `i.`      |  3000  | Image 3.0 module (usually protocols)
 | `i/`      |  4000  | Image 3.0 sub-module
 | `i.XX/YY` |  3000  | Image 3.0 sub-module YY of XX
-| `i/lo.`   |  3000  | Idle command 
-| `i/lo/`   |  4000  | Automaint module
+| `i/lo.`   |  3000  | Idle screen command 
+| `i/lo/`   |  4000  | Nightly AutoMaint module
 | `i/lo-`   |  4500  | Login module  
 | `i/XX.YY` |  4000  | Sub-module YY of XX
 | `sub.*`   |  60000 | Common BBS code called by various files 
 |====================
 
-#TODO#: mention module stack?
-
-#TODO#: finish this
+#TODO#: Go into more detail?
 
 ### Complete Module Type Listing
 
@@ -81,9 +82,12 @@ Here is a list of all the BBS module types.
 
 #FIXME#: ensure this is correct
 
+#FIXME#: I forgot why this needs to be duplicated...
+
 [options="header,autowidth"]
 |====================
 | Module prefix	| Purpose | Starting line
+| `++`      | ML module      | _n/a_ (loads at `$c000`)
 | `i.`      | System command | 3000
 | `i.XX.YY` | Sub-module YY of command XX | 4000
 | `i.XX/YY` | Sub-module YY of command XX | 3000

@@ -3,7 +3,7 @@
 [appendix]
 == Lightbar Quick Reference
 
-TODO: Quick summaries of lightbar flags in 3-column tables. Find out how to balance `Left` and `Right` column widths.
+#TODO#: Quick summaries of lightbar flags in 3-column tables. Find out how to balance `Left` and `Right` column widths.
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
@@ -223,16 +223,24 @@ If user requests more unanswered chat pages than `s.chat _x_` screens, user is l
 | _Undefined_
 
 | Trb
-| Checked: Don`'t display values of variables in programmable window for troubleshooting purposes
+| Don`'t display values of variables in programmable window for troubleshooting purposes
 | _Undefined_
 
 | DCD
-| #TODO#
-| #TODO#
+| *Enabled:* Hang up when inverted (asserted when high) DCD signal received
+
+*Disabled:* Hang up when normal (asserted when low) DCD signal received
+
+| Carrier Present
+
+Check in BASIC using `&,52,$3c,3:if a% then ...`
 
 | DSR
-| #TODO#
-| #TODO#
+| *Enabled*: Hang up on no DSR signal  
+
+*Disabled*: Hang up on no DCD signal
+
+| *Enabled*: Show data being received/transmitted in receive/transmit windows
 
 | $3e
 | _Undefined_
@@ -246,8 +254,8 @@ If user requests more unanswered chat pages than `s.chat _x_` screens, user is l
  SuperCPU Present              52 Scp 53   Turbo Mode On
  Alt last 10 callers display   54 Alt 55   Undefined
  Disable Troubleshooting Mode  56 Trb 57   Undefined
- TODO                          58 DCD 59   TODO
- TODO                          60 DSR 61   TODO
+ Invert DCD                    58 DCD 59   Carrier Present
+ DCD or DSR Hangup             60 DSR 61   Enable Rx/Tx Windows
  
 
 .Lightbar, page 5

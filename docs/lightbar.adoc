@@ -35,8 +35,6 @@ kbd:[f2]: Toggles between `FAST` and `SLOW` modes on a Commodore 128 in 64 mode.
 
 ### Lightbar Functions
 
-NOTE: These are the default lightbar titles. You may change the three-character lightbar labels by editing the file `s.lightdefs`. 
-
 NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_. 
 
 .Lightbar, page 1
@@ -321,7 +319,7 @@ Disables the beep sound, so you don't hear the console beeps.
 
 `Mac` left: _Macros On/Off_
 
-Users can see "`macros`"--a short saying presented before the main prompt.  (Users can toggle them on/off with the kbd:[MA] command, or add their own with the ME command.)
+Users can see "`macros`"--a short saying presented before the main prompt.  (Users can toggle them on/off with the kbd:[MA] command, or add their own with the kbd:[ME] command.)
 
 `Mac` right: _MCI Disable in Editor_
 

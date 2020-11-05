@@ -1,0 +1,73 @@
+:experimental:
+:toc:
+
+### Convert a 1.2 System
+
+NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work but have not been tested.
+
+.	Make a complete backup of all your Image 1.2 drives.
+.	You will need two new Image drives (partitions) or use two locations not already assigned as Image 1.2 drives.
+They are used for your Image 3.0 "`Program Disk`" (drive 5) and your 3.0 "`System Disk`" (drive 1).
+
+IMPORTANT: _Do not_ delete any of your Image 1.2 files unless otherwise told to do so.
+
+Alternately, if you have enough hard drive space, such as on a CMD hard drive, you could make new partitions for all your Image drives and copy everything except the 1.2 boot and program drives to the new partitions.
+This method would allow you to revert back to 1.2 at any time in the condition it was last in.
+
+[start=3]
+. Either convert the two .d81 files to floppy disk or use some other method of getting the files onto your Image drives.
+
+[width="100%"]
+|====================
+| Either use `fcopy+` (included on the 3.0 UTILITIES disk) or log onto your 1.2 system in local mode and use `CP` for the following steps:
+|====================
+
+[start=4]
+. Copy all the files from disk 1 to your new 3.0 "`Program Disk`".
+
+. Copy all `e.` files _except_ for the REL files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
+
+. Copy all the `s.*` files to your NEW 3.0 "`SYSTEM Disk`" and the `nm.times` file to your EXISTING 1.2 mail drive.
+
+If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 "`System Disk`". 
+
+### Edit Your `bd.data` File
+
+[start=1]
+. Log on to your 1.2 system.
+
+. Enter the 1.2 kbd:[WF] editor.
+. kbd:[.G]et the file `bd.data` from your 1.2 boot drive.
+
+Lines 1 through 12 identify your Image drive assignments.
+
+[start=4]
+. kbd:[.E]dit lines 1 and 2 for your new 3.0 System Disk device and drive numbers.
+. kbd:[.E]dit lines 9 and 10 for your new 3.0 Program Disk device and drive numbers.
+. kbd:[.E]dit any other device/drive assignments that may have changed. 
+. kbd:[.L]ist the file and make sure everything is correct.
+. kbd:[.P]ut the file as ``d.data`` (__not__ ``bd.data``) to your new 3.0 Program Disk.
+
+IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0's `e.last` file is in a different format.)
+
+[start=9]
+. Shut down your computer and reboot the BBS.
+
+### Installation
+
+include::includes\sub_modem-config.adoc[]
+
+include::includes\boot-command.adoc[]
+
+. When prompted, type kbd:[2] to `Convert from Image 1.2`.
+. Clock setting
+
+You are asked to select a method of setting the system clock automatically during boot up.
+For this installation method, select kbd:[1] Manually.
+You can change that later during further configuration.
+
+. At this point, Image will create several files needed for its own operation.
+
+It reads the Image drive assignments and access group information from `d.data`, and uses that information to create a new `bd.data` file on its own Program Disk, modify the existing `e.data` file with expanded 3.0 information, and create a new file called `e.access`.
+
+When finished, Image will reboot to the System Idle screen.

@@ -12,9 +12,10 @@
 | Character | Purpose
 | `A` | Text output aborted 
 | `G` | Garbage collection occurring
-| `L` | Lt. Kernal port lock
+| `I` | Interrupts disabled
+| `L` | Loading data
 | `P` | Text output paused
-| `S` | Swapping data
+| `S` | Swapping data between RAM and ROM
 |====================
 
 .File transfer indicators
@@ -22,7 +23,5 @@
 |====================
 | Character | Purpose
 | `F` | RS232 flow control asserted 
-| `I` | Interrupts disabled
-| `L` | Loading data?
 | `O` | Overrun
 |====================
