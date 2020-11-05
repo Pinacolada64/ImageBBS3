@@ -245,7 +245,7 @@ Character layout differs between Commodore and ASCII standards, most notably by 
 Enables linefeeds for the user.
 In ASCII mode, terminals need a carriage return to move the cursor to the beginning of the current line.  
 However, they may also need a linefeed character to move the cursor to the next line.
-(Without one, the user will probably complain that "`everything displays on one line.`"
+(Without one, the user will probably complain that "`everything displays on one line.`")
 
 TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] to resolve this problem.
 
