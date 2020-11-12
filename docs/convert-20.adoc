@@ -19,12 +19,12 @@ This is the default partition on most drives but if running on a Lt. Kernal and 
 . Copy `bd.data` from the "`Etcetera Disk`" to the "`Program Disk`" and rename it to "`d.data`".
 . Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your "`Etcetera Disk`" replacing the existing files of the same name.
 . Remove all the Image 2.0 `s.*` files from your "`System Disk`".
-    
+
 CAUTION: What if you've written custom board entry files or login screens?
 
 [start=8]
 . Copy all the `s.*` files from IMAGE 3.0 D2 to your System Disk.
-. If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
+. If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your Etcetera Disk.
 
 include::includes\boot-command.adoc[]
 
