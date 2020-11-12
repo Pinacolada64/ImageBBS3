@@ -406,68 +406,86 @@
 	im=1:goto{:431}
 {:521}
 	im=2:goto{:431}
-{:522}
-	im=1:goto{:439}
-{:523}
-	im=1:goto{:438}
-{:524}
-	im=13:goto{:445}
 {:525}
+	im=1:goto{:439}
+{:528}
+	im=1:goto{:438}
+{:533}
+	im=13:goto{:445}
+{:534}
 	im=4:goto{:445}
-{:526}
+{:535}
 	im=5:goto{:445}
-
+{:540}
 	im=1:goto{:437}
-
+{:541}
 	im=2:goto{:437}
-
+{:542}
 	im=1:goto{:440}
-
+{:543}
 	im=2:goto{:440}
-
+{:544}
 	im=1:goto{:429}
-
+{:545}
 	im=8:goto{:445}
-
+{:546}
 	im=10:goto{:445}
-
+{:547}
 	im=14:goto{:445}
-
+{:548}
 	im=15:goto{:445}
-
+{:549}
 	im=1:goto{:448}
-
+{:550}
 	im=2:goto{:448}
-
+{:551}
 	im=3:goto{:448}
-
+{:552}
 	im=4:goto{:448}
-
+{:553}
 	im=5:goto{:448}
-
+{:554}
 	im=6:goto{:448}
-
+{:555}
 	im=7:goto{:448}
+{:556}
 	im=8:goto{:448}
+{:557}
 	im=9:goto{:448}
+{:558}
 	im=1:goto{:436}
+{:559}
 	im=2:goto{:429}
+{:560}
 	im=3:goto{:429}
+{:561}
 	im=4:goto{:429}
+{:562}
 	im=5:goto{:429}
+{:563}
 	im=6:goto{:429}
+{:564}
 	im=7:goto{:429}
+{:565}
 	im=2:goto{:449}
+{:566}
 	im=3:goto{:449}
+{:567}
 	im=1:goto{:449}
 {:999}
 	return
+{:2000}
 	poke22,25:fori=2topeek(152):closepeek(603):next:poke2031,.
+{:2002}
 	x=peek(780):y=peek(781)+peek(782)*256:&"{f6}[Error#{pound}!x, Line#{pound}!y]{f6}":el=y
+{:2004}
 	&,11:&,28,1:poke53248,.
+{:2006}
 	dr$=mid$(str$(dr%(5)),2)+":":dv%=dv%(5):loaddr$+"im",dv%,2
+{:2008}
 	gosub{:304}:goto{:4000}
 {:3000}
+{step:2}
 	poke828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}":poke53280,.:poke53281,.
 	open131,2,134,chr$(6):poke248,203:poke250,204:poke56,160:poke52,160
 	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
@@ -505,86 +523,149 @@
 	poke56328,.:poke56579,peek(56579)or38:poke56577,peek(56577)or36
 	dimtt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
 	dimec%(19,24),es%(3,49),ei%(50)
+{:3073}
 	restore:fori=1to9:reada$:co$(i)=a$+"":next
 ' bd$=boot drive?
+{:3074}
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys49155:&,53
-	rem poke$16ec,$32:poke$16ed,$30
+{:3075}
+	&,69,0,2,"im Revision: Nov 11, 2020 12:39 AM",3
+{:3076}
 	a$="NTSC":ifpeek(678)thena$="PAL"
+{:3078}
 	gosub{:3400}:z3$=a$+" System Detected.":gosub{:3404}
+{:3080}
 	close15:open15,dv%,15:&,18,.:poke53248,1:am$="1"+"0001018600"
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub{:3404}:close2:close15:open15,dv%,15
+{:3086}
 	fl=.:open2,dv%,2,bd$+"bd.data,s,r":gosub{:5}:ife%thenclose2:gosub{:3250}:gosub{:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
+{:3088}
 	input#2,dv%(3),dr%(3),po$:close2:restore:ifpo$=""thenpo$="Main: "
 {:3090}
 	reada$:ifa$<>"*"then{:3090}
+{:3092}
 	rem:ifdv%=lk%thenprint#15,"l800"
+{:3093}
 	gosub{:33}:fori=1to6:x=i+51:gosub{:1}:&,2,2:dv%(i)=val(a$)
+{:3094}
 	&,2,2:dr%(i)=val(a$):next:close2
 ' i.IM/modem does write RS232 interface to e.data
+{:3095}
 	gosub{:33}:x=32:gosub{:1}:&,2,2:a=val(a$):close2
 {:3096}
 	dr=5:gosub{:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
+{:3097}
 	z3$="Reading System Info...":gosub{:3404}
+{:3098}
 	gosub{:35}:ife%thenclose2:gosub{:3250}:goto{:3096}
+{:3100}
 	x=1:gosub{:1}:&,2,2:bs$=a$:close2
+{:3102}
 	im=.:gosub{:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
+{:3103}
 	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
+{:3104}
 	dr=3:gosub{:3}:z3$="Loading Preset Definitions...":gosub{:3414}:gosub{:3404}
+{:3106}
 	&"{lt. blue}{f6}ECS Defs: ":a$=dr$+"e.ecs.main":&,42,4:gosub{:5}:&"{cyan}Done...{f6}"
+{:3108}
 	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub{:5}:&"{cyan}Done...{f6}"
+{:3110}
 	&"{lt. blue}LightBar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub{:5}:&"{cyan}Done...{f6}"
+{:3111}
 	z3$="Setting Alarm Tables...":gosub{:3404}
+{:3112}
 	&"{f6:4}{lt. blue}Alarm Table: ":a$=dr$+"e.alarms":&,7,dv%,9:gosub{:5}:&"{cyan}Done...{f6}"
+{:3114}
 	dr=2:gosub{:3}
+{:3116}
 	&"{lt. blue}Network Alarm Table: ":a$=dr$+"nm.times":&,7,dv%,12:gosub{:5}:&"{cyan}Done...{f6}"
+{:3118}
 	dr=3:a$="e.fkeys,s,r":gosub{:4}:ife%thenclose2:goto{:3128}
+{:3120}
 	z3$="Enabling Function Keys...":gosub{:3404}
+{:3122}
 	fori=1to8:&,2,2:ifright$(a$,1)="{back arrow}"thena$=left$(a$,len(a$)-1)+r$
+{:3124}
 	tt$(i)=a$:next:close2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
 '	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8):z3$="Setting Up Variables... (e.data)":gosub{:3404}
+{:3126}
 	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8)
 {:3128}
-	z3$="Setting Up Variables... (e.data)":gosub{:3404}:gosub{:33}:ife%thenclose2:gosub{:3250}:goto{:3128}
+	z3$="Setting Up Variables... (e.data)":gosub{:3404}:gosub{:33}
+{:3129}
+	ife%thenclose2:gosub{:3250}:goto{:3128}
+{:3130}
 	x=1:gosub{:1}:&,2,2:ca=val(a$):x=12:gosub{:1}:&,2,2:ur=val(a$)-1
+{:3132}
 	x=17:gosub{:1}:&,2,2:d3$=a$:x=18:gosub{:1}:&,2,2:pp$=a$
+{:3134}
 	x=19:gosub{:1}:&,2,2:z$=a$:x=20:gosub{:1}:input#2,p1%,p2%,p3%
-' TODO: move l2 stuff here
+{:3135}
+' moved l2 reservation stuff here
 	x=21:gosub{:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3)):ifl2then:&,52,40,1
+{:3136}
+' FIXME: record 35 is read twice
 	x=35:gosub{:1}:&,2,2:am$=a$:x=36:gosub{:1}:&,2,2:mc=val(a$)
+{:3138}
 	x=37:gosub{:1}:&,2,2:y%=val(a$):x=38:gosub{:1}:&,2,2:lk%=val(a$)
+{:3140}
 	df%=3:x=40:gosub{:1}:&,2,2:a=val(a$):ifa>.anda<16thendf%=a
+{:3142}
 	x=41:gosub{:1}:&,2,2:a=val(a$):ifa$<>""thenclose4:open4,4,a
+{:3144}
 	x=42:gosub{:1}:&,2,2:a=val(a$):ifathenpoke17136,a
+' FIXME: record 35 is read twice
+{:3146}
 	x=35:gosub{:1}:&,2,2:an$=a$:&,15:d6$=an$+"M":x=45:gosub{:1}:&,2,2:tz$=a$
+{:3148}
 	x=47:gosub{:1}:&,2,2:bn$=a$
+{:3150}
 	x=48:gosub{:1}:&,2,2:c1$="{clear}{f6}{$07}"+a$+"{f6:2}":x=49:gosub{:1}:&,2,2:c2$="{f6:2}"+a$+"{f6:2}"
+{:3152}
 	x=51:gosub{:1}:&,2,2:cc$=a$
+{:3154}
 	x=58:gosub{:1}:&,2,2:nc=val(a$)
+{:3155}
 	ify%>4thengosub{:3348}:gosub{:3170}:goto{:3158}
+{:3156}
 	ony%gosub{:3348},{:3358},{:3366}:gosub{:3170}
 {:3158}
 	poke970,.:poke971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub{:447}:gosub{:3250}
+{:3160}
 	gosub{:30}:forx=1to38:gosub{:1}:&,2,2:st(x)=val(a$):next:close2
+{:3162}
 	an$=am$:lt$=am$:tk$=left$(am$,1):gosub{:3300}
+{:3164}
 	close2:gosub{:3186}:&,37
+{:3166}
 	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":fori=54272toi+24:pokei,.:next
+{:3168}
 	f1=3:&,27,1:goto{:302}
 {:3170}
 	a=val(left$(z$,1)):gosub{:3184}:poke52935,a
+{:3172}
 	a=val(mid$(z$,2,2)):gosub{:3184}:poke52938,a
+{:3174}
 	a=val(mid$(z$,4,2)):gosub{:3184}:poke52936,a
+{:3176}
 	a=val(mid$(z$,6,2)):gosub{:3184}:poke52937,a
+{:3178}
 	b=val(mid$(z$,8,2))
+{:3180}
 	c=val(mid$(z$,10,2))
+{:3182}
 	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.:return
 {:3184}
 	a=16*int(a/10)+a-int(a/10)*10:return
 {:3186}
 	forq=.to6:bf(q)=-1:next
-	rem
+' 3187: moved this to 3075
 '	z3$="im Revision: Sep. 29, 2020 9:00 AM":gosub{:3404}
+{:3188}
 	z3$="Reading Blocks Free...":gosub{:3404}:forq=1to6:dr=q:gosub{:61}
+{:3190}
 ' FIXME: can we do {pound}!a at the end?
 	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk{pound}{back arrow}30:{cyan}"+str$(a):next:q=.:return
 {:3200}
@@ -650,6 +731,7 @@
 	c$="{yellow}{gray3}":i=i+1:ifi>2theni=1
 	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 {:3410}
+' this must stay 3410 since called by i/su.config
 	getan$:z=z+1:ifan$<>""thenz2$="":z=.:gosub{:3400}:return
 	ifz=20thenz=.:goto{:3408}
 	goto{:3410}
