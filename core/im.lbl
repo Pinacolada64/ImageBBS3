@@ -1,0 +1,727 @@
+{step:2}
+{assign: 4000= 4000}
+{assign:60000=60000}
+{:0}
+	onpeek(829)goto{:3000},{:4000}:goto{:300}
+{:1}
+	gosub{:10}:&,22,1:goto{:10}
+{:2}
+	dv%(.)=d1%:dr%(.)=d2%:dv%=dv%(dr):dr$=mid$(str$(dr%(dr)),2)+":":d3%=dr%(dr):return
+{:3}
+	close15:gosub{:2}:open15,dv%,15:return
+{:4}
+	close2:gosub{:3}:open2,dv%,2,dr$+a$
+{:5}
+	input#15,e%,e$,t%,s%:a$="{f6}Status:{pound}#2{pound}%e:{pound}$e:{pound}%t:{pound}%s{f6}":return
+{:6}
+	an$=uu$:on-(an$<>"")gosub{:310}:on-(an$<>"")goto{:314}:pl=1:&,1:goto{:310}
+{:7}
+	&"{pound}g1":a$=an$:return
+{:8}
+	&"{f6}8{f6}":return:remove
+{:9}
+	onntgoto{:999}:&,69,4,21,left$(" "+cm$+"               ",22),$8c:return
+{:10}
+	print#15,"p{$02}"chr$(xand255)chr$(x/256)"{$01}":return
+{:11}
+	a=val(mid$(fl$,a,1)):return
+{:12}
+	poke53253,0:poke2024,.:poke2031,.:poke53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
+{:13}
+	&"{clear}"
+{:14}
+	a$=a$+",s,r":gosub{:4}:ife%=0then:&,3,2
+{:15}
+	close2:return
+{:16}
+	gosub{:1}:input#2,st(x):st(x)=st(x)+i
+{:17}
+	gosub{:1}:print#2,st(x):return
+{:18}
+	gosub{:19}:a$=a$+",s,w":goto{:4}
+{:19}
+	gosub{:3}:print#15,"s"dr$a$:return
+{:20}
+	&,52,56,3:ona%goto{:25}:cm$="is="+str$(is):gosub{:9}:&,22,10:cm$="p2$="+p2$:gosub{:9}:&,22,10
+{:21}
+	cm$="im="+str$(im):gosub{:9}:&,22,10:cm$="ec="+str$(ec):gosub{:9}:&,22,10
+{:22}
+	cm$="f4="+str$(f4):gosub{:9}:&,22,10
+{:25}
+	return
+{:28}
+	cm$=a$:gosub{:9}:dr=5:gosub{:3}:if"++ "+a$=ml$thene%=0:return
+{:29}
+	ml$="++ "+a$:a$=dr$+ml$:&,7,dv%,2:goto{:5}
+{:30}
+	dr=3:a$="e.stats":goto{:4}
+{:31}
+	dr=3:a$="e.access":goto{:4}
+{:32}
+	dr=2:a$="m."+left$(tt$,13)+",s,"+a$:goto{:4}
+{:33}
+	dr=3:a$="e.data":goto{:4}
+{:34}
+	e%=a%:&,52,46,3:am=a%:a%=e%:dr=3:a$="e.log"+left$(lt$,am)+",s,"+a$:goto{:4}
+{:35}
+	dr=6:a$="u.config":goto{:4}
+{:36}
+	dr=3:a$="e."+b$+",s,"+a$:goto{:4}
+{:37}
+	a$="a":gosub{:36}:ife%thena$="w":gosub{:36}
+{:38}
+	print#2,na$r$id;r$d1$r$ac%r$ph$r$rn$r$co$:return
+{:39}
+	&,14,2,kk-1:print#2,"{^}":close2:goto{:62}
+{:40}
+	a$="new user":goto{:42}
+{:41}
+	a$="config"
+{:42}
+	a$="s."+a$:dr=1:goto{:13}
+{:43}
+	dr=3:a$="e.say":gosub{:4}:onsgn(e%)goto{:999}:x=1:gosub{:1}:input#2,x
+{:44}
+	a=rnd(-ti):x=int(rnd(1)*x)+2:gosub{:1}
+{:45}
+	input#2,b$,c$,d$,f$:gosub{:47}:lp=1:&"{f6}{pound}$q{white} {pound}$b{f6}{pound}$q{cyan} {pound}$c{f6}{pound}$q{yellow} {pound}$d{f6}{pound}$q{orange} {pound}$f{f6}{pound}q0"
+{:46}
+	close2:return
+{:47}
+	&"{f6}47{f6:2}":goto{:90}
+{:50}
+	ifi%thenreturn
+{:51}
+	c$=a$:a$="a":gosub{:34}:ife%=0thenprint#2,c$
+{:52}
+	close2:a$=c$:an$=c$:a=a%:&,52,13,3:b=a%:a%=a:ifb=0thenreturn
+{:53}
+	open16,4,15:close16:ifstthenreturn
+{:54}
+	print#4,a$:return
+{:60}
+	a$="{black},u,w":gosub{:4}:close2:print#15,"s"dr$"{black}":a=-sgn(e%):return
+{:61}
+	ifdr<7thenifbf(dr)>-1thengosub{:2}:a=bf(dr):bf=a:return
+{:62}
+	gosub{:3}:on-(dv%<>lk%)goto{:64}:a$=dr$:ifdr$="10:"thena$="a"
+{:63}
+	a=2:print#15,"lg"left$(a$,1):input#15,e%,a$,a$,a$,a$,a$:goto{:65}
+{:64}
+	a=1:close2:open2,dv%,0,"$"+dr$+"{black}":get#2,a$,a$:&,8,2,1:&,8,2,1:close2
+{:65}
+	a=val(a$)*a:bf=a:fora=1to6:ifdv%(a)=dv%anddr%(a)=val(dr$)thenbf(a)=bf
+{:66}
+	next:a=bf:return
+{:70}
+	dr=5
+{:71}
+	on-(pr$<>"i."+a$)gosub{:76}:goto{:3000}
+{:72}
+	dr=5
+{:73}
+	on-(p1$<>"i/"+a$)gosub{:77}:goto{:4000}
+{:74}
+	on-(a$<>"modem")goto{:100}:dr=5:on-(p2$<>"sub."+a$)gosub{:78}:is=is+1:im$(is)=p2$
+{:75}
+	gosub60000:is=is-1:on-(is<1)goto{:999}:a$=mid$(im$(is),5):goto{:78}
+{:76}
+	a$="i."+a$:pr$=a$+"":p1$="":p2$="":new3000:goto{:79}
+{:77}
+	a$="i/"+a$:p1$=a$+"":p2$="":new4000:goto{:79}
+{:78}
+	a$="sub."+a$:p2$=a$+"":new60000
+{:79}
+	gosub{:20}:cm$="L:"+a$:gosub{:9}:gosub{:2}:loaddr$+a$,dv%:return
+{:80}
+	a$=z$:z$=mid$(p1$,3):gosub{:72}:a$=z$:dr=5:on-(lc<>1)goto{:77}:return
+{:82}
+	fori=1to4:&,11,i:next
+{:83}
+	&,11,.:return
+{:84}
+	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+{:85}
+	&"{f6}Would You Like To Leave Feedback? ":gosub{:96}:ona+1goto{:999}:dr=3:gosub{:61}
+{:86}
+	x=2:on-(bf<35)goto{:390}:im=1:goto{:444}
+{:90}
+' TODO: change this to one-liner (double-check bytes saved)
+	q$="":on-(ll%<42)goto{:999}:forr=1toint((ll%-42)/2):q$=q$+" ":next:return
+{:92}
+	&"{f6}{lt. blue}>{cyan}>{white}Canceled!{f6}":return
+{:93}
+	gosub {:98} ' &"{f6}Are You Sure?: "
+{:94}
+	&"{cyan}[{white}No{cyan}]":gosub{:7}:&"{pound}h4":a=-(a$="Y"):goto{:97}
+{:95}
+	gosub {:98} ' &"{f6}Are You Sure?: "
+{:96}
+	&"{cyan}[{white}Yes{cyan}]":gosub{:7}:&"{pound}h5":a=(a$="N")+1
+{:97}
+	&"{pound}q"+chr$(df%+48)+mid$("YesNo",4-a*3,3)+"{f6}":return
+{:98}
+	&"{f6}Are You Sure?: ":return
+
+{:100}
+	p2$="sub."+a$:gosub{:110}:is=is+1:im$(is)=im$
+{:102}
+	gosub60000:new60000:is=is-1:ifisthena$=im$(is):p2$="sub."+a$:gosub{:110}
+{:104}
+	return
+{:110}
+	gosub{:20}:dr=5:gosub{:2}:im$=a$:cm$="L:sub."+a$:gosub{:9}:a$=dr$+"sub."+a$:loada$,dv%
+{:112}
+	return
+{:200}
+	ontr%+1goto{:240}:&,52,17,lf:&,52,20,em:poke951,ll%:poke971,mp%:poke970,0
+{:202}
+	&,52,30,3:ona%gosub{:330}
+{:204}
+	s=.:sh=.:gosub{:12}
+{:206}
+	poke970,0:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
+{:208}
+	mm=2:gosub{:3000}:gosub{:9}:&"{f6} {blue}- {white}{pound}$bM{pound}q0":iftr%<100thena%=tr%:&" {blue}- {white}{pound}%a {cyan}Min Left{pound}q0"
+{:209}
+	ifzzthena%=usr(0):&"{f6} {blue}- {cyan}Stack Free: {white}{pound}%a{pound}q0"
+{:210}
+	&"{f6:2}":poke53252,38:gosub{:6}
+{:212}
+	cm$=left$(p$,11)+":"+left$(an$,4):gosub{:9}:cm$=p$
+{:214}
+	ontr%+1goto{:240}:ifan$=""thengosub{:250}:goto{:200}
+{:216}
+	gosub{:220}:iff4thengosub{:304}:on-(f4=1.1)-2*(f4=1.2)-3*(f4=1.3)goto{:270},{:268},{:234}
+{:218}
+	onrsgoto{:200}:mm=1:goto{:3000}
+{:220}
+	on-(ac%<>ao%)gosub{:320}:an$=an$+"":rs=1:a$=left$(an$,1):z$=left$(an$,2)
+{:222}
+	&,52,20,3:em=a%:&,52,5,3:zz=a%
+{:224}
+	x=1:rq=.:rs=1
+{:226}
+	f4=.:a%=zz:b%=2^ac%:&,42:ifa%thenef$=b$:ep$=a$:ec=a%:ec%=b%:goto{:260}
+{:228}
+	on-(a$="O"or(lc=1anda$="Q"))-2*(a$="{f2}")goto{:230},250:rs=0:return
+{:230}
+	f4=0:ifright$(an$,1)<>"!"then:&"{f6:2}Logoff?: ":gosub{:96}:ifa=0thenreturn
+{:232}
+	f4=1.3:return
+{:234}
+	f1=1-(right$(an$,1)="!"):cd%=.:on-(mid$(z$,2,1)="%")goto{:302}
+{:235}
+'	&"{f6}Update Message/File Scan Date?: ":gosub{:96}:ona+1goto{:302}:ld$=lt$:goto{:302} ' 70 bytes
+	&"{f6}Update Message/File Scan Date?: ":gosub{:96}:if a then ld$=lt$ ' 68 bytes
+	goto{:302}
+{:240}
+	&"{f6}Sorry, Time Limit Exceeded.{f6}":mm=3:gosub{:3000}:f1=1:goto{:302}
+{:242}
+	f1=.:&"{f6} Aborted!{f6}":goto{:200}
+{:250}
+	im=1:goto{:436}
+{:260}
+	rem
+{:261}
+	ifec%>0andcr-ec%<0then:&"{red}Not Enough Credits!{f6}":return
+{:262}
+	cr=cr-ec%:ifep$=""orid=1then{:264}
+{:263}
+	&"{f6}{white}Password{blue}:{white}":&,6:ifan$<>ep$then:&"{f6}{red}Incorrect Password.{f6}":return
+{:264}
+	f4=0:onecgoto{:265},{:266},{:267},{:268}:return
+{:265}
+	z$=ef$:f4=1.1:&,28,1:return
+{:266}
+	f4=1.2:&,28,1:return
+{:267}
+	z$=ef$:goto{:80}
+{:268}
+	a%=asc(ef$+nl$)+256*asc(mid$(ef$,2,1)+nl$):&,42,1
+{:270}
+	mm=.:a$=z$:goto{:70}
+{:280}
+	a%=zz:b%=2^ac%:&,42:ifa%thenef$=b$:ep$=a$:ec=a%:ec%=b%:goto{:264}
+{:282}
+	return
+{:288}
+	return
+{:289}
+' 	&"{pound}i0":ifan$=""thenreturn
+' 	&,15,2:return
+{:290}
+	&"{pound}i0":ifan$<>""then:&,15,2
+	&,15,2:return
+{:300}
+	&,28,1:&,52,$30,3:ona%gosub{:309}:mm=.:a$="main":goto{:70}
+{:302}
+	&,28,1:&,52,$30,3:ona%gosub{:309}:mm=0:a$="lo":goto{:70}
+{:304}
+	&,28,1:gosub{:306}:&,27:return
+{:306}
+	dimbb$(31),dt$(61),ed$(61),nn$(61)
+{:308}
+	dima%(61),c%(61),d%(61),e%(31),f%(61),ac%(31),so%(31):return
+{:309}
+	cm$="L: 1.3 Emulator":gosub{:9}:dr=5:gosub{:3}:loaddr$+"im.emul13",dv%:goto{:304}
+{:310}
+	pu$=an$:on-(an$="{f8}{f2}")goto{:315}
+{:311}
+	ifleft$(an$,1)="{f8}"thenan$=hs$(10-val(mid$(an$,2,1))):goto{:314}
+{:312}
+	&,15,6,140:uu$=an$:an$=a$
+{:313}
+	forct=1to9:hs$(ct)=hs$(ct+1):next:hs$(10)=an$:return
+{:314}
+	&p$+": {pound}v7{f6}":return
+{:315}
+	forct=1to10:a%=10-ct:a$=hs$(ct):&"{f8}{pound}%a: {pound}$a{f6}":next:an$="":uu$="":return
+{:320}
+	gosub{:31}:x=ac%+1:gosub{:1}:&,2,2:ag$=a$:&,2,2:close2
+{:321}
+	iflen(fl$)<len(a$)thenfl$=fl$+mid$(a$,len(fl$)+1)
+{:322}
+	iflen(fl$)>len(a$)thenfl$=a$
+{:323}
+	ifac%<>ao%thenfl$=a$:ao%=ac%
+{:324}
+	a=6:gosub{:11}:le=(a+1)*10:a=16:gosub{:11}:poke830,a:a=20:gosub{:11}:da%=a
+{:325}
+	return
+{:330}
+	dr=3:a$="e.macros":gosub{:4}
+{:332}
+	ife%=0then:&,2,2:a=val(a$):&"{f6:2}":x=int(rnd(1)*a)+2:gosub{:1}:&,3,2
+{:334}
+	close2:return
+{:340}
+	dr=3:gosub{:3}:cm$="ecs.l."+a$:gosub{:9}:&,60,2,0,ec%(0,0),dr$+"e.ecs.l."+a$,dv%
+{:342}
+	gosub{:3}:cm$="ecs.s."+a$:gosub{:9}:&,60,2,0,es%(0,0),dr$+"e.ecs.s."+a$,dv%:return
+{:349}
+	&"{f6}Device, Drive: {pound}i1":an$="  "+an$:return
+{:350}
+	a=int(val(mid$(an$,3,2))):ifa>.thenifa<7thendr=a:goto{:353}
+{:351}
+	ifa<7ora>29thena=8
+{:352}
+	&,15,6,133:d2%=val(an$):d1%=a:dr=.:dv%(.)=d1%:dr%(.)=d2%
+{:353}
+	gosub{:3}:close15:a=-(st<>.):return
+{:370}
+' 	a=1-a:an$=mid$("ffn",a*2+1,2):&"{f6}{green}{pound}$b Mode{lt. green}: {white}O{pound}v7{f6}":return ' 59 bytes
+	a=1-a:&"{f6}{green}{pound}$b Mode{lt. green}: {white}O"+mid$("ffn",a*2+1,2)+"{f6}":return ' 55 bytes
+{:371}
+	a=val(mid$(uf$,b,1)):gosub{:370}:uf$=left$(uf$,b-1)+chr$(a+48)+mid$(uf$,b+1):return
+{:372}
+	a=em:b$="Expert":gosub{:370}:em=a:&,52,20,em:return
+{:373}
+	im=3:goto{:430}
+{:374}
+	b=3:b$="Graphic Menu":gosub{:371}:&,52,44,a:return
+{:375}
+	&,53,a:im=2+a:goto{:443}
+{:376}
+	a=pm:b$="Prompt":gosub{:370}:pm=a:return
+{:390}
+	dr=3:a$="e.text":gosub{:4}:gosub{:1}:&,2,2:close2:&"{f6}{pound}$a{f6}":return
+{:400}
+	rem**subroutine modules**
+{:427}
+	a$="turbo":goto{:74}
+{:428}
+	a$="comm1":goto{:74}
+{:429}
+	a$="comm2":goto{:74}
+{:430}
+	a$="param1":goto{:74}
+{:431}
+	a$="param2":goto{:74}
+{:436}
+	a$="menus":goto{:74}
+{:437}
+	a$="sysdos":goto{:74}
+{:438}
+	a$="stats":goto{:74}
+{:439}
+	a$="bar":goto{:74}
+{:440}
+	a$="editor":goto{:74}
+{:441}
+	a$="handles":goto{:74}
+{:442}
+	a$="protos":goto{:74}
+{:443}
+	a$="display":goto{:74}
+{:444}
+	a$="feedback":goto{:74}
+{:445}
+	a$="misc":goto{:74}
+{:446}
+	on-(lc=.andp2$="sub.modem")goto60000:a$="modem":goto{:74}
+{:447}
+	a$="info":goto{:74}
+{:448}
+	a$="local":goto{:74}
+{:449}
+	a$="misc2":goto{:74}
+{:450}
+	a$="stack":goto{:74}
+{:500}
+	rem**jump table**
+{:501}
+	&"{f6}Edit (I)nfo or (P)arameters? {pound}g1{pound}v7{f6}":a=-(an$="I")-2*(an$="P")
+{:502}
+	im=1:onagoto{:447},{:430}:return
+{:503}
+	im=2:goto{:447}
+{:504}
+	im=1:goto{:443}
+{:505}
+	im=1:goto{:441}
+{:506}
+	im=1:goto{:430}
+{:507}
+	im=1:goto{:445}
+{:508}
+	im=2:goto{:445}
+{:509}
+	im=1:goto{:427}
+{:510}
+	im=1:goto{:428}
+{:511}
+	im=2:goto{:428}
+{:512}
+	im=2:goto{:430}
+{:513}
+	im=4:goto{:443}
+{:514}
+	im=4:goto{:430}
+{:515}
+	im=5:goto{:430}
+{:516}
+	im=4:goto{:447}
+{:520}
+	im=1:goto{:431}
+{:521}
+	im=2:goto{:431}
+{:522}
+	im=1:goto{:439}
+{:523}
+	im=1:goto{:438}
+{:524}
+	im=13:goto{:445}
+{:525}
+	im=4:goto{:445}
+{:526}
+	im=5:goto{:445}
+
+	im=1:goto{:437}
+
+	im=2:goto{:437}
+
+	im=1:goto{:440}
+
+	im=2:goto{:440}
+
+	im=1:goto{:429}
+
+	im=8:goto{:445}
+
+	im=10:goto{:445}
+
+	im=14:goto{:445}
+
+	im=15:goto{:445}
+
+	im=1:goto{:448}
+
+	im=2:goto{:448}
+
+	im=3:goto{:448}
+
+	im=4:goto{:448}
+
+	im=5:goto{:448}
+
+	im=6:goto{:448}
+
+	im=7:goto{:448}
+	im=8:goto{:448}
+	im=9:goto{:448}
+	im=1:goto{:436}
+	im=2:goto{:429}
+	im=3:goto{:429}
+	im=4:goto{:429}
+	im=5:goto{:429}
+	im=6:goto{:429}
+	im=7:goto{:429}
+	im=2:goto{:449}
+	im=3:goto{:449}
+	im=1:goto{:449}
+{:999}
+	return
+	poke22,25:fori=2topeek(152):closepeek(603):next:poke2031,.
+	x=peek(780):y=peek(781)+peek(782)*256:&"{f6}[Error#{pound}!x, Line#{pound}!y]{f6}":el=y
+	&,11:&,28,1:poke53248,.
+	dr$=mid$(str$(dr%(5)),2)+":":dv%=dv%(5):loaddr$+"im",dv%,2
+	gosub{:304}:goto{:4000}
+{:3000}
+	poke828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}":poke53280,.:poke53281,.
+	open131,2,134,chr$(6):poke248,203:poke250,204:poke56,160:poke52,160
+	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
+	dimb$,b%,bd,bd$,bn$,bu
+	dimc$,c%,c1$,c2$,c3$,ca,cc,cc$,cd%,ch$,cm$,cn,co$,co%,cr,ct,ct%
+	dimd$,d%,d1$,d1%,d2$,d2%,d3%,d3$,d4$,d5$,d6$,da%,db%,dc,dc%,dd$,dr,dr$,dv%
+	dimdf%
+	dime$,e%,el,em,ef$,ep$,ec,ec%
+	dimf$,f%,f1,f2,f3,f4,ff$,fl,fl$,f1$,f2$,f3$,f4$,f5$,f6$,f7$,f8$
+	dimg$,g%
+	dimh$,h%,hx$
+	dimi$,i%,id,im$,im,in$,is
+	dimj$,j%,jn$
+	dimk$,k%,kk,kp%
+	diml$,l%,l1,l1$,l2,l2$,l3,l3$,lc,ld$,le,lf,lk%,ll$,ll%,lm$,lp,lt$,lt%
+	dimm$,m%,mc,mf,ml$,mp$,mt$,mw,mp%,mn%
+	dimn$,n%,na$,nc,nf,nl,nl$,nm,nm$
+	dimo$,o%
+	dimp$,p%,p1%,p2%,p3%,pf,ph$,pl,pm,po$,pp$,pr,pr$,ps,pu$,pw$,p1$,p2$
+	dimq$,q%,qb,qe,qt$
+	dimr$,r%,rc,rn$,rp,rq
+	dims$,s%,sa%,sh,sg
+	dimt$,t%,t1,tc%,tf,tk$,tr%,tt,tt$,tz$
+	dimu$,u%,uc,uh,ul,ur,uf$,uu$
+	dimv$,v%
+	dimw$,w%
+	dimx$,x%
+	dimy$,y%
+	dimz$,z%,zz
+	ac%=16:x=rnd(-ti):hx$="0123456789ABCDEF"+""
+	c3$="{f6}Returning To The Editor"+"{f6:2}"
+	ak$=" {$c0:38}"+"{f6}":lk%=8
+	r$=chr$(13):nl$=chr$(.):qt$=chr$(34)
+	open4,4,7:poke836,1:poke650,128
+	poke56328,.:poke56579,peek(56579)or38:poke56577,peek(56577)or36
+	dimtt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
+	dimec%(19,24),es%(3,49),ei%(50)
+	restore:fori=1to9:reada$:co$(i)=a$+"":next
+' bd$=boot drive?
+	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys49155:&,53
+	rem poke$16ec,$32:poke$16ed,$30
+	a$="NTSC":ifpeek(678)thena$="PAL"
+	gosub{:3400}:z3$=a$+" System Detected.":gosub{:3404}
+	close15:open15,dv%,15:&,18,.:poke53248,1:am$="1"+"0001018600"
+{:3084}
+	dv%=z%:z3$="Reading Drive Configuration...":gosub{:3404}:close2:close15:open15,dv%,15
+	fl=.:open2,dv%,2,bd$+"bd.data,s,r":gosub{:5}:ife%thenclose2:gosub{:3250}:gosub{:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
+	input#2,dv%(3),dr%(3),po$:close2:restore:ifpo$=""thenpo$="Main: "
+{:3090}
+	reada$:ifa$<>"*"then{:3090}
+	rem:ifdv%=lk%thenprint#15,"l800"
+	gosub{:33}:fori=1to6:x=i+51:gosub{:1}:&,2,2:dv%(i)=val(a$)
+	&,2,2:dr%(i)=val(a$):next:close2
+' i.IM/modem does write RS232 interface to e.data
+	gosub{:33}:x=32:gosub{:1}:&,2,2:a=val(a$):close2
+{:3096}
+	dr=5:gosub{:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
+	z3$="Reading System Info...":gosub{:3404}
+	gosub{:35}:ife%thenclose2:gosub{:3250}:goto{:3096}
+	x=1:gosub{:1}:&,2,2:bs$=a$:close2
+	im=.:gosub{:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
+	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
+	dr=3:gosub{:3}:z3$="Loading Preset Definitions...":gosub{:3414}:gosub{:3404}
+	&"{lt. blue}{f6}ECS Defs: ":a$=dr$+"e.ecs.main":&,42,4:gosub{:5}:&"{cyan}Done...{f6}"
+	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub{:5}:&"{cyan}Done...{f6}"
+	&"{lt. blue}LightBar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub{:5}:&"{cyan}Done...{f6}"
+	z3$="Setting Alarm Tables...":gosub{:3404}
+	&"{f6:4}{lt. blue}Alarm Table: ":a$=dr$+"e.alarms":&,7,dv%,9:gosub{:5}:&"{cyan}Done...{f6}"
+	dr=2:gosub{:3}
+	&"{lt. blue}Network Alarm Table: ":a$=dr$+"nm.times":&,7,dv%,12:gosub{:5}:&"{cyan}Done...{f6}"
+	dr=3:a$="e.fkeys,s,r":gosub{:4}:ife%thenclose2:goto{:3128}
+	z3$="Enabling Function Keys...":gosub{:3404}
+	fori=1to8:&,2,2:ifright$(a$,1)="{back arrow}"thena$=left$(a$,len(a$)-1)+r$
+	tt$(i)=a$:next:close2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
+'	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8):z3$="Setting Up Variables... (e.data)":gosub{:3404}
+	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8)
+{:3128}
+	z3$="Setting Up Variables... (e.data)":gosub{:3404}:gosub{:33}:ife%thenclose2:gosub{:3250}:goto{:3128}
+	x=1:gosub{:1}:&,2,2:ca=val(a$):x=12:gosub{:1}:&,2,2:ur=val(a$)-1
+	x=17:gosub{:1}:&,2,2:d3$=a$:x=18:gosub{:1}:&,2,2:pp$=a$
+	x=19:gosub{:1}:&,2,2:z$=a$:x=20:gosub{:1}:input#2,p1%,p2%,p3%
+' TODO: move l2 stuff here
+	x=21:gosub{:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3)):ifl2then:&,52,40,1
+	x=35:gosub{:1}:&,2,2:am$=a$:x=36:gosub{:1}:&,2,2:mc=val(a$)
+	x=37:gosub{:1}:&,2,2:y%=val(a$):x=38:gosub{:1}:&,2,2:lk%=val(a$)
+	df%=3:x=40:gosub{:1}:&,2,2:a=val(a$):ifa>.anda<16thendf%=a
+	x=41:gosub{:1}:&,2,2:a=val(a$):ifa$<>""thenclose4:open4,4,a
+	x=42:gosub{:1}:&,2,2:a=val(a$):ifathenpoke17136,a
+	x=35:gosub{:1}:&,2,2:an$=a$:&,15:d6$=an$+"M":x=45:gosub{:1}:&,2,2:tz$=a$
+	x=47:gosub{:1}:&,2,2:bn$=a$
+	x=48:gosub{:1}:&,2,2:c1$="{clear}{f6}{$07}"+a$+"{f6:2}":x=49:gosub{:1}:&,2,2:c2$="{f6:2}"+a$+"{f6:2}"
+	x=51:gosub{:1}:&,2,2:cc$=a$
+	x=58:gosub{:1}:&,2,2:nc=val(a$)
+	ify%>4thengosub{:3348}:gosub{:3170}:goto{:3158}
+	ony%gosub{:3348},{:3358},{:3366}:gosub{:3170}
+{:3158}
+	poke970,.:poke971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub{:447}:gosub{:3250}
+	gosub{:30}:forx=1to38:gosub{:1}:&,2,2:st(x)=val(a$):next:close2
+	an$=am$:lt$=am$:tk$=left$(am$,1):gosub{:3300}
+	close2:gosub{:3186}:&,37
+	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":fori=54272toi+24:pokei,.:next
+	f1=3:&,27,1:goto{:302}
+{:3170}
+	a=val(left$(z$,1)):gosub{:3184}:poke52935,a
+	a=val(mid$(z$,2,2)):gosub{:3184}:poke52938,a
+	a=val(mid$(z$,4,2)):gosub{:3184}:poke52936,a
+	a=val(mid$(z$,6,2)):gosub{:3184}:poke52937,a
+	b=val(mid$(z$,8,2))
+	c=val(mid$(z$,10,2))
+	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.:return
+{:3184}
+	a=16*int(a/10)+a-int(a/10)*10:return
+{:3186}
+	forq=.to6:bf(q)=-1:next
+	rem
+'	z3$="im Revision: Sep. 29, 2020 9:00 AM":gosub{:3404}
+	z3$="Reading Blocks Free...":gosub{:3404}:forq=1to6:dr=q:gosub{:61}
+' FIXME: can we do {pound}!a at the end?
+	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk{pound}{back arrow}30:{cyan}"+str$(a):next:q=.:return
+{:3200}
+	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
+	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
+	&"{pound}{back arrow}10{yellow}({white}2{yellow}) {lt. green}to Convert from Image 1.2{f6}"
+	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6}"
+' TODO: confirm reboot
+' FIXME: Return goes to selecting RS232 interface, overprints this menu
+'	&"{f6:2}":gosub{:3408}:on-(an$="1"oran$="2"oran$="3")goto{:3220}:ifan$="4"thensys64738
+	&"{f6:2}":gosub{:3408}:lm=val(an$):on-(lm<1orlm>4)goto{:3220}
+	return
+{:3220}
+	iflm=1thenz3$="Configure New Image 3.0 System"
+	iflm=2thenz3$="Convert from Image 1.2"
+	iflm=3thenz3$="Convert from Image 2.0"
+	iflm=4then:&"{f6}Reset C64: ":gosub{:93}:ona+1goto{:999}:sys64738 ' FIXME
+' TODO: there's a subroutine at 3414 for clearing this screen area...
+	gosub{:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
+' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto{:73}
+'	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
+	a$="su.config":new4000:&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000:return ' FIXME
+{:3250}
+	dr=3:a$="e.lightdefs,s,r":gosub{:4}:ife%thenclose2:goto{:3300}
+	z3$="Setting Default Checkmarks...":gosub{:3404}
+' FIXME: if e%, don't jump into the middle of a for-next loop. change to 3210 at least
+	forx=.to7:&,2,2:iflen(a$)<>16then{:3258}
+'	fori=1to16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
+	fori=1to16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
+{:3258}
+	next:close2
+{:3300}
+	dr=3:a$="e.log"+left$(lt$,1):gosub{:4}:ife%=.thenreturn
+	dr=3:a$="e.log"+left$(lt$,1):gosub{:18}:close2:an$=d1$:&,15:d6$=an$
+	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub{:51}
+	gosub{:33}:x=44:gosub{:1}:print#2,d6$:close2
+	gosub{:30}:forx=12to22:st(x)=.:gosub{:17}:next:return
+{:3348}
+	z3$="Setting Clock by CMD Device...":gosub{:3404}:close15:open15,y%,15:print#15,"t-ra":&,2,15
+	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
+	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
+	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
+	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke1010,1:return
+{:3358}
+	gosub{:3364}:sys49155:goto{:3362}
+	gosub{:33}:x=35:gosub{:1}:&,2,2:d1$=a$:close2:poke1010,1:return
+{:3362}
+	z$="":fora=49159to49169:z$=z$+chr$(peek(a)):next:poke1010,1:return
+{:3364}
+	z$="Setting Clock by Lt.Kernal...":gosub{:3404}:dr=5:gosub{:4}:a$=dr$+"swr.ml":&,7,dv%,2:return
+{:3366}
+	gosub{:3364}:sys49152:sys49155:goto{:3362}
+{:3400}
+' TODO: overhaul this
+	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
+	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+	&" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
+{:3404}
+	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
+	b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
+{:3408}
+	c$="{yellow}{gray3}":i=i+1:ifi>2theni=1
+	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
+{:3410}
+	getan$:z=z+1:ifan$<>""thenz2$="":z=.:gosub{:3400}:return
+	ifz=20thenz=.:goto{:3408}
+	goto{:3410}
+{:3414}
+	&"{home}{f6:6}":fori=1to17:&"{pound}{back arrow}38 {f6}":next:&"{home}{f6:6}":return
+	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
+	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
+	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
+' TODO: put this in i.su/config
+{:3510}
+	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swiftlink{f6}> {pound}g1"
+	a=val(an$):ifa<0ora>1then{:3510}
+	gosub{:33}:x=32:gosub{:1}:print#2,an$:close2:return
+{crunch:off}
+	copr. 1994 new image 9/21/94
+{crunch:on}
+{:4000}
+	&,38:cm$=cm$+"":p$=p$+"":pr$=pr$+"":p1$=p1$+"":p2$=p2$+""
+	on-(x<128)goto{:4006}:a$="FATAL ERROR!!":gosub{:51}:sys64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
+	&,38:&,61,.,8:print"&,37:goto300:":end
+{:4006}
+	restore
+{:4008}
+	reada$:ifa$<>"errors"then{:4008}
+	&,40:d$="GURU":ifx>.andx<30thenfork=1tox:readd$:next
+	a%=x:&"{f6}{lt. red} SYSTEM ERROR #{pound}%a {white}({pound}$d ERROR){f6}":r$=chr$(13)
+	a$="im":ifel=>3000thena$=pr$:ifel=>4000thena$=p1$:ifel=>60000thena$=p2$
+	a=el:&"{lt. blue} In Line:{gray3}{pound}!a {lt. blue}Of {gray3}{pound}$a{f6}"
+	&"{f6}{lt. red}Recording Error, Please Wait...":d$=str$(x)+" ("+d$+" ERROR)"
+	dr=3:a$="e.errlog,s,a":gosub{:4}:ife%=.then{:4024}
+	a$="e.errlog,s,w":gosub{:4}
+{:4024}
+	print#2,na$r$id;r$d1$r$ac%;r$ph$r$rn$r$co$(co%)r$
+	print#2,"Error :"d$r$"Line  :"el;r$"Area  : "cm$r$"Prompt: "p$
+	print#2,"Program: "pr$r$"Module: "p1$r$"Sub Module: "p2$
+	print#2,"ML File: "ml$r$"Protocol: "d4$r$
+	fori=1to10:a$=chr$(58-i):ifhs$(i)<>""thenprint#2," {f8}"a$": "hs$(i)
+	next:print#2,"{^}":close2:poke53280,2
+	a$="User  : "+na$+r$+"Error :"+d$+r$+"Line  :"+str$(b)+r$+"Time  : {$04}"+d1$+r$
+	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+".":remgosub51
+	close2:&,37:forx=1to4:&,11,x:next:sy$="":sb$="":sg=.
+	p2$="":is=.:p1$="":pr$="":ml$="":pr=-1:pf=.
+	ifac%<>16then:&,52,4,3:ona%goto{:4050}:if(peek(2033)and1)=.then{:4050}
+	f1=2:goto{:302}
+	a$="FATAL ERROR!!":gosub{:51}:sys64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
+{:4050}
+	&,52,4,3:if(a%=1)ori%orid=1then{:4068}
+	gosub{:4092}:kk=.:a$="s.errmail,s,r":dr=1:gosub{:4}:ife%thenclose2:goto{:4068}
+{:4054}
+	kk=kk+1:&,2,2:s=(64andst):tt$(kk)=a$:ifs=.then{:4054}
+	close2:tt$=na$:a$="a":gosub{:32}:ife%thena$="w":gosub{:32}
+	a$="[System Error ("+d$+")]":a=.:print#2,i1$r$1;r$d1$r$a$r$
+' TODO: &,14,2 instead?
+	forx=1tokk:print#2,tt$(x):next:print#2,"{^}":close2:close15
+	gosub{:30}:i=1:x=14:gosub{:16}:x=25:gosub{:16}:x=32:gosub{:16}:close2
+	&"{pound}h9{pound}h9{pound}h7ed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub{:96}
+	ifathena$="E"+"M":goto{:70}
+{:4068}
+	pr$="":goto{:300}
+	data"errors"
+	data"TOO MANY FILES","FILE OPEN","FILE NOT OPEN"
+	data"FILE NOT FOUND","DEVICE NOT PRESENT","NOT INPUT FILE"
+	data"NOT OUTPUT FILE","MISSING FILE NAME","ILLEGAL DEVICE NUMBER"
+	data"NEXT WITHOUT FOR","SYNTAX","RETURN WITHOUT GOSUB"
+	data"OUT OF DATA","ILLEGAL QUANTITY","OVERFLOW"
+	data"OUT OF MEMORY","UNDEF'D STATEMENT","BAD SUBSCRIPT"
+	data"REDIM'D ARRAY","DIVISION BY ZERO","ILLEGAL DIRECT"
+	data"TYPE MISMATCH","STRING TOO LONG","FILE DATA"
+	data"FORMULA TOO COMPLEX","CAN'T CONTINUE","UNDEF'D FUNCTION"
+	data"VERIFY","LOAD","BREAK "
+{:4092}
+	gosub{:35}:x=1:gosub{:1}:&,2,2:i1$=a$:close2:return
+{crunch:off}
+	copr. 1996 new image 5/6/96-jlf
+	rem:"im (c)nissa 200929 lh-ad"
