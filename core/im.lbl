@@ -664,7 +664,7 @@
 	a=val(an$):ifa<0ora>1then{:3510}
 	gosub{:33}:x=32:gosub{:1}:print#2,an$:close2:return
 {crunch:off}
-	copr. 1994 new image 9/21/94
+	rem copr. 1994 new image 9/21/94
 {crunch:on}
 {:4000}
 	&,38:cm$=cm$+"":p$=p$+"":pr$=pr$+"":p1$=p1$+"":p2$=p2$+""
@@ -723,5 +723,5 @@
 {:4092}
 	gosub{:35}:x=1:gosub{:1}:&,2,2:i1$=a$:close2:return
 {crunch:off}
-	copr. 1996 new image 5/6/96-jlf
+	rem copr. 1996 new image 5/6/96-jlf
 	rem:"im (c)nissa 200929 lh-ad"
