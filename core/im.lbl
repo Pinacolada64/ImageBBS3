@@ -529,7 +529,7 @@
 {:3074}
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys49155:&,53
 {:3075}
-	&,69,0,2,"im Revision: Nov 11, 2020 12:39 AM",3
+	&,69,1,1,"im Revision: Nov 11, 2020 12:39 AM",3
 {:3076}
 	a$="NTSC":ifpeek(678)thena$="PAL"
 {:3078}
@@ -539,7 +539,9 @@
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub{:3404}:close2:close15:open15,dv%,15
 {:3086}
-	fl=.:open2,dv%,2,bd$+"bd.data,s,r":gosub{:5}:ife%thenclose2:gosub{:3250}:gosub{:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
+	fl=.:open2,dv%,2,bd$+"bd.data,s,r":gosub{:5}
+{:3087}
+	ife%thenclose2:gosub{:3200}:gosub{:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
 {:3088}
 	input#2,dv%(3),dr%(3),po$:close2:restore:ifpo$=""thenpo$="Main: "
 {:3090}
@@ -558,7 +560,7 @@
 {:3097}
 	z3$="Reading System Info...":gosub{:3404}
 {:3098}
-	gosub{:35}:ife%thenclose2:gosub{:3250}:goto{:3096}
+	gosub{:35}:ife%thenclose2:gosub{:3240}:goto{:3096}
 {:3100}
 	x=1:gosub{:1}:&,2,2:bs$=a$:close2
 {:3102}
@@ -595,7 +597,7 @@
 {:3128}
 	z3$="Setting Up Variables... (e.data)":gosub{:3404}:gosub{:33}
 {:3129}
-	ife%thenclose2:gosub{:3250}:goto{:3128}
+	ife%thenclose2:gosub{:3240}:goto{:3128}
 {:3130}
 	x=1:gosub{:1}:&,2,2:ca=val(a$):x=12:gosub{:1}:&,2,2:ur=val(a$)-1
 {:3132}
@@ -685,9 +687,11 @@
 	iflm=4then:&"{f6}Reset C64: ":gosub{:93}:ona+1goto{:999}:sys64738 ' FIXME
 ' TODO: there's a subroutine at 3414 for clearing this screen area...
 	gosub{:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
+{:3240}
 ' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto{:73}
-'	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
-	a$="su.config":new4000:&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000:return ' FIXME
+' "0:" prefix does not work with LtK, it assumes prg is in LU 0 (mine is in LU 1)
+' so I leave dr$ off here:
+	new4000:load"i/su.config",dv%:gosub 4000:return
 {:3250}
 	dr=3:a$="e.lightdefs,s,r":gosub{:4}:ife%thenclose2:goto{:3300}
 	z3$="Setting Default Checkmarks...":gosub{:3404}
@@ -721,30 +725,43 @@
 {:3400}
 ' TODO: overhaul this
 	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
+{:3401}
 	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+{:3402}
 	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+{:3403}
 	&" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
 {:3404}
 	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
+{:3406}
 	b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
 {:3408}
 	c$="{yellow}{gray3}":i=i+1:ifi>2theni=1
+{:3409}
 	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 {:3410}
 ' this must stay 3410 since called by i/su.config
 	getan$:z=z+1:ifan$<>""thenz2$="":z=.:gosub{:3400}:return
+{:3411}
 	ifz=20thenz=.:goto{:3408}
+{:3412}
 	goto{:3410}
 {:3414}
 	&"{home}{f6:6}":fori=1to17:&"{pound}{back arrow}38 {f6}":next:&"{home}{f6:6}":return
+{:3500}
 	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
+{:3502}
 	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
+{:3504}
 	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
 ' TODO: put this in i.su/config
 {:3510}
 	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swiftlink{f6}> {pound}g1"
+{:3512}
 	a=val(an$):ifa<0ora>1then{:3510}
+{:3514}
 	gosub{:33}:x=32:gosub{:1}:print#2,an$:close2:return
+{:3999}
 {crunch:off}
 	rem copr. 1994 new image 9/21/94
 {crunch:on}
