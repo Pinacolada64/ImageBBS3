@@ -486,7 +486,8 @@
 	gosub{:304}:goto{:4000}
 {:3000}
 {step:2}
-	poke828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}":poke53280,.:poke53281,.
+' POKE 52938,20 fixes boot year to 2020 rather than 2090
+	poke828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}":poke53280,.:poke53281,.:poke52938,20
 	open131,2,134,chr$(6):poke248,203:poke250,204:poke56,160:poke52,160
 	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
 	dimb$,b%,bd,bd$,bn$,bu
@@ -670,28 +671,42 @@
 {:3190}
 ' FIXME: can we do {pound}!a at the end?
 	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk{pound}{back arrow}30:{cyan}"+str$(a):next:q=.:return
+
+' subroutine:
 {:3200}
 	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
 	&"{pound}{back arrow}10{yellow}({white}2{yellow}) {lt. green}to Convert from Image 1.2{f6}"
 	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6}"
 ' TODO: confirm reboot
+' TODO: prompt for boot drive (default is "0:")
 ' FIXME: Return goes to selecting RS232 interface, overprints this menu
 '	&"{f6:2}":gosub{:3408}:on-(an$="1"oran$="2"oran$="3")goto{:3220}:ifan$="4"thensys64738
-	&"{f6:2}":gosub{:3408}:lm=val(an$):on-(lm<1orlm>4)goto{:3220}
+	&"{f6:2}":gosub{:3408}:lm=val(an$):on lm goto {:3220},{:3222},{:3224},(:3226}
+	if an$=r$ then gosub {:3414}
 	return
 {:3220}
-	iflm=1thenz3$="Configure New Image 3.0 System"
-	iflm=2thenz3$="Convert from Image 1.2"
-	iflm=3thenz3$="Convert from Image 2.0"
-	iflm=4then:&"{f6}Reset C64: ":gosub{:93}:ona+1goto{:999}:sys64738 ' FIXME
+	z3$="Configure Image BBS 3.0":goto {:3228}
+{:3222}
+	z3$="Convert from Image BBS 1.2":goto {:3228}
+{:3224}
+	z3$="Convert from Image BBS 2.0":goto {:3228}
+{:3226}
+	z3$="Reset C64":gosub {:3404}:gosub {:93}:on a+1 goto {:999}:sys 64738 ' FIXME
+{:3228}
 ' TODO: there's a subroutine at 3414 for clearing this screen area...
-	gosub{:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
+	gosub{:3404}:&"{f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}"
+
 {:3240}
+' original:
 ' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto{:73}
-' "0:" prefix does not work with LtK, it assumes prg is in LU 0 (mine is in LU 1)
-' so I leave dr$ off here:
-	new4000:load"i/su.config",dv%:gosub 4000:return
+' check for file first, so we won't crash with ?load error:
+	f$="i/su.config":close 15:open 1,dv%,1,f$:s=st:close 15:if s then:&"{f6}Cannot find {f5}{pound}$f{f5}. Halting...{pound}w5":goto {:4048}
+' "0:" prefix (with LtK) assumes prg is in LU 0 (mine is in LU 1), so crashes with ?load  error.
+' So I leave dr$ off here:
+	new4000:loadf$,dv%:gosub 4000:return
+'	new4000:load"i/su.config",dv%:gosub 4000:return
+
 {:3250}
 	dr=3:a$="e.lightdefs,s,r":gosub{:4}:ife%thenclose2:goto{:3300}
 	z3$="Setting Default Checkmarks...":gosub{:3404}
@@ -701,7 +716,7 @@
 	fori=1to16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
 {:3258}
 	next:close2
-{:3300}
+{:3300} ' was 3210 (called in i/su.config)
 	dr=3:a$="e.log"+left$(lt$,1):gosub{:4}:ife%=.thenreturn
 	dr=3:a$="e.log"+left$(lt$,1):gosub{:18}:close2:an$=d1$:&,15:d6$=an$
 	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub{:51}
@@ -756,7 +771,7 @@
 	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
 ' TODO: put this in i.su/config
 {:3510}
-	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swiftlink{f6}> {pound}g1"
+	&"{f6}RS232 Interface Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swiftlink{f6}> {pound}i1"
 {:3512}
 	a=val(an$):ifa<0ora>1then{:3510}
 {:3514}
@@ -793,6 +808,7 @@
 	p2$="":is=.:p1$="":pr$="":ml$="":pr=-1:pf=.
 	ifac%<>16then:&,52,4,3:ona%goto{:4050}:if(peek(2033)and1)=.then{:4050}
 	f1=2:goto{:302}
+{:4048}
 	a$="FATAL ERROR!!":gosub{:51}:sys64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
 {:4050}
 	&,52,4,3:if(a%=1)ori%orid=1then{:4068}
