@@ -248,11 +248,11 @@
 {:288}
 	return
 {:289}
-' 	&"{pound}i0":ifan$=""thenreturn
-' 	&,15,2:return
-{:290}
+'	&"{pound}i0":ifan$=""thenreturn
 	&"{pound}i0":ifan$<>""then:&,15,2
-	&,15,2:return
+{:290}
+'	&,15,2:return
+	return
 {:300}
 	&,28,1:&,52,$30,3:ona%gosub{:309}:mm=.:a$="main":goto{:70}
 {:302}
