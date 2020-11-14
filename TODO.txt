@@ -506,3 +506,35 @@ Manual:
 "media: book" - apparently this sets up some parameters like facing number pages and other things, suitable for making printed books
 
 Add Jack's struct docs (on previous laptop)
+
+[Manual]
+Trc right - Time Reset Clock - sync time with RTC if VICE clock runs slow from fluctuating emulation speed
+
+update200909:
+Hit Return at "Insert System Disks in Correct Drive" prompt goes to
+
+RS232 Device Type:onfigure a New BBS
+Enter 0 for User Portert from Image 1.2
+Enter 1 for Swiftlinkert from Image 2.0
+>         (4) to Abort
+
+then
+
+RS232 Device Type:onfigure a New BBS
+Enter 0 for User Portert from Image 1.2
+Enter 1 for Swiftlinkert from Image 2.0
+> 1       (4) to Abort
+?file data  error in 5
+c64 d#10 lu01 user00 port#00  ready.
+
+[FIXED]
+Still want to fix boot year of 2090
+(poke $16ee... does not fix it)
+
+if Larry's gonna distribute updates like this, I should write a file copier that knows about which devices/drives your files are stored on and copy 'em for you.
+
+201003 update
+im: what is pu$?
+
+i.lo:
+3999	ready.
