@@ -29,23 +29,36 @@ Copying the files out of the original disk images we recommend you use `fcopy+` 
 
 ### Designate Drives
 
-The Commodore 64 is designed to use up to eight devices on the serial port.
+The Commodore 64 is designed to use up to eight devices on the serial bus.
 However, we recommend not using more than six due to current limitations of the serial port driver.
-It will support single or dual drives, or logical units (LUs) 0 through 9 on a Lt. Kernal (IMAGE will not access LU 10 on a Lt. Kernal).
 
-You will want to plan your setup on what space you have available, so read the following information carefully to help you in this regard. 
+Image BBS supports:
 
-Although it is possible to run IMAGE BBS v3.0 using only two 1581 disk drives, we highly recommend you use multiple drives, since you will find that disk space and directory space gets used quickly.
+* single or dual drives
+* logical units (LUs) 0 through 9 on a Lt. Kernal hard drive (IMAGE will not access LU 10, the DOS LU)
+* partitions 0-254 on a Creative Micro Designs hard drive
 
+Plan your setup on what storage space you have available.
+Read the following information carefully to help you in this regard. 
+
+It is possible to run Image BBS v3.0 using only two 1581 disk drives.
+We highly recommend you use higher capacity drives, since you will find that disk space and directory space gets used quickly.
+
+.Some Commodore Storage Terminology
+****
 _Device_ refers to either the physical unit, or the device number(s) assigned to the particular device (_i.e._ one device online is usually set to 8, two devices to 8 and 9, etc.).
 
 #FIXME# - is this a decent description?
+
 _Drive_ refers to the number of available separate storage spaces available on a device.
+(These are like _volumes_ on Windows or Linux operating systems.)
 
 - 0 on a single drive (such as a 1541 or 1571--the count begins at zero)
 - 0 or 1 on a dual drive (such as a 2031)
-- _Logical Units:_ 0 through 9 on a Lt. Kernal or Rear Admiral hard drive
-- _Partitions:_ 1 through 254 on a Creative Micro Designs (or ThunderDrive)
+- _Logical Units:_ 0 through 9 on a Lt. Kernal (or Rear Admiral) hard drive
+- _Partitions:_ 1 through 254 on a Creative Micro Designs (or ThunderDrive) hard drive.
+Partition 0 means "`current partition.`"
+****
 
 If you have multiple devices connected, there may either be a switch somewhere on the device to change the device number, or--in the case of CMD and Rear Admiral drives--a "`Swap`" button to change the device number in software.
 
@@ -93,7 +106,7 @@ E-mail files have a prefix of `m.`.
 
 Forced mail files have a prefix of `f.`.
 
-If the BBS is networked, network mail and network configuration files have a prefix of `nm.`.
+If the BBS is networked, network mail and network configuration files (which have a prefix of ``nm.``) are stored here also.
 
 [start=3]
 . The "`Etcetera Disk`"
@@ -165,36 +178,67 @@ NOTE: There are <<Shared Image BBS 3.0 Setup>> steps to take no matter if you ar
 
 1.	Configure your hard drive and/or other system hardware for your Image drive assignments.
 
-It`'s recommended that you:
+If you don't have a lot of storage space available, it`'s recommended to:
 
 - Use separate partitions or drives for Image drives 1 (System), 2 (Mail), and 5 (Program)
-- Combine 3 (Etcetera), 4 (Directory) and 6 (User) drives to a different drive or partition.
+- Combine drives 3 (Etcetera), 4 (Directory) and 6 (User) in a different drive or partition
 
 You'll probably want two additional drives or partitions for message boards and Upload/Download sections.
 
 [start=2]
-2.	Either convert the three .d81 and two .d64 files to floppy disk or use some other method of getting the files onto your Image drives.
+. Convert the three .d81 and two .d64 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-3.	Use `fcopy+` included on the 3.0 UTILS disk for copying all the files from disk 1 to your "`Program Disk`". 
+##### Copy Files
 
-4. 	It's recommended to use `copy-all.64l`, also included on the 3.0 UTILS disk, for copying all the `e.` files from disk 2 to your "`Etcetera Disk`".
+Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 
-5.	Use `fcopy+` to copy all the `s.` files to your "`System Disk`" and the `nm.times` file to your "`E-Mail Disk`".
+. All the boot and other module files from Disk 1 to your Program Disk:
+
+.Boot and Module Files
+[width="100%",options="header"]
+|====================
+| Filename    | Purpose 
+| `boot`      | autoboot program
+| `image 3.0` | title screen
+| `im`        | core routines
+| `i*`        | BBS modules 
+| `ml*`       | assembly language
+| `sub.*`     | BBS modules
+| `++*`       | protocols
+|====================
+
+[start=2]
+. Copy all the `s.*` files (SEQ) from Disk 2 to your System Disk.
+
+. Copy `nm.times` (PRG) from Disk 2 to your Mail Disk.
+
+. It's recommended to use `copy-all.64l`, also included on the 3.0 UTILS disk, for copying all the `e.*` files (PRG, SEQ, REL) from Disk 2 to your Etcetera Disk.
 
 TIP: If you wish to run the "`Today in History`" logon module, copy all the `today.*` files to your Etcetera Disk.
 
-[start=6]
+// [start=6]
 
 include::includes\sub_modem-config.adoc[]
 
 #### Installation
 
-NOTE: Intro here
+#TODO#: Intro here
 
 include::includes\boot-command.adoc[]
 
-2.  When prompted type kbd:[1] to `Configure a New BBS`.
-3.	Image begins collecting information needed to configure 3.0.
+[start=4]
+
+4.  When you are prompted
+
+....
+Insert All System Disks In Correct
+     Drives, And Press RETURN
+....
+
+type kbd:[1] to `Configure a New BBS`.
+
+Image BBS begins collecting information needed to configure itself.
+
 4.	Part I: Sysop Information
 
 Enter the information asked for. 
@@ -210,14 +254,16 @@ You need to set the date and time after every reboot.
 
 kbd:[2] CMD Device w/RTC Option
 
-You are asked which device has the Creative Micro Designs Real-Time Clock option.
+The RTC (real-time clock) in various Creative Micro Designs devices (CMD FD 2000/CMD FD 4000 floppy drives, or the CMD hard drive) can be polled to get the current date and time.
+
+You are asked which device has the RTC option.
 Enter the device number of your CMD device.
 
 kbd:[3] Lt. Kernal Port 1
 
 kbd:[4] Lt. Kernal Port 2
 
-These are for use with Lloyd Sponenburgh’s Real-Time Clock module attached.
+These are for use with Lloyd Sponenburgh’s Real-Time Clock module attached to the Lt. Kernal hard drive.
 
 [start=6]
 6.	Part III: Device/Drive Settings
@@ -227,18 +273,18 @@ Configure your Image drive assignments.
 [start=7]
 7.	Part IV: BBS Information
 
-Enter the customized information asked for pertaining to your BBS.
+You can customize information asked for pertaining to your BBS.
 
-NOTE: Seems like this part could be folded into <<Shared Image BBS 3.0 Setup>>. I'm not sure if the conversion process follows these steps exactly.
+#TODO#: Seems like this part could be folded into <<Shared Image BBS 3.0 Setup>>. I'm not sure if the conversion process follows these steps exactly.
 
 At this point, Image creates several files needed for its own operation.
 When finished, Image displays a message for you to read and asks you to `Hit any key`.
 
-You are then prompted for the RS232 interface type you have connected to the C64.
+You are then prompted for the RS232 interface type you have connected to the C64:
 
-- If you have an OmniTronix or similar user port interface, type kbd:[0].
+- Enter kbd:[0] if you have an OmniTronix or similar user port interface
 
-- If you have a SwiftLink, Turbo232, or a clone of these on the cartridge port, type kbd:[1].
+- Enter kbd:[1] if you have a SwiftLink, Turbo232, or a clone of these on the cartridge port.
 
 Hit a key, and you are taken to the System Idle screen.
 
@@ -248,12 +294,21 @@ If the time has been set using a real-time clock, Image performs AutoMaintenance
 
 #### Manual Set
 
-If not already set by a real-time clock, the bottom Status Line continues to flash until the time is set.
+If not already set by a real-time clock, the status line on the bottom row of the screen continues to flash until the time is set.
 Hit kbd:[1] to set the time.
+
+First, the current date and time are displayed.
+
+.Example
+....
+          Current date/time is
+       Sat Nov 14, 2020  3:19 PM
+....
+
 You are taken through several prompts to set the time and date:
 
 [start=1]
-. Weekday
+. Day
 
 .Weekday Numbers
 [options="header,autowidth"]
@@ -269,44 +324,102 @@ You are taken through several prompts to set the time and date:
 |====================
 
 [start=2]
+. Month
+. Date
 . Year
 
-Enter only the last two digits of the year here.
+****
+TIP: Enter only the last two digits of the year here.
+****
 
-[start=3]
-. Month
-. Day
+[start=5]
 . Hour
+
+****
+TIP: The clock set routine only accepts 12-hour time.
+24-hour time is not accepted as valid input.
+****
+
+[start=6]
 . Minute
 . AM/PM
 
-The current date and time is displayed, and you are prompted `Select Yes to Start Clock, or Select No to Change`.
+The current date, time and time zone are displayed for confirmation.
+
+.Example
+....
+          Setting date/time to
+       Sat Nov 14, 2020  3:19 PM PST
+....
+
+and you are prompted:
+
+....
+ Select Yes to set clock, or
+ select No to change: [Yes]
+....
+
 
 kbd:[Y]es logs the time and date to `e.data` and sets the system clock.
 
 kbd:[N]o restarts the clock setting questions.
 
-Image may or my not perform AutoMaintenance again and return to the System Idle screen.
+Image may (if the date entered was different than the old date) or may not perform AutoMaintenance again and return to the System Idle screen.
 
 ### Console Login
 
-#FIXME#: I don`'t think hitting f1 to go to full screen mode will let you hit f7. I might be wrong.
+A _console login_ is when you're sitting in front of the C64.
+Here's how to do that.
 
-[start=1]
-.	#Press kbd:[f1] to go to full screen mode then# 
-. Use kbd:[f3] (move highlight left) and kbd:[f5] (move highlight right) to move the lightbar highlight to `Loc`.
-. Press kbd:[f7] to put a check mark on the left of `Loc`.
+****
+_Optional:_ If the lightbar highlight is already positioned on `Loc`, you can press kbd:[f1] to go to full screen mode.
 
-This starts a console BBS login.
+The screen mask disappears, and only the bottom status line is visible.
+The time and date, status line indicators, and time remaining (which is shown as `--:--` for now since no one is connected yet) are always visible (unless `New` right, _Enable Screen Blanking_, has been selected).
+
+You can always press kbd:[f1] to toggle between these full and split-screen modes.
+****
+
+If you have the split screen mode enabled, use kbd:[f3] (move highlight left) and kbd:[f5] (move highlight right) to move the lightbar highlight to `Loc`, if necessary.
+
+In either case:
+
+* Press kbd:[f7] to put a check mark on the left of `Loc`.
+
+This starts a console login.
 
 ### Instant Login
 
-The BBS copyright message is displayed, and 
+_Instant Login_ is used to bypass many of the activities and questions asked as a user logs on to the BBS.
+It's useful if a sysop wants to quickly log in, do some maintenance, then log off.
+
+The BBS copyright message is displayed, and you are prompted:
+
+....
+       IMAGE BBS 64 V3.0 (C) 2020
 
 
-. Press kbd:[I] for Instant Login. 
+ Press RETURN For Normal Login or
+ Press "I" For Instant Login:
+....
 
-. When asked, type your sysop password.
+. Press kbd:[I] for `Instant` Login. 
+
+.QuickList
+****
+You can define sysops (yourself included) as being able to perform Instant Logins--even remotely--in a list called the _QuickList_.
+
+There aren't any users defined in QuickList when a new BBS is set up, but you can go into kbd:[IM] later and set yourself, or other users as you acquire them, to do this.
+
+Once you have done that, users are listed here in the QuickList option.
+They just type the number of the account to log on, type their password, and they can do an Instant Login.
+
+The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
+
+For more information, see the relevant `IM` documentation.
+****
+
+. When prompted, type your sysop password.
 
 ### Online Configuration
 
@@ -315,25 +428,29 @@ The BBS greets you with a welcome message and prompts you to select your time zo
 . Select your time zone (7=EST, 6=CST, 5=MST, 4=PST)
 . The BBS will display the current time and `Stack Free: 239`.
 
+NOTE: Initially, the time may be off by a few hours.
+This is because the system's time zone has not been set for the BBS clock.
+You can fix this later, during further BBS configuration.
+
 NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`GOSUB` without `RETURN`, or `FOR` without `NEXT` statements) on the stack. 
 
 [start=3]
-.	At the Main Prompt, type kbd:[EP] to _Edit your Parameters_. 
+.	At the Main Prompt, type kbd:[EP] to `Edit your Parameters`. 
 Select kbd:[P]arameters.
 
 . Set your Computer Type and any other Terminal Parameters you want. 
 
-_More? Prompt_ Off and _Cursor Menu Mode_ On are recommended.
+`More? Prompt` Off and `Cursor Menu Mode` On are recommended.
 
 Hit kbd:[Return] to exit.
 
 [start=5]
 . At this point, it is suggested you log off using the kbd:[O] command and answer `Update User File?` with kbd:[Y]es.
-This will save your new parameters to your user file.
+This saves your new parameters to your user file.
 You can then log back on in any mode you choose. 
 
 IMPORTANT:  Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] commands.
-Logging off by hitting kbd:[f7] (unchecking left `Loc`) will bypass the module which updates the last 10 callers and cause errors in the time used during the call.
+Logging off by hitting kbd:[f7] (unchecking left `Loc`) bypasses the module which updates the last 10 callers and cause errors in the time used during the call.
 
 #### Shared Image BBS 3.0 Setup
 
@@ -347,7 +464,7 @@ You are taken to the Image BBS Configuration Editor.
 #### Access Groups
 
 You can use the cursor keys to move the highlight, or type kbd:[E] for `Access Groups`.
-The BBS will load the access group information.
+The BBS loads the access group information.
 
 [width="100%"]
 |====================
@@ -362,7 +479,7 @@ kbd:[Return] exits, saving changes.
 You are returned to the Configuration Editor.
 
 . Type kbd:[I] for ``Misc. Features``.
-.. At minimum, you will need to set the `Time Zone` and the `System ID`.
+.. At minimum, you need to set the `Time Zone` and the `System ID`.
 ..  If you are running on a Lt. Kernal, type kbd:[A] to set your Lt. Kernal device number.
 .. Type kbd:[M] to configure your Chat messages for entering and leaving chat.
 .. Edit any other parameter you wish to set.
@@ -371,9 +488,21 @@ You are returned to the Configuration Editor.
 #### Modem Configuration
 
 . Type kbd:[J] for `Modem Config`.
+
+.Lt. Kernal Ports
+****
+If a Lt. Kernal hard drive is configured, you are asked:
+
+ Edit Modem Config for Which Port? (RETURN = 0):
+
+Select Port 0 if you don't have a multiplexed Lt. Kernal system. 
+Otherwise, select the port number of the Commodore 64 you are configuring.
+****
+
 .. Type kbd:[B] for `Setup/Import Modem Config`.
 .. Type kbd:[1] for `Setup New Modem Config`.
-.. Answer kbd:[Y]es to the next two questions. #FIXME#: what are they?
+.. Answer `Continue?:` kbd:[Y]es
+.. Answer `Are You Sure?:` kbd:[Y]es
 
 ###### GGlabs GLink232-LT
 
@@ -381,7 +510,7 @@ include::includes\im-gglabs-modem-config.adoc[]
 
 When finished configuring your modem, type kbd:[X] to `Exit Modem Config` and answer `Update Modem Flags?` kbd:[Y]es.
 
-The remaining configuration options are custom settings for your BBS and will not be discussed as part of the installation process.
+The remaining configuration options are custom settings for your BBS, not discussed as part of the installation process.
 
 ## Introducing RELedit
 
@@ -392,7 +521,7 @@ RELedit, if you're not familiar, is #FIXME#. For more information, see the chapt
 .	Cursor to or type kbd:[G] for `Editor Utils`.
 
 .	Type kbd:[A] to `Run RELedit`.
-Here you will define your Subs, U/Ds, U/Xs and SIGs the same way it is done in Image 1.2a.
+Here you can define your Subs, U/Ds, U/Xs and SIGs the same way it is done in Image 1.2a.
 You _must_ define at least one SIG and add your SB, UD and UX assignments.
 
 When finished with RELedit, exit using the kbd:[Return] key until you end up back at the `Base Editor` menu.
@@ -445,7 +574,7 @@ h.	Type kbd:[Return] to exit.
 7.	At this point, it is suggested you log off using the kbd:[O] command and answer `Update User File?` with kbd:[Y]es. This saves the new parameters to your account. You can then log back on in any mode you choose.
 
 NOTE: Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] command.
-Logging off with the kbd:[f7] key will bypass the module which updates the last 10 callers and cause errors in the time used.
+Logging off with the kbd:[f7] key bypasses the module which updates the last 10 callers and cause errors in the time used.
 
 [start=8]
 .	Log back on to the BBS. At the Main Prompt, type kbd:[IM].
@@ -463,14 +592,18 @@ You are returned to the Configuration Editor.
 [start=10]
 .	Enter kbd:[I] for `Misc. Features`.
 
-.. At minimum, you will need to set the `Time Zone` and the `System ID`.
-.. If you are running on a Lt. Kernal, use option kbd:[A] to set to your Lt. Kernal device number.
-.. Type kbd:[M] to configure your Entering and Exiting Chat messages.
+.. At minimum, you should set kbd:[G], the `Time Zone` and kbd:[J], the `System ID`.
+.. If you are running on a Lt. Kernal, set kbd:[A], `Lt. Kernal Device` number.
+.. _Optional:_ Type kbd:[M] to configure your `Entering Chat` and `Exiting Chat` messages.
 .. Edit any other parameters you wish to set.
 .. When finished, type kbd:[N] to `Quit` back to the Configuration Editor.
 
 [start=11]
-11.	Enter J for Modem Config. Enter B for Setup/Import Modem Config.  Enter 1 to Setup New Modem Config.  Answer Yes to the next two questions.
+11.	Type kbd:[J] for `Modem Config`.
+
+a. Enter kbd:[B] for `Setup/Import Modem Config`.
+b. Enter kbd:[1] to `Setup New Modem Config`.
+Answer Yes to the next two questions.
 
 include::im-gglabs-modem-config.adoc[]
 
@@ -484,40 +617,41 @@ This asks any user whose account is still configured with a phone number to chan
 
 [start=14]
 .	Type kbd:[B] for `Maint Mods` to configure your nightly AutoMaintenance modules.
-2.	Configure any other items you need to get started.
-3.	When back at the Configuration Editor, type kbd:[N] for `Base Editors`.
-4.	Cursor to or type kbd:[G] for `Editor Utils`.
-5.	Enter kbd:[A] to `Run RELedit`. Here you should find your Subs, U/Ds, U/Xs and SIGs the same way it was configured in Image 1.2a.
+.	Configure any other items you need to get started.
+.	When back at the Configuration Editor, type kbd:[N] for `Base Editors`.
+.	Type kbd:[G] for `Editor Utils`.
+.	Type kbd:[A] to `Run RELedit`.
+Here you should find your Subs, U/Ds, U/Xs and SIGs the same way it was configured in Image 1.2a.
 
 Verify everything is correct or make changes as needed.
-If your 1.2 system was networked, you will need to go into each netsub you have defined.
+If your 1.2 system was networked, go into each netsub you have defined.
 No changes need to be made from within the netsub but when you exit each netsub, they are updated to a new Image 3.0 file format called a "`structure file.`"
 
 When finished with RELedit, exit with kbd:[Return].
 The BBS performs a series of operations to convert all your 1.2 SIGs to 3.0 format.
 When finished, you go back to the `Base Editor` Menu.
 
-[start=6]
-6.	This would be a good time to check your CMD Clock and Set Time Device number of your CMD drive if you want to use it for setting Image time during boot-up.
-Use the available menu selections.
+****
+If you are using a CMD RTC to set the BBS clock at boot-up, this would be a good opportunity to kbd:[H] `Set Time Dv#` (set time device number) and kbd:[I] `Set CMD Clock` of your CMD device.
+****
 
 7.	Type kbd:[K] to quit back to the Configuration Editor.
 
 8.	Type kbd:[Q] to quit back to the Main Prompt.
 
-9.	If you had macros defined in your 1.2 system and want to keep them, you will need to convert the `e.macros` file. Otherwise, just delete it.
+9.	If you had macros defined in your 1.2 system and don't want to keep them, delete the `e.macros` file.
 
 If you would like to convert the file, follow these steps:
 
 #FIXME# more exact steps.
 
-.. Use kbd:[RD] at the Main Prompt, and read the SEQuential file `e.i.macros`.
+.. Type kbd:[RD] at the Main Prompt, and read the SEQuential file `e.i.macros`.
 This contains the number of macros you have.
-.. Use kbd:[RF] at the Main Prompt. This is a RELative File editor.
-.. Select `e.macros`.
+.. Type kbd:[RF] at the Main Prompt. This is a RELative File editor.
+.. Select `e.macros` as the filename to read.
 .. kbd:[V]iew record 1.
 
-TIP: You might want to move this record to the end of the file, since it will be replaced by the macro count.
+TIP: You might want to move this record to the end of the file, since the first record is going to be replaced by the macro count.
 
 [start=5]
 .. Edit record 1, replacing the data in it with a number equal to 1 less than the number of macros in `e.i.macros`.
@@ -538,20 +672,22 @@ As in previous versions of Image BBS software, menus are displayed with kbd:[?],
 ## Final Notes [[final-notes]]
 
 Included in the Image 3.0 package is a games disk containing several ready-to-install games converted to Image 3.0 format.
-Load and run the `run me` file (Image SEQ Reader) which will allow you to read the installation instructions for all the games included on the disk.
+Load and run the `run me` file (Image SEQ Reader) which allows you to read the installation instructions for all the games included on the disk.
 
 Also included in the Image 3.0 package is a weed mod disk.
-Load and run the `run me` file (Image SEQ Reader) which will allow you to read the installation instructions for all the files included on the disk.
+Load and run the `run me` file (Image SEQ Reader) which allows you to read the installation instructions for all the files included on the disk.
 
 #TODO:# Explain what this is.
 
-In Image 3.0, the GF section replaces the Image 1.2 `PF`, `TF`, `NF` and `RF` sections.
+In Image 3.0, the `GF` section replaces the Image 1.2 `PF`, `TF`, `NF` and `RF` sections.
 To go there, enter kbd:[GF] at the Main Prompt.
 If you`'re in Maintenance Mode with Graphic Menus on, you will see a list of sysop options for editing the menus.
-It was designed to be sysop friendly and anyone with a little Image 1.2 knowledge should be able to navigate through the functions to get items added to the GF section. 
+It was designed to be sysop-friendly, and anyone with a little Image 1.2 knowledge should be able to navigate through the functions to get items added to the `GF` section.
 
-These instructions were written for real hardware but Image 3.0 will run well in WinVice.
-In fact, much of the development and testing of this software was done in VICE. 
+****
+These instructions were written for real hardware, but Image 3.0 runs well in WinVice.
+In fact, much of the development and testing of this software was done in VICE.
+****
 
 Enjoy the files.
 Many thousand man-hours have gone into their creation and what they are today.

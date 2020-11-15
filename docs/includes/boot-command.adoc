@@ -8,5 +8,5 @@
 . From there, type:
 
 * `load"boot",x,1` (standard Commodore DOS, where _x_ is your boot device number)
-* `l boot` (Lt. Kernal DOS)
+* `boot` (Lt. Kernal DOS)
 * `%boot` (JiffyDOS)
