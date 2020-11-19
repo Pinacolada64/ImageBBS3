@@ -1,7 +1,5 @@
-### Boot Image 3.0
-
 [start=1]
-. Turn on your computer. 
+. Turn on (or reset) your computer. 
 
 . Change device numbers to your Program Disk.
 

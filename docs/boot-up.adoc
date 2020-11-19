@@ -1,6 +1,9 @@
 :toc: left
 
 ## Boot Up
+
+include::include\boot-command.adoc[]
+
 ### Startup Files
 ### Idle Screen Display
 ### Status Line

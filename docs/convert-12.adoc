@@ -5,33 +5,37 @@
 
 NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work but have not been tested.
 
-.	Make a complete backup of all your Image 1.2 drives.
-.	You will need two new Image drives (partitions) or use two locations not already assigned as Image 1.2 drives.
-They are used for your Image 3.0 "`Program Disk`" (drive 5) and your 3.0 "`System Disk`" (drive 1).
+. Make a complete backup of all your Image 1.2 drives.
+. You will need two new Image drives (partitions) or use two locations not already assigned as Image 1.2 drives.
+They are used for your Image 3.0 Program Disk (drive 5) and your System Disk (drive 1).
 
 IMPORTANT: _Do not_ delete any of your Image 1.2 files unless otherwise told to do so.
 
-Alternately, if you have enough hard drive space, such as on a CMD hard drive, you could make new partitions for all your Image drives and copy everything except the 1.2 boot and program drives to the new partitions.
-This method would allow you to revert back to 1.2 at any time in the condition it was last in.
+****
+Alternately, if you have enough hard drive space (such as on a CMD hard drive), you could make new partitions for all your Image drives and copy everything except the 1.2 boot and program drives to the new partitions.
+This method allows you to revert back to 1.2 at any time in the condition it was last in.
+****
 
 [start=3]
 . Either convert the two .d81 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-[width="100%"]
-|====================
-| Either use `fcopy+` (included on the 3.0 UTILITIES disk) or log onto your 1.2 system in local mode and use `CP` for the following steps:
-|====================
+****
+Either use `fcopy+` (included on the 3.0 UTILITIES disk), or log onto your 1.2 system in local mode and use `CP` for the following steps:
+****
 
 [start=4]
-. Copy all the files from disk 1 to your new 3.0 "`Program Disk`".
+. Copy all the files from disk 1 to your new 3.0 Program Disk.
 
-. Copy all `e.` files _except_ for the REL files from IMAGE 3.0 D2 to your "`Etcetera Disk`".
+. Copy all `e.` files _except_ for the REL files from IMAGE 3.0 D2 to your Etcetera Disk.
 
-. Copy all the `s.*` files to your NEW 3.0 "`SYSTEM Disk`" and the `nm.times` file to your EXISTING 1.2 mail drive.
+. Copy all the ``s.*`` files to your **new** 3.0 System disk.
+. Copy `nm.times` to your *existing* 1.2 E-mail drive.
 
-If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 "`System Disk`". 
+If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 System disk.
 
-### Edit Your `bd.data` File
+### Edit `bd.data`
+
+Here you'll change your device/drive assignments.
 
 [start=1]
 . Log on to your 1.2 system.
@@ -59,16 +63,17 @@ include::includes\sub_modem-config.adoc[]
 
 include::includes\boot-command.adoc[]
 
-. When prompted, type kbd:[2] to `Convert from Image 1.2`.
+. When prompted, select kbd:[2] `Convert from Image 1.2`.
 . Clock setting
 
 You are asked to select a method of setting the system clock automatically during boot up.
-For this installation method, select kbd:[1] Manually.
+For this installation method, select kbd:[1] `Manually`.
 You can change that later during further configuration.
 
 [start=6]
-. At this point, Image will create several files needed for its own operation.
+. At this point, Image creates several files needed for its own operation.
 
 It reads the Image drive assignments and access group information from `d.data`, and uses that information to create a new `bd.data` file on its own Program Disk, modify the existing `e.data` file with expanded 3.0 information, and create a new file called `e.access`.
 
-When finished, Image will reboot to the System Idle screen.
+When finished, Image reboots to the System Idle screen.
+

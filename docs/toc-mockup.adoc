@@ -72,20 +72,58 @@ Only trouble is "`for profit`" phrasing.
 
 A lot of this is from 1.2, some newer hardware will be talked about.
 
+## Modem/Telnet Bridge Setup
+
+### Telnet BBSes and Bridge Software
+#### `tcpser 1.1rc1`
+
+#TODO#: mention jbrain GitHub repo since FozzTexx and geneb fixes are in 1.1rc1
+ 
+#### `tcpser4j`
+
+Advantages: Play DTMF tones, play sound on connect, running multiple virtual modems is possible
+
+### BBS Server
+### #TODO# VSPE - Al
+### #TODO# any others?
+
 ## Set Up Image BBS 3.0
-### Upgrading From Previous Versions
-#### Upgrading From 1.x
-##### Modifying Files
-#### Upgrading From 2.0
-### Setting Up 3.0 From Scratch
-#### BBS/Sysop Information
+### Designate Drives
+### Copy Files
+
+IMPORTANT: Copy `im` to Program disk for error recovery.
+
+### Boot Disk
+
+### Upgrade From Previous Versions
+#### Upgrade From 1.x
+##### Modify `bd.data`
+#### Upgrade From 2.0
+### New Setup of 3.0
+#### Sysop Information
+
+Handle, First/Last Names, Email Address, Password
+
 #### Clock Set Method
-### Shared _Image BBS 3.0_ Setup Steps
+
+Manual, CMD RTC, Lt. Kernal
+
+#### Device/Drive Settings
+#### BBS Information
+
+BBS Name, Main Prompt, Chat Messages, NEW Credits
+
+#### RS232 Interface Type
+### Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
 #TODO#: Verify the steps are in fact word-for-word duplicates.
 
-### GGlabs GLink232-LT
+### Introducing the `IM` Configuration Editor
+
+#TODO#: Cross-reference more in-depth `IM` chapter.
+
+#### GGlabs GLink232-LT
 
 SwiftLink clone
 
@@ -97,9 +135,21 @@ This needs work to be fully converted to ASCIIdoctor still.
 
 ## Boot Up
 ### Startup Files
-### Idle Screen Display
-### Status Line
+### The Screen Mask
+### The Status Line
 #### Status Indicators
+### Set the Time
+#### Automatically From Real-Time Clocks
+
+CMD HD, CMD FD 2000/4000, Lt.Kernal Clock
+
+#### Manually From Console
+
+### The Idle Screen
+
+#### Idle Mode Command Keys
+### The Lightbar
+### `e.idle _weekday_` Logging
 
 #TODO# More stuff here later.
 
@@ -112,64 +162,6 @@ This needs work to be fully converted to ASCIIdoctor still.
 ### Lightbar Interface: `&,52`
 
 This probably should be in the Programmer`'s Reference Guide.
-
-## Run Module
-### Image 1._x_ Emulation Mode
-### Command Classes
-### Device,Drive Prompt
-### Value of Variable
-## Complete Module Type List
-
-#FIXME# Some items here duplicate those of "`Set Up Image BBS 3.0`" section.
-Combine them somehow.
-
-## Get Things Going
-### Designate Drives
-### Copy Files
-### Boot Disk
-
-IMPORTANT: Copy `im` to `i*` module disk for error recovery.
-
-### Configure Your BBS
-#### Set Up a New System
-##### Clock Set Method
-##### Device/Drive Assignments
-##### Enter BBS Information
-#### Upgrade from Image 1._x_
-#### Upgrade from Image 2.0
-#### Shared Image 3.0 Setup
-### Introducing The `IM` Configuration Editor
-
-#TODO#: Cross-reference more in-depth `IM` chapter.
-
-#### Modem/Telnet Bridge Setup
-
-##### Telnet BBSes and Bridge Software
-##### `tcpser 1.1rc1`
-
-#TODO#: mention jbrain GitHub repo, not FozzTexx repo (Ray tested that, it didn't work as well?)
- 
-##### `tcpser4j`
-
-Advantages: Play DTMF tones, play sound on connect, running multiple virtual modems is possible
-
-#### BBS Server
-#### #TODO# VSPE - Al
-#### #TODO# any others?
-
-### Booting Up
-### The Idle Screen
-### The Bottom Screen Mask
-### The Bottom Status Line
-### Set the Time
-#### Automatically From Real-Time Clocks
-
-CMD HD, CMD FD 2000/4000, Lt.Kernal Clock
-
-#### Manually From Console
-### Idle Mode Command Keys
-### The Lightbar
-### `e.idle _weekday_` Logging
 
 ## Log On
 ### Console Logon
@@ -193,10 +185,17 @@ This is checked for.
 ### Security Questions
 #### Disable Second Security Question
 ### Login Modules
-### The Bottom Screen Mask After Logon
+### The Screen Mask After Logon
 ### What Now?
 
 Learn about WF, RELedit, etc.
+
+## Run Module
+### Image 1._x_ Emulation Mode
+### Command Classes
+### Device,Drive Prompt
+### Value of Variable
+### Complete Module Type List
 
 #### Edit System Info Files
 #### RELedit: Edit Sub-Boards/Libraries
@@ -300,7 +299,7 @@ Remove users who haven`'t called in a specified time limit.
 
 ### Command Queue
 
-`^^` displays the last ten commands you`'ve entered.
+`^?` displays the last ten commands you`'ve entered.
 
 `^1` - `^9` executes that command.
 
