@@ -1,0 +1,297 @@
+	poke829,0:goto{:2004}
+{:1001}
+	goto[1]
+	goto[10]
+	&,53,a:im=2+a:goto{:2426}
+{:1004}
+	goto[11]
+	pl=.:goto{:1028}
+{:1006}
+	goto[6]
+	goto[7]
+	&"{f6}Device,Drive: {pound}i1":an$="  "+an$:return
+{:1009}
+	goto[2]
+{:1010}
+	goto[3]
+{:1011}
+	goto[4]
+{:1012}
+	goto[5]
+{:1013}
+	dr=5
+{:1014}
+	cm$=a$+"":gosub{:1360}:gosub{:1010}:ifa$=pr$thene%=.:return
+	a$=dr$+"+."+a$:loada$,dv%:pr$=cm$:lm$="":goto{:1012}
+{:1016}
+	gosub{:1013}:goto[3000]
+{:1019}
+	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+	goto[18]
+{:1024}
+	goto[19]
+	goto[16]
+	goto[17]
+	goto[36]
+{:1028}
+	poke53249,pl:lp=.:&,1:return
+	&:return
+	sh=.:rc=.:poke2038,.:poke2024,-(qe=.andrq=1)*255
+	&,3,sr:s=st
+	poke144,sand255:a=rc:gosub{:1914}:rc=a:return
+	im=7:goto{:2400}
+	im=1:goto{:2403}
+	im=8:goto{:2400}
+	im=1:goto{:2401}
+	im=9:goto{:2400}
+	im=2:goto{:2401}
+	im=3:goto{:2401}
+	im=11:goto{:2400}
+	im=10:goto{:2400}
+	im=13:goto{:2400}
+	pr$="":im$="":lm$="":return
+	im=1:goto{:2412}
+	im=1:goto{:2414}
+	goto[30]
+{:1061}
+	goto[31]
+	goto[32]
+	goto[33]
+	goto[34]
+	goto[35]
+	cm$=a$:gosub{:1360}:gosub{:1014}:f1=sgn(e%):goto[3000]
+	goto[37]
+	goto[38]
+	im=1:goto{:2400}
+	im=2:gosub{:2400}
+	&,52,17,lf:&,52,20,em:poke951,ll%:poke971,mp%:poke970,.:return
+	im=1:goto{:2426}
+	goto[39]
+{:1075}
+	goto[13]
+	goto[14]
+	close5:return
+	goto[61]
+	goto[62]
+	goto[60]
+	a$="{black}":gosub{:1024}:a=-sgn(e%):return
+	im=5:goto{:2404}
+	gosub{:1470}:onagoto{:1995}:&"{f6}Pattern: ":gosub{:1499}
+	close1:open1,dv%,.,"$"+dr$+an$:&"{f6}":&,8,1:close1:return
+	goto[82]
+	goto[83]
+	goto[50]
+	goto[51]
+	cm$=p$:gosub{:1360}:gosub{:1100}
+	cm$=left$(p$,11)+":"+left$(an$,4):gosub{:1360}:cm$=p$:return
+{:1100}
+	s=.:sh=.:gosub{:1914}:poke53252,38:gosub{:1908}:&"{f6:2}":goto{:1006}
+	ifdv%=lk%thenprint#15,"l800"
+	return
+	im=4:goto{:2428}
+	goto[310]
+	&p$+": {pound}v7{f6}":return
+	forct=1to10:a%=10-ct:a$=hs$(ct):&"{f8}{pound}%a: {pound}$a{f6}":next:an$="":uu$="":return
+	a$=z$:y$=pr$:gosub{:1016}:a$=y$:on-(lc<>1)goto{:1013}:return
+{:1301}
+	a$=z$:goto{:1016}
+	im=3:goto{:2404}
+	br=.:mm=.:a=9:gosub{:1004}:on-(a<>.)goto{:1301}:x=4:gosub{:1980}:goto{:1812}
+{:1320}
+	&,52,14,3:ifa%thenx=1:gosub{:1980}:goto{:1812}
+	gosub{:1019}:a=5:gosub{:1004}:b=a:a=15:gosub{:1004}
+	&,52,15,3:ifb=.or(pt%anda=.)or(a%<>.andqb<1200)thenx=4:gosub{:1980}:goto{:1812}
+{:1323}
+	f1=.:a$=z$+str$(nl):gosub{:1350}:a$=z$:goto{:1301}
+	im=7:goto{:2404}
+	im=8:goto{:2404}
+	&,5:a=lp:lp=1:&"{f6}Image BBS 64 V{pound}!a.{pound}%a: {pound}$a{f6}":return
+	bn=.:r=int(val(mid$(an$,3))):ifr<1thenr=1
+	on-(z$="UD"orz$="UX")goto{:1320}:goto{:1323}
+	gosub{:1351}:goto{:1812}
+	a$="new user":goto{:1350}
+	a$="config"
+{:1350}
+	a$="s."+a$:dr=1:goto{:1075}
+{:1351}
+	im=1:goto{:2430}
+	im=2:goto{:2404}
+	dr=1:a$="s.menu 3":goto{:1075}
+	im=4:goto{:2404}
+{:1360}
+	goto[9]
+{:1370}
+	&,69,c,22,right$(str$(a+1e5),b),$81:return
+	&,40
+	z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+	a=ca:b=5:c=2:gosub{:1370}:a=cn:b=3:c=10:goto{:1370}
+	a$=co$(co%):co$=a$
+{:1376}
+	an$=a$:&,9:return
+	a$="                ":goto{:1376}
+	fora=1to6:ifdv%(a)=dv%anddr%(a)=val(dr$)thenbf(a)=bf
+	next:a=bf:return
+	goto[360]
+	im=1:goto{:2404}
+{:1470}
+	a=int(val(mid$(an$,3,2))):ifa>.thenifa<7thendr=a:goto{:1474}
+	ifa<7ora>15thena=8
+	&,15,6,133:d2%=val(an$):d1%=a:dr=.:dv%(.)=d1%:dr%(.)=d2%
+{:1474}
+	gosub{:1010}:close15:a=-(st<>.):return
+	goto[50]
+{:1499}
+	&"{pound}i0":ifan$=""thenreturn
+	&,15,2:return
+	a=mn%:return
+	&,25,.,x:return
+{:1603}
+	return
+	im=1:goto{:2402}
+	im=2:goto{:2402}
+{:1630}
+	f1=.:gosub{:1920}:goto{:1812}
+{:1634}
+	gosub{:1061}:x=ac%+1:gosub{:1001}:&,2,2:ag$=a$:&,2,2:close2
+	iflen(fl$)<len(a$)thenfl$=fl$+mid$(a$,len(fl$)+1)
+	iflen(fl$)>len(a$)thenfl$=a$
+	ifac%<>ao%thenfl$=a$:ao%=ac%
+	a=6:gosub{:1004}:le=(a+1)*10:a=16:gosub{:1004}:poke830,a:a=20:gosub{:1004}:da%=a
+	return
+	im=4:goto{:2400}
+	im=1:goto{:2408}
+	im=2:goto{:2408}
+	im=3:goto{:2408}
+	im=4:goto{:2408}
+	im=1:goto{:2410}
+	im=2:goto{:2410}
+	im=3:goto{:2410}
+	im=5:goto{:2400}
+	&"{f6}Edit (I)nfo{f6}  or (P)arameters? {pound}g1{pound}v7{f6}":a=-(an$="P")-2*(an$="I")
+	im=1:onagoto{:2406},{:2428}:return
+	im=2:goto{:2406}
+	im=2:goto{:2428}
+	im=4:goto{:2406}
+	im=5:goto{:2406}
+	im$="":pr$="":lm$="":return
+	im=6:goto{:2404}
+	goto[85]
+	im=1:goto{:2422}
+	f4=.:ifright$(an$,1)<>"!"then:&"{f6:2}{green}Time to Fly? ":gosub{:1907}:ifa=.thenreturn
+	f4=1.3:return
+	a=1:ifright$(an$,1)<>"!"then:&"{f6:2}{red}Must {green}You Leave{white}?: ":gosub{:1907}
+	ifa=.thenf1=-3*(x=2):onxgoto{:1630},[3000],[3000]
+	cd%=.:ifmid$(z$,2,1)<>"%"thenld$=lt$
+	ifright$(an$,1)="!"thenf1=2:goto{:1700}
+	f1=1:iftr%<1thenb$="Time":gosub{:1985}:f1=2
+{:1700}
+	goto[302]
+	remifa=prthen1740
+	pr=a:dr=5:gosub{:1009}
+	a$=dr$+"++"+str$(a):&,7,dv%,2
+	d4$="++"+str$(a):return
+	goto[28]
+	goto[300]
+{:1812}
+	goto[300]
+	on-(ac%<>ao%)gosub{:1634}:an$=an$+"":rs=1:a$=left$(an$,1):z$=left$(an$,2)
+	&,52,20,3:em=a%:&,52,5,3:zz=a%
+	rs=.:return:rem**" √ommand ”can Œot Ÿet …mplemeted -  Ã∆ "
+	poke970,mp%:&"{f6}":return
+	goto[93]
+	goto[94]
+	a=-(a$="Y")
+	goto[97]
+	&:&"{f6}{pound}q0":return
+	pr$="":&:goto{:1812}
+{:1907}
+	goto[96]
+{:1908}
+	poke970,.:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
+	goto{:1915}
+	dr=3:a$="e.say":gosub{:1011}:onsgn(e%)goto{:1603}:x=1:gosub{:1001}:input#2,x
+	a=rnd(-ti):&"{f6}":x=int(rnd(1)*x)+2:gosub{:1001}
+	input#2,b$,c$,d$,f$:&"{white} {pound}$b{f6}{cyan} {pound}$c{f6}{yellow} {pound}$d{f6}{orange} {pound}$f{f6}{pound}q0":close2:return
+{:1914}
+	goto[12]
+{:1915}
+	&"{f6:2} - {pound}$bM":a%=tr%:ifa%<100then:&" - {pound}%a Min. Left":return
+	return
+{:1920}
+	goto[92]
+	goto[330]
+	x=2
+{:1980}
+	goto[390]
+	b$="Time"
+{:1985}
+	&"{f6}Sorry, {pound}$b Limit Exceeded.{f6}":return
+	&"{f6:2}{red}Unknown {green}Command{white}. {green}Enter {white}{f5}{red}?{white}{f5} {green}For Help!":return
+	ni=val(an$):n1$=cc$+mid$(str$(ni),2):b$="-"+n1$:n2$=""
+	ifleft$(an$,1)="!"thenni=-1:n1$=mid$(an$,2,3):b$=" @ "+n1$
+	an$=mid$(an$,5):&,15,6,94:ifan$<>""andni=-1thenn2$=an$:b$=b$+"/"+n2$
+	an$=a$:n0$=a$:&,15,1:an$=an$+b$:return
+{:1995}
+	x=6:goto{:1980}
+	poke22,25:fori=2topeek(152):closepeek(603):next:poke2031,.
+	x=peek(780):y=peek(781)+peek(782)*256
+{:2004}
+	&,11:&,28,1:poke53248,.
+	dr$=mid$(str$(dr%(5)),2)+":":dv%=dv%(5):loaddr$+"im",dv%,2
+	&,28,1:gosub{:2110}:&,27:return
+	goto{:2110}
+	im=4:goto{:2426}
+	im=5:goto{:2426}
+{:2110}
+	goto[306]
+	goto[308]
+{:2400}
+	goto[45]:rem**misc
+{:2401}
+	a$="misc2":goto{:2500}
+{:2402}
+	goto[40]:rem**editor
+{:2403}
+	a$="nodes":goto{:2500}
+{:2404}
+	a$="local":goto{:2500}
+{:2406}
+	a$="params":goto{:2500}
+{:2408}
+	a$="comm1":goto{:2500}
+{:2410}
+	a$="comm2":goto{:2500}
+{:2412}
+	a$="stats":goto{:2500}
+{:2414}
+	a$="bar":goto{:2500}
+	a$="screens":goto{:2500}
+{:2422}
+	goto[44]:rem**feedback
+	a$="trans":goto{:2500}
+{:2426}
+	goto[43]:rem**display
+{:2428}
+	goto[47]:rem**info
+{:2430}
+	a$="menus":goto{:2500}
+{:2500}
+	&"{f6:2}System Sub-Routine File Error!{f6:2}":return
+	gosub{:2610}:gosub[4000]:new4000:return
+{:2610}
+	lm$=left$(pr$,2)+"."+a$:dr=5:gosub{:1010}:a$=dr$+"+/"+lm$:loada$,dv%:return
+	gosub{:2630}:gosub[4000]:new4000:return
+{:2630}
+	lm$=a$+"":dr=5:gosub{:1010}:a$=dr$+"+/"+lm$:loada$,dv%:return
+{:2900}
+	a=45:b=43:a$="Program":gosub{:2910}
+	a=47:b=45:a$="Variables":gosub{:2910}
+	a=49:b=47:a$="Arrays":gosub{:2910}
+	a=51:b=49:a$="Free RAM":gosub{:2910}
+	a=55:b=51:a$="Strings":gosub{:2910}
+	poke53252,16:&"{f6}Load: {pound}i0{f6}":ifan$=""thenreturn
+	dr=5:gosub{:1010}:a$=dr$+an$:loada$,dv%:goto{:2900}
+{:2910}
+	c=peek(a)-peek(b)+(peek(a+1)-peek(b+1))*256:&"{pound}$a:{pound}{back arrow}10{pound}!c{f6}":return
+	goto[90]
+	copr. 1996 new image 1/2/99 jlf
