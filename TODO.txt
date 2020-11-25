@@ -84,7 +84,7 @@ designate a line in im that does
 	a=abs(int(val(an$))):return
 
 s.menu 3:
-	{pound}v3 - outputs user's email address, not phone number
+[Ryan]	{pound}v3 - outputs user's email address, not phone number
 [Larry]	{pound}!x - output floating point variable
 [Larry]	move last 2 lines to beginning of file
 
@@ -297,8 +297,8 @@ PS "Pesonal Signatures"
 MT: Most people are going to be calling remotely, therefore move this to "s.menu 4"?
 
 200905 s.menu 3:
-{pound}N "carrage return" (a few instances)
-{pound}S "tents of a second"
+[Ryan] {pound}N "carrage return" (a few instances)
+[Ryan] {pound}S "tents of a second"
 
 200905 s.menu 4:
 WF Missing - is it in ECS? does SF replace WF?
@@ -530,6 +530,7 @@ c64 d#10 lu01 user00 port#00  ready.
 [FIXED]
 Still want to fix boot year of 2090
 (poke $16ee... does not fix it)
+Modified line 3000 by adding poke 52938,32 ($ceca,$20)
 
 if Larry's gonna distribute updates like this, I should write a file copier that knows about which devices/drives your files are stored on and copy 'em for you.
 
@@ -538,3 +539,98 @@ im: what is pu$?
 
 i.lo:
 3999	ready.
+
+11/19/2020:
+Missing i/lo/filelist AutoMaint program to distribute files to UDs
+
+[re: quoting replies in posts]
+jam:
+some people "top post", others "bottom post" and still others are "inline"
+
+rns:
+oh yes that old chestnut
+
+jam:
+indeed
+and in image, you really can't put the cursor on the first line
+
+rns:
+true
+if the visual editor ever got finished, it could be doable, I suppose
+or even in how the tt$() array were created before entering the buffer. Maybe you could engage .Insert mode with a POKE, set the current line to 1, and have the quoted reply be lines 2-
+
+Clock set with CMD emulation:
+ Image BBS V3.0 - 10/08/2020 - 06:20PM
+
+ P....................................N
+ . Part I: Sysop Information          .
+ . Part II: Clock Setting             .
+ M.....................................
+
+Set the Image 3.0 System Clock:
+
+(1) Manually
+(2) CMD.Device w/RTC Option            m
+(3) Lt. Kernal Port 1
+(4) Lt. Kernal Port 2
+
+]> [should echo char]
+
+Which Device has the CMD
+RTC Option Installed?
+
+CMD Device: 8
+CMD Device:
+Is 0 Correct? [Yes]
+
+
+ZSun Dec  9, 2020  1:04:25 AM     00:00
+
+"i.IM/make anagra" exits to main prompt
+
+i.stack:
+
+STACK Investigator 3.0:
+
+Stack Has 32 Bytes of Garbage:
+
+GOSUB on Line 4026
+FOR  On Line 4026
+GOSUB on Line 3054
+
+[Error#128, Line#4026]
+
+?illegal quantity  error in 4002
+ready.
+
+[center headers better]
+
+----+----+----+----+----+----+----+----+
+             Image BBS V3.0
+|old     Base Editor Programs
+|new      Base Editor Programs
+
+Eliminate login module "Do <xyz>" questions since login handler either asks the question, or forced execution runs it anyway.
+i/lo.anagram is an example of this
+4572 "CROISANT" typo
+
+
+  A Find Access      G Editor Utils
+  B Fix BA Count     H Set Time Dv #
+  C Make Anagram     I Set CMD Clock
+  D Scan Netlog      J Netfiles
+  E Run Alpha/Ind    K Quit
+  F Lt.K Utils
+
+
+
+
+
+
+
+
+
+
+
+
+ZFri Nov 20, 2020  1:28:15 PM     --:44
