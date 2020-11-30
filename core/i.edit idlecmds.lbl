@@ -134,9 +134,9 @@
 {:3228}
 	&"[K]eypress..: {pound}$a{f6}"
 '	if wc%(.,i) then b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
-	z=wc%(1,x)
+	a=wc%(1,x)
 {:lm_value}
-	&"[L]M Value..: {pound}!z{f6}"
+	&"[L]M Value..: {pound}!a{f6}"
 
 	&,60,1,11,wc%(2,x),a$
 	&"[F]ilename..: i/lo.{pound}$a{f6}"
@@ -163,7 +163,6 @@
 
 ' to store a numeric value: wc%(<field>,<record>)=<number>
 
-' FIXME: stores ok, doesn't display
 ' &,1,32 displays like:
 ' Keypress: C
 ' Keypress: _ (cursor blinks here)
