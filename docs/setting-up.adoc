@@ -1,12 +1,9 @@
 :experimental:
 :toc:
 
-
 ### Boot Disk
 
 ### Upgrade From Previous Versions
-#### Upgrade From 1.x
-##### Modify `bd.data`
 #### Upgrade From 2.0
 ### New Setup of 3.0
 #### Sysop Information

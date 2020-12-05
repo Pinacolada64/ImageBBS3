@@ -5,6 +5,7 @@ v0.1
 :toc: left
 :toclevels: 10
 :icons: font
+:xrefstyle: full
 
 NOTE: Preliminary start on documentation. Feedback welcome!
 

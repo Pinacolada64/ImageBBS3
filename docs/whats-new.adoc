@@ -30,7 +30,7 @@ Many new features have been added and improvements have been made in existing fe
 
 ** Access group data changes no longer require a reboot
 
-** Programmable function keys: kbd:[Ctrl+f1] - kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
+// ** Programmable function keys: kbd:[Ctrl+f1] - kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
 
 * Configurable time zones for both the BBS and the caller show the caller's local time if the BBS is in a different time zone
 
@@ -59,7 +59,7 @@ Many new features have been added and improvements have been made in existing fe
 
 * New text editor dot commands:
 ** kbd:[.B]anner text: Create large text for fun or emphasis in messages
-** kbd:[.T]ext Transfer mode: Disables echoing of text while pasting text in from a terminal buffer
+** kbd:[.T]ext Transfer mode: Prevents text from being displayed in the terminal while text is sent from a buffer
 ** kbd:[.U]se Signature (kbd:[PS] edits them): Add "`taglines`" to your posts
 * kbd:[/] is an alias for kbd:[.] for those used to that command character from other BBS programs
 * New MCI commands:
@@ -78,7 +78,7 @@ Many new features have been added and improvements have been made in existing fe
 * Image 1._x_ emulation layer so their `+.` files can be run
 * BASIC keyword extensions
 ** Hexadecimal values can be used in `POKE`, `PEEK`, `SYS` and `&` commands. `POKE $D004,$0c` is the equivalent of `POKE 53252,12`
-** `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an additional purpose--specifying the segment of memory to load a particular file to
-** `NEW _line_number_-` erases that portion of the BASIC program to prepare for ``LOAD``ing a new module
+** `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
+** `NEW _line_number_` erases that portion of the BASIC program to prepare for ``LOAD``ing a new module
 
 New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.
