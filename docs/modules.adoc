@@ -63,15 +63,15 @@ TIP: A `file not found` DOS error is written to the system error log (`e.errlog`
 |====================
 | Prefix    |  Starting line | Purpose 
 | `+.`      |  1     | Image 1._x_ plus file
-| `++`      | _n/a_  | Image 3.0 ML module
-| `i.`      |  3000  | Image 3.0 module (usually protocols)
+| `++`      | _n/a_  | Image 3.0 ML module (usually protocols)
+| `i.`      |  3000  | Image 3.0 module
 | `i/`      |  4000  | Image 3.0 sub-module
-| `i.XX/YY` |  3000  | Image 3.0 sub-module YY of XX
+| `i.XX/YY` |  3000  | Image 3.0 sub-module `YY` of module `XX`
 | `i/lo.`   |  3000  | Idle screen command 
 | `i/lo/`   |  4000  | Nightly AutoMaint module
 | `i/lo-`   |  4500  | Login module  
-| `i/XX.YY` |  4000  | Sub-module YY of XX
-| `sub.*`   |  60000 | Common BBS code called by various files 
+| `i/XX.YY` |  4000  | Sub-module `YY` of module `XX`
+| `sub.*`   |  60000 | Common BBS code called by various modules 
 |====================
 
 #TODO#: Go into more detail?

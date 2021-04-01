@@ -212,12 +212,14 @@ I'm checking them against `s.menu *` files to make sure I don't forget something
 They will be transferred to both the #TODO# _Command Reference Appendix_ and relevant chapters.
 
 ## Main Prompt Maintenance Commands
-### `CP`    Online File Copier
+### `CP`    Online file copier
+### `CP3`   Enhanced file copier
 ### `DE`    Direct download editor (works with `DX`)
 ### `ECS`   Extended Command Set Editor
 ### `ED`    User Editor
 ### `IM`    Image Configuration
 ### `MENU`  Menu Editor
+
 Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way,  the user only sees commands they have access to).
 The access levels have to be set for each command.
 
@@ -226,6 +228,7 @@ The access levels have to be set for each command.
 ### `R`     Run i* or +.* File
 ### `RELRD` RELative File Reader
 ### `RF`    Read PRG/SEQ/REL Files
+
 Written by X-TEC
 
 ### `RP`    Read Program File
@@ -242,11 +245,10 @@ Written by X-TEC
 ### `FG`    Force Garbage Collect    
 ### `ME`    Change ID to another User
 ### `MM`    Memory Management        
-### `RDx,y` Read SEQ File                
-### `RF` Read REL File
+### `RDx,y` Read SEQ File
 ### `RS` Reserve an Account
 ### `VF` View Feedback + Logs
-### `WF` Write/Edit File #FIXME: Missing from menu?#
+### `WF` Write/Edit File #FIXME: Missing from menu#
 ### `ZZ` Toggle Pseudo-Local Mode
 
 ### AutoWeed

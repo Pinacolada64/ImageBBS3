@@ -1,0 +1,51 @@
+## File Formats
+
+### `e.data`
+
+`e.data` is a RELative file containing BBS configuration information, as well as BBS statistics.
+
+.e.data File Format
+[%autowidth]
+[%header]
+|====================
+| Record | Purpose | Possible Values
+|  1 | Total calls to the system |
+|  2-3 | (unused) |
+|  4 | one-time caller weed cutoff, in months |
+|  5-11 | (unused) |
+| 12 | Highest user account # -1 |
+| 13-16 | (unused) |
+| 17 | Last caller handle |
+| 18 | Password of some kind |
+| 19 | Date/time of last user logoff |
+| 20 | Prime Time info | Time allowed per call, Prime Time start, Prime Time end
+| 21 | System Reservation Password | `0`=None, `1`=One Call, `2`=All Calls. `,` `^`=No Password, or 1-14 Character Password
+| 22-30 | (unused) |
+| 31 | Next available user account # |
+| 32 | RS232 Device | `0`=User Port `1`=SwiftLink
+| 33-34 | (unused) |
+| 35 | Date/time of last log reset |
+| 36 | Macro count |
+| 37 | Clock set device | `1`=Boot Drive, `2`=Lt.Kernal Port 1, `3`=Lt.Kernal Port 2, `4`=Last System Timestamp, `8-29`=External CMD Device No.
+| 38 | Lt.Kernal device number | 
+| 39 | Autoweed cutoff, in months | 
+| 40 | Default prompt color| 
+| 41 | Printer secondary address | 
+| 42 | Printer line feeds | `0`=no, `10`=yes
+| 43 | Password mask character(s) |
+| 44 | Log start date | 
+| 45 | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
+| 46 | Main prompt text | 
+| 47 | BBS name| 
+| 48 | Entering chat message | 
+| 49 | Exiting chat message | 
+| 50 | Netsub ID | increments by 1 when net post/response made
+| 51 | BBS identifier | _e.g._, `WN`
+| 52 | System device, drive |
+| 53 | E-Mail device, drive |
+| 54 | Etcetera device, drive |
+| 55 | Directory device, drive |
+| 56 | Plus-File device, drive |
+| 57 | User device, drive | 
+| 58 | Credits for new user | 
+|====================

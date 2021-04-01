@@ -24,3 +24,5 @@ Welcome to the _Image BBS 3.0 Programmer's Reference Guide_.
 #TODO#: POKEs are going away in favor of `&,20` and `&,21` interface read/write commands.
 
 include::prg-lightbar.adoc[]
+
+include::prg-file-formats.adoc[]
