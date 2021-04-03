@@ -1,6 +1,12 @@
 ## File Formats
 
-### `e.data`
+:icons: font
+
+### Introduction
+
+// NOTE: argh icon:exclamation[] icon:download[]
+
+#### `e.data`
 
 `e.data` is a RELative file containing BBS configuration information, as well as BBS statistics.
 
@@ -13,10 +19,10 @@
 |  2-3 | (unused) |
 |  4 | one-time caller weed cutoff, in months |
 |  5-11 | (unused) |
-| 12 | Highest user account # -1 |
+| 12 | Highest user account # +1 |
 | 13-16 | (unused) |
 | 17 | Last caller handle |
-| 18 | Password of some kind |
+| 18 | Default null password |
 | 19 | Date/time of last user logoff |
 | 20 | Prime Time info | Time allowed per call, Prime Time start, Prime Time end
 | 21 | System Reservation Password | `0`=None, `1`=One Call, `2`=All Calls. `,` `^`=No Password, or 1-14 Character Password
@@ -25,8 +31,12 @@
 | 32 | RS232 Device | `0`=User Port `1`=SwiftLink
 | 33-34 | (unused) |
 | 35 | Date/time of last log reset |
-| 36 | Macro count |
-| 37 | Clock set device | `1`=Boot Drive, `2`=Lt.Kernal Port 1, `3`=Lt.Kernal Port 2, `4`=Last System Timestamp, `8-29`=External CMD Device No.
+
+// record #36 in e.data has been moved to record #1 in e.macros
+// i/IM.macros uses mc, could remove 
+
+| 36 | _unused_ |
+| 37 | Clock set device | `1`=Manual, `3`=Lt.Kernal Port 1, `4`=Lt.Kernal Port 2, `8-29`=CMD Device #
 | 38 | Lt.Kernal device number | 
 | 39 | Autoweed cutoff, in months | 
 | 40 | Default prompt color| 
@@ -35,17 +45,31 @@
 | 43 | Password mask character(s) |
 | 44 | Log start date | 
 | 45 | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
-| 46 | Main prompt text | 
+| 46 | _unused_ | 
 | 47 | BBS name| 
 | 48 | Entering chat message | 
 | 49 | Exiting chat message | 
 | 50 | Netsub ID | increments by 1 when net post/response made
 | 51 | BBS identifier | _e.g._, `WN`
-| 52 | System device, drive |
-| 53 | E-Mail device, drive |
-| 54 | Etcetera device, drive |
-| 55 | Directory device, drive |
-| 56 | Plus-File device, drive |
-| 57 | User device, drive | 
+
+// [%hardbreaks] have no power here
+// Would like the cell formatted like:
+// System device
+// System drive
+// E-Mail device
+// E-Mail drive
+// etc.
+// alas...
+
+| 52 | System device, drive
+// this table cell spans 6 rows 52-57
+.6+| For each of these records, devices and drives are in separate fields of each record (stored as two lines separated by a carriage return).
+// subsequent cells don't need 2nd column specified
+| 53 | E-Mail device, drive
+| 54 | Etcetera device, drive
+| 55 | Directory device, drive
+| 56 | Module device, drive
+| 57 | User device, drive
+// end span
 | 58 | Credits for new user | 
 |====================

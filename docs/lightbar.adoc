@@ -193,6 +193,12 @@ Then the user is returned to the area and prompt they were at before entering ch
 * Returning to Editor *
 ```
 
+====
+
+The command path to edit the chat messages is kbd:[IM], kbd:[I] `Misc Features`, kbd:[M] `Chat Messages`.
+
+====
+
 `Cht` right: _Disable Modem Input_
 
 ---
@@ -323,11 +329,11 @@ Disables playing the beep sound from the console.
 
 `Net` left: _NetMail Enable_
 
-If enabled, 
+If enabled, users have access to NetMail commands, can send NetMail
 
 `Net` right: _NetMail Trigger_
 
-_(BBS controlled)_ If enabled, an alarm has occurred 
+_(BBS controlled)_ If enabled, an alarm has occurred to perform NetMail processing.
 
 ---
 
@@ -335,7 +341,10 @@ _(BBS controlled)_ If enabled, an alarm has occurred
 
 When enabled, users can see "`macros,`" or a random short saying presented before the main prompt.
 
+====
 The command path to edit the macros is kbd:[IM], kbd:[N] `Base Editors`, kbd:[G] `Editor Utils`, kbd:[G] `Edit Sayings`.
+
+====
 
 // Users used to be able to toggle macros on or off with the MA command.
 

@@ -1,0 +1,117 @@
+## Static Arrays (Structures)
+
+_Structures_ allow you to store multiple types of data into memory reserved for arrays.
+There are functions to put and get strings, 11-digit dates, #FIXME: more functions# from this block of memory.
+For example, string data can be stored in a floating point or integer array.
+
+_Elements_ are #FIXME: definition#
+
+It is suggested that you use numeric type arrays, since this will allow you to access the elements as numeric data, as well as put end get strings.
+
+Floating point arrays (like `a()` or `b()`) use 5 bytes per element.
+Integer arrays (like `a%()` or `b%()`) use 2 bytes per element.
+When deciding to use structures, you should determine what types of data you will need to store, and how much memory that data will require.
+
+As an example, let`'s design a structure to hold a user’s handle, ID#, and password.
+The handle requires 20 characters.
+The ID is an integer type (never > 32767) requiring 2 bytes.
+The password is 15 characters.
+
+Since the integers store in 2 bytes, the total number of bytes needed is 37.
+Thirty-seven bytes would require 190 integer elements (38 bytes), _or_ 8 floating point elements (40 bytes).
+Since the ID# is an integer anyway, it would be best to use the integer array.
+The definition would look like this:
+
+ dim u%(18)
+
+TIP: Remember that arrays start at element 0!
+ 
+Of course, you may want to store more than one of these structures in memory.
+To do so, you would need a 2-dimensional array.  This would change the `dim` statement to:
+
+ dim u%(18,x-1)
+
+(Suppose that _x_ is the number of structures you want.)
+
+Now that you have the basic concept of the structure, let’s look in a little more detail.
+Here is a byte-by-byte map of the structure we designed.
+
+NOTE: Because the unused byte is _not_ on an even element boundary, it cannot be used.
+
+[%header]
+.Sample structure layout
+|===
+| Element Position | Byte Position | Data | Type | Bytes Used
+| Element 0 | Bytes 00-01 | ID# | Integer | 2 bytes
+| Element 1 | Bytes 02-21 | Handle | String | 20 bytes
+| Element 11 | Bytes 22-36 | Password | String | 15 bytes
+| Element 18½ | Byte 37 | Unused | N/A| 1 byte
+|===
+
+
+// Ryan added this next paragraph
+
+To refer to bytes in the structure:
+
+* the first number in the array notation is the _element number_ (like a field in a RELative file)
+* the second number is the _record number_
+
+For example, to access the third user’s password, you would get a string from element `u%(11,2)` and ask for 20 bytes.
+
+Now down to the important part: how to use all of this!
+There are currently 12 sub-functions supported by the structure routines.
+They are documented below.
+
+0: PutStr - Put a string into a structure
+
+.Usage
+
+`&,60,0,_bytes_,_array()_,_string$_`
+
+.Example
+
+ &,60,0,20,u%(1,1),na$
+
+This sub-function will copy from a string variable into a structure.
+In the example, it is 20 bytes (parameter 4) from `na$` into `u%(1,1)`.
+
+1: GetStr - Get a string from a structure
+
+.Usage
+
+`&,60,1,_bytes_,_array()_,_string$_`
+
+.Example
+
+ &,60,1,15,u%(11,3),a$
+
+This sub-function will copy a string from a structure into a string variable.  In the example, it is 15 bytes from U%,11,3) into A$.
+
+2: Load - Load a structure from disk
+
+.Usage
+
+`&,60,2,0,_array()_,_filename$_,_device_`
+
+.Example
+
+ &,60,2,0,u%(0,0),dr$+"u.handles",dv%
+
+This sub-function will load the specified file into an array.
+
+NOTE: You do not have to load the file at the start of the array.
+
+The starting element is specified in the command.  The example loads the file `u.handles` into the `u%()` array, starting at the beginning of the array.
+
+3: Save - Save a structure to disk
+
+.Usage
+
+`&,60,3,0,_array()_,_bytes_,_filename$_,_device_`
+
+.Example
+
+ &,60,3,0,U%(0,0),3*38,dr$+”u.handles”,dv%
+
+This sub-function will save a structure to a specified file.
+The starting element is specified with the array, and the number of bytes should be calculated by the number of bytes per structure, multiplied by the number of structures (38 bytes * 3 structures in the example).

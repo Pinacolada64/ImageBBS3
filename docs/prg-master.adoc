@@ -1,28 +1,80 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
-Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2020-09-26
+Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
+v0.1, 2021-04-01
 :experimental:
+// enable kbd:[] macro
 :toc: left
 :icons: font
 
-NOTE: Preliminary start on documentation. Feedback welcome!
+include::prg-introduction.adoc[]
 
-Welcome to the _Image BBS 3.0 Programmer's Reference Guide_.
+### How to Use This Guide
+
+### How to Get Help
 
 ## Programming Image BBS 3.0
-### Overall Description
+
+### Programming Etiquette
+
+include::prg-structures.adoc[]
+
 ### `im` Subroutines
-### `&` Calls
-### Modules
-### Variable Handling
+
+### `sub.*` Module Jump Table
+
+include::prg-ampersand-calls.adoc[]
+
 ### Image BBS Output Routine
 
 `&"bla","bla"` and `&"bla &pound;!x"`
 
-### POKEs and Machine Language Routines
+#### `&` By Itself
 
-#TODO#: POKEs are going away in favor of `&,20` and `&,21` interface read/write commands.
+This is a quick way to output the contents of `a$`.
+
+`a$="Hello therekbd:[f6]":&`
+
+====
+
+NOTE: Outputting a string containing an MCI string variable does not work as expected. _i.e._:
+
+`z$="&pound;$c":&"&pound;$z"`
+
+does not output the contents of `z$` (which is actually `c$`).
+Instead, do this:
+
+`z$="&pound;$c":&z$`
+
+====
+
+#### Word-Wrap
+
+Setting the variable `lp=1` and outputting text with `&"..."` word-wraps to 40 columns on the console, and whatever the remote side`'s screen width is.
+
+Setting `lp=0` disables word-wrap, and words do not break at margins.
+
+## Variables
+
+### Integer
+
+### Floating Point
+
+### String
+
+### Arrays
+
+## POKEs and Machine Language Routines
+
+====
+
+TIP: ``POKE``s could go away in favor of `&,20` (interface read) and `&,21` (interface write) commands.
+
+====
 
 include::prg-lightbar.adoc[]
+
+include::prg-memory-map.adoc[]
+
+// Ray wrote this
 
 include::prg-file-formats.adoc[]
