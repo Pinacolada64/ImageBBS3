@@ -10,6 +10,8 @@
 
 `e.data` is a RELative file containing BBS configuration information, as well as BBS statistics.
 
+The record size is 31 bytes.
+
 .e.data File Format
 [%autowidth]
 [%header]

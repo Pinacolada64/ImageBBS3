@@ -41,6 +41,6 @@ Bob Sisko (Iron Axe)
 
 Ed Wilson (Fred Krueger)
 
-And most of all, I’d like to thank our dear friend, Fred Dart, to who we owe the very existence of Image v2.0.
+And most of all, I’d like to thank our dear friend, Fred Dart, to whom we owe the very existence of Image v2.0.
 Without Fred, the project would have been lost forever.
 It is in his memory that we dedicate Image BBS v3.0.

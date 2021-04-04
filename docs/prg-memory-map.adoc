@@ -8,14 +8,14 @@ During boot (contents of the ML file):
 [%header]
 |===
 | Memory range | Purpose
-| `$6C00` - `$6FFF` | Wedge code
+| `$6C00` - `$6FFF` | wedge code
 | `$7000` - `$7FFF` | editor code
-| `$8000` - `$83FF` | Garbage collector
+| `$8000` - `$83FF` | garbage collector
 | `$8400` - `$8DFF` | ECS code
-| `$8E00` - `$93FF` | Struct code
-| `$9400` - `$97FF` | Swap1 code
-| `$9800` - `$9BFF` | Swap2 code
-| `$9C00` - `$9FFF` | Swap3 code
+| `$8E00` - `$93FF` | struct code
+| `$9400` - `$97FF` | `swap1` code
+| `$9800` - `$9BFF` | `swap2` code
+| `$9C00` - `$9FFF` | `swap3` code
 |===
 
 Everything after this point is the same as the next section.
@@ -27,13 +27,13 @@ While running:
 [%header]
 |===
 | Memory range | Purpose
-| `$0800`-`$0AFF` | rs232 driver
-| `$0B00`-`$0B7F` | rs232 input buffer
-| `$0B80`-`$0BFF` | rs232 output buffer
-| `$0C00`-`$0FFF` | basic wedge
+| `$0800`-`$0AFF` | RS232 driver
+| `$0B00`-`$0B7F` | RS232 input buffer
+| `$0B80`-`$0BFF` | RS232 output buffer
+| `$0C00`-`$0FFF` | BASIC wedge
 | `$1000`-`$12FF` | temporary screen data
-| `$1300`-`$130F` | chktbl
-| `$1310`-`$13CF` | bartbl
+| `$1300`-`$130F` | `chktbl`
+| `$1310`-`$13CF` | `bartbl`
 | `$13D0`-`$13DF` | array pointers
 | `$13E0`-`$13EC` | days per month
 | `$13ED`-`$13EF` | unused
@@ -41,21 +41,22 @@ While running:
 | `$1450`-`$147F` | net alarms
 | `$1480`-`$14FF` | ASCII to CBM translation table
 | `$1500`-`$15FF` | CBM to ASCII translation table
-| `$1600`-`$161F` | tblcta1
-| `$1620`-`$163F` | tblcta2
-| `$1640`-`$165F` | tblcta3
+| `$1600`-`$161F` | `tblcta1`
+| `$1620`-`$163F` | `tblcta2`
+| `$1640`-`$165F` | `tblcta3`
 | `$1660`-`$16E0` | alarm table
 | `$16E0`-`$16FF` | date buffer
-| `$1700`-`$1718` | lobytes
-| `$1719`-`$1731` | hibytes
-| `$1732`-`$174A` | lobytec
-| `$174B`-`$1763` | hibytec
+| `$1700`-`$1718` | `lobytes`
+| `$1719`-`$1731` | `hibytes`
+| `$1732`-`$174A` | `lobytec`
+| `$174B`-`$1763` | `hibytec`
 | `$1764`-`$177F` | unused
-| `$1780`-`$17FF` | pmodetbl
+| `$1780`-`$17FF` | `pmodetbl`
 | `$1800`-`$27FF` | editor execution location (swapped in when needed)
-| `$1800`-`$9FFF` | BASIC program area
+// verify this:
+| `$2800`-`$9FFF` | BASIC program area
 | `$A000`-`$BFFF` | BASIC ROM / Image ML routines in RAM
-| `$C000`-`$CAFF` | "Protocol" block for loadable ML code
+| `$C000`-`$CAFF` | "`Protocol`" block for loadable ML code
 | `$CB00`-`$CCFF` | swapper area
 | `$CD00`-`$CDFF` | interface page
 | `$CE00`-`$CDFF` | buffer page
@@ -63,7 +64,7 @@ While running:
 | `$D000`-`$DFFF` | I/O memory
 | `$D000`-`$DFFF` | Character ROM
 | `$D000`-`$DFFF` | editor swap location (code is here when waiting to run)
-| `$E000`-`$FFFF` | KERNAL ROM / Image ML "swap" code in ROM 
+| `$E000`-`$FFFF` | KERNAL ROM / Image ML "`swap`" code in ROM 
 | `$E000`-`$E3FF` | garbage collector swap module
 | `$E400`-`$EDFF` | ECS swap module
 | `$EE00`-`$F3FF` | Struct swap module
