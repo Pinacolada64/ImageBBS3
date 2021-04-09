@@ -396,7 +396,8 @@ While text output is paused, `P` displays in the bottom status line, between the
 
 `Frd` left: _Full-Color Read Disable_
 
-// This turns off color for color-blind users.
+// TODO: check this
+When enabled, this disables outputting color for color-blind users.
 
 TIP: This lightbar position is a homage to Fred Dart, Image BBS support guru and programmer.
 

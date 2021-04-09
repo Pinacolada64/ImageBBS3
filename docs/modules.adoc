@@ -50,7 +50,7 @@ Each type of module uses a different variable within the BASIC code to control w
 | 5     | `im`       
 |====================
 
-#TODO#: There is a module jump table in the _Image 3.0 Programmer`'s Reference Guide_.
+#TODO#: There is a module listing and jump table in the _Image 3.0 Programmer`'s Reference Guide_.
 
 If there is no DOS error, the module should execute.
 
@@ -63,17 +63,18 @@ TIP: A `file not found` DOS error is written to the system error log (`e.errlog`
 |====================
 | Prefix    |  Starting line | Purpose 
 | `+.`      |  1     | Image 1._x_ plus file
-| `++`      | _n/a_  | Image 3.0 ML module (usually protocols)
-| `i.`      |  3000  | Image 3.0 module
+| `++`      | _n/a_  | Image 3.0 ML module (usually protocols which load at `$c000`)
+| `i.`      |  3000  | Image 3.0 module (system command)
 | `i/`      |  4000  | Image 3.0 sub-module
 | `i.XX/YY` |  3000  | Image 3.0 sub-module `YY` of module `XX`
 | `i/lo.`   |  3000  | Idle screen command 
 | `i/lo/`   |  4000  | Nightly AutoMaint module
 | `i/lo-`   |  4500  | Login module  
 | `i/XX.YY` |  4000  | Sub-module `YY` of module `XX`
-| `sub.*`   |  60000 | Common BBS code called by various modules 
+| `sub.*`   |  60000 | `im` sub-module; common BBS code called by various modules 
 |====================
 
+////
 #TODO#: Go into more detail?
 
 ### Complete Module Type Listing
@@ -83,11 +84,11 @@ Here is a list of all the BBS module types.
 #FIXME#: ensure this is correct
 
 #FIXME#: I forgot why this needs to be duplicated...
+////
 
 [options="header,autowidth"]
 |====================
 | Module prefix	| Purpose | Starting line
-| `++`      | ML module      | _n/a_ (loads at `$c000`)
 | `i.`      | System command | 3000
 | `i.XX.YY` | Sub-module YY of command XX | 4000
 | `i.XX/YY` | Sub-module YY of command XX | 3000

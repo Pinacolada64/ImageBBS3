@@ -94,7 +94,6 @@ Mode 5 is reserved for use by ML routines, and is the equivalent of `&,52,_x_,3`
 .checkflag.asm
 [source,6502]
 ----
-; FIXME: can it do 6502 highlighting?
 ldx #$04	; lightbar flag number
 jsr chkflag	; returns flag status (0=off, 1=on) in .a
 bne flag_on

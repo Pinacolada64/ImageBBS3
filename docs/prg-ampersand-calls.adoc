@@ -1,3 +1,10 @@
+:experimental:
+// enable kbd:[] macro
+
 ### `&` Calls
 
 `&` is the command character #FIXME#
+
+`&,23:if peek(780)<>32 then...`
+
+Test whether caller is hitting kbd:[Space].

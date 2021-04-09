@@ -99,6 +99,9 @@ $c003	&,17	sys49155
 
 	&,22,x	tenwait [x=tenths of a second]
 	&,23	xgetin
+		Get character from modem, return in accumulator
+		&,23:if peek(780)<>32 then...
+		Test whether caller is hitting Space
 	&,24	xchrout1
 
 $f80c	&,25,x,y	sound
@@ -124,6 +127,7 @@ $f80c	&,25,x,y	sound
 	&,39	prtln
 	&,40	forcegc
 	&,41	setbaud
+
 
 	&,42	ecs - search for ecs command
 		[2.0] im 1860: f4=.:a%=zz:b%=2^ac%:&,42:if a% then ef$=b$:ep$=a$:ec=a%:ec%=b%:goto 1800

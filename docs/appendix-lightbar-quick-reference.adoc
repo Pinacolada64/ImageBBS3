@@ -95,37 +95,37 @@ Chat reason logged to `e.log _weekday_`.
 |====================
 | Option | Left | Right
 
-| Asc
+| `Asc`
 | x
 | x
 
-| Ans
+| `Ans`
 | x
 | x
 
-| Exp
+| `Exp`
 | x
 | x
 
-| Unv
+| `Unv`
 | x
 | x
 
-| Trc
+| `Trc`
 | Enable BASIC line execution trace.
-Slow down with kbd:[Shift] or kbd:[Shift-Lock]. 
+Slow down with kbd:[Ctrl]. 
 Normally only used for debugging.
 | _Undefined_
 
-| Bel
+| `Bel`
 | x
 | x
 
-| Net
+| `Net`
 | x
 | x
 
-| Mac
+| `Mac`
 | x
 | x
 
@@ -151,36 +151,36 @@ Normally only used for debugging.
 |====================
 | Option | Left | Right
 
-| Chk
+| `Chk`
 | x
 | Excessive chat logoff.
 If user requests more unanswered chat pages than `s.chat _x_` screens, user is logged off as soon as possible.
 
-| Mor
+| `Mor`
 | x
 | x
 
-| Frd
+| `Frd`
+| Disable color output.
+| x
+
+| `Sub`
 | x
 | x
 
-| Sub
+| `Res`
 | x
 | x
 
-| Res
+| `Mnt`
 | x
 | x
 
-| Mnt
+| `Mnu`
 | x
 | x
 
-| Mnu
-| x
-| x
-
-| Xpr
+| `Xpr`
 | x
 | x
 
@@ -206,27 +206,27 @@ If user requests more unanswered chat pages than `s.chat _x_` screens, user is l
 |====================
 | Option | Left | Right
 
-| Em3
+| `Em3`
 | Run Image 1._x_ `+` files
 | _Undefined_
 
-| Sc2
+| `Sc2`
 | Second login security question asked
 | _Undefined_
 
-| Scp
+| `Scp`
 | CMD SuperCPU connected to system
 | CMD SuperCPU operating in 20 mHz mode
 
-| Alt
+| `Alt`
 | Display idle screen last ten callers in different colors
 | _Undefined_
 
-| Trb
+| `Trb`
 | Don`'t display values of variables in programmable window for troubleshooting purposes
 | _Undefined_
 
-| DCD
+| `DCD`
 | *Enabled:* Hang up when inverted (asserted when high) DCD signal received
 
 *Disabled:* Hang up when normal (asserted when low) DCD signal received
@@ -235,14 +235,14 @@ If user requests more unanswered chat pages than `s.chat _x_` screens, user is l
 
 Check in BASIC using `&,52,$3c,3:if a% then ...`
 
-| DSR
+| `DSR`
 | *Enabled*: Hang up on no DSR signal  
 
 *Disabled*: Hang up on no DCD signal
 
 | *Enabled*: Show data being received/transmitted in receive/transmit windows
 
-| $3e
+| `$3e`
 | _Undefined_
 | _Undefined_
 
@@ -288,35 +288,35 @@ Pages 5-7 are undefined and are available for your own use.
 |====================
 | Option | Left | Right
 
-| At1
+| `At1`
 | x
 | x
 
-| At2
+| `At2`
 | x
 | x
 
-| At3
+| `At3`
 | x
 | x
 
-| At4
+| `At4`
 | x
 | x
 
-| At5
+| `At5`
 | x
 | x
 
-| At6
+| `At6`
 | x
 | x
 
-| At7
+| `At7`
 | x
 | x
 
-| At8
+| `At8`
 | x
 | x
 

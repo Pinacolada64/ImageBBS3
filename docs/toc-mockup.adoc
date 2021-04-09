@@ -42,7 +42,9 @@ List them, addresses. Mention cbbsoutpost.
 
 Facebook, Brent's forum, Google Hangouts?
 
-#### imagebbs.net
+#### imagebbs.org
+
+// Jay Theriot runs this
 
 Online documentation hosted there, someday. 
 Having https://www.github.io available for this preview helps immensely in the meantime.
