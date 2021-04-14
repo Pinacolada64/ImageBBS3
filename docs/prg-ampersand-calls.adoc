@@ -5,6 +5,9 @@
 
 `&` is the command character #FIXME#
 
-`&,23:if peek(780)<>32 then...`
+// 2.0's i.UD
+`&,22,200` Wait 20 seconds (20 10/10ths of a second)
+
+`&,23:if peek(780)=32 then...`
 
 Test whether caller is hitting kbd:[Space].

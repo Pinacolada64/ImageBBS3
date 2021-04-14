@@ -198,7 +198,7 @@ $fc06	&,57	relread
 	Usage:	&,60,4,0,struct%(f,r),string$
 		does "0" param always have to be 0?
 		struct%(f,r)	field,record to put date into
-		string$		the date string
+		string$		the 11-digit date string
 
 	GetDate: get date string from structure (BCD)
 
@@ -209,7 +209,7 @@ $fc06	&,57	relread
 
 	DoScan	Scan records (yikes)
 	Usage	&,60,6,num,command,a(a,b),b(a,b),l,bits,test
-		returns count in a%, and FIXME (a struct?)
+		returns count in a%, and b(a,b) (a struct)
 	num	# of records to scan
 	command
 			0	2 byte AND, <>0

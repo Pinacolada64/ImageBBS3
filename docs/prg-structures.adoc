@@ -69,6 +69,7 @@ Now that you have the basic concept of the structure, let’s look in a little m
 Here is a byte-by-byte map of the structure we designed.
 
 [%header]
+[%autowidth]
 .Sample structure layout
 |===
 | Element Position | Byte Position | Data | Type | Bytes Used
@@ -237,7 +238,7 @@ NOTE: You do not have to load the file at the start of the array.
 NOTE: The `0` is believed to be a necessary but ignored parameter.
 
 [start=2]
-. Use the `u%()` array, starting at element 0, byte 0:
+. Use the `u%()` array(element 0, byte 0):
 
 `&,60,2,0,**u%(0,0)**,dr$+"u.handles",dv%`
 
@@ -280,7 +281,7 @@ _device_ should be gotten with:
 `&,60,3,0,**u%(0,0)**,3*38,dr$+"u.handles",dv%`
 
 [start=3]
-. _bytes_: the number of bytes per structure, multiplied by the number of structures (3 structures  &times; 38 bytes in the example):
+. _bytes_: the number of bytes per structure, multiplied by the number of structures (3 structures &times; 38 bytes in the example):
 
 `&,60,3,0,u%(0,0),**3*38**,dr$+"u.handles",dv%`
 
@@ -291,31 +292,79 @@ _device_ should be gotten with:
 
 ### Put Date
 
-Put an 11-digit date into a structure.
+Put an 11-digit date into a structure (stored in Binary Coded Decimal).
 
 .Syntax
-`&,60,4,0,array(a,b),string$`
+`&,60,4,0,_array(a,b)_,_string$_`
 
 _array(a,b)_: array name(`a`=starting structure, `b`=starting byte)
 
 _string$_: the 11-digit date string
 
 .Example
- an$="xxxxxxxxxxx":&,60,4,0,u%(3,0),an$
+ an$="10412208234":&,60,4,0,u%(3,0),an$
+
+====
+
+.Details: Binary Coded Decimal
+
+Structs store an 11-digit date in 3 bytes using Binary Coded Decimal (BCD) format.
+Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., two 4-bit halves of an 8-bit number).
+
+ an$="10412208234":&,60,4,0,u%(0,1),an$
+
+[cols="8"]
+[%autowidth]
+|===
+// 4 cells, cols 2-3, 4-5, 6-7 span
+>|Element
+2+^|`u%(0,1)`
+2+^|`u%(0,2)`
+2+^|`u%(0,3)`
+>|_unused_ 
+
+// 8 cells
+>| Binary
+^| `%0001&nbsp;%0000`
+^| `%0100&nbsp;%0001`
+^| `%0010&nbsp;%0010`
+^| `%0000&nbsp;%1000`
+^| `%0010&nbsp;%0011`
+>| `%0100`
+>| `%xxxx` 
+
+>| Decimal
+>| `1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0`
+>| `4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1`
+>| `2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2`
+>| `0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8`
+>| `2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3`
+>|  `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4`
+>|  `&nbsp;&nbsp;&nbsp;&nbsp;x` 
+|===
+
+====
 
 ### Get Date
 
-Get an 11-date from structure.
+Get an 11-digit date from structure.
+The date is stored in Binary Coded Decimal (BCD) format as shown above.
 
 .Syntax
-`&,60,5,0,__array(a,b)__,__string$__`
+`&,60,5,0,_array(a,b)_,_string$_`
 
 _array(a,b)_: array name(`a`=starting structure, `b`=starting byte)
 
 _string$_: string name
 
 .Example
- xxx
+ &,60,5,0,u%(0,1),an$:&,15:&an$
+
+. `&,60,5,0,u%(0,1),an$`: Get a date from the struct into `an$`.
+
+. `&,15`: convert `an$` into a long date string.
+
+. `&an$`: display the long date string.
 
 ### Scan Structures
 
@@ -335,17 +384,17 @@ Example:
 ud%(0,1),ud%(0,1) -> reads and puts it back?
 ////
 
-`num` # of structures to scan
+_num_: # of structures to scan
 
-`bits` the bits to set if true
+_bits_: the bits to set if true
 
-`a(a,b)` starting flags element,byte
+_a(a,b)_: starting flags(_element_,_byte_)
 
-`b(a,b)` starting object element,byte
+_b(a,b)_: starting object(_element_,_byte_)
 
-`size` size of struct
+_size_: size in bytes of struct
 
-`com` command number:
+_command_: command number:
 
  0: 2 byte and, <>0
  1: 2 byte and, ==0
@@ -354,33 +403,37 @@ ud%(0,1),ud%(0,1) -> reads and puts it back?
  4: date cmp, <
  5: date cmp, >=
 
-`test` the object to test for
+_test_: the object to test for
 (apparently can be either a variable or a number, maybe the array number?)
 
 .Example: `i.UD` from Image 2.0
+The following code scans the U/D directory for entries which have an upload date older than `ld$`, (setting `$4f` on ud%(0,1) if the entry matches):
+
  3950 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
 
- &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
+//    &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
-`rn`: record number, how many structures to scan in the directory
+_&,60,6_: scan struct
 
-`$4f`: `%1001111` in binary, still researching the purpose of this
+_rn_: record number, how many structures to scan in the directory
 
-`ud%(0,1)` SubOp ID?
+_$4f_: `%01001111` in binary, #FIXME# still researching the purpose of this
 
-`ud%(3,1)` Upload date
+_ud%(0,1)_: #FIXME#
 
-`60` structure width
+_ud%(3,1)_: Upload date
 
-`4` date comparison, <
+_60_: structure size, in bytes
 
-`ld$` last call date (the comparison object).
+_4_: date comparison, `<` (less than)
+
+_ld$_: last call date (the comparison object).
 Can apparently be a string name, or number of an array?
 
 .Returns
-`a%`, count of structures that the comparison returns as matching `test`.
+`a%`: count of structures that the comparison returns as matching `test`.
 
-`b(a,b)`, the structure containing the comparisons matching `test`.  
+`b(a,b)`: the structure containing the comparisons matching `test`.  
 
 ### Sort
 
@@ -398,27 +451,27 @@ Can apparently be a string name, or number of an array?
 .Purpose
 
 .Syntax
-`&,60,8,__num__,__size__,__acs__,__a(a,b)__,__a%(a)__,__start__`
+`&,60,8,_num_,_size_,_acs_,_a(a,b)_,_a%(a)_,_start_`
 
-`num` number of structures to scan
+_num_: number of structures to scan
 
-`size` size of the structure
+_size_: size of the structure, in bytes
 
-`acs` access level to filter results by
+_acs_: access level to filter results by
 
-`a(a,b)` the structure to scan
+_a(a,b)_: the structure to scan
 
-`a%(a)` #FIXME#
+_a%(a)_: the structure to put the results in? #FIXME#
 
-`start` element to start scanning at
+_start_: element to start scanning at
 
 .Example
  &,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
 
 .Returns
-`a%` #FIXME#
+`a%`: #FIXME#
 
-`a%(a)` #FIXME#
+`a%(a)`: #FIXME#
 
 ### Scan Sum
 
@@ -427,9 +480,9 @@ Can apparently be a string name, or number of an array?
 .Syntax
 `&,60,9,_num_,_size_,_a(a,b)_`
 
-`num` number of structures to scan
+_num_ number of structures to scan
 
-`size` size of structure
+_size_ size of structure
 
 `a(a,b)` structure(_element_,_byte_) to scan
 
@@ -464,7 +517,7 @@ Copy structure `a+1` to structure `a` in a loop.
 .Syntax
 `&,60,11,_num_,_size_,_op_,_str_,_a1(a,b)_,_a2(b)_,_start_`
 
-`num`
+_num_
 
 `size` size of structure
 
