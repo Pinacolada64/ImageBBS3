@@ -31,7 +31,12 @@ kbd:[f1]: Split screen mode is useful when you want to access the lightbar and v
 
 You must be in split screen mode to enable or disable lightbar positions via the function keys.
 
-kbd:[f2]: Toggles between `FAST` and `SLOW` modes on a Commodore 128 in 64 mode. When you are in `FAST` mode, the screen is disabled since the VIC chip cannot run at 2 mHz.
+kbd:[f2]: Toggles between `FAST` (2 mHz) and `SLOW` (1 mHz) modes on a Commodore 128 in 64 mode.
+
+TIP: When you are in `FAST` mode, the BBS should operate faster at 2 mHz.
+However, the screen goes blank since the VIC chip cannot display the 40 column screen clearly at 2 mHz.
+Depending on which disk drives or other storage devices you have connected, disk access might not see any speed increase, since the C64's serial bus operates at 1 mHz.
+This is also a restriction while using CMD's SuperCPU in 20 mHz mode.
 
 ### Lightbar Functions
 
@@ -81,7 +86,7 @@ pass:q[<u>Related Checkmarks:</u>]
 
 `Sys` Right: _Background Page Enable_
 
-When the sysop is available for chat and the user has entered a reason for chat, the chat page sound will continue playing in the background until the sysop enters chat mode or the user logs off.
+When the sysop is available for chat and the user has entered a reason for chat, the chat page sound will continue playing in the background (while the user is doing other things) until the sysop enters chat mode or the user logs off.
 
 [.text-right]
 pass:q[<u>Related Checkmarks:</u>]
@@ -99,14 +104,14 @@ pass:q[<u>Related Checkmarks:</u>]
 
 `Acs` left: _Edit User's Access_
 
-Change the access group of the user who is online. This changes a portion of the bottom screen mask, `A=_x_` (_x_ being the user`'s access group).
+Change the access group of the user who is online. This changes a portion of the bottom screen mask, `A=_x_` (_A_ being short for _access_, and _x_ being the user`'s access group).
 
 [options="autowidth"]
 |==========
 | kbd:[f1] | sets access group to `A=0`
 | kbd:[f2] | sets access group to `A=9`
-| kbd:[f3] / kbd:[f4] | raises access one group (wraps around from `A=0`-`A=9`)
-| kbd:[f5] / kbd:[f6] | lowers access one group (wraps around `A=9`-`A=0`)
+| kbd:[f3] / kbd:[f4] | raises access one group (wraps around from `A=0`...`A=9`)
+| kbd:[f5] / kbd:[f6] | lowers access one group (wraps around `A=9`...`A=0`)
 | kbd:[f7] | gives the user the selected access level, exiting this function
 |==========
 

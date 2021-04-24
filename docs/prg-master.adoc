@@ -1,12 +1,12 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2021-04-07
+v0.1, 2021-04-14
 :experimental:
 // enable kbd:[] macro
 :toc: left
 :icons: font
 
-// GitHubb Flavored AsciiDoc
+// GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
 
 include::prg-introduction.adoc[]
