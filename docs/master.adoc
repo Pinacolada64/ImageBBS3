@@ -6,10 +6,13 @@ v0.1
 :toclevels: 10
 :icons: font
 :xrefstyle: full
+// :doctype: book // this requires using docbook
 
 NOTE: Preliminary start on documentation. Feedback welcome!
 
 include::preface.adoc[]
+
+include::typography.adoc[]
 
 include::whats-new.adoc[]
 

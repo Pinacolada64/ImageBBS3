@@ -1,13 +1,193 @@
-:experimental:
-// enable kbd:[] macro
+:experimental: // enable kbd:[] macro
 
 ### `&` Calls
 
-`&` is the command character #FIXME#
+`&` is the command character which is BASIC's interface to over 50 machine language routines of Image BBS.
 
-// 2.0's i.UD
-`&,22,200` Wait 20 seconds (20 10/10ths of a second)
+#### Image BBS Output Routine
 
-`&,23:if peek(780)=32 then...`
+In BASIC, the `print` keyword (or its abbreviation `?`) displays text on the screen, as in:
 
-Test whether caller is hitting kbd:[Space].
+ print"Hello there!"
+
+You can substitute `&` in Image BBS to do the same thing:
+
+ &"Hello there!"
+
+But unlike BASIC, after outputting this text, the cursor remains on the same line--there is no automatic carriage return printed.
+
+It's as if a semicolon (`;`) was used after the `print` statement above--this keeps the text all on one line:
+
+ print"Hello ";"there!";
+
+vs. printing on two lines:
+
+ print"Hello"
+ print"there!"
+
+To work around this, you can output a _carriage return_, which moves the cursor to the next line.
+
+.Boring Background: CR/LF, CR, LF?
+====
+On other terminals or operating systems, a carriage return moves the cursor down a row, staying in the current column, but an additional _linefeed_ character is needed to move the cursor to the beginning of the current row.
+
+ Hello 
+       there!
+
+This stairstep-looking result is what printing looks like with only a linefeed when the terminal needed both a carriage reeturn and a linefeed.
+Probably not the desired result.
+However, ``print``ing in Commodore BASIC--and our BBS in this example--doesn't need them.
+====
+
+ &"Hello there!"+chr$(13)
+
+`chr$()` (read it as "`character string`") is a function that outputs a character supplied in parentheses.
+A carriage return is `chr$(13)`.
+So this snippet of code will move the cursor to the next line after outputting `Hello there!`.
+
+There is also a string variable defined in `im`: `r$=chr$(13)` (short for "`return`").
+This is a handy shortcut.
+You can now code:
+
+ &"Hello there!"+r$
+
+// TODO
+
+TIP: This is actually an easy way to write data containing carriage returns to a SEQ file, as you'll see later.
+
+But there's something even handier available.
+
+#### Encoded Function Keys
+
+Some special characters are difficult (or impossible) to type in BASIC.
+Or, they might cause problems while reading disk files.
+Therefore, they have been encoded using the reverse video letters seen while typing function keys when in Commodore's "`quote mode.`"
+
+.Quote Mode
+====
+bla
+====
+
+Image BBS translates specific PETSCII characters into the reverse video letters seen when typing function keys inside quotation marks.
+
+This eliminates a few difficulties:
+
+* Entering special characters is made easier
+
+* Some more simply written code (and BASIC itself) can truncate data when a `,` is encountered in a SEQ file
+
+.BASIC Pitfall
+[code]
+====
+Using `input#2,a$` when the disk file contains a string `hello,there` returns only `hello` in `a$`.
+
+You can prefix the string with `"` on disk to get around that.
+But most likely, you want to read `hello` and `there` into two separate variables. `input#2,a$,b$` does that, resulting in `a$="hello"` and `b$="there"`.
+====
+
+////
+====
+This is an example
+======
+This is an example inside an example
+======
+====
+////
+
+Image BBS converts these special characters from their encoded form to readable characters when you:
+
+* use kbd:[RD] to read a SEQ file
+* use kbd:[SB] to read a post
+* Use kbd:[WF] to kbd:[.G]et, kbd:[.E]dit, and kbd:[.P]ut a file back.
+
+The `image seq reader` utility also does this.
+
+As it relates to carriage returns, though, we can see in the following table:
+
+.Image BBS Encoded Function Keys
+[%autowidth]
+[%header]
+|==============
+| Key | Quoted | Character | Key | Quoted | Character 
+| kbd:[f1] ^| kbd:[E] | kbd:[,] comma ^| kbd:[f5] ^| kbd:[I] | kbd:["] quotation mark 
+| kbd:[f2] ^| kbd:[F] | kbd:[?] question mark ^| kbd:[f6] ^| kbd:[J] | kbd:[Return] `chr$(13)`
+| kbd:[f3] ^| kbd:[G] | kbd:[:] colon ^| kbd:[f7] ^| kbd:[K] | kbd:[*] asterisk 
+| kbd:[f4] ^| kbd:[H] | kbd:[=] equal sign ^| kbd:[f8] ^| kbd:[L] | kbd:[^] up arrow
+|==============
+
+We can take the previous example of:
+
+ &"Hello there!"+r$
+
+and simplify it further with:
+
+`print"Hello there!kbd:[f6]"`
+
+// TODO: `&"bla","bla"` and `&"bla &pound;!x"`
+
+====
+
+NOTE: Outputting a string containing an MCI command or string variable does not work as expected. _i.e._:
+
+`z$="&pound;$c &pound;#3&pound;# &pound;%c":&"&pound;$z"`
+
+does not output the contents of `z$` (which is actually `c$`, and setting 3 leading spaces for `c%`).
+Instead, do this:
+
+`z$="&pound;$c &pound;#3&pound;# &pound;%c":&z$`
+
+====
+
+#### `&` By Itself
+
+This is a quick way to output the contents of `a$`.
+
+`a$="Hello therekbd:[f6]":&`
+
+#### Word-Wrap
+
+Setting the variable `lp=1` and outputting text with `&"..."` word-wraps to 40 columns on the console, and whatever the remote side`'s screen width is.
+
+Setting `lp=0` disables word-wrap, and words do not break at margins.
+
+---
+
+### & Routines
+
+// 2.0's i.UD-struct
+[source]
+----
+&,22,200 <1>
+----
+<1> Wait 20 seconds (20 10/10ths of a second)
+
+---
+
+[source]
+----
+3000 &,23:c=peek(780):if c<>32 then 3000 <1>
+----
+<1> Get character from RS232 routine.
+Save in `c`.
+Loop until the caller hits kbd:[Space] [`chr$(32)`].
+
+TIP: `&,23` doesn't stop and wait for input, unlike the `&pound;g1` MCI command.
+If no character is received from the connected user, `peek(780)=0`.
+
+// async
+// 1. A process in a multitasking system whose execution can proceed independently, "in the background". Other processes may be started before the asynchronous process has finished.
+
+#### Variable Pointer Management
+
+When modules use arrays not already defined in `im`,
+
+`&,27,_x_` bla
+
+`&,28,_x_` bla
+
+====
+Image 1.2 had just one level of variable pointer save and restore.
+Image 1.3 and above adds multiple levels of save and restore with an additional parameter.
+====
+
+// array pointers: $13D0-$13DF, is that 16 1-byte pointers (levels 0-15) or 8 2-byte pointers (levels 0-7)?

@@ -1,0 +1,20 @@
+:experimental: // enable kbd:[] macro
+
+== Typography Notes
+
+There are several conventions used in this manual.
+
+_Italic text_ represents a variable, or some text supplied by the user in response to a prompt.
+
+*Bold text* represents #FIXME#.
+
+Letters or text enclosed in rounded, shaded squares such as kbd:[T], kbd:[Ctrl], or kbd:[f1] represent keys on the Commodore 64 keyboard.
+They generally are either options, or should be pressed, during a series of instructions in the manual.
+
+== Latin Junk
+
+Because I'm such a nerd:
+
+* _i.e._ is short for _id est_, meaning "`that is to say,`" or "`in other words.`"
+
+* _e.g._ is short for _exemplī grātiā_, meaning "`for example.`"

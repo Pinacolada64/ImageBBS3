@@ -74,11 +74,11 @@ Many new features have been added and improvements have been made in existing fe
 ** Structures (`&,60` and `&,68`: RAM block manipulation, load, save, search, store/retrieve bytes and strings, and more) can replace using BASIC arrays
 ** Sounds
 *** New "`gong`" sound (`&,25,3`)
-*** _repeat_ parameter: 1-254=repeat count, 255=infinite repeat
+*** _repeat_ parameter: `0`=stop repeating, `1-254`=repeat count, `255`=infinite repeat
 * Image 1._x_ emulation layer so their `+.` files can be run
 * BASIC keyword extensions
 ** Hexadecimal values can be used in `POKE`, `PEEK`, `SYS` and `&` commands. `POKE $D004,$0c` is the equivalent of `POKE 53252,12`
 ** `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
-** `NEW _line_number_` erases that portion of the BASIC program to prepare for ``LOAD``ing a new module
+** `NEW _line_number_` prepares to ``LOAD`` a new module by erasing lines from `line_number` to the end of the BASIC program
 
 New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.
