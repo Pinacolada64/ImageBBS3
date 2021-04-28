@@ -1,0 +1,97 @@
+### New Features
+
+`_variable_=usr(0)` function reads the stack pointer to display how much free space is on the processor stack.
+
+#### BASIC Keyword Extensions
+
+##### `LOAD` Relocate Flag
+
+// load"filename",device,relocate_flag 
+
+Regular Commodore DOS uses the `,1` in `load"filename",8,1` to mean "`load this file to the load address stored in the file.`"
+
+In Image BBS, the _relocate_flag_ has an expanded purpose--specifying the _segment_ of memory to load a particular file to.
+A segment is the address which a file will load into, ignoring the file's existing load address contained in the first two bytes of the file.
+
+NOTE: Currently, some segments are undefined.
+
+[%autowidth]
+[%header]
+|====================
+| Segment | Purpose | Address | Example File
+| 2 | Protocol start | `$c000` | `++ punter`
+| 7 | Print mode table | x | `e.printmodes` 
+| 8 | Lightbar table | x | `e.lightdefs` 
+| 9 | Alarm table | x | `e.alarms`
+| 10| ASCII -> Commodore translation table | x | _n/a_ 
+| 11| Commodore -> ASCII translation table | x | _n/a_ 
+| 12| Network alarm table | x | `nm.times`
+|====================
+
+.Loading a Protocol
+[code]
+====
+Here are two different methods of accomplishing the same thing, loading the Punter file transfer protocol.
+
+The first uses the enhanced `load` function:
+
+ 3000 dr=5:gosub 3:a$="++ punter":load dr$+a$,dv%,2 <1>
+ 
+And the second relies more heavily on the Image ML, using the parameters set by BASIC:
+
+ 3000 dr=5:gosub 10:a$=dr$+"++ punter":&,7,2 <2>
+
+In both examples:
+
+* `dr=5:gosub 3` takes an Image drive (1-6) to return the device (`dv%`) and drive prefix (_e.g._, `0:`).
+Here, it returns the device and drive which your modules are stored on.
+
+* `a$="++ punter"` sets the filename to `load`.
+
+Next:
+
+<1> Method 1: `load dr$+a$,dv%,2` loads drive prefix `dr$` plus filename `a$` from device `dv%` to segment 2 (`$c000`)
+
+<2> Method 2: `&,7,2` uses `dr$`, `a$` and `dv%` as defined by BASIC, but is shorter code
+====
+
+##### `NEW` line range
+
+``new _line_number_`` prepares to ``load`` a new module by erasing lines from `line_number` to the beginning of the next module.
+
+`new 3000` erases lines 3000-4000.
+
+##### Hexadecimal Values
+
+Hexadecimal values (base 16) are prefaced with `$`.
+They can be used in `poke`, `peek`, `sys` and `&` commands.
+`poke $d004,$0c` is the equivalent of `poke 53252,12`.
+
+##### Binary Values
+
+Binary values (base 2) are prefaced with `%` and up to 8 bits can be specified.
+Leading ``0``s do not have to be specified.
+
+Binary values can be used with the same BASIC keywords as above.
+Hexadecimal and binary can be combined, _i.e._:
+
+ poke $d004,%00001100
+
+is again the equivalent of `poke 53252,12`.
+Since only the lowest 4 bits are being set, the example can be shortened to:
+
+ poke $d004,%1100
+
+====
+.Parsing Limitations
+// TODO: test this
+If you want to do logical operations like `and` or `or` with the new binary or hexadecimal prefixes, the only keywords they work with are `poke`, `peek`, `sys`, and `&`.
+
+Putting hexadecimal or binary prefixes after logical operators results in a `?syntax  error`:
+
+ poke $d004,peek($d004) and %1100
+
+Instead, assign `%1100` to a variable first, then perform the logical operation using the variable:
+
+ c=%1100:poke $d004,peek($d004) and c
+====

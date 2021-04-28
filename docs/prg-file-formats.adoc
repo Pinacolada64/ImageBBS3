@@ -4,6 +4,15 @@
 
 ### Introduction
 
+====
+.Option Lists
+To show when options are mutually exclusive (there can be only one option chosen from a group), the following notation is used:
+
+[ _option 1_ | _option 2_ | _option 3_ ]
+
+means that of the three options presented, option 1 _or_ option 2 _or_ option 3 is saved in that position in the file.
+====
+
 // NOTE: argh icon:exclamation[] icon:download[]
 
 #### `e.data`
@@ -16,43 +25,50 @@ The record size is 31 bytes.
 [%autowidth]
 [%header]
 |====================
-| Record | Purpose | Possible Values
-|  1 | Total calls to the system |
-|  2-3 | (unused) |
-|  4 | one-time caller weed cutoff, in months |
-|  5-11 | (unused) |
-| 12 | Highest user account # +1 |
-| 13-16 | (unused) |
-| 17 | Last caller handle |
-| 18 | Default null password |
-| 19 | Date/time of last user logoff |
-| 20 | Prime Time info | Time allowed per call, Prime Time start, Prime Time end
-| 21 | System Reservation Password | `0`=None, `1`=One Call, `2`=All Calls. `,` `^`=No Password, or 1-14 Character Password
-| 22-30 | (unused) |
-| 31 | Next available user account # |
-| 32 | RS232 Device | `0`=User Port `1`=SwiftLink
-| 33-34 | (unused) |
-| 35 | Date/time of last log reset |
+| Record | Variable | Purpose | Possible Values
+|  1 | `ca` | Total calls to the system | --
+|  2-3 | -- | _unused_ | -- 
+|  4 | -- | one-time caller weed cutoff, in months |
+|  5-11 | -- | _unused_ | --
+| 12 | `ur` | Highest user account # +1 |
+| 13-16 | -- | _unused_ |
+| 17 | `d3$` | Last caller handle |
+// fix the wording on this:
+| 18 | `pp$` | Default null password |
+| 19 | -- | Date/time of last user logoff |
+| 20 | `p1%,p2%,p3%` | Prime Time info | Time allowed per call, Prime Time start, Prime Time end
+| 21 | `l2,l2$` | System Reservation Password | [``0``=None \| ``1``=One Call \| ``2``=All Calls] , [``^``=No Password \| 1-14 Character Password]
+
+`0,^`: No reservation, no password
+
+`1,ONCE`: Reserved for one call with password `ONCE`
+
+`2,ALL`: Reserved for all calls with password `ALL`
+| 22-30 | -- | _unused_ |
+| 31 | -- | Next available user account # |
+| 32 | -- | RS232 Interface Type | [`0`=User Port \| `1`=SwiftLink]
+| 33-34 | -- | _unused_ |
+| 35 | `am$`, `d6$` | Date/time of last log reset |
 
 // record #36 in e.data has been moved to record #1 in e.macros
 // i/IM.macros uses mc, could remove 
 
-| 36 | _unused_ |
-| 37 | Clock set device | `1`=Manual, `3`=Lt.Kernal Port 1, `4`=Lt.Kernal Port 2, `8-29`=CMD Device #
-| 38 | Lt.Kernal device number | 
-| 39 | Autoweed cutoff, in months | 
-| 40 | Default prompt color| 
-| 41 | Printer secondary address | 
-| 42 | Printer line feeds | `0`=no, `10`=yes
-| 43 | Password mask character(s) |
-| 44 | Log start date | 
-| 45 | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
-| 46 | _unused_ | 
-| 47 | BBS name| 
-| 48 | Entering chat message | 
-| 49 | Exiting chat message | 
-| 50 | Netsub ID | increments by 1 when net post/response made
-| 51 | BBS identifier | _e.g._, `WN`
+| 36 | -- | _unused_ |
+| 37 | `y%` | Clock set device | [`1`=Manual \| `3`=Lt.Kernal Port 1 \| `4`=Lt.Kernal Port 2 \| `8-29`=CMD Device #]
+| 38 | `lk%` | Lt.Kernal device number | 
+| 39 | -- | Autoweed cutoff, in months | 
+| 40 | `df%` | Default text color | 
+| 41 | `a` | Printer secondary address | 
+| 42 | `a` | Printer line feeds | [`0`=no \| `10`=yes]
+| 43 | -- | Password mask character(s) |
+| 44 | -- | Log start date | 
+| 45 | `tz$` | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
+| 46 | -- | _unused_ | 
+| 47 | `bn$` | BBS name | 
+| 48 | `c1$` | Entering chat message | 
+| 49 | `c2$` | Exiting chat message | 
+| 50 | -- | Netsub ID | increments by 1 when net post/response made
+| 51 | `cc$` | BBS identifier | _e.g._, `WN`
 
 // [%hardbreaks] have no power here
 // Would like the cell formatted like:
@@ -63,15 +79,15 @@ The record size is 31 bytes.
 // etc.
 // alas...
 
-| 52 | System device, drive
+| 52 | -- | System device, drive
 // this table cell spans 6 rows 52-57
-.6+| For each of these records, devices and drives are in separate fields of each record (stored as two lines separated by a carriage return).
+.6+| For records 52-57, devices and drives are in separate fields of each record (stored as two lines separated by a carriage return).
 // subsequent cells don't need 2nd column specified
-| 53 | E-Mail device, drive
-| 54 | Etcetera device, drive
-| 55 | Directory device, drive
-| 56 | Module device, drive
-| 57 | User device, drive
+| 53 | -- | E-Mail device, drive
+| 54 | -- | Etcetera device, drive
+| 55 | -- | Directory device, drive
+| 56 | -- | Module device, drive
+| 57 | -- | User device, drive
 // end span
-| 58 | Credits for new user | 
+| 58 | `nc` | Credits for new user | 
 |====================

@@ -1,8 +1,7 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
 v0.1, 2021-04-25
-:experimental:
-// enable kbd:[] macro
+:experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
 :icons: font
@@ -18,7 +17,7 @@ include::prg-introduction.adoc[]
 
 ## Programming Image BBS 3.0
 
-### New Features
+include::prg-new-features.adoc[]
 
 include::prg-programming-etiquette.adoc[]
 

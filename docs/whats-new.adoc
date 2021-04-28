@@ -30,6 +30,7 @@ Many new features have been added and improvements have been made in existing fe
 
 ** Access group data changes no longer require a reboot
 
+// until we fix this, comment it out
 // ** Programmable function keys: kbd:[Ctrl+f1] - kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
 
 * Configurable time zones for both the BBS and the caller show the caller's local time if the BBS is in a different time zone
@@ -78,7 +79,9 @@ Many new features have been added and improvements have been made in existing fe
 * Image 1._x_ emulation layer so their `+.` files can be run
 * BASIC keyword extensions
 ** Hexadecimal values can be used in `POKE`, `PEEK`, `SYS` and `&` commands. `POKE $D004,$0c` is the equivalent of `POKE 53252,12`
+** Binary values can also be used, and can be combined with hexadecimal: `POKE $D004,%00001100` is the equivalent of `POKE 53252,12`
 ** `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
 ** `NEW _line_number_` prepares to ``LOAD`` a new module by erasing lines from `line_number` to the end of the BASIC program
+* `_variable_=usr(0)` function reads the stack pointer to display how much free space is on the processor stack
 
 New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.
