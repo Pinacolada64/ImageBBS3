@@ -2,7 +2,7 @@
 
 // https://github.com/Pinacolada64/ImageBBS/blob/534f39f7cbe3f8c896725bc1db94fa23416ecacf/v2/docs/%26%20commands.txt
 
-## Static Arrays (Structures)
+## Static Arrays (Structures) [[structures]]
 
 _Structures_ allow you to store multiple types of data into memory reserved for arrays, and perform operations on these blocks of memory.
 There are functions to:

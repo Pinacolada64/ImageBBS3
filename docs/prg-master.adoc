@@ -46,13 +46,15 @@ include::prg-structures.adoc[]
 
 ### Arrays
 
-## POKEs and Machine Language Routines
+## POKEs
 
 ====
 
 TIP: ``POKE``s could go away in favor of `&,20` (interface read) and `&,21` (interface write) commands.
 
 ====
+
+include::prg-machine-language.adoc[]
 
 include::prg-lightbar.adoc[]
 

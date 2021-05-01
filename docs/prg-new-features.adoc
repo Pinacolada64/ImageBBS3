@@ -39,11 +39,13 @@ The first uses the enhanced `load` function:
  
 And the second relies more heavily on the Image ML, using the parameters set by BASIC:
 
- 3000 dr=5:gosub 10:a$=dr$+"++ punter":&,7,2 <2>
+// "// <2>" creates non-selectable callout if text is selected, but it doesn't seem to make much of a difference
+
+ 3000 dr=5:gosub 3:a$=dr$+"++ punter":&,7,2 // <2>
 
 In both examples:
 
-* `dr=5:gosub 3` takes an Image drive (1-6) to return the device (`dv%`) and drive prefix (_e.g._, `0:`).
+* `dr=5:gosub 3` takes an Image drive number (`dr`, 1-6) to return the device (`dv%`, _e.g._ `10`) and drive prefix (`dr$`, _e.g._, `0:`).
 Here, it returns the device and drive which your modules are stored on.
 
 * `a$="++ punter"` sets the filename to `load`.

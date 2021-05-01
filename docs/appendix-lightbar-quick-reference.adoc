@@ -346,7 +346,7 @@ Run Image 1._x_ `+` files.
 | `Sc2`
 | *Disable 2nd Security Check*
 
-During login, a second login security question is not asked (first/last names, e-mail address, xxx)
+During login, a second login security question is not asked (first/last names, e-mail address)
 
 | _Undefined_
 

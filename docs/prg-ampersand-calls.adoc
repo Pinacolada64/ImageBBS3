@@ -79,7 +79,7 @@ The kbd:[Inst/Del] key is the only cursor control not affected by "`quote mode.`
 
 Typing a second kbd:["] exits quote mode, and allows you to use the cursor keys to edit the program line again.
 
-TIP: See `&,70,_y_,_x_` for how to position the terminal cursor easily in Image BBS.
+TIP: See <<position-cursor>> for how to position the terminal cursor easily in Image BBS.
 
 .Insert Mode
 Insert mode is similar to quote mode, only for the number of spaces you insert with the kbd:[Shift+Inst/Del] key, the BASIC editor is in quote mode.
@@ -204,6 +204,8 @@ This
 
 _Parameters_:
 
+`&,1,_editor_[,_password_]`
+
 `p$`: text of prompt shown before `:` and input accepted
 
 `w$`: text to use as default when using edit mode
@@ -212,12 +214,9 @@ _Parameters_:
 
 `pl=1`: allow both lowercase and uppercase
 
-Up to two additional parameters after `&,1` can be given.
-Here, we supply them as `&,1,_editor_[,_password_]`.
-
 NOTE: Not all of these parameters are currently understood.
 
-`editor`: editor flags
+`editor`: editor flags:
 
 These are shown in binary, each bit controls a separate function of the input routine.
 Bits may be combined together to perform multiple functions.
@@ -243,7 +242,7 @@ Bits may be combined together to perform multiple functions.
 | `%10000000` | 128 | kbd:[Delete] on column one exits input
 |=====
 
-`password`: password flags
+`password`: password flags:
 
 [%header]
 [%autowidth]
@@ -263,9 +262,9 @@ Bits may be combined together to perform multiple functions.
 
 Disk file input.
 
-`x`: logical file number
+`lfn`: logical file number
 
-`bytes`: 1-80, number of bytes to get from file
+`bytes`: number of bytes to get from file, 1-80
 
 _Returns:_
 
@@ -273,7 +272,7 @@ _Returns:_
 
 ---
 
-### `&,3` Read File From Disk
+### `&,3` Read File from Disk
 
 `&,3,_lfn_[,_speed_]`	read file from disk
 
@@ -281,8 +280,8 @@ _Parameters:_
 
 `lfn`: logical file number
 
-// Range? 0-15?
-`speed`: speed
+// Range 1-20 from i/GF-other:
+`speed`: speed (1-20, for movie file read)
 
 ---
 
@@ -332,28 +331,44 @@ TIP: The secondary address must be `0` to instruct the drive to return the disk 
 
 _Parameters:_
 
-_x_: logical file #
+`&,8,_lfn_,_y_`
 
+_lfn_: logical file #
+
+// TODO: Double-check this:
 _y_: [`0`=entire directory | `1`=single line]
 
 _Returns:_
 
-If _y_=`1`, `a$`: single line of disk directory information
+_y_=`0`: Displays directory
+
+_y_=`1`, `a$`: single line of disk directory information
 
 .Reading Disk Directory
- 3000 dr=1:gosub 3:open 2,dv%,0,dr$+"$"
- 3002 &,8,2,0:close 2:goto 300
+ 3000 dr=1:gosub 3:open 2,dv%,0,dr$+"$":get#2,a$,a$ <1>
+ 3002 &,8,2,0:close 2:goto 300 <2>
+
+<1> `dr=1:gosub 3` get device of s. disk{newline}bla
+
+<2> `&,8,2,0`: Get entire disk directory. `close 2`: close lfn#2. `goto 300`: go to main prompt.
 
 ---
 
 ### `&,9` Bottom Variable
 
+Print variables to 16 character status window.
+
 `&,9[,x]`
-	&,9[,0]	print an$ to status window
-	&,9,1	print a$  to status window
-	&,9,2   print b$  to status window
-	&,9,4	looks like d1$
-		(x seems to follow the variable table definitions of Image 1.2)
+
+`&,9[,0]` print `an$` to status window
+
+`&,9,1`	print `a$` to status window
+
+`&,9,2` print `b$` to status window
+
+`&,9,4` looks like `d1$`
+
+(x seems to follow the variable table definitions of Image 1.2)
 
 ---
 
@@ -363,7 +378,9 @@ kbd:[C=,Ctrl] leaves terminal mode
 
 ---
 
-### `&,11,x` Clear Array
+### `&,11` Clear Array
+
+Clear array #_x_.
 
 ---
 
@@ -375,38 +392,90 @@ Non-abortable file read.
 
 ### `&,13` inchr
 
+NOTE: Researching this.
+
 // arbit
 
 ---
 
 ### `&,14` Dump Array
 
-	&,14,x[,y]	Output elements 1-end [or 1-y] to open lfn#2
-		dumparray (x=array # [,y=# of elements])
-		[1.3] im: 1074		[2.0] im: 39
+Write array elements to an already-open file, using logical file #2.
+
+`&,14,_array_` Output however many elements were `DIM`ensioned for the array
+
+`&,14,_array_,_end_` Output elements 1-_end_
+
+NOTE: See <<array-table>> for the arrays which correspond to _array_.
 
 ---
 
 ### `&,15` Convert `an$`
 
-&,15[,0]	an$=d1$:&,15:&an$ -> displays verbose date
+This group of functions perform various conversions on the string contained in `an$`.
 
-&,15,1	an$="THE CHIEF":&,15,1:&an$ -> The Chief
+.Example 1:
+`&,15[,0]`
+`an$=d1$:&,15:&an$` -> displays verbose date
 
-		Changes all uppercase to mixed case
+. `an$=d1$`:
+Put current 11-digit date (`d1$`) into `an$`, _e.g._ `60429218427`
 
-&,15,2	converts encoded f-key characters into readable characters
+. `&,15`:
+Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&nbsp;&nbsp;4:29 PM PST``
 
-		i.t: an$="host{f3}port":&,15,2:&"{pound}v7{f6}" -> host:port
+. `&an$`:
+Output it
 
-&,15,3	[points to &,15,2]
+---
 
-&,15,4	[points to &,15,2]
+`&,15,1`::
+Changes an all uppercase string to mixed case.
 
-&,15,5	newdate: an$=""
+`an$="THE CHIEF":&,15,1:&an$` -> `The Chief`
 
-&,15,6,x	Split `an$` at wherever `chr$(x)` is found into `an$` and `a$` if it finds `chr$(x)` or `asc("x")`
-			-> an$ [chr$(x)] a$
+---
+
+`&,15,2`::
+Converts encoded function key characters into readable characters
+
+`i.t`::
+`an$="hostkbd:[f3]port":&,15,2:&"{pound}v7{f6}"` -> host:port
+
+``&,15,3`` and ``&,15,4``::
+(These point to, and are the same as, `&,15,2`.)
+
+`&,15,5`::
+`newdate`
+
+TIP: This function is currently being researched.
+
+`&,15,6,_x_`::
+Split `an$` into two strings, `an$` and `a$`, if `chr$(_x_)` or `asc("_x_")` is found in `an$`.
+
+.Split on space, three ways
+
+[start=1]
+. `an$="Hello world":&,15,6,**32**`
+
+This splits `"Hello world"` at the `**chr$(32)**` (space), resulting in `an$="Hello"` and `a$="world"`.
+
+[start=2]
+. `an$="Hello world":&,15,6,**asc(" ")**`
+
+This splits `"Hello world"` at the **ASCII value of _space_** (32), resulting in `an$="Hello"` and `a$="world"`.
+
+// does it support 3 methods?
+[start=3]
+. `an$="Hello world":&,15,6,**32**`
+
+This splits `"Hello world"` at the `chr$(**32**)` (space), resulting in `an$="Hello"` and `a$="world"`.
+
+[%autowidth]
+.After split
+|===
+| `an$` | `chr$(_x_)` | `a$` 
+|===
 
 ====
 .im
@@ -423,6 +492,8 @@ NOTE: `133`=kbd:[f1], Image `,`
 ---
 
 ### `&,16`	sys 49152
+
+Perform `sys 49152`, 
 
 ---
 
@@ -446,7 +517,7 @@ _Parameters:_
 
 ---
 
-### `&,20,x,y` Read from Interface Table
+### `&,20` Read from Interface Table
 
 Reads a byte from the interface table.
 
@@ -458,19 +529,22 @@ _Parameters:_
 
 ---
 
-### `&,21,x,y` Write to Interface Table
+### `&,21` Write to Interface Table
 
-		Writes a byte to the interface table
+Writes a byte to the interface table.
+
+_Parameters:_
+
 		x = index (see table)
 		y = value
 
 ---
 
-### `&,22,x` _x_ Tenths of a Second Delay
+### `&,22` _x_ Tenths of a Second Delay
 
 tenwait [x=tenths of a second]
 
-_Example_
+.Example
 // 2.0's i.UD-struct
 [source]
 ----
@@ -493,24 +567,27 @@ Loop until the caller hits kbd:[Space] [`chr$(32)`].
 TIP: `&,23` doesn't stop and wait for input, unlike the `&pound;g1` MCI command.
 If no character is received from the connected user, `peek(780)=0`.
 
-// async
+// asynchronous
 // 1. A process in a multitasking system whose execution can proceed independently, "in the background". Other processes may be started before the asynchronous process has finished.
 
 ---
 
 ### `&,24` xchrout1
 
+:function_count: 1
+include::includes/prg-ml-function-warning.adoc[]
+
 ---
 
 ### `&,25` Sound
 
-Produce 4 separate _sound_, repeating _sound_ an optional _repeat_ number of times.
+Produce 4 separate sounds, optionally repeating the sound a specified number of times.
 
 _Parameters:_
 
 `&,25,_sound_[,_repeat_]`
 
-`sound=`
+_sound_=
 
 	&,25,0  beep
 	&,25,1	ding
@@ -524,15 +601,11 @@ Number of times to repeat: [`0`: Stop repeat | `1-254`: Repeat count | `255`: in
 
 ---
 
-### `&,27`, `&,28` Variable Pointer Management
-
-#### `&,27,_x_` Save Variable Pointers
+#### `&,27` Save Variable Pointers
 
 When modules use arrays not already defined in `im`, #FIXME#
 
-#### `&,27,_level_` bla
-
-#### `&,28,_level_` bla
+#### `&,28` Restore Variable Pointers
 
 ====
 Image 1.2 had just one level of variable pointer save and restore.
@@ -543,39 +616,47 @@ Image 1.3 and above adds multiple levels of save and restore with this additiona
 
 ---
 
-### ``&,28,_x_`` Restore Variable Pointers
+:function_count: 8
+include::includes/prg-ml-function-warning.adoc[]
+
+`&,29` usevar
+
+`&,30` putvar
+
+`&,31` zero
+
+`&,32` minusone
+
+`&,33` getarr
+
+`&,34` putarr
+
+`&,35` getln
+
+`&,36` putln
 
 ---
 
-====
-WARNING: ML Routines
-
-These routines are used by Image machine language themselves; there is little reason to call them from BASIC.
-
-    &,29	usevar
-	&,30	putvar
-	&,31	zero
-	&,32	minusone
-	&,33	getarr
-	&,34	putarr
-	&,35	getln
-	&,36	putln
-
-====
-
 ###	`&,37` trapon
+
+---
 
 ###	`&,38` trapoff
 
-====
-WARNING: ML Routine
+---
 
-These routines are used by Image machine language themselves; there is little reason to call them from BASIC.
+:function_count: 2
+include::includes/prg-ml-function-warning.adoc[]
 
-	&,39	prtln
-====
+### `&,39` prtln
+
+Prints the array element `tt$()` contained in the `.x` register.
+
+---
 
 ###	`&,40` forcegc
+
+Perform a garbage collection (freeing RAM by erasing unused strings).
 
 ---
 
@@ -585,82 +666,222 @@ These routines are used by Image machine language themselves; there is little re
 
 ### `&,42,_x_` ECS Commands
 
-&,42	ecs - search for ecs command
+This group of commands is used for searching, loading, saving and the Extended Command Set (ECS).
 
-		[2.0] im 1860: f4=.:a%=zz:b%=2^ac%:&,42:if a% then ef$=b$:ep$=a$:ec=a%:ec%=b%:goto 1800
+NOTE: Fix me!
 
-&,42,1	kills ECS defs in memory?
+`&,42` Check for ECS command
 
-[2.0] im
+****
+.im
+ 270 f4=.:a%=zz:b%=2^ac%:&,42:if a% then ef$=b$:ep$=a$:ec=a%:ec%=b%:goto 264
 
- 1804 a%=asc(ef$+nl$)+256*asc(mid$(ef$,2,1)+nl$):&,42,1
+_Parameters:_
 
-&,42,4	[2.0] im 3106: loads `e.ecs.main`
+`a%`: zz (Local Mode flag)
+
+`b%`: access level
+
+_Returns:_
+
+`a$`:
+
+`b$`:
+
+`a%`:
+
+`b%`:
+****
 
 ---
 
-====
-WARNING: ML Routine
+`&,42,1` Goto line in ECS command
 
-These routines are used by Image machine language themselves; there is little reason to call them from BASIC.
+_Example:_
 
-	&,43	chatchk
-	&,44	trace
-	&,45	prtvar	[MCI on?]
-	&,46	prtvar0 [MCI off?]
-	&,47	carchk
-	&,48	getkbd
-	&,49	getmod
-	&,50	outscn
-====
+.im
+ 268 a%=asc(ef$+nl$)+256*asc(mid$(ef$,2,1)+nl$):&,42,1
 
-### `&,51`	outmod
+_Parameter:_
 
-outputs character in .a [peek(780)]
+`a%`: line number to `GOTO`
+
+---
+
+`&,42,2` Get ECS definitions from RAM
+
+_Example:_
+
+#FIXME#
+
+---
+
+`&,42,3` Put ECS definitions into RAM
+
+_Example:_
+
+#FIXME#
+
+---
+
+`&,42,4` Load ECS definitions from disk
+
+ a$=dr$+"e.ecs.main":&,42,4
+ 
+im 3106: loads `e.ecs.main`
+
+---
+
+:function_count: 9
+include::includes/prg-ml-function-warning.adoc[]
+
+ &,43	chatchk
+ &,44	trace
+ &,45	prtvar	[MCI on?]
+ &,46	prtvar0 [MCI off?]
+ &,47	carchk
+ &,48	getkbd
+ &,49	getmod
+ &,50	outscn
+ &,51	outmod outputs character in .a [peek(780)]
+
+////
+&,47 returns:
+0 if carrier present, or local mode
+1 if carrier dropped
+2 if time out
+////
+
+---
 
 ### `&,52` Lightbar Interface
 
-	&,52,x,y	(&,52,$hex,y allowed)
-		chkflags
-			x=0: clear y
-			x=1: set y
-			x=2: toggle y
-			x=3: read status of y, return in a%
-			x=4: move lightbar to y
+This is how to read the status of lightbar checkmarks, change checkmarks`' status, and move the "`lit`" portion to a specific location.
 
-### `&,53` logoff
+_Parameters:_
 
-im: 1003 &,53,a
+`&,52,_position_,_option_`
 
-### `&,54,x` useeditr
+====
+TIP: `&,52,$_hexadecimal_,_option_` is allowed.
+
+_Example_: Turn off *Trc* left: `&,52,$18,0` (`&,52,24,0` decimal).
+====
+
+`option`=0: clear checkmark at _position_
+
+`option`=1: set checkmark at _position_
+
+`option`=2: toggle checkmark at _position_
+
+`option`=3: read status of _position_, return in `a%`
+
+`option`=4: move lightbar to _position_
+
+---
+
+### `&,53` Logoff
+
+:function_count: 1
+include::includes/prg-ml-function-warning.adoc[]
+
+* Resets various flags:
+
+** chat page
+** sound repeat counter
+
+* clears status area
+
+_Example:_
+
+.im:
+
+ 3074 &,53
+
+---
+
+### `&,53,1,_x_` farerr
+
+Cause BASIC error #_error_ to happen.
+
+_Parameter:_
+
+`&,53,1,_error_`
+
+_Example:_
+
+`&,53,1,14` Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
+
+.Error Numbers
+[%header]
+[%autowidth]
+|===
+| Number | Error | Number | Error
+| 1 | TOO MANY FILES        |16 | OUT OF MEMORY
+| 2 | FILE OPEN             |17 | UNDEF'D STATEMENT
+| 3 | FILE NOT OPEN         |18 | BAD SUBSCRIPT
+| 4 | FILE NOT FOUND        |19 | REDIM'D ARRAY
+| 5 | DEVICE NOT PRESENT    |20 | DIVISION BY ZERO
+| 6 | NOT INPUT FILE        |21 | ILLEGAL DIRECT
+| 7 | NOT OUTPUT FILE       |22 | TYPE MISMATCH
+| 8 | MISSING FILE NAME     |23 | STRING TOO LONG
+| 9 | ILLEGAL DEVICE NUMBER |24 | FILE DATA
+|10 | NEXT WITHOUT FOR      |25 | FORMULA TOO COMPLEX
+|11 | SYNTAX                |26 | CAN'T CONTINUE
+|12 | RETURN WITHOUT GOSUB  |27 | UNDEF'D FUNCTION
+|13 | OUT OF DATA           |28 | VERIFY
+|14 | ILLEGAL QUANTITY      |29 | LOAD
+|15 | OVERFLOW              |30 | BREAK
+|===
+
+---
+
+### `&,54` Text editor interface
 
 	&,54,0	don't preserve text in tt$() array
 	&,54,1	re-enter main
 	&,54,2	re-enter, not command
 
+---
+
+:function_count: 2
+include::includes/prg-ml-function-warning.adoc[]
+
 ### `&,55` output
+
+---
 
 ### `&,56` chatmode
 
+---
+
 ### `&,57` relread
 
-Reads until end-of-record! Nice.
+Reads a record from a RELative file.
+
+---
 
 ###	`&,58,x,y` setalarm
 
+---
+
 ###	`&,59` farerr
+
+---
 
 ###	`&,59,1,x`
 
-i.CP: throw error _a_, which crashes BBS.
-			(because a=0, and that's not a valid BASIC error #?)
+.i.CP
 
-### `&,60` Structures [[structures]]
+Throw error _a_, which crashes BBS.
 
-See <<structures>> in the programming guide.
+(because a=0, and that's not a valid BASIC error #?)
 
-###	`&,60` struct
+### `&,60` Structures
 
+See the xref:prg-structures.adoc#structures[Static Arrays (Structures)] chapter in the _Programming Reference Guide_ for more information.
+
+////
 		[Ray: &,60 handles X=0,1,2,3,14,15, any other x calls &,68]
 
 	struct%(0,0) holds # of records in a struct
@@ -796,28 +1017,41 @@ i.lo:
 	cpystruc	Copy field in struct to another field?
 	Usage:	&,60,10,bytes,a1(a,b),a2(a,b)
 
-i/IM.logon:
-	inserting a record at fb%(0,a):
-	4326 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next
+.i/IM.logon:
+Inserting a record at `fb%(0,a)`:
 
-i/GF-add:
-	again, inserting a record
-	3324 if x<>cm%(0,0) then for a=x to cm%(0,0)-1:&,60,10,100,cm%(0,a+1),cm%(0,a):next
+ 4326 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next
+
+.i/GF-add:
+again, inserting a record
+
+ 3324 if x<>cm%(0,0) then for a=x to cm%(0,0)-1:&,60,10,100,cm%(0,a+1),cm%(0,a):next
 
 	scanstr		Unknown what this is for
 	Usage:	&,60,11,num,siz,op,str,a1(a,b),a2(b),start
 	No examples yet.
 
-	gamescan
-	Usage:	&,60,13,count,size,a$,a%(a,b),b$
-	No examples yet.
+gamescan
+&,60,12,count,size,a$,a%(a,b),b$
+
+No examples yet.
+
+; textread:
+; &,60,13,number,reclen,scan(),bits,text(),strlen
+
+No examples yet.
+////
+
+---
 
 ###	`&,61,col,row` poscrsr
 
-		[jack] im 4006: &,38:&,61,.,8:print"&,37:goto 1812:":end
-	[Maybe this affects the console cursor position]
+.im
+ 4006 &,38:&,61,.,8:print"&,37:goto 1812:":end
 
 // what is the difference between &,61 and &,70?
+
+---
 
 ### `&,62,_h_,_m_` Set Time
 
@@ -827,7 +1061,14 @@ Set CIA timer?
 
 `m`: min
 		
-im: ~3184
+.im:
+ 3184
+
+---
+
+:function_count: 3
+
+include::includes/prg-ml-function-warning.adoc[]
 
 ### `&,63` inline1
 
@@ -838,10 +1079,21 @@ im: ~3184
 ### `&,66` Calculated GOTO
 
 `goto` line number held in `a%`.
+If you have 14 `goto` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
 
 `a%`: line number to `goto`
 
- a%=3000+100*x:&,66
+Instead of writing:
+
+ on a% goto 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300
+
+(79 bytes)
+
+The same thing can be written like so:
+
+ a%=3:a%=a%*100+3000:&,66
+
+(24 bytes)
 
 ### `&,66,1` mlgosub
 
@@ -849,43 +1101,67 @@ im: ~3184
 
 ### `&,68` struct
 
-	[Ray: Certain sub-functions of &,60 are re-directed here]
+// [Ray: Certain sub-functions of &,60 are re-directed here]
 
 ### `&,69` Display String on Console
 
 &,69,_column_,_row_,_text_,_color_
 
+NOTE: Upper left of the screen starts at column 0, row 0.
+
+NOTE: This function will not draw PETSCII graphics characters properly.
+
 _Example_
 
- &,69,4,21,left$(" "+cm$+"<16 spaces>",16),$8c
+ &,69,4,21,left$(" "+cm$+"{21 spaces}",22),$8c
 
-`sub.display` is a good example of this
+[start=1]
+. `&,69,4,21` position string at column 5, row 22
+
+[start=2]
+. `left$(" "+cm$+"{21 spaces}",22)` formats the string so it`'s left-justified in the 22-character `Area` window
+
+[start=3]
+. `$8c` draws the string in reverse (`$8`) in color `$c` (decimal 13, light green)
+
+TIP: The module `sub.display` is a good example of using `&,69`.
 
 _Parameters:_
 
-* Upper left corner of the screen is `0,0`.
+TIP: Upper left corner of the screen is `0,0`.
 
-`column`:
+`column`: 0-39
 
-`row`:
+`row`: 0-24
 
-<color> is 1-15, $8x is reverse color x
+`color`: 1-15, same as the MCI colors (black, `0`, is excluded).
+`$8x` is reverse color _x_ (`$81` is reverse white, `$8f` is reverse light gray).
+
 [Question: will this plot stuff even if screen mask is off?
 I'm pretty sure it does.]
 
-### `&,70,_col_,_row_` cursposn
+// [[70-position-cursor]] does not work
+
+### `&,70` Position terminal cursor [[position-cursor]]
 
 _Parameters_:
 
-`column`
+`&,70,_col_,_row_`
 
-`row`
+TIP: Upper left corner of the screen is `0,0`.
+
+`column`: 0-39
+
+`row`: 0-24
 
 .i.IM
  &,70,.,n/2+8.5:&"{white}"
 
-[what is the difference between &,61 (poscrsr) and &,70?]
-[&,70 moves the console's terminal cursor position]
+.Fancy Title
+****
+.Question for the Ages:
+What is the difference between `&,61 (poscrsr)` and `&,70 (cursposn)`?
+****
 
 ////
 "menu.s" is source for "++ 2" (cursor menu)
@@ -905,6 +1181,3 @@ _Parameters_:
 
 lm=a%+1 [returns a% value, probably which item was selected]
 ////
-
-### `&,70,y,x` Position terminal cursor
-
