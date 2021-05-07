@@ -327,8 +327,6 @@ _Syntax:_ `&,7,_device_[,_segment_]`
 
 ### `&,8` Disk Directory
 
-TIP: The secondary address must be `0` to instruct the drive to return the disk directory as a BASIC-formatted series of lines.
-
 _Parameters:_
 
 `&,8,_lfn_,_y_`
@@ -348,7 +346,9 @@ _y_=`1`, `a$`: single line of disk directory information
  3000 dr=1:gosub 3:open 2,dv%,0,dr$+"$":get#2,a$,a$ <1>
  3002 &,8,2,0:close 2:goto 300 <2>
 
-<1> `dr=1:gosub 3` get device of s. disk{newline}bla
+<1> `dr=1:gosub 3`: get device of `s.` disk.
+`open 2,dv%,0,dr$+"$"`: open the directory (the secondary address must be `0` to instruct the drive to return the disk directory as a BASIC-formatted series of lines.)
+`get#2,a$,a$`: discard the load address information.
 
 <2> `&,8,2,0`: Get entire disk directory. `close 2`: close lfn#2. `goto 300`: go to main prompt.
 
@@ -645,7 +645,7 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ---
 
-:function_count: 2
+:function_count: 1
 include::includes/prg-ml-function-warning.adoc[]
 
 ### `&,39` prtln
@@ -666,7 +666,7 @@ Perform a garbage collection (freeing RAM by erasing unused strings).
 
 ### `&,42,_x_` ECS Commands
 
-This group of commands is used for searching, loading, saving and the Extended Command Set (ECS).
+This group of commands is used for searching, loading, and saving the Extended Command Set (ECS).
 
 NOTE: Fix me!
 
@@ -678,19 +678,22 @@ NOTE: Fix me!
 
 _Parameters:_
 
-`a%`: zz (Local Mode flag)
+`an$` command the user typed
 
-`b%`: access level
+`a%`: Local Mode flag (`zz`)
+
+`ac%`: access level
 
 _Returns:_
 
-`a$`:
+`a$`: password
 
 `b$`:
 
-`a%`:
+`a%`: credits to use command
 
-`b%`:
+`b%`: 
+
 ****
 
 ---
