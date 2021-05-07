@@ -1,0 +1,117 @@
+' C64List.exe "i.test structs.lbl" -crunch -d64:test-structs.d64::"@0:I.TEST STRUCTS" -verbose -ovr
+{alpha:alt}
+{:3000}
+{step:2}
+{assign:300	=300	}
+
+{:menu}
+' build date (__BuildDate always includes quotes)
+	&"{clear}Test Structs (rev. "+{usevar:__BuildDate}+"){f6}"
+	&"8) &,60,6{pound}{back arrow}20[DoScan]{f6}"
+' nybbles:
+'	hi=1:lo=0
+
+' 10 d$="0123456789abcdefwxyz"
+' 20 input "target base, numeral to convert";tb,n:n$=""
+' 30 m=int(n/tb):r=n-tb*m:n$=mid$(d$,r+1,1)+n$:n=m:ifnthen30
+' 40 printn$
+
+' 2,73
+' 1001001
+
+' THIS WORKS: &,27,2: save current array pointers, create protected level 2:
+	&,27,2:dim u%(10,10):rem "i.test structs"
+' referring to elements: array%(struct,byte)
+' put date in struct:
+	a$=d1$:&"PutDate: {pound}$a{f6}":&,60,4,0,u%(1,0),a$
+' get date, print it:
+	&,60,5,0,u%(1,0),a$:&"GetDate: "+a$+"{f6}{$04}"+a$+"{f6}"
+
+' dracosilv's suggestion:
+' V MOD 15
+' and then V-(V MOD 15)/15
+
+' retrieve bcd-encoded values from date struct:
+	b=u%(1,0):gosub {:sub.bcd_split}
+	b=u%(1,1):gosub {:sub.bcd_split}
+	b=u%(1,2):gosub {:sub.bcd_split}
+' &,28,1 here:
+' when also performed by line 300: restore array pointers, nothing to restore, therefore error?
+' &,28,0 here results in ?bad subscript error in 2006
+' executing 'goto 300' results in '?redim'd array  error' on 306
+
+' [NOTE] THIS WORKS:
+	&,28,2:goto 300
+
+{nice:10}
+{:sub.bcd_to_dec}
+	rem convert b (bcd) to d (dec)
+	d=int(b/16)*10+(b-16*int(b/16))
+{ifdef:debug}
+	c=c+1:&"{pound}!c) in: bcd={pound}!b, out: dec={pound}!d{f6}"
+{endif}
+	return
+
+{nice:10}
+{:sub.dec_to_bcd}
+	rem convert d (dec) to b (bcd)
+	b=int(d/10)*16+(d-10*int(d/10))
+' TODO: show binary nybbles
+'	nb=hi:
+'	nb=lo:
+{ifdef:debug}
+	c=c+1:&"{pound}!c) in: dec={pound}!d, out: bcd={pound}!b{f6}"
+{endif}
+	return
+
+{nice:10}
+'{:sub.show_binary_nybble}
+' nb=...
+'	rem show 'b' nibble (lo|hi) in binary
+'	print"%";:d=7:if nb=lo then d=3
+'	for n=d to d-3 step -1:print chr$(48+(n^2)=n^2)
+
+{:sub.bcd_split}
+' uses 'b'
+' each element in the date struct is composed of a high/low byte.
+' each high/low nybble is bcd-encoded, and contains 2 digits (0-9)
+' in each nybble. therefore, each element *should* hold 4 packed digits.
+'	d=68:print"d="d
+
+' this subroutine should print the 4 digits encoded in each element.
+' get/display hi/lo nybble (hn/ln), and n=hn*10+ln (the original number) [this works]
+' Hi byte: xxx, hn=x, ln=x, n=xxx
+' Lo byte: xxx, hn=x, ln=x, n=xxx
+'	h%=b/256:l%=b-h%*256:rem hi/lo bytes of element
+
+' TODO: divide each element into high/low nybbles: this returns ?syntax error
+'	x1=b and %11110000:x2=b or %00001111:rem lo/hi nybbles
+' I think 'hn=%11110000:x1=b and hn` might work
+
+' agentfriday: First thing to note is that that if hi bit is set in hi byte of integer, it will be negative
+' agentfriday: so first copy to a floating point variable, and if less than 0, add 65536
+' agentfriday: and you can get the low byte using AND 255 (before adding 65536)
+' agentfriday: l%=b and 255
+' agentfriday: h%=(b-65536*(b<0))/256
+
+	l%=b and 255:h%=(b-65536*(b<0))/256
+	&"h%={pound}%h, l%={pound}%l"
+'	hn=int(b/10):rem high nybble
+'	ln=b-(10*int(b/10)):rem low nybble
+'	n=hn*16+ln:rem nybbles put together to get original number
+'	&"b={pound}!b, hn="+str$(hn)+", ln="+str$(ln)", n={pound}!n{f6}"
+'	b=h%:&"Hi byte: {pound}#3{pound}# {pound}%h, ":gosub {:bcd_split.2}
+'	b=l%:&"Lo byte: {pound}#3{pound}# {pound}%l, ":gosub {:bcd_split.2}
+	return
+
+' 10 d=68:print"d="d
+' 20 hn=int(d/10):rem high nybble
+' 30 ln=d-(10*int(d/10)):rem low nybble
+' 40 n=hn*16+ln:rem nybbles put together
+' 50 print"hn="hn:print"ln="ln:print"n="n
+' ready.
+' run
+' d= 68
+' hn= 6
+' ln= 8
+' n= 68
