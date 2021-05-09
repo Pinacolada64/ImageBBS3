@@ -440,7 +440,7 @@ Changes an all uppercase string to mixed case.
 Converts encoded function key characters into readable characters
 
 `i.t`::
-`an$="hostkbd:[f3]port":&,15,2:&"{pound}v7{f6}"` -> host:port
+`an$="hostkbd:[f3]port":&,15,2:&"&pound;v7kbd:[f6]"` -> `host:port`
 
 ``&,15,3`` and ``&,15,4``::
 (These point to, and are the same as, `&,15,2`.)
@@ -453,7 +453,7 @@ TIP: This function is currently being researched.
 `&,15,6,_x_`::
 Split `an$` into two strings, `an$` and `a$`, if `chr$(_x_)` or `asc("_x_")` is found in `an$`.
 
-.Split on space, three ways
+.Split on space, two ways
 
 [start=1]
 . `an$="Hello world":&,15,6,**32**`
@@ -465,16 +465,18 @@ This splits `"Hello world"` at the `**chr$(32)**` (space), resulting in `an$="He
 
 This splits `"Hello world"` at the **ASCII value of _space_** (32), resulting in `an$="Hello"` and `a$="world"`.
 
+////
 // does it support 3 methods?
 [start=3]
 . `an$="Hello world":&,15,6,**32**`
 
 This splits `"Hello world"` at the `chr$(**32**)` (space), resulting in `an$="Hello"` and `a$="world"`.
+////
 
 [%autowidth]
 .After split
 |===
-| `an$` | `chr$(_x_)` | `a$` 
+| `an$="Hello"` | `chr$(_x_)` | `a$="world"` 
 |===
 
 ====
@@ -601,11 +603,13 @@ Number of times to repeat: [`0`: Stop repeat | `1-254`: Repeat count | `255`: in
 
 ---
 
-#### `&,27` Save Variable Pointers
+### `&,27` Save Variable Pointers
 
 When modules use arrays not already defined in `im`, #FIXME#
 
-#### `&,28` Restore Variable Pointers
+---
+
+### `&,28` Restore Variable Pointers
 
 ====
 Image 1.2 had just one level of variable pointer save and restore.
@@ -619,21 +623,35 @@ Image 1.3 and above adds multiple levels of save and restore with this additiona
 :function_count: 8
 include::includes/prg-ml-function-warning.adoc[]
 
-`&,29` usevar
+### `&,29` usevar
 
-`&,30` putvar
+---
 
-`&,31` zero
+### `&,30` putvar
 
-`&,32` minusone
+---
 
-`&,33` getarr
+### `&,31` zero
 
-`&,34` putarr
+---
 
-`&,35` getln
+### `&,32` minusone
 
-`&,36` putln
+---
+
+### `&,33` getarr
+
+---
+
+### `&,34` putarr
+
+---
+
+### `&,35` getln
+
+---
+
+### `&,36` putln
 
 ---
 
@@ -664,15 +682,20 @@ Perform a garbage collection (freeing RAM by erasing unused strings).
 
 ---
 
-### `&,42,_x_` ECS Commands
+### `&,42` ECS Commands
 
-This group of commands is used for searching, loading, and saving the Extended Command Set (ECS).
+This group of commands are used for interfacing the Extended Command Set (ECS) with BASIC.
+There are sub-commands to:
 
-NOTE: Fix me!
+* load and save the command set
+* search for and update individual commands
+* `goto` or `gosub` line numbers in `im`, or modules
 
 `&,42` Check for ECS command
 
-****
+This checks whether the command passed in `an$` is a valid ECS command.
+
+_Example:_
 .im
  270 f4=.:a%=zz:b%=2^ac%:&,42:if a% then ef$=b$:ep$=a$:ec=a%:ec%=b%:goto 264
 
@@ -694,20 +717,20 @@ _Returns:_
 
 `b%`: 
 
-****
-
 ---
 
 `&,42,1` Goto line in ECS command
+
+_Parameter:_
+
+`a%`: line number to `goto`
 
 _Example:_
 
 .im
  268 a%=asc(ef$+nl$)+256*asc(mid$(ef$,2,1)+nl$):&,42,1
 
-_Parameter:_
-
-`a%`: line number to `GOTO`
+From an ECS flags string `ef$`, `a%` holds the line # to `goto`, using `&,42,1`.
 
 ---
 
@@ -715,23 +738,65 @@ _Parameter:_
 
 _Example:_
 
-#FIXME#
+.i/IM.ecs
+ 4004 &,42,2:n=a%:goto 4034
+
+_Returns:_
+
+`a%`: number of ECS definitions in memory
 
 ---
 
-`&,42,3` Put ECS definitions into RAM
+`&,42,3` Put ECS definition into RAM
 
-_Example:_
+Add/replace the ECS definition in the `tt$(_x_)` array element to the list currently in memory.
 
-#FIXME#
+_Parameter:_
+
+`tt$(_n_)`: command definition
+
+`&,42,3,_number_`: the number of commands in the ECS command set
+
+_Examples:_
+
+.i/IM.ecs
+ 4010 tt$(n+1)=chr$(0):&,42,3,n+1:return
+
+`n` is the current count of ECS commands.
+Assign an empty command (`chr$(0)` is a null byte) to the next command (`tt$(n+1)`).
+`&,42,3,n+1`: Add the empty command to the ECS command set.
 
 ---
 
 `&,42,4` Load ECS definitions from disk
 
- a$=dr$+"e.ecs.main":&,42,4
- 
-im 3106: loads `e.ecs.main`
+_Parameters:_
+
+`a$`: filename
+
+`dv%`: device #
+
+_Example:_
+
+.im
+ 3106 a$=dr$+"e.ecs.main":&,42,4
+
+Load the ECS definitions in `e.ecs.main` from disk.
+
+---
+
+`&,42,5` Save ECS definitions to disk
+
+_Parameters:_
+
+`a$`: filename
+
+`dv%`: device #
+
+_Example:_
+
+.i/IM.ecs
+ a$=dr$+a$:&,42,5:return
 
 ---
 
@@ -777,7 +842,7 @@ _Example_: Turn off *Trc* left: `&,52,$18,0` (`&,52,24,0` decimal).
 
 `option`=2: toggle checkmark at _position_
 
-`option`=3: read status of _position_, return in `a%`
+`option`=3: read status of _position_, return in `a%` (`0`=off, `1`=on)
 
 `option`=4: move lightbar to _position_
 
@@ -800,42 +865,6 @@ _Example:_
 .im:
 
  3074 &,53
-
----
-
-### `&,53,1,_x_` farerr
-
-Cause BASIC error #_error_ to happen.
-
-_Parameter:_
-
-`&,53,1,_error_`
-
-_Example:_
-
-`&,53,1,14` Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
-
-.Error Numbers
-[%header]
-[%autowidth]
-|===
-| Number | Error | Number | Error
-| 1 | TOO MANY FILES        |16 | OUT OF MEMORY
-| 2 | FILE OPEN             |17 | UNDEF'D STATEMENT
-| 3 | FILE NOT OPEN         |18 | BAD SUBSCRIPT
-| 4 | FILE NOT FOUND        |19 | REDIM'D ARRAY
-| 5 | DEVICE NOT PRESENT    |20 | DIVISION BY ZERO
-| 6 | NOT INPUT FILE        |21 | ILLEGAL DIRECT
-| 7 | NOT OUTPUT FILE       |22 | TYPE MISMATCH
-| 8 | MISSING FILE NAME     |23 | STRING TOO LONG
-| 9 | ILLEGAL DEVICE NUMBER |24 | FILE DATA
-|10 | NEXT WITHOUT FOR      |25 | FORMULA TOO COMPLEX
-|11 | SYNTAX                |26 | CAN'T CONTINUE
-|12 | RETURN WITHOUT GOSUB  |27 | UNDEF'D FUNCTION
-|13 | OUT OF DATA           |28 | VERIFY
-|14 | ILLEGAL QUANTITY      |29 | LOAD
-|15 | OVERFLOW              |30 | BREAK
-|===
 
 ---
 
@@ -864,21 +893,55 @@ Reads a record from a RELative file.
 
 ---
 
-###	`&,58,x,y` setalarm
+###	`&,58` setalarm
+
+_Parameters:_
+
+`&,58,_hour_,_minute_`
+
+`hour`: hour
+
+`minute`: minute
 
 ---
 
 ###	`&,59` farerr
 
+Cause BASIC error to happen.
+
+_Parameter:_
+
+`&,59,1,_error_`
+
+_Example:_
+
+ &,59,1,14
+
+Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
+
+.Error Numbers
+[%header]
+[%autowidth]
+|===
+| Number | Error | Number | Error
+| 1 | TOO MANY FILES        |16 | OUT OF MEMORY
+| 2 | FILE OPEN             |17 | UNDEF'D STATEMENT
+| 3 | FILE NOT OPEN         |18 | BAD SUBSCRIPT
+| 4 | FILE NOT FOUND        |19 | REDIM'D ARRAY
+| 5 | DEVICE NOT PRESENT    |20 | DIVISION BY ZERO
+| 6 | NOT INPUT FILE        |21 | ILLEGAL DIRECT
+| 7 | NOT OUTPUT FILE       |22 | TYPE MISMATCH
+| 8 | MISSING FILE NAME     |23 | STRING TOO LONG
+| 9 | ILLEGAL DEVICE NUMBER |24 | FILE DATA
+|10 | NEXT WITHOUT FOR      |25 | FORMULA TOO COMPLEX
+|11 | SYNTAX                |26 | CAN'T CONTINUE
+|12 | RETURN WITHOUT GOSUB  |27 | UNDEF'D FUNCTION
+|13 | OUT OF DATA           |28 | VERIFY
+|14 | ILLEGAL QUANTITY      |29 | LOAD
+|15 | OVERFLOW              |30 | BREAK
+|===
+
 ---
-
-###	`&,59,1,x`
-
-.i.CP
-
-Throw error _a_, which crashes BBS.
-
-(because a=0, and that's not a valid BASIC error #?)
 
 ### `&,60` Structures
 
@@ -1047,25 +1110,45 @@ No examples yet.
 
 ---
 
-###	`&,61,col,row` poscrsr
+###	`&,61` poscrsr
+
+Move the terminal cursor to a specified column and row on the screen.
+
+_Parameters:_
+
+`&,61,column,row`
+
+====
+NOTE: `0,0` is the top left corner of the screen.
+====
 
 .im
  4006 &,38:&,61,.,8:print"&,37:goto 1812:":end
+
+Position the cursor at column 0, row 9 (`&,61,0,8`) to print recovery information for when the BBS crashes.
 
 // what is the difference between &,61 and &,70?
 
 ---
 
-### `&,62,_h_,_m_` Set Time
+### `&,62` Set Time
 
-Set CIA timer?
+Set BBS clock.
 
-`h`: hour
+// CIA timer?
 
-`m`: min
-		
+_Parameters:_
+
+`&,62,_hour_,_minute_`
+
+`hour`: hour
+
+`minute`: minute
+
+_Example:_
+
 .im:
- 3184
+ 3184 &,62,h,m
 
 ---
 
@@ -1075,9 +1158,15 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ### `&,63` inline1
 
+---
+
 ### `&,64` convstr
 
+---
+
 ### `&,65` convert
+
+---
 
 ### `&,66` Calculated GOTO
 
@@ -1088,27 +1177,47 @@ If you have 14 `goto` targets on a line, this can save a fair amount of RAM (and
 
 Instead of writing:
 
- on a% goto 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300
-
-(79 bytes)
+`on a% goto 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300` (79 bytes)
 
 The same thing can be written like so:
 
- a%=3:a%=a%*100+3000:&,66
+`a%=3:a%=a%*100+3000:&,66` (24 bytes)
 
-(24 bytes)
+to go to line 3200.
+
+---
 
 ### `&,66,1` mlgosub
 
+---
+
 ### `&,67` copyrite
 
+---
+
 ### `&,68` struct
+
+
+---
 
 // [Ray: Certain sub-functions of &,60 are re-directed here]
 
 ### `&,69` Display String on Console
 
-&,69,_column_,_row_,_text_,_color_
+_Parameters:_
+
+`&,69,_column_,_row_,_text_,_color_`
+
+`column`: `0-39`
+
+`row`: `0-24`
+
+`text`: `a$`, `"Hi there!"`, or `"Hi there, "+a$+"!"`
+
+`color`: is `1-15` for un-reversed colors.
+For reversed colors, add `$80` (or 
+
+// not sure MCI commands can be included
 
 NOTE: Upper left of the screen starts at column 0, row 0.
 
@@ -1133,15 +1242,15 @@ _Parameters:_
 
 TIP: Upper left corner of the screen is `0,0`.
 
-`column`: 0-39
+`column`: `0-39`
 
-`row`: 0-24
+`row`: `0-24`
 
-`color`: 1-15, same as the MCI colors (black, `0`, is excluded).
+`color`: ``1-15``, same as the MCI colors (black, `0`, is excluded).
 `$8x` is reverse color _x_ (`$81` is reverse white, `$8f` is reverse light gray).
 
-[Question: will this plot stuff even if screen mask is off?
-I'm pretty sure it does.]
+Question::
+Will this plot stuff to the screen mask area when in full screen mode? I'm pretty sure it does.
 
 // [[70-position-cursor]] does not work
 
@@ -1149,7 +1258,7 @@ I'm pretty sure it does.]
 
 _Parameters_:
 
-`&,70,_col_,_row_`
+`&,70,_column_,_row_`
 
 TIP: Upper left corner of the screen is `0,0`.
 

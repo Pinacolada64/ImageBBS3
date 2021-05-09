@@ -4,20 +4,35 @@
 
 ## Static Arrays (Structures) [[structures]]
 
-_Structures_ allow you to store multiple types of data into memory reserved for arrays, and perform operations on these blocks of memory.
+_Structures_ (or _structs_) allow you to treat the memory used by arrays as blocks of memory.
+You can store multiple types of data in this memory, and perform operations on the data using `&,60` and various sub-commands.
+This is much faster than a BASIC `for...next` loop.
+
 There are functions to:
 
-* put and get strings
-* manipulate Image-formatted 11-digit dates
-* sort and filter structures
-* collect information from structures and put it in another array
+* put and get strings, and Image-formatted 11-digit dates
+* sort and filter data
+* collect information from one structure, and put the results in another array
 * load and save structures
 
 #FIXME: more functions#
 
-String data can be stored in a floating point or integer array.
-
 _Elements_ are the individual "`boxes`" in the array that data is held in.
+
+Strings can be stored in either a floating point or integer array.
+Two bytes per element of the string text can be stored per element of an integer array.
+
+
+.Representation of Sample 2D Integer Array
+[%autowidth]
+|===
+| `x%(0,0)` | `x%(0,1)` | `x%(0,2)`
+| `x%(1,0)` | `x%(1,1)` | `x%(1,2)`
+| `x%(2,0)` | `x%(2,1)` | `x%(2,2)`
+|===
+
+////
+TODO: later
 Let's write a BASIC program to fill and display the elements of an integer array, and then we'll show how to refer to the elements:
 
 .Sample Array
@@ -26,15 +41,7 @@ Let's write a BASIC program to fill and display the elements of an integer array
 10 print
 20 end
 ```
-
-.Representation of Sample Array
-[%autowidth]
-|===
-| `x%(0,0)` | `x%(0,1)` | `x%(0,2)`
-| `x%(1,0)` | `x%(1,1)` | `x%(1,2)`
-| `x%(2,0)` | `x%(2,1)` | `x%(2,2)`
-|===
-
+////
 
 It is suggested that you use numeric type arrays, since this will allow you to access the elements as numeric data, as well as put and get strings.
 
@@ -44,20 +51,141 @@ Floating point arrays (like `a()` or `b()`) use 5 bytes per element.
 Integer arrays (like `a%()` or `b%()`) use 2 bytes per element.
 When deciding to use structures, you should determine what types of data you will need to store, and how much memory that data will require.
 
-As an example, let`'s design a structure to hold a user’s handle, ID#, and password.
-The handle requires 20 characters.
-The ID is an integer type (never > 32767) requiring 2 bytes.
-The password is 15 characters.
 
-Since the integers store in 2 bytes, the total number of bytes needed is 37.
-Thirty-seven bytes would require 190 integer elements (38 bytes), _or_ 8 floating point elements (40 bytes).
-Since the ID# is an integer anyway, it would be best to use the integer array.
+====
+As a running example, let`'s design a structure to hold a user’s ID#, handle, and password.
+A module will be written to store, edit, and retrieve data to/from this structure.
+
+* The ID is an integer type (never > 32767), requiring 2 bytes.
+* The handle can be up to 20 characters.
+* The password can be up to 15 characters.
+
+Since the integers store in 2 bytes, the total number of bytes needed is 37 (2 + 20 + 15).
+Thirty-seven bytes would require either:
+
+* 19 integer elements (2 bytes per element &times; 19 elements  &equals; 38 bytes)
+
+_or_
+
+* 8 floating point elements (5 bytes per element &times; 8 elements  &equals; 40 bytes).
+
+Now that you have the basic concept of the structure, let’s look in a little more detail.
+Here is a byte-by-byte map of the structure we designed.
+
+[%header]
+[%autowidth]
+.Sample Structure layout
+|===
+| Element Position | Byte Position | Data | Type | Bytes Used
+| Element 0 | Bytes 00-01 | ID# | Integer | 2 bytes
+| Element 1 | Bytes 02-21 | Handle | String | 20 bytes
+| Element 11 | Bytes 22-36 | Password | String | 15 bytes
+| Element 18½ | Byte 37 | _unused_ | _n/a_ | 1 byte
+|===
+
+// Representation of user data struct
+
+.Structure Data Storage
+[cols="12"]
+[%autowidth]
+|===
+// 6 cells, cols 2-3, 4-5, 6-7, 8-9, 10-11 span
+>|Element
+^| `u%(0,0)`
+^| `u%(0,1)`
+^| `u%(0,2)`
+^| `u%(0,3)`
+^| `u%(0,4)`
+^| `u%(0,5)`
+^| `u%(0,6)`
+^| `u%(0,7)`
+^| `u%(0,8)`
+^| `u%(0,9)`
+^| `u%(0,10)`
+
+>| Byte&nbsp;Pos
+^| `00&nbsp;01`
+^| `02&nbsp;03`
+^| `04&nbsp;05`
+^| `06&nbsp;07`
+^| `08&nbsp;09`
+^| `10&nbsp;11`
+^| `12&nbsp;13`
+^| `14&nbsp;15`
+^| `16&nbsp;17`
+^| `18&nbsp;19`
+^| `20&nbsp;21`
+
+>| Data
+^| ID#
+10+^| Handle _(20 bytes)_
+
+>| Bytes
+^| `0 1`
+^| `P I`
+^| `N A`
+^| `C O`
+^| `L A`
+^| `D A`
+^| _x x_
+^| _x x_
+^| _x x_
+^| _x x_
+^| _x x_
+|===
+
+
+[cols="10"]
+[%autowidth]
+|===
+// 10 cells, cols 9-10 span
+>|Element
+^| `u%(0,11)`
+^| `u%(0,12)`
+^| `u%(0,13)`
+^| `u%(0,14)`
+^| `u%(0,15)`
+^| `u%(0,16)`
+^| `u%(0,17)`
+2+^| `u%(0,18)`
+
+>| Byte&nbsp;Pos
+^| `22&nbsp;23`
+^| `24&nbsp;25`
+^| `26&nbsp;27`
+^| `28&nbsp;29`
+^| `30&nbsp;31`
+^| `32&nbsp;33`
+^| `34&nbsp;35`
+^| `36`
+^| `37`
+
+>| Data
+8+^| Password _(15 bytes)_
+^| _unused_
+
+>| Bytes
+^| `P A`
+^| `S S`
+^| `W O`
+^| `R D`
+^| _x x_
+^| _x x_
+^| _x x_
+^| _x_
+^| _unused_
+|===
+
+TIP: Because the unused byte 37 is _not_ on an even element boundary (the previous element is an odd number of bytes), it cannot be used.
+
+Since the ID# is an integer anyway, it would be best to use an integer array.
 The definition would look like this:
 
  dim u%(18)
 
 TIP: Remember that arrays start at element 0!
- 
+There are 19 bytes in this structure, 0-18.
+
 Of course, you may want to store more than one of these structures in memory.
 To do so, you would need a 2-dimensional array.  This would change the `dim` statement to:
 
@@ -65,30 +193,16 @@ To do so, you would need a 2-dimensional array.  This would change the `dim` sta
 
 (Suppose that _x_ is the number of structures you want.)
 
-Now that you have the basic concept of the structure, let’s look in a little more detail.
-Here is a byte-by-byte map of the structure we designed.
-
-[%header]
-[%autowidth]
-.Sample structure layout
-|===
-| Element Position | Byte Position | Data | Type | Bytes Used
-| Element 0 | Bytes 00-01 | ID# | Integer | 2 bytes
-| Element 1 | Bytes 02-21 | Handle | String | 20 bytes
-| Element 11 | Bytes 22-36 | Password | String | 15 bytes
-| Element 18½ | Byte 37 | Unused | N/A| 1 byte
-|===
-
-NOTE: Because the unused byte is _not_ on an even element boundary, it cannot be used.
+====
 
 // Ryan added this next bit
 
-To refer to bytes in the structure:
+To refer to bytes in a structure:
 
 * the first number in the array notation is the _element number_ (like a field of a record in a RELative file)
 * the second number is the _byte number_.
 
-TIP: Element number `0` and byte number `0` (_e.g._, `u%(0,0)` is often used to hold the number of elements in the structure.
+TIP: Element number `0` and byte number `0` (_e.g._, `u%(0,0)`) is often used to hold the number of elements in the structure.
 
 Now down to the important part: how to use all of this!
 The structure system is called with either `&,60,_x_,...` or `&,68,_x_,...`.
@@ -102,7 +216,7 @@ The array used with structures is either an integer or floating point type.
 To put numeric values into--or get numeric values from--a structure requires no special structure calls.
 
 // Is this supported?
-// If you are using string arrays, 
+// If you are using string arrays,
 You may use code similar to the following examples:
 
 .Get number from and put number into structure
@@ -248,7 +362,7 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 `&,60,2,0,u%(0,0),**dr$+"u.handles"**,dv%`
 
 [start=4]
-. `dv%` is the device number to load the structure from: 
+. `dv%` is the device number to load the structure from:
 
 `&,60,2,0,u%(0,0),dr$+"u.handles",**dv%**`
 
@@ -321,7 +435,7 @@ Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., 
 2+^|`u%(0,1)`
 2+^|`u%(0,2)`
 2+^|`u%(0,3)`
->|_unused_ 
+>|_unused_
 
 // 8 cells
 >| Binary
@@ -331,7 +445,7 @@ Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., 
 ^| `%0000&nbsp;%1000`
 ^| `%0010&nbsp;%0011`
 >| `%0100`
->| `%xxxx` 
+>| `%xxxx`
 
 >| Decimal
 >| `1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0`
@@ -340,7 +454,7 @@ Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., 
 >| `0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8`
 >| `2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3`
 >|  `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4`
->|  `&nbsp;&nbsp;&nbsp;&nbsp;x` 
+>|  `&nbsp;&nbsp;&nbsp;&nbsp;x`
 |===
 
 ====
@@ -407,7 +521,7 @@ _test_: the object to test for
 (apparently can be either a variable or a number, maybe the array number?)
 
 .Example: `i.UD` from Image 2.0
-The following code scans the U/D directory for entries which have an upload date older than `ld$`, (setting `$4f` on ud%(0,1) if the entry matches):
+The following code scans the U/D directory for entries which have an upload date older than `ld$`, (setting `$4f` on `ud%(0,1)` if the entry matches):
 
  3950 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
 
@@ -433,7 +547,7 @@ Can apparently be a string name, or number of an array?
 .Returns
 `a%`: count of structures that the comparison returns as matching `test`.
 
-`b(a,b)`: the structure containing the comparisons matching `test`.  
+`b(a,b)`: the structure containing the comparisons matching `test`.
 
 ### Sort
 
@@ -558,17 +672,17 @@ arrays2:
 [%header]
 [%autowidth]
 |===
-| Number | Array | Purpose 
+| Number | Array | Purpose
 |  1 | `tt$()` | editor text array
 |  2 | `bb$()` |
-|  3 | `dt$()` | 
-|  4 | `ed$()` | 
-|  5 | `nn$()` | 
-|  6 | `a%()`  | 
-|  7 | `c%()`  | 
-|  8 | `d%()`  | 
-|  9 | `e%()`  | 
-| 10 | `f%()`  | 
+|  3 | `dt$()` |
+|  4 | `ed$()` |
+|  5 | `nn$()` |
+|  6 | `a%()`  |
+|  7 | `c%()`  |
+|  8 | `d%()`  |
+|  9 | `e%()`  |
+| 10 | `f%()`  |
 | 11 | `ac%()` | access info
 | 12 | `so%()` | subops
 |===
