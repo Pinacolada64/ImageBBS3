@@ -4,7 +4,9 @@
 
 #### BASIC Keyword Extensions
 
-##### `LOAD` Relocate Flag
+A few BASIC keywords have had additional parameters added to them.
+
+##### `load` Relocate Flag
 
 // load"filename",device,relocate_flag 
 
@@ -31,7 +33,7 @@ NOTE: Currently, some segments are undefined.
 .Loading a Protocol
 [code]
 ====
-Here are two different methods of accomplishing the same thing, loading the Punter file transfer protocol.
+Here are three different methods of accomplishing the same thing, loading the Punter file transfer protocol.
 
 The first uses the enhanced `load` function:
 
@@ -55,13 +57,26 @@ Next:
 <1> Method 1: `load dr$+a$,dv%,2` loads drive prefix `dr$` plus filename `a$` from device `dv%` to segment 2 (`$c000`)
 
 <2> Method 2: `&,7,2` uses `dr$`, `a$` and `dv%` as defined by BASIC, but is shorter code
+
+// Larry:
+The third (preferred) method calls a routine in `im`:
+
+ 3000 a$="punter":gosub 28
+
+This method saves time in loading `++` files.
+If the file specified in `a$` is already in memory, the load process in line 29 is skipped.
+It also is a shorter syntax for loading a protocol, saving memory in the BASIC program.
+
 ====
 
-##### `NEW` line range
+##### `new` Line Range
 
-``new _line_number_`` prepares to ``load`` a new module by erasing lines from `line_number` to the beginning of the next module.
+// Larry:
+``new _line_number_`` prepares to ``load`` a new module by erasing lines from `line_number` to the end of the program.
 
-`new 3000` erases lines 3000-4000.
+_Example:_
+
+`new 3000` erases lines 3000 to the end of all loaded modules.
 
 ##### Hexadecimal Values
 

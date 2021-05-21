@@ -1,4 +1,5 @@
 :toc: left
+:icons: font
 
 // https://github.com/Pinacolada64/ImageBBS/blob/534f39f7cbe3f8c896725bc1db94fa23416ecacf/v2/docs/%26%20commands.txt
 
@@ -195,14 +196,14 @@ To do so, you would need a 2-dimensional array.  This would change the `dim` sta
 
 ====
 
-// Ryan added this next bit
+// Ryan added this next bit, and changed "element number/byte number" to "record" and "field"
 
 To refer to bytes in a structure:
 
-* the first number in the array notation is the _element number_ (like a field of a record in a RELative file)
-* the second number is the _byte number_.
+* the first number in the array notation is the _record number_ (like a field of a record in a RELative file)
+* the second number is the _field number_ (or _byte number_).
 
-TIP: Element number `0` and byte number `0` (_e.g._, `u%(0,0)`) is often used to hold the number of elements in the structure.
+TIP: Record `0`, field `0` (_e.g._, `u%(0,0)`) is often used to hold the number of elements in the structure.
 
 Now down to the important part: how to use all of this!
 The structure system is called with either `&,60,_x_,...` or `&,68,_x_,...`.
@@ -230,19 +231,20 @@ You may use code similar to the following examples:
 
 |===
 
-TIP: Integer arrays can store values from `-32767` to `32768`.
-
+====
+TIP: Integer arrays can store values from `-32768` to `32767`.
+====
 
 ---
 
-### Put String
+### `&,60,0` Put String
 
-Sub-function `0` copies a string variable into a structure.
+Copies a specified string variable of a fixed length into a field in a structure.
 
 .Syntax
-`&,60,0,_bytes_,_array()_,_string$_`
+`&,60,0,_length_,_struct(record,field)_,_string$_`
 
-_bytes_: how many bytes to request from the structure.
+_length_: the maximum string length to put into the record.
 
 _array()_: the array name assigned to the structure you're reading the string from.
 
@@ -262,25 +264,31 @@ _string$_: the string name to read the structure data into.
 `&,60,0,**20**,u%(1,1),na$`
 
 [start=3]
-. from the `u%()` array (element 1, record 1):
+. from the `u%()` array (record 1, field 1):
 
 `&,60,0,20,**u%(1,1)**,na$`
 
 [start=4]
 . into the string variable `na$`:
 
-`&,60,0,20,u%(11,2),**na$**`
+`&,60,0,20,u%(1,1),**na$**`
 
-### Get String
+TODO: show putting string longer than _length_ into struct, is it truncated?
 
-Sub-function 1 copies a string from a structure into a string variable.
+---
 
-.Syntax
-`&,60,1,_bytes_,_array()_,_string$_`
+### `&,60,1` Get String
 
-The parameters _bytes_, _array()_, and _string$_ are the same as `Put String` above.
+This copies a string from a structure into a specified string variable.
 
-.Example
+_Syntax:_
+
+`&,60,1,_length_,_struct(field,record)_,_string$_`
+
+The parameters _length_, _struct(field,record)_, and _string$_ are the same as `Put String` above.
+
+_Example:_
+
  &,60,1,20,u%(11,2),a$
 
 [start=1]
@@ -328,14 +336,18 @@ In our earlier example user data structure, to access the third user’s passwor
 
 ====
 
-### Load structure from disk
+---
 
-Sub-function 2 loads the specified structure on disk into an array.
+### `&,60,2` Load structure from disk
 
-.Syntax
-`&,60,2,0,_array()_,_filename$_,_device_`
+Loads the specified structure on disk into an array.
 
-.Example
+_Syntax:_
+
+`&,60,2,0,_struct(field,record)_,_filename$_,_device_`
+
+_Example:_
+
  &,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 NOTE: You do not have to load the file at the start of the array.
@@ -352,7 +364,7 @@ NOTE: You do not have to load the file at the start of the array.
 NOTE: The `0` is believed to be a necessary but ignored parameter.
 
 [start=2]
-. Use the `u%()` array(element 0, byte 0):
+. Use the `u%()` array (element 0, byte 0):
 
 `&,60,2,0,**u%(0,0)**,dr$+"u.handles",dv%`
 
@@ -366,23 +378,40 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 
 `&,60,2,0,u%(0,0),dr$+"u.handles",**dv%**`
 
-### Save a structure to disk
+---
 
-Sub-function 3 saves a structure to a specified disk file.
+### `&,60,3` Save a structure to disk
 
-.Syntax
-`&,60,3,0,_array()_,_bytes_,_filename$_,_device_`
+This saves a structure to a specified disk file.
 
-The parameters _array()_, _bytes_, and _filename$_ are the same as usual.
+_Parameters:_
 
-_device_ should be gotten with:
+`&,60,3,0,_struct%(record,field)_,_bytes_,_filename$_,_device_`
+
+The parameters _struct%(record,field)_, _bytes_, and _filename$_ are the same as in previous commands.
+
+_device_ should be gotten with (since `u.` files live on Image drive 6):
 
  dr=6:gosub 3
 
-.Example
+to get the drive prefix, `dr$`, and device, `dv%`.
+
+_Example:_
+
  &,60,3,0,u%(0,0),3*38,dr$+"u.handles",dv%
 
-// The starting element is specified with the array, and the number of bytes should be calculated by the number of bytes per structure, multiplied by the number of structures (38 bytes * 3 structures in the example).
+The starting record and field numbers to save are specified by the numbers in the array notation.
+The number of bytes should be calculated by:
+
+****
+bytes per record &times; number of records (38 bytes &times; 3 records in the example).
+
+// :icon: fa-hand-point-right
+
+Don't forget: records start at `0`!
+****
+
+The starting field and record is specified with (as above) `u%(0,0)`.
 
 [start=1]
 . Save a structure:
@@ -404,7 +433,9 @@ _device_ should be gotten with:
 
 `&,60,3,0,u%(0,0),3*38,**dr$+"u.handles"**,dv%`
 
-### Put Date
+---
+
+### `&,60,4` Put Date
 
 Put an 11-digit date into a structure (stored in Binary Coded Decimal).
 
@@ -459,15 +490,18 @@ Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., 
 
 ====
 
-### Get Date
+---
+
+### `&,60,5` Get Date
 
 Get an 11-digit date from structure.
 The date is stored in Binary Coded Decimal (BCD) format as shown above.
 
-.Syntax
+_Parameters:_
+
 `&,60,5,0,_array(a,b)_,_string$_`
 
-_array(a,b)_: array name(`a`=starting structure, `b`=starting byte)
+`array(_rec_,_field_)`: array name(_record_,_field_)
 
 _string$_: string name
 
@@ -480,14 +514,29 @@ _string$_: string name
 
 . `&an$`: display the long date string.
 
-### Scan Structures
+---
 
-.Purpose
+### `&,60,6` Scan Structures
 
-.Syntax
-`&,60,6,_num_,_bits_,_a(a,b)_,_b(a,b)_,_size_,_command_,_test_`
+Scan through a field in a structure, testing whether various conditions are true on variables.
+If the condition is true, perform an operation on another field in the structure.
+
+_Syntax:_
+
+`&,60,6,_num_,_command_,_a%(a,b)_,_b%(a,b)_,_size_,_bits_,_test_`
+
+.i.GF
+ a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+
+.i.MM.load
+ &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
+
+ &,60,6,x1%(0,0),5,x1%(0,1),x1%(0,1),36,8192,f
+
+ &,60,6,x1%(0,0),7,x1%(0,1),x1%(0,1),36,16384,id
 
 ////
+
 The syntax has changed between the comments in the source code and i.UD line 3950
 updated:
 &,60,6,num,bits,a(a,b),b(a,b),size,com,test
@@ -498,27 +547,36 @@ Example:
 ud%(0,1),ud%(0,1) -> reads and puts it back?
 ////
 
-_num_: # of structures to scan
+`num`: # of fields in the struct to scan
 
-_bits_: the bits to set if true
+`bits`: the bits to set if _test_ is true
 
-_a(a,b)_: starting flags(_element_,_byte_)
+`flag%(_record_,_field_)`: the field on which to set `bits` if `test` is true.
 
-_b(a,b)_: starting object(_element_,_byte_)
+====
+NOTE: _record_ may be a dummy parameter, more tests needed.
+====
 
-_size_: size in bytes of struct
+// `b(a,b)`: starting object(_element_,_byte_)
+`scan%(_rec_,_field_)`: field to scan
 
-_command_: command number:
+`size`: record size in bytes
 
- 0: 2 byte and, <>0
- 1: 2 byte and, ==0
- 2: 2 byte cmp, <
- 3: 2 byte cmp, >=
- 4: date cmp, <
- 5: date cmp, >=
+`command`: command number:
+
+.Scan Struct Commands
+[%autowidth]
+|===
+| 0| 2 byte and, <>0
+| 1| 2 byte and, ==0
+| 2| 2 byte cmp, <
+| 3| 2 byte cmp, >=
+| 4| date cmp, <
+| 5| date cmp, >=
+|===
 
 _test_: the object to test for
-(apparently can be either a variable or a number, maybe the array number?)
+(apparently can be either a variable or a number, maybe the byte number?)
 
 .Example: `i.UD` from Image 2.0
 The following code scans the U/D directory for entries which have an upload date older than `ld$`, (setting `$4f` on `ud%(0,1)` if the entry matches):
@@ -527,125 +585,175 @@ The following code scans the U/D directory for entries which have an upload date
 
 //    &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
-_&,60,6_: scan struct
+`&,60,6`: scan struct
 
-_rn_: record number, how many structures to scan in the directory
+`rn`: record number, how many structures to scan in the directory
 
-_$4f_: `%01001111` in binary, #FIXME# still researching the purpose of this
+`$4f`: `%01001111` in binary, #FIXME# still researching the purpose of this
 
-_ud%(0,1)_: #FIXME#
+`ud%(0,1)`: #FIXME#
 
-_ud%(3,1)_: Upload date
+`ud%(3,1)`: Upload date
 
-_60_: structure size, in bytes
+`60`: record size, in bytes
 
-_4_: date comparison, `<` (less than)
+`4`: date comparison, `<` (less than)
 
-_ld$_: last call date (the comparison object).
+`ld$`: last call date (the comparison object).
 Can apparently be a string name, or number of an array?
 
-.Returns
-`a%`: count of structures that the comparison returns as matching `test`.
+_Returns:_
 
-`b(a,b)`: the structure containing the comparisons matching `test`.
+`a%`: count of fields the comparison returns as matching `test`.
 
-### Sort
+`b%(a,b)`: the array containing the comparisons matching `test`.
 
-.Purpose
+---
 
-.Syntax
-`&,60,7,0,_a(a,b)_,_start?_`
+### `&,60,7` Sort Structure
 
-.Example
-// Image 2.0 +/lo/tt maint
- &,60,7,0,a$(p+1,i),n-p
+Sort a string array (only multi-dimensional?).
+Does not work with numeric values.
 
-### Scan Numbers
+_Syntax:_
 
-.Purpose
+`&,60,7,0,_a$(a,b)_,_start?_`
 
-.Syntax
-`&,60,8,_num_,_size_,_acs_,_a(a,b)_,_a%(a)_,_start_`
+_Example:_
 
-_num_: number of structures to scan
+.i/lo/tt maint:
+`&,60,7,0,a$(p+1,i),n-p`
 
-_size_: size of the structure, in bytes
+---
 
-_acs_: access level to filter results by
+### `&,60,8` Scan Numbers
 
-_a(a,b)_: the structure to scan
+Scan through a specified field in a structure for non-zero values.
+`a%` holds how many non-zero values there are.
+The list of non-zero values is put in a specified array.
 
-_a%(a)_: the structure to put the results in? #FIXME#
+_Parameters:_
 
-_start_: element to start scanning at
+`&,60,8,_number_,_size_,_access_,_struct%(record,field)_,_result%(1)_,_start_`
 
-.Example
+`number`: number of records to scan
+
+`size`: size of the record, in bytes
+
+`access`: access level to filter results by (in bits?)
+
+====
+
+i/MM.load::
+`&,60,8,x1%(0,0),36,**8192+16384**,x1%(0,1),x2%(1),1:x2%(0)=a%`
+
+More research needed.
+This value exceeds the expected access levels of 0-9 (values 1-1023).
+
+====
+
+`struct%(record,field)`: the field to scan
+
+`result%(1)`: the single-dimension array to put the results in.
+`1` seems to be a dummy parameter: ignored, but necessary to be interpreted as a valid array reference.
+
+`start`: record to start scanning at
+
+.i.UD:
  &,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
 
-.Returns
-`a%`: #FIXME#
+. `&,60,8`: Scan Numbers sub-command
+. `rn`: Scan through `rn` records
+. `60`: the struct is 60 bytes per record
+. `a`: filter by access level `a`
+. `ud%(x,1)`: look in the `ud%(_x_,1)` (_x_="don't care") record
+. `f%(_x_)`: putting non-zero results in the `f%()` array
+. `1`: Start at record 1.
 
-`a%(a)`: #FIXME#
+_Returns:_
+`a%`: number of results returned. `0` if none.
 
-### Scan Sum
+`a%(a)`: one-dimensional array of results, from `a%(1)` to `a%(a%)`
 
-.Purpose
+---
 
-.Syntax
-`&,60,9,_num_,_size_,_a(a,b)_`
-
-_num_ number of structures to scan
-
-_size_ size of structure
-
-`a(a,b)` structure(_element_,_byte_) to scan
-
-.Example
-
-
-.Returns
-`a%` #FIXME#
-
-### Copy Structure
+### `&,60,9` Scan Sum
 
 .Purpose
 
-.Syntax
+_Syntax:_
+
+`&,60,9,_number_,_size_,_struct%(record,field)_`
+
+`number`: number of records to scan
+
+`size`: size of record, in bytes
+
+`struct%(_x_,_field_)`: (record _x_="don't care"), field to scan
+
+====
+NOTE: This function call documentation seems incomplete.
+====
+
+_Example:_
+
+None yet.
+
+_Returns:_
+
+`a%`: #FIXME#: total of values in record?
+
+---
+
+### `&,60,10` Copy Structure
+
+Copy one record to another.
+
+_Syntax:_
+
 `&,60,10,_size_,_a1(a,b)_,_a2(a,b)_`
 
-`size` size of structure
+`size`: size of record
 
-`a1(a,b)` source structure
+`a1(a,b)`: source record
 
-`a2(a,b)` destination structure
+`a2(a,b)`: destination record
 
-.Example
- 4326 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next
+_Example:_
 
-Copy structure `a+1` to structure `a` in a loop.
+.i/IM.logon
+----
+4694 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next <1>
+----
+<1> `if x<>fb%(0,0)`: if `x` does not equal the number of records in the structure [`fb%(0,0)`], then copy record `a+1` to record `a` in a loop.
 
-### Scan for String
+---
 
-.Purpose
+### `&,60,11` Scan for String
 
-.Syntax
+Scan structure for a string present in a specified array.
+
+_Parameters:_
+
 `&,60,11,_num_,_size_,_op_,_str_,_a1(a,b)_,_a2(b)_,_start_`
 
-_num_
+`num`: number of records
 
-`size` size of structure
+`size`: size of record
 
-`op`
+`op`: #FIXME#: array number in table?
 
-`str`
+`str`: #FIXME#: string/string literal to scan for?
 
-`a1(a,b)` source structure to scan
+`a1(a,b)`: source record to scan
 
-`a2(b)` target structure to put results into
+`a2(b)`: target 1-dimension array to put results into
 
-`start`
+`start`: record to start scanning from
 
-.Example
+_Example:_
+
+None yet.
 
 ////
 arrays1:
@@ -687,17 +795,47 @@ arrays2:
 | 12 | `so%()` | subops
 |===
 
-### Game Scan
+---
+
+### `&,60,12` Game Scan
 
 .Purpose
 
-.Syntax
+_Parameters:_
 
-`&,60,12,count,size,a$,a%(a,b),b$`
+`&,60,12,_count_,_size_,_a$_,_a%(a,b)_,_b$_`
 
-### Text Read
+`count`: 
 
-.Purpose
+`size`: size of the record to scan
 
-.Syntax
+`a$`: 
+
+`a%(a,b)`: 
+
+`b$`: 
+
+_Example:_
+
+None yet.
+
+---
+
+### `&,60,13` Text Read
+
+_Purpose:_
+
+_Syntax:_
 `&,60,13,number,reclen,scan(),bits,text(),strlen`
+
+---
+
+### `&,60,14` Unknown
+
+====
+NOTE: This has been seen in one module, not sure it's a valid call or what it does.
+====
+
+.i.convert ud:
+ &,2,2:fs=val(a$)*254:&,60,14,0,ud%(4,j),fs
+ 

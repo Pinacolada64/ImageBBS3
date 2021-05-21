@@ -8,9 +8,10 @@ Other ways may work but have not been tested.
 Since you are already running Image 2.0, keep the same Image drive assignments for the 3.0 upgrade.
 
 ****
-The file `im` line `3074` is preconfigured to run from drive 0. 
+The file `im` line `3074` is preconfigured to run from drive 0.
 This is the default partition on most drives.
-If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line `3074` to the number of your boot LU.
+
+NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line `3074` to the number of your boot LU.
 ****
 
 . Make a complete backup of all your Image 2.0 drives.
@@ -67,7 +68,7 @@ This takes you to the menu page that used to be called by the kbd:[SM] command i
 You shouldn’t have to do anything here, but you can look around if you want to.
 ****
 
-When done, use the `Quit` option to go back to the Configuration Editor. 
+When done, use the `Quit` option to go back to the Configuration Editor.
 Then `Quit` from there back to the Main Prompt.
 
 20. Enter kbd:[NF] to go to the News files and configure any news files needing to be edited, added or configured.

@@ -1,6 +1,6 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2021-05-08
+v0.1, 2021-05-20
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
@@ -46,13 +46,7 @@ include::prg-structures.adoc[]
 
 ### Arrays
 
-## POKEs
-
-====
-
-TIP: ``POKE``s could go away in favor of `&,20` (interface read) and `&,21` (interface write) commands.
-
-====
+include::prg-pokes.adoc[]
 
 include::prg-machine-language.adoc[]
 
