@@ -58,7 +58,7 @@ Image BBS v3.0 was tested on the following hardware:
 
 * Creative Micro Designs`' (or ThunderDrive) Hard Drive with SwiftLink, and normal User Port configurations using BBS Server as the "`modem`".
 
-* &micro;IEC/SD by Jim Brain as a mass storage device.
+* µIEC/SD by Jim Brain as a mass storage device.
 
 Although we have not tested this software on a great deal of other hardware, it should run with no issues on just about any hardware.
 
@@ -256,7 +256,9 @@ Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 
 . It's recommended to use `copy-all.64l`, also included on the 3.0 UTILS disk, for copying all the `e.*` files (PRG, SEQ, REL) from Disk 2 to your Etcetera Disk.
 
+====
 TIP: If you wish to run the "`Today in History`" logon module, copy all the `today.*` files to your Etcetera Disk.
+====
 
 [start=5]
 
@@ -470,14 +472,16 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
 The BBS greets you with a welcome message and prompts you to select your time zone.
 
-. Select your time zone (7=EST, 6=CST, 5=MST, 4=PST)
+. Select your time zone (kbd:[7]=EST, kbd:[6]=CST, kbd:[5]=MST, kbd:[4]=PST)
 . The BBS will display the current time and `Stack Free: 239`.
 
+====
 NOTE: Initially, the time may be off by a few hours.
 This is because the system's time zone has not been set for the BBS clock.
 You can fix this later, during further BBS configuration.
 
-NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`GOSUB` without `RETURN`, or `FOR` without `NEXT` statements) on the stack. 
+NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`gosub` without `return`, or `for` without `next` statements) on the stack. 
+====
 
 [start=3]
 .	At the Main Prompt, type kbd:[EP] to `Edit your Parameters`. 
@@ -494,8 +498,10 @@ Hit kbd:[Return] to exit.
 This saves your new parameters to your user file.
 You can then log back on in any mode you choose. 
 
+====
 IMPORTANT:  Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] commands.
 Logging off by hitting kbd:[f7] (unchecking left `Loc`) bypasses the module which updates the last 10 callers and causes errors in the time used during the call.
+====
 
 #### Shared Image BBS 3.0 Setup
 
@@ -677,8 +683,9 @@ Answer Yes to the next two questions.
 include::im-gglabs-modem-config.adoc[]
 ////
 
-12. Select kbd:[D] `Logon Editor`.
-13.	Select kbd:[A] `Logon Mods` (Logon Modules).
+[start=12]
+. Select kbd:[D] `Logon Editor`.
+.	Select kbd:[A] `Logon Mods` (Logon Modules).
 .. Type kbd:[H]elp for instructions on how to configure your logon modules.
 .. Configure them for your preference.
 
@@ -710,23 +717,25 @@ When finished, you go back to the `Base Editor` Menu.
 If you are using a CMD RTC to set the BBS clock at boot-up, this would be a good opportunity to kbd:[H] `Set Time Dv#` (set time device number) and kbd:[I] `Set CMD Clock` of your CMD device.
 ****
 
-7.	Type kbd:[K] to quit back to the Configuration Editor.
-
-8.	Type kbd:[Q] to quit back to the Main Prompt.
-
-9.	If you had macros defined in your 1.2 system and don't want to keep them, delete the `e.macros` file.
+[start=7]
+. Type kbd:[K] to quit back to the Configuration Editor.
+. Type kbd:[Q] to quit back to the Main Prompt.
+. If you had macros defined in your 1.2 system and don't want to keep them, delete the `e.macros` file.
 
 If you would like to convert the file, follow these steps:
 
 #FIXME# more exact steps.
 
-.. Type kbd:[RD] at the Main Prompt, and read the SEQuential file `e.i.macros`.
+.. Type kbd:[RD] at the Main Prompt.
+Read the SEQuential file `e.i.macros`.
 This contains the number of macros you have.
 .. Type kbd:[RF] at the Main Prompt. This is a RELative File editor.
 .. Select `e.macros` as the filename to read.
 .. kbd:[V]iew record 1.
 
+====
 TIP: You might want to move this record to the end of the file, since the first record is going to be replaced by the macro count.
+====
 
 [start=5]
 .. Edit record 1, replacing the data in it with a number equal to 1 less than the number of macros in `e.i.macros`.
@@ -738,12 +747,14 @@ From here, explore and become familiar with the new features.
 
 Much has changed since Image 1.2 and 2.0. The best way to learn is to experiment.
 
+// FIXME: that's not helpful wording. We don't want documentation to be user-hostile. -rs
+
 You`'ll probably be confused and make mistakes along the way, but the learning experience is necessary for any new system.
 
-#FIXME#: that's not helpful wording. We don't want documentation to be user-hostile. -rs
-
-// Cross-reference [[cross-reference]] set.
-// a <<cross-reference,cross-reference>> mentioned.
+////
+Cross-reference [[cross-reference]] set.
+a <<cross-reference,cross-reference>> mentioned.
+////
 
 More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible. 
 
@@ -768,7 +779,7 @@ In fact, much of the development and testing of this software was done in VICE.
 ****
 
 Enjoy the files.
-Many thousand man-hours have gone into their creation and what they are today.
+Thousands of man-hours have gone into their creation and made them what they are today.
 
 I will answer questions and provide tech support for this software as needed.
 Contact X-TEC at node 1 of the NISSA Network.

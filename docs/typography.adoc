@@ -4,14 +4,134 @@
 
 There are several conventions used in this manual.
 
-_Italic text_ represents a variable, or some text supplied by the user in response to a prompt.
+_Italic text_ represents a variable.
 
-*Bold text* represents #FIXME#.
+.Example
+_name_
 
-Letters or text enclosed in rounded, shaded squares such as kbd:[T], kbd:[Ctrl], or kbd:[f1] represent keys on the Commodore 64 keyboard.
+Variable names made of two words are tied together with an underscore (`_`).
+
+.Example
+_first_name_
+
+This method differentiates _first_name_ as being separate from two variables named _first_ and _name_.
+
+// *Bold text* represents #FIXME#.
+
+Letters enclosed in rounded, shaded squares represent keys on the Commodore 64 keyboard.
 They generally are either options, or should be pressed, during a series of instructions in the manual.
 
-== Latin Junk
+.Examples
+kbd:[Shift+T], kbd:[Ctrl], or kbd:[f1]
+ 
+The same notation can also represent BBS commands typed at a prompt.
+
+.Examples
+* kbd:[ST], kbd:[AT], or kbd:[O!]
+* Type kbd:[Y]es
+
+Monospace text on a gray background usually represents text shown on the screen.
+
+.Example
+`Enter your user name or ID#:`
+
+Bold monospace text represents text typed by the user in response to a prompt.
+
+.Example
+`Enter your user name or ID#: **45**`
+
+=== Callouts
+
+_Callouts_ are numbers enclosed in circles at the end of a line of instructions or text.
+They provide a way to add annotations to lines below the block of text.
+The numbers are not meant to be typed, but match the number below the block of text.
+
+----
+
+Example code <1>
+More examples <2>
+
+----
+<1> A longer explanation of what the first line of code, data  or instruction does goes here.
+
+<2> Another explanation of the next line of example code, data or instruction.
+
+=== Icons
+
+Icons are used to draw your attention to situations or information.
+They are presented here, in order of increasing severity, with some examples from throughout the manual:
+
+====
+NOTE: **Note**
+
+This is extra information which #FIXME#
+
+.Example
+x
+====
+
+====
+TIP: **Tip**
+
+This can be advanced information, or letting you know something helpful which isn't immediately obvious from what is presented on screen.
+
+.Example
+When in the Image Term phonebook, some options such as kbd:[D]ial or kbd:[E]dit allow typing either:
+
+* kbd:[D]ial kbd:[Return], then answer the `Dial Which` prompt with kbd:[4] kbd:[Return]
+
+* kbd:[D4] kbd:[Return] to dial entry #4 directly
+====
+
+====
+IMPORTANT: **Important**
+
+x
+
+.Example
+Also copy `im` to your modules disk.
+If a BASIC error is caught by the error-trapping routine, the `im` module reloads from the modules disk instead of the copy on the boot drive or partition that you booted the BBS from.
+====
+
+====
+CAUTION: **Caution**
+
+Be careful here; read on-screen prompts if applicable.
+Something unwanted may happen if you hurry through this section.
+
+.Example
+The Image BBS text editor currently does not confirm whether you want to clear the text buffer when you type either kbd:[.A]`bort` or kbd:[.N]`ew Text` followed by kbd:[Return].
+Once you type either of these dot commands, your text will be erased.
+====
+
+====
+WARNING: **Warning**
+
+Your BBS or data could be impacted by doing something (or not) here.
+The warning should contain an explanation of why doing something is harmful.
+
+.Example
+Deleting the configuration file `bd.data` requires you to reconfigure many aspects of your BBS.
+====
+
+=== Command Path
+
+Like a search path in an operating system, this gives you the steps to reach a command.
+
+.Command Path Example
+====
+The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
+====
+
+// this looks like a good include for the IM section:
+
+. kbd:[IM]: type these characters at a prompt.
+. kbd:[D] `Logon Editor`: A graphic menu option is selected by either:
+* typing kbd:[D] to select `Logon Editor` (it's a _hotkey_, so hitting kbd:[Return] to select it is not necessary)
+* using the cursor keys to move to `Logon Editor`, and kbd:[Return] to select it
+. You would follow the same procedure for the second menu option, kbd:[D] `Quicklist`.
+
+=== Latin Junk
 
 Because I'm such a nerd:
 

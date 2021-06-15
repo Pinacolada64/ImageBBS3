@@ -15,11 +15,13 @@ include::include\boot-command.adoc[]
 | Character | Purpose
 | `A` | Text output aborted 
 | `G` | Garbage collection occurring
-| `I` | Interrupts disabled
+| `I` | Interrupt occurring
 | `L` | Loading data
 | `P` | Text output paused
 | `S` | Swapping data between RAM and ROM
 |====================
+
+#TODO#: More of an explanation.
 
 .File transfer indicators
 [options="autowidth",options="header"]
@@ -28,3 +30,5 @@ include::include\boot-command.adoc[]
 | `F` | RS232 flow control asserted 
 | `O` | Overrun
 |====================
+
+#TODO#: Move to file transfer section?

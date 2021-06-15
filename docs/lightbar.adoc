@@ -1,5 +1,6 @@
 :experimental:
 :icon: font
+:toc: left
 
 ## The Lightbar
 
@@ -7,7 +8,11 @@ Image BBS`'s familiar lightbar has been expanded, as compared to previous versio
 
 ### Lightbar Defaults
 
-During boot-up, lightbar check mark defaults are read. This allows you to configure your BBS more easily than in previous versions of Image BBS. Maybe you want to disable the _More_ prompt, or debug some code with the on-screen trace function, at startup. You can do that within `IM`, option `H`: _Lightbar/Alarms_.
+During boot-up, lightbar check mark defaults are read. This allows you to configure your BBS more easily than in previous versions of Image BBS. Maybe you want to disable the `...More? (Y/n)` prompt, or debug some code with the on-screen trace function, at startup.
+
+====
+The command path is kbd:[IM], kbd:[H] `Lightbar/Alarms`, kbd:[A] `LightBar Defs`.
+====
 
 ### Lightbar Function Keys
 
@@ -41,6 +46,8 @@ This is also a restriction while using CMD's SuperCPU in 20 mHz mode.
 ### Lightbar Functions
 
 NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_. 
+
+#### Page 1
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
@@ -240,6 +247,8 @@ They are told the area is closed temporarily.
 300 baud users cannot access the UD/UX area.
 They are told that they do not have access to that area at this time.
 
+#### Page 2
+
 .Lightbar, page 2
 [width="100%",cols="8*^"]
 |====================
@@ -357,6 +366,8 @@ The command path to edit the macros is kbd:[IM], kbd:[N] `Base Editors`, kbd:[G]
 
 Disables the use of the Message Command Interpreter in the BBS text editor.
 
+#### Page 3
+
 .Lightbar, page 3
 [width="100%",cols="8*^"]
 |====================
@@ -401,10 +412,11 @@ While text output is paused, `P` displays in the bottom status line, between the
 
 `Frd` left: _Full-Color Read Disable_
 
-// TODO: check this
-When enabled, this disables outputting color for color-blind users.
+When enabled, this disables outputting color for color-blind users, or terminals not capable of color.
 
-TIP: This lightbar position is a homage to Fred Dart, Image BBS support guru and programmer.
+====
+NOTE: This lightbar position is a homage to Fred Dart, Image BBS support guru and programmer.
+====
 
 `Frd` right: _Undefined_
 
@@ -466,6 +478,7 @@ If enabled, when the user first connects to the BBS, they have the option kbd:[X
 
 If enabled, the user will see a file called `s.detect` at login instead of a specific message about their graphics mode.
 
+#### Page 4
 
 .Lightbar, page 4
 [width="100%",cols="8*^"]
@@ -520,11 +533,15 @@ If enabled, the programmable window will not display variable values for debuggi
 
 `DCD` left: _Invert DCD Signal_
 
+_(BBS controlled)_
+
 *Enabled:* The modem hangs up when an inverted (asserted when high) Data Carrier Detect signal is received from the modem.
 
 *Disabled:* The modem hangs up when a normal (asserted when low) Data Carrier Detect signal is received from the modem.
 
 `DCD` right: _Carrier Present_
+
+_(BBS controlled)_
 
 When enabled, there is either a DCD or DSR carrier signal present.
 
@@ -556,6 +573,8 @@ TIP: At higher bits per second rates, the data is not shown to achieve maximum t
 
 `$3e` right: _Undefined_
 
+#### Pages 5-7
+
 .Lightbar, page 5
 [width="100%",cols="8*^"]
 |====================
@@ -575,6 +594,8 @@ TIP: At higher bits per second rates, the data is not shown to achieve maximum t
 |====================
 
 Pages 5-7 are undefined and are available for your own use.
+
+#### Page 8
 
 .Lightbar, page 8
 [width="100%",cols="8*^"]
@@ -640,7 +661,15 @@ Features:
 * Alarms can trigger only if another checkmark is enabled
 * After an alarm triggers, it can then enable or disable another checkmark
 
-TIP: The command path is kbd:[IM], kbd:[H] `Lightbar/Alarm`, kbd:[B] `Alarms`.
+====
+TIP: There is one alarm trigger enabled by default: `At1`.
+Every few hours, the `Trc` right lightbar function (`Time: Reset Clock`) will poll a CMD RTC to update the BBS clock.
+If you do not need this feature, disable this alarm.
+====
+
+====
+The command path is kbd:[IM], kbd:[H] `Lightbar/Alarm`, kbd:[B] `Alarms`.
+====
 
 ### NetMail Alarms
 

@@ -9,8 +9,8 @@ With a different philosophy behind the core `im` file, several improvements beca
 
 * line numbering was flipped from 1.2/1.3's 1000- to 3.0's shorter 1-999 scheme
 * grouping related subroutines together was improved
-* more external `im.` modules were written to reduce including the same code in multiple files whenever possible
-* a module "`call stack`" was implemented, so loading a second (or third, or fourth...) `im.` module from the first would reload and return to the previous `im.` module
+* more external `sub.` modules (called `im.` modules in 2.0) were written to reduce including the same code in multiple files whenever possible
+* a module "`call stack`" was implemented, so loading a second (or third, or fourth...) `sub.` module from the first would reload and return to the previous `sub.` module
 
 While 3.0's modules now start with an `i` prefix instead of 1._x_`'s `+` prefix, you can still run modules meant for those older versions of the BBS through an included emulation (or to be more precise, a _redirection_) layer.
 
@@ -76,12 +76,12 @@ Many new features have been added and improvements have been made in existing fe
 ** Sounds
 *** New "`gong`" sound (`&,25,3`)
 *** _repeat_ parameter: `0`=stop repeating, `1-254`=repeat count, `255`=infinite repeat
-* Image 1._x_ emulation layer so their `+.` files can be run
+* Image 1._x_ emulation layer so their `+.` files can be run (if renumbered to 3000-)
 * BASIC keyword extensions
-** Hexadecimal values can be used in `POKE`, `PEEK`, `SYS` and `&` commands. `POKE $D004,$0c` is the equivalent of `POKE 53252,12`
-** Binary values can also be used, and can be combined with hexadecimal: `POKE $D004,%00001100` is the equivalent of `POKE 53252,12`
-** `LOAD"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
-** `NEW _line_number_` prepares to ``LOAD`` a new module by erasing lines from `line_number` to the end of the BASIC program
+** Hexadecimal values can be used in `poke`, `peek`, `sys` and `&` commands. `poke $d004,$0c` is the equivalent of `poke 53252,12`
+** Binary values can also be used, and can be combined with hexadecimal: `poke $d004,%00001100` is the equivalent of `poke 53252,12`
+** `load"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
+** `new _line_number_` prepares to ``load`` a new module by erasing lines from `line_number` to the end of the BASIC program
 * `_variable_=usr(0)` function reads the stack pointer to display how much free space is on the processor stack
 
 New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.
