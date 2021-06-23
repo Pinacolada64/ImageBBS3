@@ -103,6 +103,12 @@ As it relates to carriage returns, though, we can see in the following table:
 | kbd:[f7] ^| kbd:[H] | kbd:[*] asterisk ^| kbd:[f8] ^| kbd:[L] | kbd:[^] up arrow
 |==============
 
+_Key_ is what you type on the Commodore 64 keyboard. 
+
+_Quoted_ is what it looks like in "`quote mode.`"
+
+_Character_ is what the encoded character represents.
+
 #### `&` By Itself
 
 This is a quick way to output the contents of `a$`.
@@ -183,10 +189,11 @@ The left and right margins can now be indented by up to 15 characters using two 
 
 // source: s.menu 3
 
-* `£m<__x__` (left margin) This MCI command causes every carriage return issued by Image BBS to be followed by _x_ spaces, which indents text _x_ spaces.
+* `£m<__x__` (set left margin).
+This command causes every carriage return issued by Image BBS to be followed by _x_ spaces, which indents text _x_ spaces.
 The values for _x_ are `0` (to disable word-wrap), or `1-9`, and `j-o` (10-15).
 
-* `£m>__x__` (right margin).
+* `£m>__x__` (set right margin).
 This command causes the system to word wrap as if the user's screen width was _x_ characters less than it really is.
 It indents the text from the right side.
 
@@ -229,10 +236,10 @@ _Floating point_ values are not integers--the value could be fractional, and the
 
 `&str$(h)`::
 Since `&h` isn't supported to output the value of `h`, it must be converted to a string with the `str$()` function.
-This worked under Image 1.2; it works here too, but there is a new MCI command in Image 3.0 to output single-letter floating point variables:
+`&str$(h)` worked under Image 1.2; it works here too, but there is a new MCI command in Image 3.0 to output single-letter floating point variables:
 
 `&"£!h"`::
-Output the value of `h` using an MCI command.
+Output the value of `h`.
 
 To output a two-character variable name (_e.g._, `xx`, `c1`), you have some choices:
 
@@ -254,31 +261,35 @@ These variables are denoted in _italics_.
 This means that `&,` is required, but the value of _call_ varies.
 Substitute the appropriate number in its place.
 
+.Example
+
+`&,40`: perform garbage collection
+
 `&,_call[,optional]_`::
 This means that, again, `&,_call_` is required.
 The value of _call_ varies.
 However, the parameter _[,optional]_ is not required.
-If it is supplied, needs `,` and the appropriate parameter substituted in its place.
+If it is supplied, there needs to be a `,` and the appropriate parameter substituted in its place.
+
+.Example
+
+`&,9,#FIXME#`: display `var` in the 16-character programmable window
 
 // &,_call_[,_optional_[,_parameter_]] -- don't think this ever happens
 
 There are various sections which most commands use.
 They outline BASIC setup (variables or ``poke``s) which need to be done before the `&` call can be used.
 
-_BASIC Setup:_
-
+_BASIC Setup:_ ::
 Any ``poke``s or BASIC variables which are used by the ``&`` command are listed here.
 
-_Parameters:_
-
+_Parameters:_ ::
 Any extra information given after `&,_x_`, like strings or numbers, are listed here.
 
-_Returns:_
-
+_Returns:_ ::
 Strings, numbers or arrays returned when the `&` command is finished are listed here.
 
-_Examples:_
-
+_Examples:_ ::
 Examples of setup, the `&` call being used, and some typical results are listed here.
 
 ---

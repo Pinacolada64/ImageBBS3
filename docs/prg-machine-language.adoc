@@ -1,4 +1,5 @@
-:experimental: // enable 'kbd:[x]' macro
+:experimental:
+// enable 'kbd:[x]' macro
 
 ## Machine Language Entry Points
 
@@ -70,17 +71,6 @@ This module can display PRG files.
 
 The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
 
-////
-"menu.s" is source for "++ 2" (cursor menu)
-	(from source, bytes in struct)
-; 0 - # entries
-; 1 - item type character
-;2,3- item value
-;4,5- credits to charge
-;6,7- access
-;8-39 - text
-////
-
 `&,16,0`: 
 Add menu string
 
@@ -126,6 +116,8 @@ _Parameters:_
 
 `&,16,2,_?_,_menu%(element,byte)_,_item_count?_,_?_,_?_,_menu_height?_,_?_,_?_,_?_`
 
+#FIXME# 
+
 _Examples:_
 
  xxxx &,16,2,42,q%(0,0),n,36,1,n,6,6,0:a$=chr$(q%(3,a%) and 255)
@@ -138,4 +130,5 @@ _Returns:_
 
 ---
 
-`&,16,3`: Use Menu
+`&,16,3`: ?
+

@@ -825,18 +825,7 @@ None yet.
 
 _Purpose:_
 
+Not sure yet.
+
 _Syntax:_
 `&,60,13,number,reclen,scan(),bits,text(),strlen`
-
-////
----
-
-### `&,60,14` Unknown
-
-====
-NOTE: This has been seen in one module, not sure it's a valid call or what it does.
-====
-
-.i.convert ud:
- &,2,2:fs=val(a$)*254:&,60,14,0,ud%(4,j),fs
- ////

@@ -1,6 +1,6 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2021-05-21
+v0.1, 2021-06-22
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4

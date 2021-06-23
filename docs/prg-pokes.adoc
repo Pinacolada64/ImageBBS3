@@ -4,10 +4,10 @@
 
 [%autowidth]
 [%header]
-|====================
+|===
 | Decimal | Hex     | Purpose 
 | `53252` | `$d004` | Control input line length
-|====================
+|===
 
 ====
 
