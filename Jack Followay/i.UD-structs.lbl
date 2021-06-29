@@ -27,6 +27,11 @@
 {alpha:alt}
 {crunch:on}
 
+' Larry:
+' FIXME: No upload capability.
+' FIXME: No e.stats update.
+' FIXME: No daily log updates when files are downloaded.
+' FIXME: Edit function not done, just a return at that routine.
 {number:3000}
 {step:2}
 ' mm=1: ?
@@ -96,7 +101,8 @@
 {:3092}
 	on-(bn>0 and cf>0)goto{:3096}:return
 {:3094}
-	dr=4:gosub 3:a$=dr$+"d.UD"+str$(e%(bn)):return
+' FIXME: 3010 in "i.convert ud" is "d.u/d <x>,s,r"
+	&"3094{f6}":dr=4:gosub 3:a$=dr$+"d.UD"+str$(e%(bn)):return
 {:3096}
 	gosub{:3094}:print# 15,"s"a$:&,60,3,0,ud%(0,0),60*ud%(0,0)+60,a$,dv%:cf=0:goto 5
 {:3098}
@@ -128,7 +134,7 @@
 	if id>0 and id=so%(bn)or id=so%then q=1
 	&"{f6} - Protocol   : {pound}vl{f6} - Credit Pts :{pound}v7{f6} - {pound}$d Free: {pound}!a{f6}"
 ' 442: sub.protos
-	if pm$<>ml$then im=2:gosub 442
+	if pm$<>ml$ then:&"3158 pm$="+pm$+", ml$="+ml$+r$:im=2:gosub 442
 	a$=bb$(bn):gosub{:3006}:cm$="UD#"+mid$(str$(bn),2):p$=cm$+": "+a$
 	if sg then p$=sg$+" SIG, "+cm$+"{f6}"+a$
 	return
@@ -155,7 +161,7 @@
 ' upload:
 ' TODO: check for full directory, protocol=Copier if local mode upload/download
 ' TODO: PRotocol command
-	on-(an$="U")-2*(an$="UM")goto {:xxxx},{:xxxx}
+	if a$="U" or a$="UM" then a$="MM.ud-"+mid$("localtrans",(pr=2)*6-5,6):goto 72
 	&"Unknown command. Type {f5}?{f5} for help.{f6}":return
 {:3250}
 	&"{f6}":if rn=0 then:&"{red}No files to tag.{f6}":return
@@ -173,13 +179,14 @@
 {:3282}
 	b$="starting at ":c$="for 1"
 {:3284}
-	lp=1:&"{cyan}{pound}$a [T]agged, [N]ew, [U]nv, or {pound}$b: (RETURN {pound}$c)"
+	lp=1:&"{cyan}{pound}$a [T]agged, [N]ew, [U]nvalidated, or {pound}$b: (RETURN {pound}$c)"
 	poke 53252,3:p$=">":gosub 6:xn=abs(int(val(an$))):b$=an$
 {:3288}
 	a=-(b$="U")-2*(b$="T")-4*(b$="N")-8*(b$="R")-16*(b$="O"):return
 {:3290}
 	gosub{:3292}:dr=bn+6:a$=f$+","+t$+",r":goto 4
 {:3292}
+' get filename/filetype from struct
 	&,60,1,16,ud%(21,xn),f$:t$=mid$("sp",1+(ud%(29,xn)and 1),1):return
 {:3300}
 	&"{f6}":if rn=0 then:&"{red}No files to scan.{f6}":return
@@ -203,8 +210,9 @@
 	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn):s$="":if a%<>1 then s$="s"
 	if a%then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}total download{pound}$s{f6}"
 ' SUGGESTION: add bn (board number) to "e.UD.desc" filename
+' SUGGESTION: open "e.UD.desc x" at beginning of "About" session, close when option other than N/P/Return chosen, save open/close file
 '	&"{f6}{cyan}":x=ud%(9,xn):on-(x=0)goto{:3376}:dr=3:a$="e.UD.desc":gosub 4:if e%then{:3376}
-	&"{f6}{cyan}":x=ud%(9,xn):on-(x=0)goto{:3376}:dr=3:a$="e.UD"+str$(bn)+".desc":gosub 4:if e% then {:3376}
+	&"{f6}{cyan}":x=ud%(9,xn):on x+1 goto{:3376}:gosub {:3998}:if e% then {:3376}
 '	x=x+1:gosub 1:&,2,2:&,2,2:&,2,2:close 2
 ' just 1-line description:
 	x=x+1:gosub 1:&,2,2
@@ -213,8 +221,8 @@
 '	close 2:&" No description available.{f6}"
 	&" No description available.{f6}"
 {:3378}
-'	&"{lt. blue}{pound}vj":return
-	close 2:&"{lt. blue}{pound}vj":return
+	&"{lt. blue}{pound}vj":return
+'	close 2:&"{lt. blue}{pound}vj":return
 {:3400}
 	&"{f6}":if rn=0 then:&"{red}No files to read.{f6}":return
 	on-(a<>0)goto{:3408}:if xn then{:3406}
@@ -416,7 +424,7 @@
 	if c%then:&"{pound}{back arrow}07{cyan}{pound}#2{pound}# {pound}%c Tagged{f6}"
 	if d%then:&"{pound}{back arrow}07{cyan}{pound}#2{pound}# {pound}%d Unvalidated{f6}"
 	return
-' 3488 TODO: fix this module
+' 3988 TODO: write this module
 	a$="UD.edit":goto 72
 {:3990}
 	a$="MM.load":goto 72
@@ -425,9 +433,10 @@
 {:3994}
 	a$="MM.subop":goto 72
 {:3996}
+' display U/D stats
 	im=4:goto 443
 {:3998}
-' rs: open "e.UD {bn}.desc"
-	dr=3:gosub 3:
+' rs: TODO open "e.UD {bn}.desc"
+	dr=3:a$="e.UD"+str$(bn)+".desc":gosub 4
 {:3999}
 	copr.1991 new image 08/21/91, 5/5/2021 pinacolada

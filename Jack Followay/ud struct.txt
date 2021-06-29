@@ -41,7 +41,7 @@ i.UD, 3174
 c%()	block/KB size
 d%()	computer type #
 f%()	uploader id#?
-dt$()	Date uploaded | Date last downloaded (2 11-digit date strings)
+dt$()	Date uploaded | Date last downloaded (2 11-digit date strings) | filename,t
 ed$()	file description
 nn$()	Handle of uploader
 
