@@ -1,15 +1,16 @@
 {step:2}
 {crunch:on}
 {alpha:alt}
+{assign:300	=300	}
 {:3000}
-	rem "i.test frame" efficiency/madness strikes again - pinacolada 2020/01/24
+	rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
 ' TODO: &,27,1 at startup / &,28,1 at quit?
 	&"{clear}":&,27,1:s$="{space:36}"
 {:menu}
 '	&"{home}{pound}n7"
 	&,70,0,7
 	&"0) Quit{f6}1) Draw frame{f6}"
-	&"2) Scroll text{f6}3) Flash text, get option{f6:2}"
+	&"2) Scroll text{f6}3) Flash text, get keyboard input{f6:2}"
 {:prompt}
 	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":&,28,1:goto 300
 	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
@@ -29,6 +30,7 @@
 ' display z1$ and z2$
 	z1$="1: Option One":z2$="2: Option Two":gosub {:3408}:goto {:menu}
 
+' NOTE: Immutable line number
 {:3400}
 ' 3400 z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
 ' &,69 can't do special petscii characters like {$b0}
@@ -38,7 +40,7 @@
 	for i=3 to 4:&,70,1,i:&"{gray2}{$dd}{gray3}{rvrs on}{pound}$s{rvrs off}{gray2}{$dd}":next
 ' 3402 &" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
 ' 3403 &" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
-{:3403}
+{:3402}
 	&,70,1,5:&"{gray2}{$ad}"+mid$(ak$,2,36)+"{$bd}":return
 
 '	c$="{yellow}{gray3}":return
@@ -47,36 +49,57 @@
 ' add trailing spaces after z2$
 ' 3404 z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
 
+' NOTE: Immutable line number
 ' pass z3$ as new line of info to scroll
 ' scroll z1$ and z2$ up. z3$ is new line to display
+' pad z2$ out with spaces
 {:3404}
 	z1$=z2$:c=$8f:z2$=left$(z3$+s$,34)
 ' 3406 b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
 ' display both z2$ and z3$, don't scroll
-{:3406}
+{:3405}
 	&,69,3,3,z1$,c:&,69,3,4,z2$,c:return
 
-' 3408 c$="{yellow}{gray3}":i=i+1:ifi>2theni=1
-' $87=rvs yellow, $8f=rvs gray3
-' c=current color, ci=color index
-' alternate inside of frame between colors
+' FIX: remove z=z+1 stuff. this does not delay 1/2 second on a SuperCPU system. use timer instead:
+' 'i=not i' does not work
+{:3406}
+' i=color index (0=gray, 1=yellow)
+	gosub {:3414}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
 {:3408}
-' ' i=not i does not work
-	z=z+1:if z=21 then i=1-i:c=$87:if i then c=$8f
+' t=ti, e=30 ('elapsed time': 1/2 second delay [30 jiffies], instead of continuously interpreting floating point)
+	t=ti:e=t+30
+{:3410}
+	on peek(198) goto {:3420}:if ti<e then {:3410}
+' jiffy delay has run out. toggle color index 'i' for new interior text color 'c':
+' $87=rvs yellow, $8f=rvs gray3
+{:3411}
+	i=1-i:c=$87:if i then c=$8f
+' draw interior text, reset jiffy delay
+{:3412}
+	gosub {:3405}:goto {:3408}
 ' 3409 b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 ' &,69,<column>,<row>,<text>,<color>
-' &,69,4,21,left$(" "+cm$+"{space:16}",16),$8c
-{:3409}
-	if z=21 then z=.:gosub {:3406}
 
-' &,48 - getkbd - replace get an$? may be blocking
-' (character-io.asm)
-' {:3410} &,48:if kp%=. then:&,22,5:goto {:3408}
-{:3410}
-	get an$:on -(an$="") goto {:3408}:goto {:3401}
-' 3411 if z=20 then z=.:goto 3408
-{:3411}
-	an=val(an$):if an<1 or an>2 then {:3408}
-{:3412}
-	&"Selected option {pound}v7.{f6}":return
 ' ### neat ###
+
+' color index
+' 5 c=1
+' t=time, e=elapsed time (1/2 second, 30 jiffies)
+' 10 t=ti:e=30
+' an=non-zero when key is hit, check for expired timeout (elapsed jiffies>30)
+' 20 on peek(198) goto 40:if ti<t+e then 20
+' if so, toggle color index, print color and index value
+' 30 c=1-c:printmid$("{yellow}{light gray}",c+1,1)c:goto 10
+' key hit: read key buffer, convert to numeric value
+' 40 get an$:print"key:"an$:lm=val(an$):if lm<1 and lm>3 then 20
+
+' NOTE: Immutable line number
+{:3414}
+' clear screen lines 7-24 TODO: clear line link?
+	for i=7 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
+
+{:3420}
+' NOTE: &,48 (character-io.asm: getkbd): returns char in peek(198), non-blocking
+' convert keypress into numeric value:
+	get an$:lm=asc(an$)-48:if an$<>"{back arrow}" and lm<1 and lm>3 then {:3408}
+	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:goto {:menu}
