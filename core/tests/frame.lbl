@@ -4,31 +4,38 @@
 {assign:300	=300	}
 {:3000}
 	rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
-' TODO: &,27,1 at startup / &,28,1 at quit?
-	&"{clear}":&,27,1:s$="{space:36}"
+' NOTE: &,27,2 at startup / &,28,2 at quit not needed, we don't create any new arrays
+	&"{clear}":s$="{space:36}"
 {:menu}
 '	&"{home}{pound}n7"
 	&,70,0,7
 	&"0) Quit{f6}1) Draw frame{f6}"
 	&"2) Scroll text{f6}3) Flash text, get keyboard input{f6:2}"
 {:prompt}
-	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":&,28,1:goto 300
+	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":goto 300
 	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
-' calculated goto: [save 2 bytes vs. a%=3000+(a%*100)]
-	a%=a%*100+3000:&,66
+' calculated gosub: [save 2 bytes vs. a%=3000+(a%*100)]
+' a%=1: 3100, a%=2: 3200, a%=3: 3300
+	a%=a%*100+3000:&,66,1:goto {:menu}
+
 {:3100}
-	gosub {:3400}:goto {:menu}
+' draw frame:
+	gosub {:3400}:return
+
 {:3200}
+' scroll text:
 ' does not work
 '	j=j+1:z1$="Line {pound}!j":j=j+1:z2$="Line {pound}!j":gosub {:3404}:goto {:menu}
 ' scroll the numbers 1-20 up as a counter:
 	for j=1 to 20 step 2
-	z3$="Line "+str$(j):gosub {:3404}:&,22,5
-	z3$="Line "+str$(j+1):gosub {:3404}:&,22,5
-	next:goto {:menu}
+	z3$="Line"+str$(j):gosub {:3404}:&,22,5
+	z3$="Line"+str$(j+1):gosub {:3404}:&,22,5
+	next:return
+
 {:3300}
+' flash message:
 ' display z1$ and z2$
-	z1$="1: Option One":z2$="2: Option Two":gosub {:3408}:goto {:menu}
+	z1$="1: Option One":z2$="2: Option Two":gosub {:3406}:return
 
 ' NOTE: Immutable line number
 {:3400}
@@ -95,11 +102,12 @@
 
 ' NOTE: Immutable line number
 {:3414}
-' clear screen lines 7-24 TODO: clear line link?
-	for i=7 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
+' clear screen lines 7-24 (0-based)
+' TODO: clear line link?
+	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
 
 {:3420}
 ' NOTE: &,48 (character-io.asm: getkbd): returns char in peek(198), non-blocking
 ' convert keypress into numeric value:
 	get an$:lm=asc(an$)-48:if an$<>"{back arrow}" and lm<1 and lm>3 then {:3408}
-	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:goto {:menu}
+	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:return
