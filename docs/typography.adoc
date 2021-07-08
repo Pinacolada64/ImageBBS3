@@ -1,6 +1,6 @@
 :experimental: // enable kbd:[] macro
 
-== Typography Notes
+=== Typography Notes
 
 There are several conventions used in this manual.
 
@@ -40,7 +40,7 @@ Bold monospace text represents text typed by the user in response to a prompt.
 .Example
 `Enter your user name or ID#: **45**`
 
-=== Callouts
+==== Callouts
 
 _Callouts_ are numbers enclosed in circles at the end of a line of instructions or text.
 They provide a way to add annotations to lines below the block of text.
@@ -56,7 +56,7 @@ More examples <2>
 
 <2> Another explanation of the next line of example code, data or instruction.
 
-=== Icons
+==== Icons
 
 Icons are used to draw your attention to situations or information.
 They are presented here, in order of increasing severity, with some examples from throughout the manual:
@@ -114,7 +114,7 @@ The warning should contain an explanation of why doing something is harmful.
 Deleting the configuration file `bd.data` requires you to reconfigure many aspects of your BBS.
 ====
 
-=== Command Path
+==== Command Path
 
 Like a search path in an operating system, this gives you the steps to reach a command.
 
@@ -131,7 +131,7 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 * using the cursor keys to move to `Logon Editor`, and kbd:[Return] to select it
 . You would follow the same procedure for the second menu option, kbd:[D] `Quicklist`.
 
-=== Latin Junk
+==== Latin Junk
 
 Because I'm such a nerd:
 

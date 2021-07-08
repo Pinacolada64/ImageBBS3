@@ -1,0 +1,46 @@
+= Image BBS 3.0 Sysop Manual
+Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
+v0.1
+:experimental:
+:toc:
+:toclevels: 10
+:icons: font
+// e.g., Section 2.3, “Installation”:
+:xrefstyle: full
+// this requires using docbook but allows index entries:
+:doctype: book
+
+NOTE: Preliminary start on documentation. Feedback welcome!
+
+TODO: Change sans serif fonts to serif (for print purposes) with a stylesheet. I think.
+
+////
+start of preface: roman page numbers
+preface chapters should have level 3 headings to be included
+the next level 2 heading will start normal page numbering
+////
+include::preface.adoc[]
+
+include::typography.adoc[]
+
+include::whats-new.adoc[]
+
+// end of preface: back to arabic page numbers
+
+include::setting-up.adoc[]
+
+include::convert-12.adoc[]
+
+include::convert-20.adoc[]
+
+include::boot-up.adoc[]
+
+include::lightbar.adoc[]
+
+include::modules.adoc[]
+
+[appendix]
+include::appendix-lightbar-quick-reference.adoc[]
+
+[index]
+== Index

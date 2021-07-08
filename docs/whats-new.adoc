@@ -1,5 +1,5 @@
 :experimental:
-== Why a New Version?
+=== Why a New Version?
 
 While Image BBS 2.0 was a big step forward in overhauling the Image BBS infrastructure, the biggest shortcoming was its lack of free memory.
 This put a hard limit of 30 messages in a sub-board, 30 files in the upload/download areas, or 30 directory entries in other subsystems.
@@ -16,11 +16,11 @@ While 3.0's modules now start with an `i` prefix instead of 1._x_`'s `+` prefix,
 
 #TODO#: I forgot what I was going to put here.
 
-== What's New
+=== What's New
 
 Many new features have been added and improvements have been made in existing features for Image BBS 3.0.
 
-=== Sysop Features
+==== Sysop Features
 
 * First time setup is built in, no separate `config` program needed
 
@@ -41,7 +41,7 @@ Many new features have been added and improvements have been made in existing fe
 ** Subdirectory level is now remembered and returned to after executing a module
 * More file transfer protocols #TODO#: Ymodem? list them
 
-==== Lightbar
+===== Lightbar
 
 * Expanded to 8 pages
 * kbd:[f2] puts a Commodore 128 running in 64 mode into 2 mHz mode
@@ -50,13 +50,13 @@ Many new features have been added and improvements have been made in existing fe
 * Alarms can set, clear, or toggle checkmarks at specified times
 * Many new functions added
 
-=== User Features
+==== User Features
 
 * Text word-wraps to 40 columns for C64 console and caller's terminal line length
 * Optional "`More`" prompt can automatically pause text output
 * Terminal bell sent when nearing idle time limit
 
-==== Text Editor
+===== Text Editor
 
 * New text editor dot commands:
 ** kbd:[.B]anner text: Create large text for fun or emphasis in messages
@@ -67,7 +67,7 @@ Many new features have been added and improvements have been made in existing fe
 ** left/right margin set (``£<``_nn_ and ``£>``_nn_)
 ** floating point variable display (``£!``_n_)
 
-=== Programming Features
+==== Programming Features
 
 * `im` line numbering restructured
 * More module types
