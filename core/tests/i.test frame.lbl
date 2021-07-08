@@ -2,6 +2,7 @@
 {crunch:on}
 {alpha:alt}
 {assign:300	=300	}
+' C64List4_04.exe "i.test frame.lbl" -prg -alpha:alt -crunch -ovr
 {:3000}
 	rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
 ' NOTE: &,27,2 at startup / &,28,2 at quit not needed, we don't create any new arrays
@@ -10,7 +11,7 @@
 '	&"{home}{pound}n7"
 	&,70,0,7
 	&"0) Quit{f6}1) Draw frame{f6}"
-	&"2) Scroll text{f6}3) Flash text, get keyboard input{f6:2}"
+	&"2) Scroll header{f6}3) Flash header, get keyboard input{f6:2}"
 {:prompt}
 	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":goto 300
 	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
@@ -33,11 +34,20 @@
 	next:return
 
 {:3300}
-' flash message:
-' display z1$ and z2$
-	z1$="1: Option One":z2$="2: Option Two":gosub {:3406}:return
+' flash header message:
+' display two lines in header
+	z3$="Insert All System Disks In Correct":gosub {:3404}
+	z3$="Drives and Press RETURN":gosub {:3404}:return
 
 ' NOTE: Immutable line number
+' draw frame:
+' ----+----+----+----+----+----+----+----+
+'0 (empty line)
+'1 (empty line)
+'2 +------------------------------------+
+'3 | &,69,3,3 (column 3, row 3)         |
+'4 | &,69,3,4 (column 3, row 4)         |
+'5 +------------------------------------+
 {:3400}
 ' 3400 z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
 ' &,69 can't do special petscii characters like {$b0}
@@ -73,6 +83,8 @@
 ' i=color index (0=gray, 1=yellow)
 	gosub {:3414}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
 {:3408}
+' NOTE: Immutable line number
+' flash frame contents:
 ' t=ti, e=30 ('elapsed time': 1/2 second delay [30 jiffies], instead of continuously interpreting floating point)
 	t=ti:e=t+30
 {:3410}
@@ -104,10 +116,10 @@
 {:3414}
 ' clear screen lines 7-24 (0-based)
 ' TODO: clear line link?
-	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
+	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}38":next:&,70,.,5:return
 
 {:3420}
 ' NOTE: &,48 (character-io.asm: getkbd): returns char in peek(198), non-blocking
 ' convert keypress into numeric value:
-	get an$:lm=asc(an$)-48:if an$<>"{back arrow}" and lm<1 and lm>3 then {:3408}
-	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:return
+	get an$:lm=asc(an$)-48:if an$<>"{back arrow}" and lm<1 and lm>3 then {:3410}
+	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:goto {:3410}
