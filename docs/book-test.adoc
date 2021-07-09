@@ -1,0 +1,1012 @@
+:doctype: book
+:toc:
+:experimental:
+
+= Image BBS 3.0 Sysop Guide
+Ryan "Pinacolada" Sherwood <sym.rsherwood@gmail.com>, Jack "Rascal" Followay, Don Gladden
+Test Edition
+
+[preface]
+== Preface
+
+You have to go back to 1991...
+
+### Special Thanks
+
+### In Memoriam
+
+((Al DeRosa)) wrote these.
+
+### Acknowledgments
+
+I'd like to thank the Academy...
+
+== Introduction
+
+```
+print"hello, world"
+```
+
+== In the Beginning
+
+[quote, Douglas Adams, The Hitchiker's Guide to the Galaxy]
+In the beginning, the Universe was created. This has made countless people very unhappy, and was widely regarded as a bad move.
+
+### The Sysadmin Problem
+
+Get stuff out of my head and onto paper in case I am ever hit by a bus.
+
+== Product Information
+
+### Why a New Version?
+
+### What`'s New
+
+#### Sysop Features
+
+#### User Features
+
+#### Programming Features
+
+### Support Channels
+
+#### NISSA BBSes
+
+List them, addresses. Mention cbbsoutpost.
+
+#### Social Media
+
+Facebook, Brent's forum, Google Hangouts?
+
+#### imagebbs.org
+
+// Jay Theriot runs this
+
+Online documentation hosted there, someday.
+Having https://www.github.io available for this preview helps immensely in the meantime.
+
+Ryan is writing these.
+
+### License, No Warranty
+
+MIT license? https://mit-license.org/
+Only trouble is "`for profit`" phrasing.
+
+== Supported Hardware
+
+### Disk Drives
+
+(((disk drive)))
+
+### Image Drive Numbers
+
+(((Image drive)))
+
+### JiffyDOS
+
+((JiffyDOS)) is a serial I/O speed enhancement system.
+It consists of two chip replacements...
+
+Jim Brain sells physical JiffyDOS chips and emulator ROM files at his store, http://www.go4retro.com.
+
+### Mass Storage
+
+#### CMD HD, ThunderDrive
+
+The (((hard drive, Creative Micro Designs))) Creative Micro Designs hard drive was manufactured by CMD for a high degree of compatability with Commodore 64/128 computers.
+
+As of October 2020, it can be emulated in VICE.
+
+The (((hard drive, ThunderDrive))) hard drive is a clone of the CMD hard drive and...
+
+#### Lt. Kernal HD, Rear Admiral
+
+The (((hard drive, Lt. Kernal))) Lt. Kernal hard drive was manufactured by Fiscal Information, Inc.
+
+As of October 2020, it can be emulated in VICE.
+
+The (((hard drive, Rear Admiral))) Rear Admiral hard drive is a clone of the Lt. Kernal and...
+
+#### CMD RAMLink
+
+The RAMLink was manufactured by CMD to be a battery-backed RAM expansion unit.
+Optionally, you can plug in a Commodore REU into the pass-through port and maintain its memory contents.
+
+#### SD2IEC
+
+(((hardware, SD2IEC)))
+
+#### 1541 Ultimate II
+
+(((hardware, 1541 Ultimate II)))
+
+Many functions:
+
+* 16 MB REU
+* Kernal replacement
+* SwiftLink emulation on the II+
+
+### Real-Time Clocks
+
+#### Dallas Semiconductor DS12C887 Emulation
+
+(((RTC, DS12C887)))
+
+This is an emulation option within VICE.
+
+### Modems
+
+#### RS-232 Bridges
+
+(((RS232 bridge)))
+
+#### Telnet BBS Cable
+
+(((RS232 bridge, telnet cable)))
+
+### Interfaces
+
+#### GGlabs GLink232-LT
+
+(((RS232 interface, GGlabs GLink232-LT)))
+
+#### 1541 Ultimate II+ SwiftLink Emulation
+
+(((RS232 interface, 1541 Ultimate II+ SwiftLink Emulation)))
+
+#### CMD SuperCPU
+
+(((hardware, CMD SuperCPU)))
+
+### Printers
+
+(((hardware, printers)))
+
+A lot of this is from 1.2, some newer hardware will be talked about.
+
+== Modem/Telnet Bridge Setup
+
+### Telnet BBSes and Bridge Software
+
+#### `tcpser 1.1rc1`
+
+(((RS232 bridge, tcpser 1.1rc1)))
+
+From documentation:
+
+____
+`tcpser` turns a PC serial port into an emulated Hayes compatible modem that uses TCP/IP for incoming and outgoing connections.
+It can be used to allow older applications and systems designed for modem use to operate on the Internet.
+`tcpser` supports all standard Hayes commands, and understands
+extended and vendor proprietary commands (though it does not implement many of them).
+`tcpser` can be used for both inbound and outbound connections.
+____
+
+#TODO#: mention jbrain GitHub repo since FozzTexx and geneb fixes are in 1.1rc1
+
+#### `tcpser4j`
+
+(((RS232 bridge, tcpser4j))) ((tcpser4j)) is
+
+Advantages:
+
+* Play DTMF tones
+* Play sound on connect
+* Run multiple virtual modems in a single instance
+
+### BBS Server
+
+(((RS232 bridge, BBS Server)))
+
+BBS Server is a graphical program that does many of the same things as tcpser.
+
+### Virtual Serial Port Emulator
+
+(((RS232 bridge, VSPE))) is a commercial program. (Al)
+
+// #TODO# any others?
+
+== Set Up Image BBS 3.0
+
+### Designate Drives
+
+### Copy Files
+
+(((im)))
+
+IMPORTANT: Copy `im` to Program disk for error recovery.
+
+### Boot Disk
+
+### Upgrade From Previous Versions
+
+#### Upgrade From 1.x
+
+##### Modify `bd.data`
+
+((bd.data)) is a configuration file.
+
+#### Upgrade From 2.0
+
+### New Setup of 3.0
+
+#### Sysop Information
+
+(((configuration, new BBS)))
+
+(((configuration, setup questions)))
+
+Handle, First/Last Names, Email Address, Password
+
+#### Clock Set Method
+
+(((BBS clock, setting, manual)))
+
+(((BBS clock, setting, CMD)))
+
+(((BBS clock, setting, Lt. Kernal)))
+
+Manual, CMD RTC, Lt. Kernal
+
+#### Device/Drive Settings
+
+#### BBS Information
+
+(((configuration, BBS parameters)))
+
+BBS Name, Main Prompt, Chat Messages, NEW Credits
+
+#### RS232 Interface Type
+
+(((RS232 interfaces, types, user port)))
+
+(((RS232 interfaces, types, expansion port)))
+
+Two types, user port and expansion (cartridge) port.
+
+### Shared Image BBS 3.0 Setup
+
+Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
+#TODO#: Verify the steps are in fact word-for-word duplicates.
+
+### Introducing the `IM` Configuration Editor
+
+// concealed index entry
+(((configuration editor, IM)))
+
+#TODO#: Cross-reference more in-depth `IM` chapter.
+
+#### GGlabs GLink232-LT
+
+(((RS232 interfaces, GGlabs GLink232-LT)))
+
+SwiftLink clone
+
+#TODO#: This will incorporate Larry`'s docs plus re-use additional information in the expanded 1.2b docs.
+Give URL of GGlabs order page.
+This needs work to be fully converted to ASCIIdoctor still.
+
+### Final Notes
+
+== Boot Up
+
+### Startup Files
+
+### The Screen Mask
+
+### The Status Line
+
+#### Status Indicators
+
+### Set the Time
+
+#### Automatically From Real-Time Clocks
+
+CMD HD, CMD FD 2000/4000, Lt.Kernal Clock
+
+#### Manually From Console
+
+### The Idle Screen
+
+Waiting for a call...
+
+(((idle screen, explanation)))
+
+#### Idle Screen Command Keys
+
+(((idle screen, command keys)))
+
+##### Activity/Idle Logs
+
+(((idle screen, activity/idle log)))
+
+`e.idle _weekday_` Logging
+
+#TODO# More stuff here later.
+
+#### Idle Screen Additional Keys
+
+(((idle screen, command keys, adding functions)))
+
+### The Lightbar
+
+(((lightbar, explanation)))
+
+### Lightbar Defaults
+
+(((lightbar, defaults)))
+
+### Lightbar Function Keys
+
+(((lightbar, function keys)))
+
+### Lightbar Functions
+
+(((lightbar, functions)))
+
+#### Alarm Triggers
+
+(((lightbar, alarm trigger)))
+
+#### NetMail Triggers
+
+(((lightbar, NetMail trigger)))
+
+### Lightbar Interface: `&,52`
+
+(((lightbar, programming interface)))
+
+This probably should be in the Programmer`'s Reference Guide.
+
+== Log On
+
+### Console Logon
+
+(((log on, console)))
+
+### Remote Logon
+
+(((log on, remote)))
+
+### Graphics Modes
+
+(((log on, graphics modes)))
+
+### Logon Options
+
+(((log on, options)))
+
+#### Instant Logon
+
+(((log on, options, instant logon)))
+
+#### Logoff
+
+(((log on, options, log off)))
+
+#### Mail Check
+
+(((log on, options, mail check)))
+
+#### Redetect Graphics Mode
+
+(((log on, options, redetect graphics mode)))
+
+// #### #TODO# Toggle Linefeeds
+
+### BBS Reservations
+
+#### Network Reservation
+
+#### System Reservation
+
+### `NEW` Users
+
+(((users, NEW)))
+
+### `RES` Users
+
+(((users, RES)))
+
+### `VISITOR` Account
+
+(((users, VISITOR)))
+
+This is checked for.
+
+### Security Questions
+
+(((log on, security question)))
+
+#### Disable Second Security Question
+
+(((log on, security question, disabling second)))
+
+### Login Modules
+
+(((log on, modules)))
+
+### The Screen Mask After Logon
+
+(((log on, screen mask)))
+
+### What Now?
+
+Learn about WF, RELedit, etc.
+
+== Run Module
+
+### Image 1._x_ Emulation Mode
+
+### Command Classes
+
+### Device,Drive Prompt
+
+### Value of Variable
+
+### Module Types
+
+#### Edit System Info Files
+
+#### RELedit: Edit Sub-Boards/Libraries
+
+IMPORTANT: Make these the first 2 chapters.
+Maintenance and configuration are really important sysop tasks.
+
+NOTE: The commands listed in these headings are just temporary.
+I'm checking them against `s.menu *` files to make sure I don't forget something.
+They will be transferred to both the #TODO# _Command Reference Appendix_ and relevant chapters.
+
+== Main Prompt Maintenance Commands
+
+### `CP`    Online file copier
+
+### `CP3`   Enhanced file copier
+
+### `DE`    Direct download editor (works with `DX`)
+
+### `ECS`   Extended Command Set Editor
+
+### `ED`    User Account Editor
+
+### `IM`    Image Configuration Editor
+
+### `MENU`  Access-Aware Menu Editor
+
+Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way,  the user only sees commands they have access to).
+The access levels have to be set for each command.
+
+### `MU`    Message Move Utility
+
+### `NW`    Edit/Kill/View/Weed Netwall
+
+### `R`     Run i* or +.* File
+
+### `RELRD` RELative File Reader
+
+### `RF`    Read PRG/SEQ/REL Files
+
+Written by X-TEC
+
+### `RP`    Read Program File
+
+### `RS`    Reserve an Account
+
+### `SF`    Sysops File Editor
+
+Works with `i/lo-question`, the sysop questionaire login module.
+
+### `UU`    User View (Graphic Menu)
+
+### `VL`    Variable List
+
+== All Level Maintenance Commands
+
+### `BFx,y` Blocks Free
+
+### `CA`    Add Credits To User
+
+### `DCx,y` Disk Command
+
+### `DRx,y` Disk Directory
+
+### `FG`    Force Garbage Collect
+
+### `ME`    Change ID to Another User
+
+### `MM`    Memory Management
+
+### `RDx,y` Read SEQ File
+
+### `RS` Reserve an Account
+
+### `VF` View Feedback + Logs
+
+### `WF` Write/Edit File
+
+#FIXME: Missing from menu#
+
+### `ZZ` Toggle Pseudo-Local Mode
+
+### AutoWeed
+
+Remove users who haven`'t called in a specified time limit.
+
+### Nightly AutoMaint
+
+### Hourly NetMaint
+
+== Main Level Commands
+
+### `CM` Credit Mall
+
+### `DX` Direct Download
+
+### `JA` Jerk Award
+
+### `UB` User Biographies
+
+== Account Configuration
+
+### `AT` C/G-ASCII-ANSI Mode Translation
+
+### `EP` Edit Parameters
+
+#### `I` Account Information
+
+#### `P` Terminal Parameters
+
+### `LD` Last Call Date
+
+### `MN` Toggle Cursor Menu Mode
+
+### `MP` Toggle "...More (Y/n)?" Prompt
+
+### `MX` Make/Edit Personal Macros
+
+### `PM` Toggle Prompt Mode
+
+### `PS` Personal Signatures
+
+### `PW` Change Your Password
+
+### `TZ` Select a Time Zone
+
+### `XP` Toggle Expert Mode
+
+== All Level Commands
+
+### `?`	Help Menus
+
+### `BA` Board Activity Register
+
+### `C`	Chat Request/Chat Mode
+
+### `CF` System Configuration
+
+### `F`	Feedback
+
+### `LG` Activity Log
+
+### `LN` List NetNodes/Show Maps
+
+### `NU` New User Message
+
+### Log Off
+
+#### `O` Regular Logoff
+
+#### `O!` Instant Logoff
+
+#### `O%` Save Last Call Date
+
+#### `O%!` Instant + Save Last Call Date
+
+### `QM` Quick Mail
+
+### `ST` Status
+
+### `SY` Read a Saying
+
+### `T` Time and Date
+
+### `TT` Top Ten Users
+
+### Command Stacking
+
+`^` between commands executes multiple commands in one string.
+
+### Command Queue
+
+`^?` displays the last ten commands you`'ve entered.
+
+`^1` - `^9` executes that command.
+
+`^^` executes previous command again.
+
+### Enter/Change Subsystems
+
+If while the user is in one subsystem and types another subsystem command, kbd:[Q] reloads previous subsystem.
+
+== `SB` Sub-Boards
+
+### Message Base System
+
+### Special Interest Groups (SIGs)
+
+### Move to Another Sub-Board
+
+### `L`  `Lx` List Sub-Boards
+
+### `Sx` `SA` `SN` Scan Bulletins
+
+#### Bulletin Status Indicators
+
+##### ``--- \*NEW* \*NRB*``
+
+### `A`  `Ax` About Bulletins
+
+### `R`  `RA` `RN` Read Bulletins
+
+#### End-of-Bulletin Menu
+
+##### `Return` Read Next Message
+
+##### `R`  Respond Publicly to Thread
+
+##### `P`  Respond Privately to Original Poster
+
+##### `Px` Respond Privately to Responder #x
+
+##### `O`  Read Entire Thread Over
+
+##### `x`  Read from Response #x
+
+##### `Q`  Quit RA or SA
+
+##### `N`  New Response Rescan
+
+#### Sysop Commands
+
+##### `K`  Kill This Bulletin
+
+##### `F`  Freeze or Unfreeze Bulletin
+
+### New Messages
+
+### `P` Post New Bulletins
+
+#### `^` Frozen Bulletins
+
+### `Kx` Kill Threads
+
+### `Ex` Edit Bulletins
+
+#### Subop Commands
+
+##### `KO` / `KA` Kill Old/Kill All Messages
+
+### Anonymous/Password/Non-Anonymous Boards
+
+== Upload/Download Subsystem
+
+### Move to Another Library
+
+### `PR`    Upload/Download Protocol
+
+### `U`     Single File Upload
+
+### `UM`    Upload Multiple files
+
+### `D`     Single File Download
+
+### `DM`    Download Multiple Files
+
+### `L  Lx` List Files
+
+### `Kx Ex` Kill Directory Entry/Scratch File
+
+### `Ex`    Edit File Details
+
+### `Rx`    Read SEQuential/PRoGgram Files
+
+### `Vx`	Validate Files
+
+### Copy/Move Files
+
+### Subops
+
+### `UX`  Full Disk eXchange Libraries
+
+#### Free UD/UX library
+
+== Electronic Mail Subsystem
+
+### `#`, `Return` Read E-mail
+
+### `D` Delete e-mail
+
+### `FR` Personal file storage
+
+### `L` List e-mail
+
+### `R` `Rx` Respond to a Message
+
+### `S` Send Private E-mail
+
+### `V` Verify User`'s E-mail
+
+### `VE` Verify/Edit E-mail
+
+### NetMail Commands
+
+#### `LN` List Active Nodes
+
+#### `NA` List All Nodes
+
+#### `NIx` Node _x_ Information
+
+#### `NM` Network Node Map
+
+#### `NS` Send NetMail
+
+### Sysop Commands
+
+#### `FM` Write/Erase Forced E-mail
+
+#### `SL` Read NetMail Sysop Log
+
+#### `VL` Read NetMail Transfer Log
+
+== News Subsystem
+
+### `A` Add a news file
+
+### `R`, `Return` Read next news item
+
+### `K`, `Kx` Kill news files
+
+### `E`, `Ex` Edit news files
+
+### `L`, `Lx` List news files
+
+== `GF` General Files Libraries
+
+### Movie File Library
+
+### Modules Library
+
+### RLE File Library
+
+### Text File Library
+
+### `d.name` Make Subdirectory
+
+### `A` Add a File
+
+### `#` Enter a Subdirectory or run a file
+
+### `K` `Kx` Kill a Subdirectory or File
+
+### `E` `Ex` Edit a Subdirectory or File
+
+### `L` `Lx` List Files
+
+== BBS Database Subsystem
+
+### `A` Add a BBS
+
+### `D` Display BBS notes
+
+### `E` Edit BBS flags
+
+### `L` List BBSes
+
+### `R` Remove a BBS
+
+== `VB` Voting Booth Subsystem
+
+### `A` Add a Topic
+
+### `K` Kill a Topic
+
+### `_#_` Vote/View Results
+
+### `L` List Topics
+
+== `UL` User List Subsystem
+
+### `Q` Quick Listing
+
+### `R` Regular Listing
+
+== Image Text Editor
+
+### Enter Text
+
+### Editing Control Keys
+
+### Dot Commands
+
+#### New Dot Command Prefix
+
+ /
+
+#### Line Ranges
+
+### `.A` Exit the editor
+
+### `.R` / `.M` Read what you have typed
+
+### `.L` List lines
+
+### `.Q` Query buffer
+
+### Manipulating Text
+
+#### `.B` Banner Text
+
+#### `.C` Column width
+
+#### `.D` Delete line _(range)_
+
+#### `.E` Edit line _(range)_
+
+#### `.Y` Move line _(range)_
+
+#### `.Z` Copy line _(range)_
+
+### Editor Modes
+
+#### `.I` Line Insert mode
+
+#### `.O` Line Numbering mode
+
+#### `.T` Text transfer mode
+
+### `.J` Justify text
+
+#### ``C``enter
+
+#### ``E``xpand
+
+#### ``I``ndent
+
+#### ``P``acked
+
+#### ``L``eft
+
+#### ``R``ight
+
+#### ``U``n-Indent
+
+### `.N` Starting Over
+
+### `.F` Search for Text
+
+### `.K` Replace Text
+
+### WF Editor Commands
+
+#### Disk Access
+
+##### `.G` / `.P` Get/Put File
+
+IMPORTANT: Mention ``.P``ut instead of ``.S``ave required when ``.G``etting a file
+
+##### `.S` Save Text
+
+##### `.&` Read Text File
+
+##### `.!` DOS Command
+
+##### `.?` / `.H` Getting Help
+
+### Message Command Interpreter (MCI)
+
+== Online Terminals
+
+### Image Term
+
+#### Terminal Menus
+
+##### The Phone Book
+
+##### File Operations
+
+### `MT` Mini Terminal
+
+[appendix]
+## Command Summary
+
+[appendix]
+## Lightbar Summary
+
+[appendix]
+## Troubleshooting, Q&A
+
+[appendix]
+## Offline Utilities
+
+### `chksum`
+
+### `copy-all.64l`
+
+#TODO# not included
+
+### `edata edit 3.0`
+
+### `fcopy+`
+
+### `image reader`
+
+### `image modmaker`
+
+### `mcopy`
+
+### `renumber.49152`
+
+#TODO#: EXEC file on Lt.Kernal to renumber modules?
+
+### `sdp900705`
+
+### `sdp900705.doc`
+
+### `set cmd hd clock`
+
+[appendix]
+## Miscellaneous BBS Modules
+
+### `i.alpha/ind`
+
+[appendix]
+## Credit Pool
+
+### Setup
+
+### AutoMaint Module
+
+[appendix]
+## Image BBS Networking
+
+### Planning a Network
+
+### Joining an Existing Network
+
+### Network Utilities
+
+#### `i.NM/util`
+
+[appendix]
+== VICE Settings
+
+VICE is short for _Versatile Commodore Emulator_.
+
+### RS232 Options
+
+### Serial I/O Options
+
+#### JiffyDOS ROMs
+
+#TODO# Mention http://www.go4retro.com is a licensed distributor of physical JiffyDOS and emulator ROM images.
+
+#### FD4000 ROMs
+
+#TODO# Incorporate Jay Campey`'s Facebook post on how to set this up.
+
+### CMD HD Emulation
+
+### Lt.Kernal Emulation
+
+#### Lt. Kernal Host Adapter Cartridge File
+
+### SuperCPU Emulation
+
+### RAMLink Emulation
+
+### Python Command-Line Setup Script
+
+Written by the one, the only, jam.
+
+[index]
+## Index
