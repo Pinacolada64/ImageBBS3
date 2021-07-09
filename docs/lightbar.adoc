@@ -1,6 +1,5 @@
 :experimental:
 :icon: font
-:toc: left
 
 ## The Lightbar
 
@@ -45,14 +44,14 @@ This is also a restriction while using CMD's SuperCPU in 20 mHz mode.
 
 ### Lightbar Functions
 
-NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_. 
+NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_.
 
 #### Page 1
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
 |====================
-| `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D` 
+| `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D`
 |====================
 
 `Sys` Left: _Sysop Available to Chat_
@@ -73,7 +72,7 @@ If there are multiple unanswered chat requests pending, a counter increments.
 [start=3]
 . A file (`s.chat _x_`) is shown for that attempt number.
 
-If there is no file for that attempt number, the _Excessive Chat Attempt_ lightbar flag is checked.  
+If there is no file for that attempt number, the _Excessive Chat Attempt_ lightbar flag is checked.
 
 * If that is set, the user's time remaining is set to zero, and they are logged off at the earliest available opportunity.
 
@@ -82,7 +81,7 @@ If there is no file for that attempt number, the _Excessive Chat Attempt_ lightb
 *Disabled*: When a user types kbd:[C], they are told the sysop is unavailable for chat.
 
 [.text-right]
-pass:q[<u>Related Checkmarks:</u>]
+[underline]#Related Checkmarks:#
 
 [.text-right]
 `Sys` Right: _Background Page Enable_
@@ -96,7 +95,7 @@ pass:q[<u>Related Checkmarks:</u>]
 When the sysop is available for chat and the user has entered a reason for chat, the chat page sound will continue playing in the background (while the user is doing other things) until the sysop enters chat mode or the user logs off.
 
 [.text-right]
-pass:q[<u>Related Checkmarks:</u>]
+[underline]#Related Checkmarks:#
 
 // would be nice to use icon:checkmark[] here
 
@@ -140,7 +139,7 @@ This is a true local login, with Sysop access enabled--as compared to a "`pseudo
 #TODO#: See _Logging On From the Console_ for more information.
 
 [.text-right]
-pass:q[<u>Related Checkmark:</u>]
+[underline]#Related Checkmark:#
 
 [.text-right]
 `Loc` right: _ZZ (Pseudo-Local) Mode_
@@ -150,7 +149,7 @@ pass:q[<u>Related Checkmark:</u>]
 Once a user is online, you can grant them pseudo-local mode access in order to perform maintenance tasks if they don't have the *Local Maint* access flag set.
 
 [.text-right]
-pass:q[<u>Related Checkmark:</u>]
+[underline]#Related Checkmark:#
 
 [.text-right]
 `Loc` left: _Local Mode (No Modem I/O)_
@@ -159,7 +158,7 @@ pass:q[<u>Related Checkmark:</u>]
 
 `Tsr` left: _Edit User's Time Left_
 
-Adjust time remaining for the user online. The time remaining is shown in the bottom right hand corner of the screen, and is always visible. 
+Adjust time remaining for the user online. The time remaining is shown in the bottom right hand corner of the screen, and is always visible.
 
 [options="autowidth"]
 |==========
@@ -263,7 +262,7 @@ Character layout differs between Commodore and ASCII standards, most notably by 
 `Asc` right: _Line Feed After Return_
 
 Enables linefeeds for the user.
-In ASCII mode, terminals need a carriage return to move the cursor to the beginning of the current line.  
+In ASCII mode, terminals need a carriage return to move the cursor to the beginning of the current line.
 However, they may also need a linefeed character to move the cursor to the next line.
 (Without one, the user will probably complain that "`everything displays on one line.`")
 
@@ -371,7 +370,7 @@ Disables the use of the Message Command Interpreter in the BBS text editor.
 .Lightbar, page 3
 [width="100%",cols="8*^"]
 |====================
-| `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`  
+| `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`
 |====================
 
 `Chk` left: _Enable MailCheck at Logon_
@@ -384,7 +383,7 @@ They can then choose whether to continue logging on or not.
 If the user requests more unanswered chat pages than there are `s.chat _x_` screens, the user is logged off as soon as possible.
 
 [.text-right]
-pass:q[<u>Related Checkmark:</u>]
+[underline]#Related Checkmark:#
 
 [.text-right]
 `Cht` left: _Enter/Exit Chat Mode_
@@ -483,12 +482,12 @@ If enabled, the user will see a file called `s.detect` at login instead of a spe
 .Lightbar, page 4
 [width="100%",cols="8*^"]
 |====================
-| `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e` 
+| `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e`
 |====================
 
 `Em3` left: _Emulate Image 1.x mode_
 
-When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls. 
+When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls.
 
 TIP: The main prompt kbd:[R]un command checks this lightbar flag and prompts for the appropriate module type.
 For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mode>>.
@@ -557,7 +556,7 @@ This can be checked for in BASIC using `&,52,$3c,3:if a% then ...`.
 
 You can choose whether loss of Data Carrier Detect or Data Set Ready signals indicates there is no user connected, therefore the BBS should hang up.
 
-*Enabled*: If there is no Data Set Ready signal present, then hang up.  
+*Enabled*: If there is no Data Set Ready signal present, then hang up.
 
 *Disabled*: If there is no Data Carrier Detect signal, then hang up.
 
@@ -578,19 +577,19 @@ TIP: At higher bits per second rates, the data is not shown to achieve maximum t
 .Lightbar, page 5
 [width="100%",cols="8*^"]
 |====================
-| `$40` | `$42` | `$44` | `$46` | `$48` | `$4a` | `$4c` | `$4e` 
+| `$40` | `$42` | `$44` | `$46` | `$48` | `$4a` | `$4c` | `$4e`
 |====================
 
 .Lightbar, page 6
 [width="100%",cols="8*^"]
 |====================
-| `$50` | `$52` | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e` 
+| `$50` | `$52` | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e`
 |====================
 
 .Lightbar, page 7
 [width="100%",cols="8*^"]
 |====================
-| `$60` | `$62` | `$64` | `$66` | `$68` | `$6a` | `$6c` | `$6e` 
+| `$60` | `$62` | `$64` | `$66` | `$68` | `$6a` | `$6c` | `$6e`
 |====================
 
 Pages 5-7 are undefined and are available for your own use.
@@ -600,7 +599,7 @@ Pages 5-7 are undefined and are available for your own use.
 .Lightbar, page 8
 [width="100%",cols="8*^"]
 |====================
-| `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8` 
+| `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8`
 |====================
 
 `At1` left: _Default Alarm 1 Enable_
@@ -679,7 +678,7 @@ _NetMail Alarms_ define up to 24 times of the day or night that NetMaint takes p
 
 `&,52,_position_,_mode_`
 
-`position` ranges from 0-127 decimal (`$00`-`$7f` hexadecimal--for example, `&,52,$30,0` is allowed). 
+`position` ranges from 0-127 decimal (`$00`-`$7f` hexadecimal--for example, `&,52,$30,0` is allowed).
 
 `mode` is 0-4 as used by BASIC.
 Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
@@ -689,6 +688,6 @@ Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Im
 | `0` | clear checkmark at _position_
 | `1` | set checkmark at _position_
 | `2` | toggle checkmark at _position_
-| `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on 
-| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?] 
+| `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on
+| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?]
 |====================
