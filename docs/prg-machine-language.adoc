@@ -1,0 +1,134 @@
+:experimental:
+// enable 'kbd:[x]' macro
+
+## Machine Language Entry Points
+
+Here is a listing of ML modules and their entry points.
+
+====
+NOTE: This section is currently undergoing research.
+====
+
+### Protocols [[protocols]]
+
+`&,16,4,_x_`: `getflag`
+
+`sub.protos`: This returns the value of `defflag` from the protocol.
+Its purpose is currently unknown.
+
+`&,16,5,_x_`: `getflag`
+
+This sets the value of `defflag` from the protocol.
+Its purpose is currently unknown.
+
+#### `++ index`
+
+This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) files.
+
+[%header]
+[%autowidth]
+|===
+| Function  | Label       | Parameter(s) | Returns
+| `&,16,0`	| `find`      | `an$`=user name | ?
+| `&,16,1`	| `loadindex` | `a$`=filename | ?
+| `&,16,2`	| `saveindex` | `a$`=filename | ?
+| `&,16,3`	| `makeindex` | `a$`=filename, `b%`=? | ?
+| `&,16,4`	| `instindex` | `a%`=id| ?
+| `&,16,5`	| `deltindex` | `a%`=id| ?
+| `&,16,6`	| `nextindex` | ? | ?
+| `&,16,7`	| `setcrskip` | ? | ?
+| `&,16,8`	| `findindex` | `a%`=id | `a%`=0: not found
+|===
+
+#### `++ punter`
+
+[%header]
+[%autowidth]
+|===
+| Function | Purpose | Returns
+| `&,16,0` | multi-download | 
+| `&,16,1` | multi-upload | 
+| `&,16,2` | multi-download + header | 
+| `&,16,3` | multi-upload   + header | 
+| `&,16,4` | setflag | `a%`
+| `&,16,5` | getflag | `a%`
+
+(are these flags whether the protocol supports multi-file transfers?)
+|===
+
+#### `++ reader`
+
+This module can display PRG files.
+
+[%header]
+[%autowidth]
+|===
+| Function | Purpose | Returns
+| `&,16,0,_ll%_` | Detokenize BASIC file, use column width `ll%` | 
+|===
+
+#### Graphic Menu
+
+The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
+
+`&,16,0`: 
+Add menu string
+
+_Parameters:_
+
+`&,16,0,_?_,_menu%(element,byte)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
+
+`?`: `42`: draw two-column menu
+
+`menu%(_element,byte_)`: struct to put menu text in
+
+`hotkey(s)`: One (kbd:[B]) or two (kbd:[/B]) keys to type to select this menu item
+
+`prefix_text`:
+
+`menu_item_text`: Text the user sees for this menu item.
+
+_Example:_
+
+.i.GF:
+ 3518 if pf>1 then:&,16,0,42,q%(0,n),"/B","Op ","Return to Previous Menu":n=n+1
+
+.i.IM
+ &,16,.,34,m%(.,1),"A","","Macros Editor"
+
+_Returns:_
+
+`a%`: which item was selected
+
+---
+
+`&,16,1`: Add string
+
+_Parameters:_
+
+Unknown.
+
+---
+
+`&,16,2`: Use menu
+
+_Parameters:_
+
+`&,16,2,_?_,_menu%(element,byte)_,_item_count?_,_?_,_?_,_menu_height?_,_?_,_?_,_?_`
+
+#FIXME# 
+
+_Examples:_
+
+ xxxx &,16,2,42,q%(0,0),n,36,1,n,6,6,0:a$=chr$(q%(3,a%) and 255)
+
+ xxxx &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.
+ 
+_Returns:_
+
+`a%`: item number selected
+
+---
+
+`&,16,3`: ?
+

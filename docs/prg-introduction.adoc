@@ -1,0 +1,48 @@
+## Preface
+
+====
+NOTE: Preliminary start on documentation. Feedback welcome!
+====
+
+Welcome to the _Image BBS 3.0 Programmer's Reference Guide_.
+
+Image BBS has always been a versatile system, allowing a balance between the simplicity of operation and the power of customization with BASIC and ML programming.
+With the advent of Image BBS v3.0, the power of the system has increased greatly.
+
+Nearly the entire BBS can be customized completely online without the need for programming knowledge.  However, Image BBS v3.0 also provides for many powerful new programming tools not before available to the SysOp who desires complete customization of the BBS by changing the BASIC code.
+
+This guide is designed to help such programmers use the Image Application Programming Interface (API) more productively.
+A lot of hard work has gone into this manual as it was created while the BBS was still being developed.
+Care was taken to document as much of the BBS as possible for just this purpose.
+We hope you find this useful in creating the next generation of Image BBS applications.
+
+Happy programming!
+[.text-right]
+&#8212;Jack Followay, Jr.; Larry Hedman, Al DeRosa, and Ryan Sherwood
+[.text-right]
+&#8212;thanks to jam and X-Tec for editing help
+
+## Introduction
+
+Welcome to the first official New Image BBS Programmer’s Reference Guide.
+While there was an unofficial guide released for Image v1.2, we hoped to give SysOps something they could trust when questions arose about v3.0.
+Nearly everyone who helped write Image v3.0 helped contribute to this guide.
+I would like to personally thank everyone who was involved, but if I’ve forgotten anyone please forgive me!
+
+Al DeRosa (Bucko)
+
+Larry Gartin (Wheelman)
+
+Ray Kelm (Professor)
+
+John Moore (Little John)
+
+Ryan Powers (MonOp)
+
+Bob Sisko (Iron Axe)
+
+Ed Wilson (Fred Krueger)
+
+And most of all, I’d like to thank our dear friend, Fred Dart, to whom we owe the very existence of Image v2.0.
+Without Fred, the project would have been lost forever.
+It is in his memory that we dedicate Image BBS v3.0.

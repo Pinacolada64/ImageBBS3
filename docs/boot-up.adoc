@@ -1,0 +1,34 @@
+:toc: left
+
+## Boot Up
+
+include::include\boot-command.adoc[]
+
+### Startup Files
+### Idle Screen Display
+### Status Line
+#### Status Indicators
+
+.Function Indicators
+[options="autowidth",options="header"]
+|====================
+| Character | Purpose
+| `A` | Text output aborted 
+| `G` | Garbage collection occurring
+| `I` | Interrupt occurring
+| `L` | Loading data
+| `P` | Text output paused
+| `S` | Swapping data between RAM and ROM
+|====================
+
+#TODO#: More of an explanation.
+
+.File transfer indicators
+[options="autowidth",options="header"]
+|====================
+| Character | Purpose
+| `F` | RS232 flow control asserted 
+| `O` | Overrun
+|====================
+
+#TODO#: Move to file transfer section?

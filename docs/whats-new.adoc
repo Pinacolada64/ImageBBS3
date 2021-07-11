@@ -1,47 +1,87 @@
-== What's New
+:experimental:
+=== Why a New Version?
+
+While Image BBS 2.0 was a big step forward in overhauling the Image BBS infrastructure, the biggest shortcoming was its lack of free memory.
+This put a hard limit of 30 messages in a sub-board, 30 files in the upload/download areas, or 30 directory entries in other subsystems.
+The developers felt they had done almost all they wanted to do with that version, and turned their attention to the newer 3.0 infrastructure.
+
+With a different philosophy behind the core `im` file, several improvements became obvious:
+
+* line numbering was flipped from 1.2/1.3's 1000- to 3.0's shorter 1-999 scheme
+* grouping related subroutines together was improved
+* more external `sub.` modules (called `im.` modules in 2.0) were written to reduce including the same code in multiple files whenever possible
+* a module "`call stack`" was implemented, so loading a second (or third, or fourth...) `sub.` module from the first would reload and return to the previous `sub.` module
+
+While 3.0's modules now start with an `i` prefix instead of 1._x_`'s `+` prefix, you can still run modules meant for those older versions of the BBS through an included emulation (or to be more precise, a _redirection_) layer.
+
+#TODO#: I forgot what I was going to put here.
+
+=== What's New
 
 Many new features have been added and improvements have been made in existing features for Image BBS 3.0.
 
-=== Sysop Features
+==== Sysop Features
 
-. Convert from 1.2, 1.3, and 2.0 BBS configurations
-. Online kbd:[IM] BBS configuration
-.. Access group data changes no longer require a reboot
-. Configurable time zones for BBS and caller
-. "`Graphic`" menus with hotkey item selection
-. "`General Files`" (`GF`) section replaces `MF`, `PF`, `RF` and `TF`
-.. A single directory can include multiple file types or sub-boards
-. More file transfer protocols
+* First time setup is built in, no separate `config` program needed
 
-==== Lightbar
+* Convert from previous 1.2, 1.3, and 2.0 BBS configurations
 
-. Expanded to 8 pages
-. Configurable text and boot-up defaults
-. Many new functions added
+* Online kbd:[IM] BBS configuration
 
-=== User Features
+** Access group data changes no longer require a reboot
 
-. Text word-wraps for console and caller
-. "`More`" prompt can automatically pause text output
-. Terminal bell sent when nearing idle time limit
+// until we fix this, comment it out
+// ** Programmable function keys: kbd:[Ctrl+f1] - kbd:[Ctrl+f8] will output their definitions, both in the BBS and the waiting for call Image Terminal
 
-==== Text Editor
+* Configurable time zones for both the BBS and the caller show the caller's local time if the BBS is in a different time zone
 
-. New text editor dot commands:
-.. .Banner text
-.. .Text Transfer mode
-.. .Use Signature (kbd:[PS] edits them)
-. `/` is an alias for `.`
-. New MCI commands:
-.. left/right margin set (``£<``_nn_ and ``£>``_nn_)
-.. floating point variable display (``£!``_n_)
+* "`Graphic`" menus with hotkey item selection
+* "`General Files`" (`GF`) section replaces Image 1.2`'s separate `MF`, `PF`, `RF` and `TF` subsystems
+** A single directory can include multiple file types or sub-boards
+** Subdirectory level is now remembered and returned to after executing a module
+* More file transfer protocols #TODO#: Ymodem? list them
 
-=== Programming Features
+===== Lightbar
 
-. `im` line numbering restructured
-. More module types
-. New `&` functions
-.. Structures (RAM block manipulation, load, save)
-.. Sounds
-... New "`gong`" sound
-... _repeat_ parameter
+* Expanded to 8 pages
+* kbd:[f2] puts a Commodore 128 running in 64 mode into 2 mHz mode
+* Configurable text and boot-up defaults
+* NetMail can be triggered at specific times
+* Alarms can set, clear, or toggle checkmarks at specified times
+* Many new functions added
+
+==== User Features
+
+* Text word-wraps to 40 columns for C64 console and caller's terminal line length
+* Optional "`More`" prompt can automatically pause text output
+* Terminal bell sent when nearing idle time limit
+
+===== Text Editor
+
+* New text editor dot commands:
+** kbd:[.B]anner text: Create large text for fun or emphasis in messages
+** kbd:[.T]ext Transfer mode: Prevents text from being displayed in the terminal while text is sent from a buffer
+** kbd:[.U]se Signature (kbd:[PS] edits them): Add "`taglines`" to your posts
+* kbd:[/] is an alias for kbd:[.] for those used to that command character from other BBS programs
+* New MCI commands:
+** left/right margin set (``£<``_nn_ and ``£>``_nn_)
+** floating point variable display (``£!``_n_)
+
+==== Programming Features
+
+* `im` line numbering restructured
+* More module types
+* New `&` functions
+** Structures (`&,60` and `&,68`: RAM block manipulation, load, save, search, store/retrieve bytes and strings, and more) can replace using BASIC arrays
+** Sounds
+*** New "`gong`" sound (`&,25,3`)
+*** _repeat_ parameter: `0`=stop repeating, `1-254`=repeat count, `255`=infinite repeat
+* Image 1._x_ emulation layer so their `+.` files can be run (if renumbered to 3000-)
+* BASIC keyword extensions
+** Hexadecimal values can be used in `poke`, `peek`, `sys` and `&` commands. `poke $d004,$0c` is the equivalent of `poke 53252,12`
+** Binary values can also be used, and can be combined with hexadecimal: `poke $d004,%00001100` is the equivalent of `poke 53252,12`
+** `load"_filename_",_device_,_relocate_flag_`: _relocate_flag_ has an expanded purpose--specifying the segment of memory to load a particular file to
+** `new _line_number_` prepares to ``load`` a new module by erasing lines from `line_number` to the end of the BASIC program
+* `_variable_=usr(0)` function reads the stack pointer to display how much free space is on the processor stack
+
+New commands are discussed in detail in the _Image BBS 3.0 Programmer`'s Reference Guide_.

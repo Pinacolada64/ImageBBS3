@@ -1,0 +1,21 @@
+## POKEs and Memory Locations [[pokes]]
+
+``poke``s control various flags maintained by the Image BBS ML.
+
+[%autowidth]
+[%header]
+|===
+| Decimal | Hex     | Purpose 
+| `53252` | `$d004` | Control input line length
+|===
+
+====
+
+TIP: ``poke``s could go away in the future, in favor of an interface table.
+This replaces using a memory location with a number in the interface table.
+
+Instead of using `poke 53252,22`, the call would be similar to `&,21,0,1`. 
+
+Refer to the xref:prg-ampersand-calls.adoc#read-from-interface-table[`&,20`: Read from Interface Table] or xref:prg-ampersand-calls.adoc#write-to-interface-table[`&,21`: Write to Interface Table] commands for more information.
+
+====

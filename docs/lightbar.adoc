@@ -1,0 +1,693 @@
+:experimental:
+:icon: font
+
+## The Lightbar
+
+Image BBS`'s familiar lightbar has been expanded, as compared to previous versions, in both scope and utility. The first two pages remain virtually unchanged from Image 1.2, but the addition of six new lightbar pages adds the ability to monitor and change new features which have been added to this new version.
+
+### Lightbar Defaults
+
+During boot-up, lightbar check mark defaults are read. This allows you to configure your BBS more easily than in previous versions of Image BBS. Maybe you want to disable the `...More? (Y/n)` prompt, or debug some code with the on-screen trace function, at startup.
+
+====
+The command path is kbd:[IM], kbd:[H] `Lightbar/Alarms`, kbd:[A] `LightBar Defs`.
+====
+
+### Lightbar Function Keys
+
+The function keys kbd:[f1]-kbd:[f8] are used to switch pages, move the "`lit`" portion of the lightbar, and enable/disable individual lightbar positions, shown in the table below:
+
+.Lightbar Function Keys
+[options="autowidth",options="header"]
+|====================
+| Key      | Purpose
+| kbd:[f1] | toggle between full and split screen mode
+| kbd:[f2] | toggle between 1 and 2 mHz (`FAST` in BASIC 7.0) mode when using a Commodore 128 in C64 mode
+| kbd:[f3] | move highlighted position left
+| kbd:[f4] | page backward through lightbar pages
+| kbd:[f5] | move highlighted position right
+| kbd:[f6] | page forward through lightbar pages
+| kbd:[f7] | toggle the left check mark of the selected lightbar position
+| kbd:[f8] | toggle the right check mark of the selected lightbar position
+|====================
+
+kbd:[f1]: Split screen mode is useful when you want to access the lightbar and view BBS status/caller information. Full screen mode allows you to read more text on the screen (it doesn't show the information displayed while in split screen mode).
+
+You must be in split screen mode to enable or disable lightbar positions via the function keys.
+
+kbd:[f2]: Toggles between `FAST` (2 mHz) and `SLOW` (1 mHz) modes on a Commodore 128 in 64 mode.
+
+TIP: When you are in `FAST` mode, the BBS should operate faster at 2 mHz.
+However, the screen goes blank since the VIC chip cannot display the 40 column screen clearly at 2 mHz.
+Depending on which disk drives or other storage devices you have connected, disk access might not see any speed increase, since the C64's serial bus operates at 1 mHz.
+This is also a restriction while using CMD's SuperCPU in 20 mHz mode.
+
+### Lightbar Functions
+
+NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_.
+
+#### Page 1
+
+.Lightbar, page 1
+[width="100%",cols="8*^"]
+|====================
+| `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D`
+|====================
+
+`Sys` Left: _Sysop Available to Chat_
+
+*Enabled*: The sysop is available to chat.
+If the user types kbd:[C] at any major prompt, a few checks are made:
+
+. The number of unanswered chat requests during the call is kept track of.
+If there are multiple unanswered chat requests pending, a counter increments.
+
+. If there are none pending, the user is prompted for the reason for requesting chat. If a reason is given (not just hitting kbd:[Return]):
+
+* the first 16 characters of the chat reason are shown in the programmable window
+* the window fades between shades of gray and white
+* chat alert bells will sound
+* the reason for chat is logged to `e.log _weekday_`.
+
+[start=3]
+. A file (`s.chat _x_`) is shown for that attempt number.
+
+If there is no file for that attempt number, the _Excessive Chat Attempt_ lightbar flag is checked.
+
+* If that is set, the user's time remaining is set to zero, and they are logged off at the earliest available opportunity.
+
+* Otherwise, the user is told `Paging Now!`, then returned to the prompt where they initiated the chat request.
+
+*Disabled*: When a user types kbd:[C], they are told the sysop is unavailable for chat.
+
+[.text-right]
+[underline]#Related Checkmarks:#
+
+[.text-right]
+`Sys` Right: _Background Page Enable_
+[.text-right]
+`Chk` Right: _Excessive Chat Logoff_
+[.text-right]
+`Cht` Left: _Enter/Exit Chat Mode_
+
+`Sys` Right: _Background Page Enable_
+
+When the sysop is available for chat and the user has entered a reason for chat, the chat page sound will continue playing in the background (while the user is doing other things) until the sysop enters chat mode or the user logs off.
+
+[.text-right]
+[underline]#Related Checkmarks:#
+
+// would be nice to use icon:checkmark[] here
+
+[.text-right]
+`Sys` Left: _Sysop Available to Chat_
+[.text-right]
+`Chk` Right: _Excessive Chat Logoff_
+[.text-right]
+`Cht` Left: _Enter/Exit Chat Mode_
+
+---
+
+`Acs` left: _Edit User's Access_
+
+Change the access group of the user who is online. This changes a portion of the bottom screen mask, `A=_x_` (_A_ being short for _access_, and _x_ being the user`'s access group).
+
+[options="autowidth"]
+|==========
+| kbd:[f1] | sets access group to `A=0`
+| kbd:[f2] | sets access group to `A=9`
+| kbd:[f3] / kbd:[f4] | raises access one group (wraps around from `A=0`...`A=9`)
+| kbd:[f5] / kbd:[f6] | lowers access one group (wraps around `A=9`...`A=0`)
+| kbd:[f7] | gives the user the selected access level, exiting this function
+|==========
+
+If the access group was changed, the new access group flags are loaded from `e.access` at the earliest available opportunity.
+
+`Acs` right: _Block 300 Baud Callers_
+
+Prevent 300 baud users from logging in. When one tries, they are told:
+
+ SORRY, NO CALLS LESS THAN 1200 BPS ARE CURRENTLY BEING ACCEPTED.
+
+---
+
+`Loc` left: _Local Mode (No Modem I/O)_
+
+Log in to the BBS from the C64.
+This is a true local login, with Sysop access enabled--as compared to a "`pseudo-local`" login, or kbd:[ZZ] mode being enabled at a prompt, where the caller is given local mode access to perform maintenance tasks.
+
+#TODO#: See _Logging On From the Console_ for more information.
+
+[.text-right]
+[underline]#Related Checkmark:#
+
+[.text-right]
+`Loc` right: _ZZ (Pseudo-Local) Mode_
+
+`Loc` right: _ZZ (Pseudo-Local) Mode_
+
+Once a user is online, you can grant them pseudo-local mode access in order to perform maintenance tasks if they don't have the *Local Maint* access flag set.
+
+[.text-right]
+[underline]#Related Checkmark:#
+
+[.text-right]
+`Loc` left: _Local Mode (No Modem I/O)_
+
+---
+
+`Tsr` left: _Edit User's Time Left_
+
+Adjust time remaining for the user online. The time remaining is shown in the bottom right hand corner of the screen, and is always visible.
+
+[options="autowidth"]
+|==========
+| kbd:[f1] | zeroes time (log off at earliest opportunity)
+| kbd:[f2] | gives unlimited time (`--:00` displays)
+| kbd:[f3] | +1 minute
+| kbd:[f4] | +10 minutes
+| kbd:[f5] | -1 minute
+| kbd:[f6] | -10 minutes
+| kbd:[f7] | gives the user the selected time limit, exiting this function
+|==========
+
+`Tsr` right: _Prime Time Enabled_
+
+Toggle Prime Time (limiting all callers to a certain time limit during peak usage hours) for every user.
+
+    * If it's currently Prime Time, ignore it at logon
+    * If not, enable Prime Time
+
+If no Prime Time is designated for your BBS, this has no effect.
+
+---
+
+`Cht` left: _Enter/Exit Chat Mode_
+
+Enters chat mode when a user is online. It first displays the customizable "`entering chat`" message. By default it is:
+
+```
+ * Entering Chat Mode *
+```
+
+then allows the sysop and user to type anything they wish back and forth to each other for the duration of the chat.
+
+Pressing kbd:[f7] again ends chat mode, displaying the customizable "`exiting chat`" message. By default it is:
+
+```
+* Exiting Chat Mode *
+```
+
+Then the user is returned to the area and prompt they were at before entering chat mode. If the user was in the BBS text editor, the BBS displays
+
+```
+* Returning to Editor *
+```
+
+====
+
+The command path to edit the chat messages is kbd:[IM], kbd:[I] `Misc Features`, kbd:[M] `Chat Messages`.
+
+====
+
+`Cht` right: _Disable Modem Input_
+
+---
+
+`New` left: _Disallow New Users_
+
+Makes the BBS private, and will not allow new users to sign up.
+They are told that the BBS is not accepting new users at this time.
+
+`New` right: _Enable Screen Blanking_
+
+At the BBS console`'s idle screen, if no keys are hit or no incoming calls are detected, after a certain time period the screen will go blank to prevent screen burn-in.
+The screen remains off until a key is hit or  an incoming call is detected.
+
+---
+
+`Prt` left: _Print Spooling_
+
+Sends all text output to the printer and the screen.
+
+`Prt` right:  _Print Log Entries_
+
+Prints all log entries to the printer as well as the disk log.
+
+---
+
+`U/D` left: _Disable U/D Section_
+
+Users cannot access the UD/UX area.
+They are told the area is closed temporarily.
+
+`U/D` right: _300 Baud U/D Lockout_
+
+300 baud users cannot access the UD/UX area.
+They are told that they do not have access to that area at this time.
+
+#### Page 2
+
+.Lightbar, page 2
+[width="100%",cols="8*^"]
+|====================
+| `Asc` | `Ans` | `Exp` | `Unv` | `Trc` | `Bel` |  `Net` | `Mac`
+|====================
+
+`Asc` left: _ASCII Translation_
+
+Enables ASCII translation for the user.
+Character layout differs between Commodore and ASCII standards, most notably by reversing the position of upper- and lowercase letters.
+
+`Asc` right: _Line Feed After Return_
+
+Enables linefeeds for the user.
+In ASCII mode, terminals need a carriage return to move the cursor to the beginning of the current line.
+However, they may also need a linefeed character to move the cursor to the next line.
+(Without one, the user will probably complain that "`everything displays on one line.`")
+
+TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] to resolve this problem.
+
+// TODO Add `Toggle Linefeeds` option to `i/lo.login`
+
+---
+
+`Ans` left: _ANSI Color Enable_
+
+Enables ANSI escape sequences to output color instead of Commodore color characters.
+
+`Ans` right: _ANSI Graphics Enable_
+
+Enables ANSI graphics characters, many of which have similarities with the Commodore character set, and other special symbols for the user.
+
+These are a standardized way to set character colors, plus "`screen management`" things like scrolling, windowing, clearing to end-of-line, and more (which really aren't utilized on this Commodore 64 BBS).
+
+The cursor controls can be used with the new _Graphic Menu_ system, if it`'s enabled.
+
+---
+
+`Exp` left: _Expert Mode Enable_
+
+Enables Expert Mode, which skips many entry screens seen when entering subsystems or changing areas within that subsystem.
+
+`Exp` right: _Disallow Double Calls_
+
+Disables users from calling twice in a row. If a user tries, they are told:
+
+ Sorry, no back-to-back calls allowed. Try Again Later!
+
+---
+
+`Unv` left: _No Immediate U/D Credits_
+
+*Enabled*: User receives credit when an upload is validated.
+
+*Disabled*: Credit is received after the completion of the upload.
+
+`Unv` right: _Allow Auto-Logoff_
+
+Enables asking the user whether they wish to log off after a file transfer is complete.
+
+---
+
+`Trc` left: _On-Screen Trace Enable_
+
+Enables a tracing feature that will show, at the bottom of the screen, `L=` and the BASIC line number currently executing.
+This is only meant as a debugging tool, and is normally left disabled.
+
+====
+
+When enabled, execution can be slowed down with the kbd:[Ctrl] key to read line numbers more easily.
+
+====
+
+`Trc` right: _Time: Reset Clock_
+
+Enables the BBS to periodically update its clock from a Creative Micro Designs real-time clock.
+This can be useful when the BBS runs in VICE and emulation speed slows down due to CPU speed or operating system load issues.
+
+---
+
+`Bel` left: _Local Bells Enable_
+
+Enables playing the bell sound from the console.
+
+`Bel` right: _Local Beeps Disable_
+
+Disables playing the beep sound from the console.
+
+---
+
+// 28
+
+`Net` left: _NetMail Enable_
+
+If enabled, users have access to NetMail commands, can send NetMail
+
+`Net` right: _NetMail Trigger_
+
+_(BBS controlled)_ If enabled, an alarm has occurred to perform NetMail processing.
+
+---
+
+`Mac` left: _Macros On/Off_
+
+When enabled, users can see "`macros,`" or a random short saying presented before the main prompt.
+
+====
+The command path to edit the macros is kbd:[IM], kbd:[N] `Base Editors`, kbd:[G] `Editor Utils`, kbd:[G] `Edit Sayings`.
+
+====
+
+// Users used to be able to toggle macros on or off with the MA command.
+
+`Mac` right: _MCI Disable in Editor_
+
+Disables the use of the Message Command Interpreter in the BBS text editor.
+
+#### Page 3
+
+.Lightbar, page 3
+[width="100%",cols="8*^"]
+|====================
+| `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`
+|====================
+
+`Chk` left: _Enable MailCheck at Logon_
+
+Enables a logon option (kbd:[M]) for the user to check whether they have any mail waiting.
+They can then choose whether to continue logging on or not.
+
+`Chk` right: _Excessive Chat Logoff_
+
+If the user requests more unanswered chat pages than there are `s.chat _x_` screens, the user is logged off as soon as possible.
+
+[.text-right]
+[underline]#Related Checkmark:#
+
+[.text-right]
+`Cht` left: _Enter/Exit Chat Mode_
+
+---
+
+`Mor` left: _More Prompt On_
+
+_(BBS controlled)_ Enables the BBS to pause text after the user`'s specified screen height fills up with text.
+The `...More? (Y/n)` prompt is output.
+
+* If kbd:[Y]es (or any other key than kbd:[Y], uppercase indicates it`'s the default) is hit, text will continue to output.
+* If another key is hit, the BBS attempts to abort text output. (This might not always work, there may not be code present to handle aborting output.)
+
+#TODO#: Cross-reference kbd:[MP] command.
+
+`Mor` right: _More Prompt Not Available_
+
+Enables the BBS to continually output text, and rely on the user to hit kbd:[Home] or kbd:[Ctrl+S] to pause text.
+Most keys (kbd:[Home] or kbd:[Ctrl+Q] being fairly standard) resume output.
+
+While text output is paused, `P` displays in the bottom status line, between the current time and time remaining.
+
+---
+
+`Frd` left: _Full-Color Read Disable_
+
+When enabled, this disables outputting color for color-blind users, or terminals not capable of color.
+
+====
+NOTE: This lightbar position is a homage to Fred Dart, Image BBS support guru and programmer.
+====
+
+`Frd` right: _Undefined_
+
+---
+
+`Sub` left: _Message Bases Closed (SB)_
+
+When enabled, users cannot access the sub-boards.
+
+`Sub` right: _Files Section Closed (GF)_
+
+When enabled, users cannot access the General Files section.
+
+---
+
+`Res` left: _System Reserved (Default PW)_
+
+If enabled, the BBS is considered "`reserved`" and a password must be entered to access it.
+At the idle screen, hit kbd:[7] to set or clear a reservation.
+You can set the reservation for kbd:[N]one (which clears the reservation), kbd:[O]ne call, or kbd:[A]ll calls.
+
+`Res` right: _Network Reserve_
+
+This is usually set during the Network Maintenance period.
+If a call connects during this time, they are told to call back when network transfers are done.
+
+---
+
+`Mnt` left: _Zero_ `tr%` _at_ `Hit Backspace`
+
+If `Mnt` right (_Modem Answer Disabled_) is active and a call comes in, incoming bytes from the connect process are held in the RS232 receive buffer.
+When `Mnt` right is disabled, that buffered data causes the BBS to connect and go to the `Hit Backspace` prompt.
+Since there is nobody online, the BBS waits for 6 minutes until `tr%` counts down to 0, then resets back to the idle screen.
+
+Or, sometimes a real caller (or a bot) connects to the BBS and does nothing at the `Hit Backspace` prompt.
+If the sysop is around and sees it happen, they can zero `tr%` to reset the time remaining to `0`, shortcutting the reset back to the idle screen.
+
+`Mnt` right: _Modem Answer Disabled_
+
+When enabled, the BBS will not answer an incoming call.
+
+---
+
+`Mnu` left: _Is User in Menu Mode?_
+
+_(BBS controlled)_ The Graphic Menu system uses this flag to check whether the user is currently in Graphic Menu mode.
+
+`Mnu` right: _Are Menus Available on BBS?_
+
+If enabled, Graphic Menus are available to users.
+
+---
+
+`Xpr` left: _Enable Express Logon_
+
+If enabled, when the user first connects to the BBS, they have the option kbd:[X]_press Login_ available so they can skip login modules and get to the main prompt quickly.
+
+`Xpr` right: _Use `s.detect` Files_
+
+If enabled, the user will see a file called `s.detect` at login instead of a specific message about their graphics mode.
+
+#### Page 4
+
+.Lightbar, page 4
+[width="100%",cols="8*^"]
+|====================
+| `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e`
+|====================
+
+`Em3` left: _Emulate Image 1.x mode_
+
+When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls.
+
+TIP: The main prompt kbd:[R]un command checks this lightbar flag and prompts for the appropriate module type.
+For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mode>>.
+
+`Em3` right: _Undefined_
+
+---
+
+`Sc2` left: _Disable 2nd Security Check_
+
+If enabled, the user is only prompted for their account password, not their first and last names or their email address.
+
+`Sc2` right: _Undefined_
+
+---
+
+`Scp` left: _SuperCPU Present_
+
+If enabled, the CMD SuperCPU is connected to the system.
+
+`Scp` right: _Turbo Mode On_
+
+If enabled, the CMD SuperCPU is operating in 20 mHz mode.
+
+---
+
+`Alt` left: _Alt last 10 callers display_
+
+If enabled, this displays the idle screen last ten callers list in different colors.
+
+`Alt` right: _Undefined_
+
+---
+
+`Trb` left: _Disable Troubleshooting Mode_
+
+If enabled, the programmable window will not display variable values for debugging purposes.
+
+`Trb` right: _Undefined_
+
+---
+
+`DCD` left: _Invert DCD Signal_
+
+_(BBS controlled)_
+
+*Enabled:* The modem hangs up when an inverted (asserted when high) Data Carrier Detect signal is received from the modem.
+
+*Disabled:* The modem hangs up when a normal (asserted when low) Data Carrier Detect signal is received from the modem.
+
+`DCD` right: _Carrier Present_
+
+_(BBS controlled)_
+
+When enabled, there is either a DCD or DSR carrier signal present.
+
+====
+
+This can be checked for in BASIC using `&,52,$3c,3:if a% then ...`.
+
+====
+
+---
+
+`DSR` left: _DCD/DSR select_
+
+You can choose whether loss of Data Carrier Detect or Data Set Ready signals indicates there is no user connected, therefore the BBS should hang up.
+
+*Enabled*: If there is no Data Set Ready signal present, then hang up.
+
+*Disabled*: If there is no Data Carrier Detect signal, then hang up.
+
+`DSR` right: _Show Rx/Tx Windows_
+
+If enabled, show data being received/transmitted in receive/transmit windows.
+
+TIP: At higher bits per second rates, the data is not shown to achieve maximum throughput.
+
+---
+
+`$3e` left: _Undefined_
+
+`$3e` right: _Undefined_
+
+#### Pages 5-7
+
+.Lightbar, page 5
+[width="100%",cols="8*^"]
+|====================
+| `$40` | `$42` | `$44` | `$46` | `$48` | `$4a` | `$4c` | `$4e`
+|====================
+
+.Lightbar, page 6
+[width="100%",cols="8*^"]
+|====================
+| `$50` | `$52` | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e`
+|====================
+
+.Lightbar, page 7
+[width="100%",cols="8*^"]
+|====================
+| `$60` | `$62` | `$64` | `$66` | `$68` | `$6a` | `$6c` | `$6e`
+|====================
+
+Pages 5-7 are undefined and are available for your own use.
+
+#### Page 8
+
+.Lightbar, page 8
+[width="100%",cols="8*^"]
+|====================
+| `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8`
+|====================
+
+`At1` left: _Default Alarm 1 Enable_
+
+`At1` right: _Default Alarm 1 Trigger_
+
+---
+
+`At2` left: _Default Alarm 2 Enable_
+
+`At2` right: _Default Alarm 2 Trigger_
+
+---
+
+`At3` left: _Default Alarm 3 Enable_
+
+`At3` right: _Default Alarm 3 Trigger_
+
+---
+
+`At4` left: _Default Alarm 4 Enable_
+
+`At4` right: _Default Alarm 4 Trigger_
+
+---
+
+`At5` left: _Default Alarm 5 Enable_
+
+`At5` right: _Default Alarm 5 Trigger_
+
+---
+
+`At6` left: _Default Alarm 6 Enable_
+
+`At6` right: _Default Alarm 6 Trigger_
+
+---
+
+`At7` left: _Default Alarm 7 Enable_
+
+`At7` right: _Default Alarm 7 Trigger_
+
+---
+
+`At8` left: _Default Alarm 8 Enable_
+
+`At8` right: _Default Alarm 8 Trigger_
+
+### Alarm Triggers
+
+_Alarm Triggers_ are used to modify other checkmarks on the lightbar.
+Using them, you can enable or disable BBS features at specific times of the day or night.
+
+Features:
+
+* Alarm on and off times can be specified
+* Activating an alarm can depend on the status of a specific checkmark
+* Alarms can trigger only if another checkmark is enabled
+* After an alarm triggers, it can then enable or disable another checkmark
+
+====
+TIP: There is one alarm trigger enabled by default: `At1`.
+Every few hours, the `Trc` right lightbar function (`Time: Reset Clock`) will poll a CMD RTC to update the BBS clock.
+If you do not need this feature, disable this alarm.
+====
+
+====
+The command path is kbd:[IM], kbd:[H] `Lightbar/Alarm`, kbd:[B] `Alarms`.
+====
+
+### NetMail Alarms
+
+_NetMail Alarms_ define up to 24 times of the day or night that NetMaint takes place.
+
+### Lightbar Interface: `&,52` [[lightbar-interface]]
+
+`&,52,_position_,_mode_`
+
+`position` ranges from 0-127 decimal (`$00`-`$7f` hexadecimal--for example, `&,52,$30,0` is allowed).
+
+`mode` is 0-4 as used by BASIC.
+Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
+
+[options="autowidth"]
+|====================
+| `0` | clear checkmark at _position_
+| `1` | set checkmark at _position_
+| `2` | toggle checkmark at _position_
+| `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on
+| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?]
+|====================
