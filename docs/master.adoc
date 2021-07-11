@@ -10,11 +10,16 @@ v0.1
 
 NOTE: Preliminary start on documentation. Feedback welcome!
 
+[preface]
 include::preface.adoc[]
 
+[preface]
 include::typography.adoc[]
 
+[preface]
 include::whats-new.adoc[]
+
+include::03-supported-hardware.adoc[]
 
 include::setting-up.adoc[]
 
