@@ -4,7 +4,8 @@ v0.1
 :experimental:
 :toc:
 :toclevels: 10
-:icons: font
+:icon: font
+:icon-set: far
 // e.g., Section 2.3, “Installation”:
 :xrefstyle: full
 // this requires using docbook but allows index entries:
@@ -12,20 +13,29 @@ v0.1
 
 NOTE: Preliminary start on documentation. Feedback welcome!
 
-TODO: Change sans serif fonts to serif (for print purposes) with a stylesheet. I think.
+// building with asciidoc-pdf under Linux uses serif fonts :)
 
 ////
 start of preface: roman page numbers
 preface chapters should have level 3 headings to be included
 the next level 2 heading will start normal page numbering
 ////
+[preface]
 include::preface.adoc[]
 
+[preface]
 include::typography.adoc[]
 
+[preface]
 include::whats-new.adoc[]
 
 // end of preface: back to arabic page numbers
+
+// include::01-introduction.adoc[]
+
+// include::02-product-information.adoc[]
+
+include::03-supported-hardware.adoc[]
 
 include::setting-up.adoc[]
 
@@ -38,6 +48,8 @@ include::boot-up.adoc[]
 include::lightbar.adoc[]
 
 include::modules.adoc[]
+
+include::22-text-editor.adoc[]
 
 [appendix]
 include::appendix-lightbar-quick-reference.adoc[]

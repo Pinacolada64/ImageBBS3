@@ -33,4 +33,7 @@ include::lightbar.adoc[]
 
 include::modules.adoc[]
 
+include::22-text-editor.adoc[]
+
+[appendix]
 include::appendix-lightbar-quick-reference.adoc[]

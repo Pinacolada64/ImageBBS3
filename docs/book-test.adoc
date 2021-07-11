@@ -1,6 +1,8 @@
 :doctype: book
 :toc:
 :experimental:
+:icons: font
+:icon-set: fas
 
 = Image BBS 3.0 Sysop Guide
 Ryan "Pinacolada" Sherwood <sym.rsherwood@gmail.com>, Jack "Rascal" Followay, Don Gladden
@@ -11,12 +13,15 @@ Test Edition
 
 You have to go back to 1991...
 
+[preface]
 ### Special Thanks
 
+[preface]
 ### In Memoriam
 
 ((Al DeRosa)) wrote these.
 
+[preface]
 ### Acknowledgments
 
 I'd like to thank the Academy...
@@ -72,97 +77,8 @@ Ryan is writing these.
 MIT license? https://mit-license.org/
 Only trouble is "`for profit`" phrasing.
 
-== Supported Hardware
-
-### Disk Drives
-
-(((disk drive)))
-
-### Image Drive Numbers
-
-(((Image drive)))
-
-### JiffyDOS
-
-((JiffyDOS)) is a serial I/O speed enhancement system.
-It consists of two chip replacements...
-
-Jim Brain sells physical JiffyDOS chips and emulator ROM files at his store, http://www.go4retro.com.
-
-### Mass Storage
-
-#### CMD HD, ThunderDrive
-
-The (((hard drive, Creative Micro Designs))) Creative Micro Designs hard drive was manufactured by CMD for a high degree of compatability with Commodore 64/128 computers.
-
-As of October 2020, it can be emulated in VICE.
-
-The (((hard drive, ThunderDrive))) hard drive is a clone of the CMD hard drive and...
-
-#### Lt. Kernal HD, Rear Admiral
-
-The (((hard drive, Lt. Kernal))) Lt. Kernal hard drive was manufactured by Fiscal Information, Inc.
-
-As of October 2020, it can be emulated in VICE.
-
-The (((hard drive, Rear Admiral))) Rear Admiral hard drive is a clone of the Lt. Kernal and...
-
-#### CMD RAMLink
-
-The RAMLink was manufactured by CMD to be a battery-backed RAM expansion unit.
-Optionally, you can plug in a Commodore REU into the pass-through port and maintain its memory contents.
-
-#### SD2IEC
-
-(((hardware, SD2IEC)))
-
-#### 1541 Ultimate II
-
-(((hardware, 1541 Ultimate II)))
-
-Many functions:
-
-* 16 MB REU
-* Kernal replacement
-* SwiftLink emulation on the II+
-
-### Real-Time Clocks
-
-#### Dallas Semiconductor DS12C887 Emulation
-
-(((RTC, DS12C887)))
-
-This is an emulation option within VICE.
-
-### Modems
-
-#### RS-232 Bridges
-
-(((RS232 bridge)))
-
-#### Telnet BBS Cable
-
-(((RS232 bridge, telnet cable)))
-
-### Interfaces
-
-#### GGlabs GLink232-LT
-
-(((RS232 interface, GGlabs GLink232-LT)))
-
-#### 1541 Ultimate II+ SwiftLink Emulation
-
-(((RS232 interface, 1541 Ultimate II+ SwiftLink Emulation)))
-
-#### CMD SuperCPU
-
-(((hardware, CMD SuperCPU)))
-
-### Printers
-
-(((hardware, printers)))
-
-A lot of this is from 1.2, some newer hardware will be talked about.
+include::03-supported-hardware.adoc[]
+// == Supported Hardware
 
 == Modem/Telnet Bridge Setup
 
@@ -331,6 +247,49 @@ Waiting for a call...
 ### The Lightbar
 
 (((lightbar, explanation)))
+(((lightbar label, Sys)))
+(((lightbar label, Acs)))
+(((lightbar label, Loc)))
+(((lightbar label, Tsr)))
+(((lightbar label, Cht)))
+(((lightbar label, New)))
+(((lightbar label, Prt)))
+(((lightbar label, U/D)))
+(((lightbar label, Sys)))
+(((lightbar label, Asc)))
+(((lightbar label, Ans)))
+(((lightbar label, Exp)))
+(((lightbar label, Unv)))
+(((lightbar label, Trc)))
+(((lightbar label, Bel)))
+(((lightbar label, Net)))
+(((lightbar label, Mac)))
+(((lightbar label, Chk)))
+(((lightbar label, Mor)))
+(((lightbar label, Frd)))
+(((lightbar label, Sub)))
+(((lightbar label, Res)))
+(((lightbar label, Mnt)))
+(((lightbar label, Mnu)))
+(((lightbar label, Xpr)))
+(((lightbar label, Em3)))
+(((lightbar label, Sc2)))
+(((lightbar label, Scp)))
+(((lightbar label, Alt)))
+(((lightbar label, Trb)))
+(((lightbar label, DCD)))
+(((lightbar label, DSR)))
+(((lightbar label, Mac)))
+(((lightbar label, $3e)))
+(((lightbar label, Mac)))
+(((lightbar label, At1)))
+(((lightbar label, At2)))
+(((lightbar label, At3)))
+(((lightbar label, At4)))
+(((lightbar label, At5)))
+(((lightbar label, At6)))
+(((lightbar label, At7)))
+(((lightbar label, At8)))
 
 ### Lightbar Defaults
 
@@ -858,11 +817,11 @@ If while the user is in one subsystem and types another subsystem command, kbd:[
 
 ### Editor Modes
 
-#### `.I` Line Insert mode
+#### `.I` Line Insert Mode
 
-#### `.O` Line Numbering mode
+#### `.O` Line Numbering Mode
 
-#### `.T` Text transfer mode
+#### `.T` Text Transfer Mode
 
 ### `.J` Justify text
 
