@@ -1,9 +1,16 @@
 :experimental:
-:toc:
+
+## Setting Up
+
+### Image Drive Numbers
+
+(((Image drive))) Image drive numbers are
 
 ### Boot Disk
 
 ### Upgrade From Previous Versions
+
+#### Upgrade From 1.2
 
 #### Upgrade From 2.0
 
@@ -15,15 +22,18 @@ Handle, First/Last Names, Email Address, Password
 
 #### Clock Set Method
 
-
-Manual, CMD RTC, Lt. Kernal
+* Manual
+* CMD RTC
+* Lt. Kernal
 
 #### Device/Drive Settings
+
 #### BBS Information
 
 BBS Name, Main Prompt, Chat Messages, NEW Credits
 
 #### RS232 Interface Type
+
 ### Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
@@ -68,7 +78,7 @@ Although we have not tested this software on a great deal of other hardware, it 
 
 ### Get Started
 
-Now that you are ready to set up your IMAGE BBS, we recommend that the first thing you do is back up the file(s) you received the BBS software in, then keep them in a safe place.
+Now that you are ready to set up your Image BBS, we recommend that the first thing you do is back up the file(s) you received the BBS software in, then keep them in a safe place.
 Copying the files out of the original disk images we recommend you use `fcopy+` for all the PRG and SEQ files, and `copy-all.64l` written by Jim Butterfield for the REL files.
 
 ### Designate Drives
@@ -83,7 +93,7 @@ Image BBS supports:
 * partitions 0-254 on a Creative Micro Designs hard drive
 
 Plan your setup on what storage space you have available.
-Read the following information carefully to help you in this regard. 
+Read the following information carefully to help you in this regard.
 
 It is possible to run Image BBS v3.0 using only two 1581 disk drives.
 We highly recommend you use higher capacity drives, since you will find that disk space and directory space gets used quickly.
@@ -116,7 +126,7 @@ _Drive space_ refers to blocks used, while _blocks free_ refers to blocks unused
 
 #### Image Drive Numbers
 
-The terms _Image drive_ or _system disk_ refer to six categories of files used by Image BBS for system functions.
+(((Image drive))) (((system disk))) The terms _Image drive_ or _system disk_ refer to six categories of files used by Image BBS for system functions.
 They are referred to by the numbers 1-6, since standard Commodore device numbers less than 8 are not typically used.
 
 TIP: _Technically,_ device 0 is the keyboard, 1 is the Datasette, 2 is user port RS232, 3 is the screen, 4-5 are printers, and 6 is a plotter.
@@ -128,7 +138,7 @@ Your drive layout will depend on the type and capacity of your storage device(s)
 The six Image drives are described as follows:
 
 [start=1]
-. The "`System Disk`"
+. The "`System Disk`" (((system disks, system)))
 
 System files are mostly SEQuential (text) files that do _not_ change often.
 Menu files, board entry files, and board data files are all included on this disk.
@@ -140,7 +150,7 @@ Also, system news files are located here.
 News files have a prefix of `n.`.
 
 [start=2]
-. The "`E-Mail Disk`"
+. The "`E-Mail Disk`" (((system disks, e-mail)))
 
 E-Mail files contain all user e-mail messages.
 _Forced mail_, e-mail messages that are not optional to view (and can contain various user account manipulation directives), are also stored here.
@@ -153,7 +163,7 @@ Forced mail files have a prefix of `f.`.
 If the BBS is networked, network mail and network configuration files (which have a prefix of ``nm.``) are stored here also.
 
 [start=3]
-. The "`Etcetera Disk`"
+. The "`Etcetera Disk`" (((system disks, etcetera)))
 
 Etcetera files are miscellaneous files used to supply the system with information.
 Many online games and functions use one or more Etcetera files to store data.
@@ -164,7 +174,7 @@ If no online programs use the Etcetera disk, it will not use too much disk or di
 Etcetera files have a prefix of `e.`.
 
 [start=4]
-. The "`Directory Disk`"
+. The "`Directory Disk`" (((system disks, directory)))
 
 Directory files group related information into a single file, like a disk directory does.
 Whether the information is the posts and responses for a particular sub-board, file information in a U/D or U/X library, or modules in a General File library, a directory file helps the BBS index information.
@@ -173,14 +183,14 @@ These files change often, and this disk will use a fair amount of directory spac
 Directory files have a prefix of `d.`.
 
 [start=5]
-. The "`Program Disk`"
+. The "`Program Disk`" (((system disks, program)))
 
 The Program Disk contains module files--BASIC or ML programs--that load in when needed to execute functions.
 They are the main "`operating system`" of the BBS.
 
 These files have several prefixes (`i`, `sub.` and `++`), explained in more detail in the <<modules.adoc#Module Types,Module Types>>  section of this manual.
 
-They do not change, unless modified offline. 
+They do not change, unless modified offline.
 
 // inter-document cross-ref: filename, section, xref text
 // <<document-b.adoc#section-b,Section B>>
@@ -188,7 +198,7 @@ They do not change, unless modified offline.
 These are all the files found on the `IMAGE 3.0 D1` disk.
 
 [start=6]
-. The "`User Disk`"
+. The "`User Disk`" (((system disks, user)))
 
 User files contain data about the people on your BBS.
 As new users sign up, the user file is expanded.
@@ -210,7 +220,7 @@ kbd:[2] `Convert from 1.2`
 kbd:[3] `Convert from 2.0`
 
 kbd:[4] `Abort`
-    
+
 Option kbd:[4] is there in case you change your mind--it does a C64 cold start.
 
 Each method is explained separately.
@@ -243,11 +253,11 @@ Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 .Boot and Module Files
 [options="autowidth",options="header"]
 |====================
-| Filename    | Purpose 
+| Filename    | Purpose
 | `boot`      | autoboot program
 | `image 3.0` | title screen
 | `im`        | core routines
-| `i*`        | BBS modules 
+| `i*`        | BBS modules
 | `ml*`       | assembly language
 | `sub.*`     | BBS modules
 | `++*`       | protocols
@@ -290,7 +300,7 @@ Image BBS begins collecting information needed to configure itself.
 [start=5]
 . Part I: Sysop Information
 
-Enter the information asked for. 
+Enter the information asked for.
 
 [start=6]
 . Part II: Set Clock
@@ -362,13 +372,13 @@ You are taken through several prompts to set the time and date:
 .Weekday Numbers
 [options="header,autowidth"]
 |====================
-| Number | Day  
-| kbd:[1] | Sunday  
-| kbd:[2] | Monday  
-| kbd:[3] | Tuesday 
+| Number | Day
+| kbd:[1] | Sunday
+| kbd:[2] | Monday
+| kbd:[3] | Tuesday
 | kbd:[4] | Wednesday
 | kbd:[5] | Thursday
-| kbd:[6] | Friday  
+| kbd:[6] | Friday
 | kbd:[7] | Saturday
 |====================
 
@@ -453,7 +463,7 @@ The BBS copyright message is displayed, and you are prompted:
  Press "I" For Instant Login:
 ....
 
-. Press kbd:[I] for `Instant` Login. 
+. Press kbd:[I] for `Instant` Login.
 
 .QuickList
 ****
@@ -484,14 +494,14 @@ NOTE: Initially, the time may be off by a few hours.
 This is because the system's time zone has not been set for the BBS clock.
 You can fix this later, during further BBS configuration.
 
-NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`gosub` without `return`, or `for` without `next` statements) on the stack. 
+NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`gosub` without `return`, or `for` without `next` statements) on the stack.
 ====
 
 [start=3]
-.	At the Main Prompt, type kbd:[EP] to `Edit your Parameters`. 
+.	At the Main Prompt, type kbd:[EP] to `Edit your Parameters`.
 Select kbd:[P]arameters.
 
-. Set your Computer Type and any other Terminal Parameters you want. 
+. Set your Computer Type and any other Terminal Parameters you want.
 
 `More? Prompt` Off and `Cursor Menu Mode` On are recommended.
 
@@ -500,7 +510,7 @@ Hit kbd:[Return] to exit.
 [start=5]
 . At this point, it is suggested you log off using the kbd:[O] command and answer `Update User File?` with kbd:[Y]es.
 This saves your new parameters to your user file.
-You can then log back on in any mode you choose. 
+You can then log back on in any mode you choose.
 
 ====
 IMPORTANT:  Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] commands.
@@ -542,7 +552,7 @@ The BBS loads the access group editor, then access group information.
 The Group 9 flags should already be set for full sysop access.
 Type kbd:[9] and change the group name to `Sysop`.
 
-Edit any access group name and flags per your preference. 
+Edit any access group name and flags per your preference.
 kbd:[Return] exits, prompting you to save changes if any modifications were made.
 
 You are returned to the Configuration Editor.
@@ -574,7 +584,7 @@ If a Lt. Kernal hard drive is configured, you are asked:
 
  Edit Modem Config for Which Port? (RETURN = 0):
 
-Select Port 0 if you don't have a multiplexed Lt. Kernal system. 
+Select Port 0 if you don't have a multiplexed Lt. Kernal system.
 Otherwise, select the port number of the Commodore 64 you are configuring.
 ****
 
@@ -603,7 +613,7 @@ Using it, you can assign:
 - and other features
 
 for each of your sub-boards.
-These include the `SB` (message base), `UD` (Upload/Download base), and `UX` (User eXchange base) sections. 
+These include the `SB` (message base), `UD` (Upload/Download base), and `UX` (User eXchange base) sections.
 
 You can create and maintain SIGs (Special Interest Groups), defining how related SBs, UDs or UXs are grouped together.
 
@@ -627,7 +637,7 @@ When finished with RELedit, exit with kbd:[Return] until you end up back at the 
 The remaining items in the `Base Editor` menu are sysop utilities for maintaining the BBS.
 
 . Select kbd:[K] `Quit` to return to the main menu.
-. Select kbd:[Q] `Quit` to exit to the Main Prompt. 
+. Select kbd:[Q] `Quit` to exit to the Main Prompt.
 
 Refer to <<final-notes>> for further instructions.
 
@@ -637,16 +647,16 @@ Refer to <<final-notes>> for further instructions.
 NOTE: Duplicate section. Old formatting.
 
 1.	At the System Idle screen, hit the number 1 key to set the time. Image will perform auto maintenance and return to the Idle screen.
-2.	Press the f1 key to go to full screen mode then press the f7 key to log on. Press the "`I`" key for Instant Login. 
+2.	Press the f1 key to go to full screen mode then press the f7 key to log on. Press the "`I`" key for Instant Login.
 3.	If asked, type your password. The BBS will greet you with a welcome message and then prompt you to select your time zone.
 4.	Select your time zone (7=EST, 6=CST, 5=MST, 4=PST)
 5.	Enter the number of lines per screen (suggest 23)
-6.	At the Main Prompt, type kbd:[EP] to Edit your Parameters. 
+6.	At the Main Prompt, type kbd:[EP] to Edit your Parameters.
 a.	Select kbd:[P]arameters.
-b.	Set your Computer Type and any other Terminal Parameters you want. 
+b.	Set your Computer Type and any other Terminal Parameters you want.
 c.	(_Optional_) Set Cursor Menu Mode On.
 d.	Hit kbd:[Return] to exit.
-e.	At the Main Prompt, type kbd:[EP] to Edit your Parameters. 
+e.	At the Main Prompt, type kbd:[EP] to Edit your Parameters.
 f.	Select kbd:[I]nfo.
 g.	Change your phone number to your email address.
 h.	Type kbd:[Return] to exit.
@@ -747,7 +757,7 @@ TIP: You might want to move this record to the end of the file, since the first 
 
 ### Final Notes [[final-notes]]
 
-From here, explore and become familiar with the new features. 
+From here, explore and become familiar with the new features.
 
 Much has changed since Image 1.2 and 2.0. The best way to learn is to experiment.
 
@@ -760,7 +770,7 @@ Cross-reference [[cross-reference]] set.
 a <<cross-reference,cross-reference>> mentioned.
 ////
 
-More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible. 
+More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible.
 
 As in previous versions of Image BBS software, menus are displayed with kbd:[?] and a Local Command menu is displayed to level 9 users with pseudo-Local mode access by typing kbd:[??].
 
