@@ -1,8 +1,5 @@
 :experimental: // enable kbd:[] macro
 
-:toclevel: 5
-:toc:
-
 ### `&` Routines
 
 `&` is the command character which is BASIC's interface to 70 machine language routines of Image BBS.
@@ -1548,7 +1545,13 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ### `&,57` relread
 
-Reads a record from a RELative file.
+Reads records from an open RELative file until the character `^` is encountered.
+
+_Parameters:_
+
+`&,57,_lfn_`
+
+`lfn`: logical file number
 
 ---
 
