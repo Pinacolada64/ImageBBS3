@@ -1,0 +1,86 @@
+{:4000}
+	onlmgoto{:4016},{:4024},{:4042},{:4070},{:4106}
+{:4002}
+	return
+{:4004}
+	z=1:a$="w":gosub[32]:ife%thenz=.:a$="a":gosub[32]
+	print#2,na$r$id;r$d1$r$c$
+	forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2
+' FIXME: shouldn't matter if writing/appending file, if kk<>0 then increment both	gosub[30]:i=1:x=3:gosub[16]:x=14:gosub[16]:x=32:gosub[16]:x=25:onzgosub[16]
+	ify=1thenforx=2to24step11:gosub[16]:next:x=31:gosub[16]
+	close2:return
+{:4016}
+	ifso%(bn)>1then:&"{f6}Sorry, This "+sy$+" Board Has A SubOp.{f6}":return
+	&"{f6}Please leave a few words explaining why{f6}you think you should be the SubOp"
+	&" of{f6}this "+sy$+" Board{f6:2}"
+	c$="[SubOp Application]"+r$+r$+"RE: "+bb$(bn)+r$+r$:goto{:4032}
+{:4024}
+	on-(sg=.)goto{:4002}:x=so%:gosub{:4112}:tt$=a$
+	ifa$="{^}"ora$="RES"then:&"{f6:2}Account deleted!{f6}":return
+	an$=tt$:&,15,1:&"{f6:2}Send Mail To {pound}v7?: ":gosub[94]:ifa=0thenreturn
+	&"{f6:2}SigOp Feedback:{f6}":c$="[SigOp Fbck: "+bb$(bn)+"]"
+{:4032}
+	on-(sg=.)goto{:4036}:x=so%:gosub{:4112}:tt$=a$
+	ifa$="{^}"ora$="RES"then:&"{f6:2}Account Deleted!{f6}":goto{:4040}
+{:4036}
+	gosub[542]:onkk+1goto{:4002}:an$=tt$:&,15,1:o$="Feedback To "+an$+"...."
+	&"{f6:2}Filing {pound}$o":gosub{:4004}:&"{f6:2}":iflm<>1thenreturn
+{:4040}
+	c$="Feedback to "+mid$(i1$,2):gosub{:4110}:gosub{:4114}:return
+{:4042}
+	ifq<1thenreturn
+	p$="":&"{f6:2}Enter Handle Or ID# Of User{f6:2}":gosub[6]:x=abs(val(an$)):ifxthen{:4050}
+	gosub[505]:x=i:ifxthennn$=an$:goto{:4056}
+	&"{f6:2}{f5}{pound}v7{f5} Not Found.{f6}":return
+{:4050}
+	ifx<1orx>urorx=idthen{:4054}
+	gosub[35]:gosub[1]:input#2,nn$:ifnn$<>"{^}"andnn$<>"RES"then{:4056}
+{:4054}
+	&"{f6:2}Invalid Account!{f6}":return
+{:4056}
+	&"{f6}Handle: ":&nn$:&"{f6:2}Is That Correct?: ":gosub[94]:ifa=.thenreturn
+	&"{f6}Add How Many Credits (500 Max)?: {pound}i1":iftr%<1thenreturn
+	a=abs(int(val(left$(mid$(an$,1),3)))):ifa<1ora>500thenreturn
+	gosub[35]:gosub[1]:forkk=1to24:&,2,2:tt$(kk)=a$:next
+	tt$(19)=str$(val(tt$(19))+a):gosub[1]
+	a$=tt$(1):forkk=2to24:a$=a$+r$+tt$(kk):next:print#2,a$:close2
+	a=.:&,11:x=.:return
+{:4070}
+	a%=abs(int(val(mid$(an$,3)))):ifa%<1ora%>urthenreturn
+	gosub[35]:x=a%:gosub[1]:&,2,2:ifa$="{^}"ora$="RES"thenclose2:return
+	&"{f6:2}{lt. green}Handle   : {pound}$a (UID#{pound}%a)"
+	&,2,2:&,2,2:b$=a$:&,2,2:b$=b$+" "+a$:&,2,2:c$=a$
+	a=8:gosub[11]:ifathen:&"{f6}Real Name: {pound}$b"
+	a$="{f6}Phone #  : {pound}$c":a=8:gosub[11]
+	ifa=0thenc$=mid$(c$,2,3):a$="{f6}Area Code: {pound}$c"
+	&:forkk=6to10:&,2,2:next:b$=co$(val(a$)):&"{f6}Computer : {pound}$b"
+	forkk=11to15:&,2,2:next:a%=val(a$):&,2,2:b%=val(a$)
+	&,2,2:c%=val(a$):&,2,2:d%=val(a$):&,2,2:b$=a$
+	&,2,2:f%=val(a$):&,2,2:g%=val(a$):&,2,2:c$=a$:&,2,2:d$=a$:close2
+	&"{f6}Last Call: {$04}"+c$
+	a=8:gosub[11]:ifa=0andso%<>idthenifq<1orleft$(sy$,1)<>"U"then:&"{f6}":goto{:4100}
+	a$="{f6}Credits  :{pound}$b":ifmid$(d$,7)="1"thena$="{f6}Credits  : Unlimited ({pound}$b)"
+	&:&"{f6:2} {pound}%b Uploads{f1} {pound}%a Downloads{f6} {pound}%d Blks UL'ed{f1} {pound}%c Blks DL'ed"
+{:4100}
+	a=8:gosub[11]:on-(a=1orso%=id)goto{:4102}:ifq<1orsy$<>"Sub"then{:4104}
+{:4102}
+	&"{f6} {pound}%f Posts{f1} {pound}%g Responses"
+{:4104}
+	&"{f6:2}":return
+{:4106}
+	on-(sg=.)goto{:4002}:x=so%:gosub{:4112}:ifa$="{^}"ora$="RES"thenclose2:return
+	an$=a$:&,15,1:b%=x:lp=1:&"{f6:2}User ID#{pound}%b{f1} {pound}v7 Is Your SIG Host":return
+{:4110}
+	forx=kk-1to1step-1:tt$(x+1)=tt$(x):next:kk=kk+1:tt$(1)=c$:return
+{:4112}
+	gosub[35]:gosub[1]:&,2,2:close2:return
+{:4114}
+	&"{f6:2}Filing {pound}$o...{f6:2}"
+	b$="e.fback":a$=b$+",s,a":gosub[4]:ife%thena$=b$+",s,w":gosub[4]
+	print#2,na$r$id;r$d1$r$ac%;r$ph$r$rn$r$co$(co%)
+	forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2:&,11
+	gosub[30]:i=1:x=1:gosub[16]:x=12:gosub[16]:x=23:gosub[16]:x=30:gosub[16]:close2
+	return
+	a=abs(int(val(left$(mid$(an$,2),4)))):return
+	rem copyright 1991 new image 08/15/91
+	rem:"i/MM.subop (c)nissa 200228 lh"
