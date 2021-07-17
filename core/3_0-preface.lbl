@@ -1,0 +1,76 @@
+{assign:im.rel_pointer	=1}
+{assign:im.get_drive	=2}
+{assign:im.open_cmd_channel=3}
+{assign:im.open_file	=4}
+{assign:im.read_cmd_channel=5}
+{assign:im.prompt	=6}
+{assign:im.get_key	=7}
+{assign:im.area_window	=9}
+{assign:im.rel_command	=10}
+{assign:im.get_flag	=11}
+{assign:im.output_defaults=12}
+{assign:im.seqReadClear	=13}
+{assign:im.seqRead	=14}
+{assign:im.BAR.inc	=16}
+{assign:im.BAR.write	=17}
+{assign:im.seqWrite	=18}
+{assign:im.fileScratch	=19}
+{assign:im.loadProtocol	=28}
+{assign:im.open_e_stats	=30}
+{assign:im.open_e_data	=33}
+{assign:im.open_u_config=35}
+{assign:im.writeTTarray	=39}
+{assign:im.getFreeDirEntry	=60}
+{assign:im.getBlocksFree	=61}
+{assign:im.SetIslashDrive	=72}
+{assign:im.loadIslashFile	=73}
+{assign:im.loadSubFile	=74}
+{assign:im.prepSubLoad	=78}
+{assign:im.loadModule	=79}
+{assign:im.clearArrays	=82}
+{assign:im.clearTTarray	=83}
+{assign:im.leaveFeedback	=85}
+
+' messages:
+{assign:im.center	90}
+{assign:im.canceled	92}
+{assign:im.are_you_sure.no=93}
+{assign:im.no		94}
+{assign:im.are_you_sure.yes=95}
+{assign:im.yes		=96}
+
+{assign:im.main_prompt=300}
+
+' toggles:
+{assign:im.toggle_mode=370}
+{assign:im.toggle_user_flag=371}
+{assign:im.toggleExpertMode=372}
+{assign:im.toggleMorePrompt=373}
+{assign:im.toggleMenuMode	=374}
+' 375?
+{assign:im.togglePromptMode	=376}
+{assign:im.open_e_text	=390}
+
+{assign:im.subComm1	=428}
+{assign:im.subComm2	=429}
+{assign:im.subParam1	=430}
+{assign:im.subParam2	=431}
+{assign:im.subMenus	=436}
+{assign:im.subSysDos	=437}
+{assign:im.subStats	=438}
+{assign:im.subBar	=439}
+{assign:im.subEditor	=440}
+{assign:im.subHandles	=441}
+{assign:im.subProtos	=442}
+{assign:im.subMisc	=445}
+{assign:im.subModem	=446}
+{assign:im.subInfo	=447}
+{assign:im.subLocal	=448}
+{assign:im.subMisc2	=449}
+
+{assign:im.find_id	=505}
+
+{assign:genericReturn	=999}
+{assign:iPeriodModule	=3000}
+{assign:iSlashModule	=4000}
+{assign:imSubroutine	=60000}
