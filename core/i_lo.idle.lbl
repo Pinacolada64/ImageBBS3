@@ -1,3 +1,5 @@
+{alpha:alt}
+{:4000}
 	gosub{:4480}:onlmgoto{:4100},{:4200},{:4010}:mm=.:f1=3:goto[3000]
 {:4006}
 	cm$="Connected":gosub[9]:&,69,5,21,cm$,$85
@@ -111,17 +113,30 @@
 	&"{clear}{f6}{pound}{back arrow}22{lt. red}{rvrs on} Feedback   {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}22{rvrs on} SysOp Mail {pound}#3{pound}# {pound}%y {gray1} {f6}"
 	&"{pound}{back arrow}22{lt. red}{rvrs on} Calls/Log  {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}22{lt. red}{rvrs on} New Users  {pound}#3{pound}# {pound}%w {gray1} {f6}"
 	&"{pound}{back arrow}23{rvrs on}                {f6}{up}":&,27,3:diml%(30,9):dr=3:gosub[3]
-	&,60,2,.,l%(.,.),dr$+"e.last",dv%:gosub[5]:ife%then{:4416}
-	fori=.to9:&,60,1,20,l%(8,i),h$:iflen(h$)<4then{:4415}
-	&,60,5,.,l%(1,i),an$:d$=mid$(an$,4,2)+"/"+mid$(an$,2,2)+" "
-	&,15:t$=right$(an$,7)+"M":m%=l%(7,i)
-	ifa%=.then:&"{f6}{rvrs on}{gray2}{pound}$d@ {pound}$t{pound}# {pound}#4{pound}%m Min"
-	ifa%then::&"{f6}{lt. blue}{pound}$d{yellow}@{lt. blue} {pound}$t{white}{pound}# {pound}#4{pound}%m Min{yellow}"
-	&" {pound}$h{pound}{back arrow}39{rvrs off}"
+{number:4408}
+{step:1}
+' d$=mm/dd @ t$=time m$=xxx min c$=caller
+' &,60,2: load "e.last" struct
+' gosub 5: check DOS error status, e%=error
+	&,60,2,.,l%(.,.),dr$+"e.last",dv%:gosub 5:if e% then {:4416}
+' 4409: check Alt status just once, get m$=minutes
+' &,52,$36,3: check status of Alt-L on lightbar, put result in a%
+	&,52,$36,3:for i=. to 9:m$=" "+right$("  "+str$(l%(7,i)),3)+" Min"
+' 4410: getString: c$=caller, getDate: an$=date wmmddyyhhmm
+	&,60,1,20,l%(8,i),c$:&,60,5,.,l%(1,i),an$:if len(c$)<4 then {:4415}
+' 4411: format d$="mm/dd" from short date; &,15: get long date, t$="hh:mm P"
+	d$=mid$(an$,4,2)+"/"+mid$(an$,6,2):&,15:t$=right$(an$,7)+"M":if a% then {:4413}
+' 4412:
+	&"{f6}{rvrs on}{gray2}{pound}$d @ {pound}$t{pound}$m{pound}{back arrow}25":goto{:4414}
+{:4413}
+	&"{f6}{lt. blue}{pound}$d {yellow}@ {lt. blue}{pound}$t{white}{pound}$m{pound}{back arrow}25{yellow}"
+{:4414}
+	&"{pound}$c{pound}{back arrow}39{rvrs off}"
 {:4415}
 	next
 {:4416}
 	&,28,3:close2:poke53248,.:goto{:4040}
+
 {:4420}
 	f3=2:poke53248,1:poke2042,.:&"{clear}":im=2:a$="bar":gosub[74]:poke53248,.:goto{:4040}
 {:4430}
@@ -149,4 +164,4 @@
 {:4480}
 	&,52,$34,3:ifa%thenpoke53371,0:&,52,$35,1
 	return
-	rem i/lo.idle (c)nissa 200817 lh+rs
+	rem i/lo.idle (c)nissa 2021-07-16 lh+rs
