@@ -9,7 +9,9 @@
 	&"{clear}":s$="{space:36}"
 {:menu}
 '	&"{home}{pound}n7"
-	&,70,0,7
+	gosub {:sub.clear_lines}
+	d$={usedef:__BuildDate}:t$={usedef:__BuildTime}
+	&,70,0,7:&"i.test frame{f6}{pound}vjBuild date:  {pound}$d {pound}$t{f6:2}"
 	&"0) Quit{f6}1) Draw frame{f6}"
 	&"2) Scroll header{f6}3) Flash header, get keyboard input{f6:2}"
 {:prompt}
@@ -34,10 +36,17 @@
 	next:return
 
 {:3300}
-' flash header message:
+' flash header message: (max. 34 chars)
 ' display two lines in header
-	z3$="Insert All System Disks In Correct":gosub {:3404}
-	z3$="Drives and Press RETURN":gosub {:3404}:return
+' ----+----+----+----+----+----+----+----+
+'    Insert All System Disks In Correct
+'         Drives and Press RETURN
+	z1$="Insert All System Disks In Correct"
+	z2$="     Drives and Press RETURN      "
+' 3405: draw header
+' 3406: display menu
+' 3410: flash border, get input
+	gosub {:3405}:gosub {:3406}:return
 
 ' NOTE: Immutable line number
 ' draw frame:
@@ -81,7 +90,7 @@
 ' 'i=not i' does not work
 {:3406}
 ' i=color index (0=gray, 1=yellow)
-	gosub {:3414}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
+	gosub {:sub.clear_lines}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
 {:3408}
 ' NOTE: Immutable line number
 ' flash frame contents:
@@ -99,7 +108,7 @@
 ' 3409 b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 ' &,69,<column>,<row>,<text>,<color>
 
-' ### neat ###
+' ### neat color highlighting in Kate text editor ###
 
 ' color index
 ' 5 c=1
@@ -113,13 +122,16 @@
 ' 40 get an$:print"key:"an$:lm=val(an$):if lm<1 and lm>3 then 20
 
 ' NOTE: Immutable line number
-{:3414}
+{number:3414}
+{:sub.clear_lines}
 ' clear screen lines 7-24 (0-based)
-' TODO: clear line link?
-	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}38":next:&,70,.,5:return
+' reposition cursor on row 7, col 0
+' TODO: clear line links?
+	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}38":next:&,70,.,6:return
 
 {:3420}
 ' NOTE: &,48 (character-io.asm: getkbd): returns char in peek(198), non-blocking
 ' convert keypress into numeric value:
-	get an$:lm=asc(an$)-48:if an$<>"{back arrow}" and lm<1 and lm>3 then {:3410}
-	&"Selected option {pound}v7.{pound}w2{f6}":gosub {:3414}:goto {:3410}
+	get an$:if an$="{back arrow}" then gosub {:sub.clear_lines}:goto {:menu}
+	lm=asc(an$+nl$)-48:if lm<1 and lm>3 then {:3410}
+	gosub {:sub.clear_lines}:&"Selected option {pound}v7.{pound}w2":goto {:3410}
