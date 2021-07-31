@@ -1,3 +1,6 @@
+{step:2}
+' TODO: word-wrap "Write a few words..."
+' TODO: use more variables in "Sorry, This sy$ Already Has a SubOp."
 {:4000}
 	onlmgoto{:4016},{:4024},{:4042},{:4070},{:4106}
 {:4002}
@@ -5,14 +8,21 @@
 {:4004}
 	z=1:a$="w":gosub[32]:ife%thenz=.:a$="a":gosub[32]
 	print#2,na$r$id;r$d1$r$c$
+' gosub 39 replaces this:
 	forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2
-' FIXME: shouldn't matter if writing/appending file, if kk<>0 then increment both	gosub[30]:i=1:x=3:gosub[16]:x=14:gosub[16]:x=32:gosub[16]:x=25:onzgosub[16]
+' FIXME: shouldn't matter if writing/appending file, if kk<>0 then increment both BAR records
+	gosub[30]:i=1:x=3:gosub[16]:x=14:gosub[16]:x=32:gosub[16]:x=25:onzgosub[16]
+' records 2, 13, 24
 	ify=1thenforx=2to24step11:gosub[16]:next:x=31:gosub[16]
 	close2:return
 {:4016}
-	ifso%(bn)>1then:&"{f6}Sorry, This "+sy$+" Board Has A SubOp.{f6}":return
-	&"{f6}Please leave a few words explaining why{f6}you think you should be the SubOp"
-	&" of{f6}this "+sy$+" Board{f6:2}"
+	ifso%(bn)>1then:&"{f6}Sorry, This "+sy$+" {pound}$h Already Has a SubOp.{f6}":return
+' Please leave a few words explaining why you should be the SubOp of this Board.
+' In order to word-wrap multiple strings without a line break between them, set lp=1 on both strings, but put a space as the first character of the second string.
+' Also see i/lo.on: 4010
+	lp=1:&"{f6}Please leave a few words explaining why you should be the{pound}$i"
+' FIXME: hard break here? added lp=1: check this file on LtK for working example
+	lp=1:&"of this "+sy$+" {pound}$h.":&"{f6}"
 	c$="[SubOp Application]"+r$+r$+"RE: "+bb$(bn)+r$+r$:goto{:4032}
 {:4024}
 	on-(sg=.)goto{:4002}:x=so%:gosub{:4112}:tt$=a$
@@ -46,20 +56,20 @@
 	a$=tt$(1):forkk=2to24:a$=a$+r$+tt$(kk):next:print#2,a$:close2
 	a=.:&,11:x=.:return
 {:4070}
-	a%=abs(int(val(mid$(an$,3)))):ifa%<1ora%>urthenreturn
+	a%=abs(val(mid$(an$,3))):ifa%<1ora%>urthenreturn
 	gosub[35]:x=a%:gosub[1]:&,2,2:ifa$="{^}"ora$="RES"thenclose2:return
 	&"{f6:2}{lt. green}Handle   : {pound}$a (UID#{pound}%a)"
 	&,2,2:&,2,2:b$=a$:&,2,2:b$=b$+" "+a$:&,2,2:c$=a$
-	a=8:gosub[11]:ifathen:&"{f6}Real Name: {pound}$b"
-	a$="{f6}Phone #  : {pound}$c":a=8:gosub[11]
-	ifa=0thenc$=mid$(c$,2,3):a$="{f6}Area Code: {pound}$c"
-	&:forkk=6to10:&,2,2:next:b$=co$(val(a$)):&"{f6}Computer : {pound}$b"
-	forkk=11to15:&,2,2:next:a%=val(a$):&,2,2:b%=val(a$)
+' flag 8: remote maint
+	a=8:gosub[11]:ifathen:&"{f6}Real Name: {pound}$b{f6}"
+	ifathen:&"E-Mail   : {pound}$c{f6}"
+	forkk=6to10:&,2,2:next
+	&"{f6}Computer : "+co$(val(a$))+"{f6}"	forkk=11to15:&,2,2:next:a%=val(a$):&,2,2:b%=val(a$)
 	&,2,2:c%=val(a$):&,2,2:d%=val(a$):&,2,2:b$=a$
 	&,2,2:f%=val(a$):&,2,2:g%=val(a$):&,2,2:c$=a$:&,2,2:d$=a$:close2
 	&"{f6}Last Call: {$04}"+c$
-	a=8:gosub[11]:ifa=0andso%<>idthenifq<1orleft$(sy$,1)<>"U"then:&"{f6}":goto{:4100}
-	a$="{f6}Credits  :{pound}$b":ifmid$(d$,7)="1"thena$="{f6}Credits  : Unlimited ({pound}$b)"
+	a=8:gosub[11]:if a=. and so%<>id then if q<1 or left$(sy$,1)<>"U" then {:4100}
+	&"{f6}Credits  :":a$=b$:ifmid$(d$,7)="1"thena$="Unlimited ({pound}$b)"
 	&:&"{f6:2} {pound}%b Uploads{f1} {pound}%a Downloads{f6} {pound}%d Blks UL'ed{f1} {pound}%c Blks DL'ed"
 {:4100}
 	a=8:gosub[11]:on-(a=1orso%=id)goto{:4102}:ifq<1orsy$<>"Sub"then{:4104}
@@ -69,7 +79,7 @@
 	&"{f6:2}":return
 {:4106}
 	on-(sg=.)goto{:4002}:x=so%:gosub{:4112}:ifa$="{^}"ora$="RES"thenclose2:return
-	an$=a$:&,15,1:b%=x:lp=1:&"{f6:2}User ID#{pound}%b{f1} {pound}v7 Is Your SIG Host":return
+	an$=a$:&,15,1:b%=x:lp=1:&"{f6:2}User ID#{pound}%b{f1} {pound}v7 Is Your SIG Host.":return
 {:4110}
 	forx=kk-1to1step-1:tt$(x+1)=tt$(x):next:kk=kk+1:tt$(1)=c$:return
 {:4112}
@@ -83,4 +93,5 @@
 	return
 	a=abs(int(val(left$(mid$(an$,2),4)))):return
 	rem copyright 1991 new image 08/15/91
-	rem:"i/MM.subop (c)nissa 200228 lh"
+	rem "i/MM.subop" (c)nissa 200228 lh, 2021-07-14 rs
+' 2713 bytes
