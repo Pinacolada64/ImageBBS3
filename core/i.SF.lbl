@@ -1,22 +1,4 @@
-{assign:1	=1	} ' im.rel_pointer
-{assign:2	=2	} ' im.get_drive
-{assign:3	=3	} ' im.open_cmd_channel
-{assign:4	=4	} ' im.open_file
-{assign:5	=5	} ' im.read_cmd_channel
-{assign:6	=6	} ' im.prompt
-{assign:7	=7	} ' im.get_key
-{assign:9	=9	} ' im.area_window
-{assign:11	=11	} ' im.get_flag
-{assign:12	=12	} ' im.output_defaults
-{assign:35	=35	} ' im.open_u_config
-{assign:90	=90	} ' im.center=90
-{assign:93	=93	} ' im.are_you_sure.no
-{assign:94	=94	} ' im.no
-{assign:95	=95	} ' im.are_you_sure.yes
-{assign:96	=96	} ' im.yes
-{assign:300	=300	} ' im.main_prompt
-{assign:445	=445	} ' im.load_sub_misc
-{assign:505	=505	} ' im.find_id
+{uses:3_0-preface.lbl}
 {:3000}
 {step:2}
 	&"{clear}{blue}{pound}vj{lt. blue}{rvrs off} {rvrs on} Sysop File Maintenance{pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{green}":gosub{:3176}:goto{:3012}
@@ -40,7 +22,7 @@
 	&"{f6:2}Creating...":gosub{:3002}:ife%then:&"{f6:2}Error Creating File.":goto{:3010}
 	&"{pound}h6ed...{f6:2}Filling: ":forx=1tour
 	&mid$("{white}{cyan}{purple}{green}{yellow}{lt. red}{lt. green}{lt. blue}{gray3}",int(rnd(1)*9)+1,1)+mid$("{^}*+{pound}=[]$#",int(rnd(1)*9)+1,1)
-	gosub[1]:print#2,"{^}":next:&"{f6:2}{lt. green}Finished!!":goto{:3010}
+	gosub{:1}:print#2,"{^}":next:&"{f6:2}{lt. green}Finished!!":goto{:3010}
 {:3030}
 	&"{clear}Edit Sysop Record:"
 {:3032}

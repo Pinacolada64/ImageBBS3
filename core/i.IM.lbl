@@ -1,13 +1,5 @@
-{assign:1	=1	}
-{assign:4	=4	}
-{assign:18	=18	}
-{assign:28	=28	}
-{assign:33	=33	}
-{assign:70	=70	}
-{assign:72	=72	}
-{assign:96	=96	}
-{assign:300	=300	}
-{assign:4000	=4000	}
+{uses:3_0-preface.lbl}
+
 {step:2}
 ' C64List4_04.exe i.IM.lbl -prg -crunch -alpha:alt -ovr
 ' original: 8032 bytes

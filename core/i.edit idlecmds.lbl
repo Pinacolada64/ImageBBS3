@@ -2,11 +2,7 @@
 ' C64List4_03.exe "i.edit idlecmds.lbl" -d64:utils.d64::"I.EDIT IDLECMDS" -verbose
 {step:2}
 
-{assign:3	=3}
-{assign:5	=5}
-{assign:94	=94}
-{assign:96	=96}
-{assign:300	=300}
+{uses:3_0-preface.lbl}
 
 ' an adaptation of "i.menuedit" to:
 ' a) learn how structs work

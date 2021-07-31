@@ -1,10 +1,16 @@
+{uses:3_0-preface.lbl}
+' i/su.config calls lines in 'im':
+{assign:3080	=3080	} '
+{assign:3404	=3404	} '
+{assign:3414	=3414	} '
+
 {:4000}
 ' TODO: make menu-driven
 ' TODO: use &,69,0,x to clear entire screen line?
 	rem " i/su.config "
 	onlmgosub{:4002},{:4200},{:4300}:return
 {:4002}
-	z3$="Part I: Sysop Information":gosub[3404]:d1$="12011111201"
+	z3$="Part I: Sysop Information":gosub{:3404}:d1$="12011111201"
 {:4004}
 	&"{f6}{white}":poke53252,20:w$="IMAGE SYSOP":b$=w$:pl=1:p$="Sysop Handle":&,1,32
 	ifan$=""thenan$=b$
@@ -21,21 +27,21 @@
 	&"{up:3}{lt. blue}Sysop Email{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {white}":poke53252,20
 	tt$(5)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":pl=1:w$="PASS":b$=w$:p$="Sysop Password":&,1,32
 	ifan$=""thenan$=b$
-	tt$(2)=an$:&"{up:3}{lt. blue}Sysop Password{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {yellow}{f6}Is the above information correct? ":gosub[96]:ifa=.thengosub[3414]:goto{:4004}
+	tt$(2)=an$:&"{up:3}{lt. blue}Sysop Password{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {yellow}{f6}Is the above information correct? ":gosub{:96}:ifa=.thengosub{:3414}:goto{:4004}
 	tt$=tt$(1)+r$+tt$(2)+r$+tt$(3)+r$+tt$(4)+r$+tt$(5)+r$+d1$+r$
 	tt$=tt$+"9"+r$+"0"+r$+"0"+r$+"1"+r$+mid$(str$(40+24*256),2)+r$+"0"+r$
 	tt$=tt$+"01100"+r$:fori=1to8:tt$=tt$+"0"+r$:next:tt$=tt$+d1$+r$
 	tt$=tt$+"1411191111111119000090000"
-	gosub[3414]:z3$="Part II: Clock Setting":gosub[3404]:restore:gosub{:4270}
-	z3$="Part III: Device/Drive Settings":gosub[3414]:gosub[3404]:&"{f6}{white}"
+	gosub{:3414}:z3$="Part II: Clock Setting":gosub{:3404}:restore:gosub{:4270}
+	z3$="Part III: Device/Drive Settings":gosub{:3414}:gosub{:3404}:&"{f6}{white}"
 {:4032}
 	a=. ':reada$:ifa$<>"*"then{:4032}
 	fori=1to6:poke53252,3:pl=1:readb$
 	w$="8":p$=b$+" Device":&,1,32:a=val(an$):ifa<7ora>16thena=8
 	dv%(i)=a:w$="0":p$=b$+" Drive":&,1,32:a=val(an$):ifa<.ora>254thena=.
 	dr%(i)=a:c$=mid$(str$(dv%(i)),2)+","+mid$(str$(dr%(i)),2):&"{up}{pound}{back arrow}38 {f6}{up:2}{pound}{back arrow}38 {f6}{up:2}{pound}{back arrow}38 {f6}{up:2}{pound}{back arrow}38 {f6}{up:2}{lt. blue}  {pound}$b Disk{blue}:{cyan}{pound}{back arrow}20{pound}$c{f6:2}{white}":next
-	&"{yellow}Is the above information correct? ":gosub[96]:ifa=.thengosub[3414]:&"{f6}":restore:goto{:4032}
-	z3$="Part IV: BBS Information":gosub[3414]:gosub[3404]:poke53252,30:pl=.
+	&"{yellow}Is the above information correct? ":gosub{:96}:ifa=.thengosub{:3414}:&"{f6}":restore:goto{:4032}
+	z3$="Part IV: BBS Information":gosub{:3414}:gosub{:3404}:poke53252,30:pl=.
 {:4044}
 	w$="IMAGE BBS V3.0":b$=w$:p$="BBS Name":&"{f6}{white}":&,1,32
 	ifan$=""thenan$=b$
@@ -50,45 +56,45 @@
 	ifan$=""thenan$=b$
 	&"{up:3}{lt. blue}Chat Exit{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
 	c2$=an$:w$="100":b$=w$:p$="New User Credits":&"{f6}{back arrow}38 {f6}{up}":&,1,32:ifan$=""thenan$=b$
-	nc=val(an$):&"{up:3}{lt. blue}NEW Credits{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}{yellow}{f6}Is the above information correct? ":gosub[96]:ifa=.thengosub[3414]:goto{:4044}
-	gosub[3414]:z3$="Creating Image 3.0 System Files...":gosub[3404]:&"{f6}{lt. blue}Creating {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}...."
+	nc=val(an$):&"{up:3}{lt. blue}NEW Credits{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}{yellow}{f6}Is the above information correct? ":gosub{:96}:ifa=.thengosub{:3414}:goto{:4044}
+	gosub{:3414}:z3$="Creating Image 3.0 System Files...":gosub{:3404}:&"{f6}{lt. blue}Creating {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}...."
 ' 4064
 	open2,dv%,2,bd$+"bd.data,s,w":print#2,dv%(3)r$dr%(3)r$po$
 ' TODO: subroutine this so date is changed only once
 	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close2:close15
 	&"{white}Done!{f6}{lt. blue}Creating {blue}{f5}{cyan}u.config{blue}{f5}{lt. blue}...."
-	dr=6:a$="u.config,l,"+chr$(254):gosub[4]
-	x=1:gosub[1]:print#2,tt$:x=2:gosub[1]:print#2,"{^}":ur=1:close2:&"{white}Done!{f6}"
-	&"{lt. blue}Creating {blue}{f5}{cyan}u.index{blue}{f5}{lt. blue}....":dr=6:gosub[3]:a$=dr$+"u.index":print#15,"s"a$
+	dr=6:a$="u.config,l,"+chr$(254):gosub{:4}
+	x=1:gosub{:1}:print#2,tt$:x=2:gosub{:1}:print#2,"{^}":ur=1:close2:&"{white}Done!{f6}"
+	&"{lt. blue}Creating {blue}{f5}{cyan}u.index{blue}{f5}{lt. blue}....":dr=6:gosub{:3}:a$=dr$+"u.index":print#15,"s"a$
 	a%(0)=1:a%(1)=1:&,60,3,0,a%(0),4,a$,dv%:close15:&"{white}Done!{f6}"
 	close2:&"{lt. blue}Creating {blue}{f5}{cyan}e.stats{blue}{f5}{lt. blue}...."
-	dr=3:a$="e.stats,l,"+chr$(10):gosub[4]
-	forx=1to40:gosub[1]:print#2,"0":next:close2:&"{white}Done!{f6}"
+	dr=3:a$="e.stats,l,"+chr$(10):gosub{:4}
+	forx=1to40:gosub{:1}:print#2,"0":next:close2:&"{white}Done!{f6}"
 	&"{lt. blue}Creating {blue}{f5}{cyan}e.data{blue}{f5}{lt. blue}...."
-	dr=3:a$="e.data,l,"+chr$(31):gosub[4]:x=1:gosub[1]:print#2,"0"
-	forx=2to11:gosub[1]:print#2,"{^}":next:x=12:gosub[1]:print#2,"2"
-	forx=13to16:gosub[1]:print#2,"{^}":next:x=17:gosub[1]:print#2,"NOBODY"
-	x=18:gosub[1]:print#2,"PASS":x=19:gosub[1]:print#2,d1$
-	x=20:gosub[1]:print#2," 0 , 0 , 0":forx=21to30:gosub[1]:print#2,"{^}":next
-	x=31:gosub[1]:print#2,"2"
-	forx=32to34:gosub[1]:print#2,"{^}":next:x=35:gosub[1]:print#2,d1$
-	x=36:gosub[1]:print#2,"0":x=37:gosub[1]:print#2,mid$(str$(y%),2,2)
-	x=38:gosub[1]:print#2,"0":forx=39to42:gosub[1]:print#2,"{^}":next
-	x=43:gosub[1]:print#2,"X":forx=44to46:gosub[1]:print#2,"{^}":next
-	x=47:gosub[1]:print#2,bn$:x=48:gosub[1]:print#2,c1$
-	x=49:gosub[1]:print#2,c2$:b$="0":x=50:gosub[1]:&,2,2
+	dr=3:a$="e.data,l,"+chr$(31):gosub{:4}:x=1:gosub{:1}:print#2,"0"
+	forx=2to11:gosub{:1}:print#2,"{^}":next:x=12:gosub{:1}:print#2,"2"
+	forx=13to16:gosub{:1}:print#2,"{^}":next:x=17:gosub{:1}:print#2,"NOBODY"
+	x=18:gosub{:1}:print#2,"PASS":x=19:gosub{:1}:print#2,d1$
+	x=20:gosub{:1}:print#2," 0 , 0 , 0":forx=21to30:gosub{:1}:print#2,"{^}":next
+	x=31:gosub{:1}:print#2,"2"
+	forx=32to34:gosub{:1}:print#2,"{^}":next:x=35:gosub{:1}:print#2,d1$
+	x=36:gosub{:1}:print#2,"0":x=37:gosub{:1}:print#2,mid$(str$(y%),2,2)
+	x=38:gosub{:1}:print#2,"0":forx=39to42:gosub{:1}:print#2,"{^}":next
+	x=43:gosub{:1}:print#2,"X":forx=44to46:gosub{:1}:print#2,"{^}":next
+	x=47:gosub{:1}:print#2,bn$:x=48:gosub{:1}:print#2,c1$
+	x=49:gosub{:1}:print#2,c2$:b$="0":x=50:gosub{:1}:&,2,2
 	ifasc(a$+nl$)<>32thenb$=a$
-	gosub[1]:print#2,b$:x=51:gosub[1]:print#2,cc$
-	fori=1to6:x=51+i:gosub[1]:print#2,dv%(i);r$;dr%(i):next
-	x=58:gosub[1]:print#2,nc:close2:&"{white}Done!{f6}"
-	&"{lt. blue}Creating {blue}{f5}{cyan}e.access{blue}{f5}{lt. blue}....":dr=3:a$="e.access,l,"+chr$(127):gosub[4]
-	fori=.to8:x=i+1:gosub[1]
+	gosub{:1}:print#2,b$:x=51:gosub{:1}:print#2,cc$
+	fori=1to6:x=51+i:gosub{:1}:print#2,dv%(i);r$;dr%(i):next
+	x=58:gosub{:1}:print#2,nc:close2:&"{white}Done!{f6}"
+	&"{lt. blue}Creating {blue}{f5}{cyan}e.access{blue}{f5}{lt. blue}....":dr=3:a$="e.access,l,"+chr$(127):gosub{:4}
+	fori=.to8:x=i+1:gosub{:1}
 	print#2,"Group"+str$(i)+r$+"01001100000000021151":next
 ' FIXME: group 10? changed to group 9
 	print#2,"Group"+str$(i)+r$+"19111911111111190000"
 ' gosub 3300 was 3210
-	close2:&"{white}Done!{f6}":z3$="Starting Daily Log...":gosub[3404]:gosub[3300]
-	gosub[3414]:&"{f6:2}Be sure to enter {f5}IM{f5} once online to{f6}complete the setup/configuration of{f6}"
+	close2:&"{white}Done!{f6}":z3$="Starting Daily Log...":gosub{:3404}:gosub{:3300}
+	gosub{:3414}:&"{f6:2}Be sure to enter {f5}IM{f5} once online to{f6}complete the setup/configuration of{f6}"
 	&"your BBS. Message bases, U/D and U/X{f6}libraries can be configured by using{f6}"
 	&"the {f5}Base Editors{f5} option.{f6:2}(c)2020 NISSA BBS Software.{f6:2}<Hit any key> {pound}g1"
 	lp=1:return
@@ -102,21 +108,21 @@
 {:4144}
 	z$="":fora=49159to49169:z$=z$+chr$(peek(a)):next:poke1010,1:return
 {:4146}
-	dr=5:gosub[3]:a$=dr$+"swr.ml":&,7,dv%,2:return
+	dr=5:gosub{:3}:a$=dr$+"swr.ml":&,7,dv%,2:return
 	gosub{:4146}:sys49152:sys49155:goto{:4144}
 {:4200}
 	rem:close15:open15,dv%,15,"r"+bd$+"d.data=bd.data"
-	fl=.:z3$="Reading old configuration...":gosub[3404]:close2:open2,dv%,2,bd$+"d.data,s,r":gosub[5]
+	fl=.:z3$="Reading old configuration...":gosub{:3404}:close2:open2,dv%,2,bd$+"d.data,s,r":gosub{:5}
 	ife%thenclose2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key to Configure New System:{pound}g1":return
 	fori=1to6:input#2,dv%(i),dr%(i):next
 	&,2,2:cc$=a$:&,2,2:nc=val(a$):&,2,2:&,2,2:&,2,2:bn$=a$:&,2,2:po$=a$:close2
-	&"{f6}":gosub{:4270}:gosub[3414]:z3$="Converting old information...":gosub[3404]:forqq=1to4:gosub{:4212}:next:return
+	&"{f6}":gosub{:4270}:gosub{:3414}:z3$="Converting old information...":gosub{:3404}:forqq=1to4:gosub{:4212}:next:return
 {:4212}
 	onqqgoto{:4214},{:4238},{:4250},{:4258}
 {:4214}
-	z3$="Converting Access Data...":gosub[3404]:gosub[33]
-	forx=2to11:gosub[1]:&,2,2:tt$(x)=a$:next
-	forx=21to30:gosub[1]:&,2,2:tt$(x)=a$:next
+	z3$="Converting Access Data...":gosub{:3404}:gosub{:33}
+	forx=2to11:gosub{:1}:&,2,2:tt$(x)=a$:next
+	forx=21to30:gosub{:1}:&,2,2:tt$(x)=a$:next
 	fori=.to9:a$=tt$(i+2):tt$(i+2)=mid$(a$,5)
 	a=asc(a$):b=asc(mid$(a$,2,1)):c=asc(mid$(a$,3,1)):d=asc(mid$(a$,4,1))
 	ifa>100thena=.
@@ -127,20 +133,20 @@
 	next:close2
 	fori=.to9:fl$(i)=tt$(i+21):next:&"{f6}{white}Converting of access info {yellow}SUCCESSFUL{white}!":return
 {:4238}
-	z3$="Updating 'e.data' file...":gosub[3404]:d1$="72006131201":gosub[33]
-	x=35:gosub[1]:print#2,d1$:x=36:gosub[1]:print#2,.:x=37:gosub[1]:print#2,str$(y%)
+	z3$="Updating 'e.data' file...":gosub{:3404}:d1$="72006131201":gosub{:33}
+	x=35:gosub{:1}:print#2,d1$:x=36:gosub{:1}:print#2,.:x=37:gosub{:1}:print#2,str$(y%)
 	print#2,.:print#2,.:print#2,"3"
 	print#2,"7"
-	fori=1to6:x=51+i:gosub[1]:print#2,dv%(i);r$;dr%(i):next:close2
+	fori=1to6:x=51+i:gosub{:1}:print#2,dv%(i);r$;dr%(i):next:close2
 	&"{f6:2}{white}Updating of 'e.data' {yellow}SUCCESSFUL{white}!":return
 {:4250}
-	z3$="Creating 'e.access' file...":gosub[3404]
-	close2:dr=3:a$="e.access,l,"+chr$(127):gosub[4]:fori=.to9:x=i+1:gosub[1]
+	z3$="Creating 'e.access' file...":gosub{:3404}
+	close2:dr=3:a$="e.access,l,"+chr$(127):gosub{:4}:fori=.to9:x=i+1:gosub{:1}
 	print#2,tt$(x+1)+r$+tt$(x+20):next:close2
 	&"{f6:3}{white}Creating of 'e.access' {yellow}SUCCESSFUL{white}!":return
 {:4258}
-	z3$="Writing new 'bd.data' file...":gosub[3404]
-	open2,dv%,2,bd$+"bd.data,s,w":gosub[5]:ife%thenclose2:gosub[3192]:goto[3080]
+	z3$="Writing new 'bd.data' file...":gosub{:3404}
+	open2,dv%,2,bd$+"bd.data,s,w":gosub{:5}:ife%thenclose2:gosub{:3192}:goto{:3080}
 	ifpo$=""thenpo$="Main: "
 	print#2,dv%(3);r$;dr%(3);r$;po$;r$;
 ' TODO: subroutine this so date only needs to be updated once
@@ -163,29 +169,29 @@
 {:4282}
 	poke53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}":&,1,32:b=val(an$)
 	ifan$=""thenb=val(w$)
-	&"{cyan}Is {pound}!b Correct? ":gosub[96]:ifa=.then{:4282}
+	&"{cyan}Is {pound}!b Correct? ":gosub{:96}:ifa=.then{:4282}
 	return
 {:4300}
-	fl=.:z3$="Reading 2.0 configuration...":gosub[3404]:&"{f6:9}"
-	close2:open2,dv%,2,bd$+"d.data,s,r":gosub[5]
+	fl=.:z3$="Reading 2.0 configuration...":gosub{:3404}:&"{f6:9}"
+	close2:open2,dv%,2,bd$+"d.data,s,r":gosub{:5}
 	ife%thenclose2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key:{pound}g1":return
 	input#2,dv%(3),dr%(3):&,2,2:po$=a$:close2
-	z3$="Writing new 'bd.data' file...":gosub[3404]
-	open2,dv%,2,bd$+"bd.data,s,w":gosub[5]:ife%thenclose2:gosub[3192]:goto[3080]
+	z3$="Writing new 'bd.data' file...":gosub{:3404}
+	open2,dv%,2,bd$+"bd.data,s,w":gosub{:5}:ife%thenclose2:gosub{:3192}:goto{:3080}
 	ifpo$=""thenpo$="Main: "
 	print#2,dv%(3);r$;dr%(3);r$;:print#2,po$;r$;
 	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close2:close15
-	z3$="Getting Image drive assignments...":gosub[3404]
-	gosub[33]:fori=1to6:x=i+51:gosub[1]:&,2,2:dv%(i)=val(a$)
+	z3$="Getting Image drive assignments...":gosub{:3404}
+	gosub{:33}:fori=1to6:x=i+51:gosub{:1}:&,2,2:dv%(i)=val(a$)
 	&,2,2:dr%(i)=val(a$):next:close2
-	z3$="Moving e.data records...":gosub[3404]
-	gosub[33]:x=37:gosub[1]:&,2,2:x=21:gosub[1]:print#2,a$
-	x=34:gosub[1]:&,2,2:x=37:gosub[1]:print#2,a$:close2
-	z3$="Removing 2.0 specific files...":gosub[3404]
-	dr=3:a$="e.loginmods":&:gosub[19]:gosub[5]:&:close2:close15
-	dr=3:a$="e.maintmods":&:gosub[19]:gosub[5]:&:close2:close15
-	dr=3:a$="e.menu*":&:gosub[19]:gosub[5]:&:close2:close15
-	dr=4:a$="d.GF*":&:gosub[19]:gosub[5]:&:close2:close15
+	z3$="Moving e.data records...":gosub{:3404}
+	gosub{:33}:x=37:gosub{:1}:&,2,2:x=21:gosub{:1}:print#2,a$
+	x=34:gosub{:1}:&,2,2:x=37:gosub{:1}:print#2,a$:close2
+	z3$="Removing 2.0 specific files...":gosub{:3404}
+	dr=3:a$="e.loginmods":&:gosub{:19}:gosub{:5}:&:close2:close15
+	dr=3:a$="e.maintmods":&:gosub{:19}:gosub{:5}:&:close2:close15
+	dr=3:a$="e.menu*":&:gosub{:19}:gosub{:5}:&:close2:close15
+	dr=4:a$="d.GF*":&:gosub{:19}:gosub{:5}:&:close2:close15
 	goto{:4268}
 	rem copr. 1996 new image 5/5/96-rwp
 	rem:"i/su.config (c)nissa 200614 lh ad"

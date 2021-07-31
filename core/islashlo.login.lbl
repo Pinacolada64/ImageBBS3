@@ -1,21 +1,7 @@
 {alpha:alt}
+{uses:3_0-preface.lbl}
 {crunch:on}
 {step:2}
-' squelch "line number unassigned" errors for out-of-module calls
-{assign: 4   =4   }
-{assign: 6   =6   }
-{assign: 32  =32  }
-{assign: 72  =72  }
-{assign: 90  =90  }
-{assign: 94  =94  }
-{assign: 370 =370 }
-{assign: 441 =441 }
-{assign: 445 =445 }
-{assign: 446 =446 }
-{assign: 999 =999 }
-{assign: 3000=3000}
-{assign: 4500=4500}
-
 {quoter:32=space}
 
 {number:4000}
@@ -142,5 +128,5 @@
 {:4194}
 	&"{f6:2}Login is not valid.":a$="telecheck":gosub{:4004}:goto{:4170}
 {:4200}
-	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke951,ll%:mm=10:goto 3000
-	rem:"i/lo.login (c)nissa 200621 lh-ad "
+	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke951,ll%:mm=10:goto {:3000}
+	rem i/lo.login (c)nissa 200621 lh-ad

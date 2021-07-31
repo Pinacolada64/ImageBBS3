@@ -1,11 +1,5 @@
-{assign:1	=1	}
-{assign:4	=4	}
-{assign:10	=10	}
-{assign:18	=18	}
-{assign:28	=28	}
-{assign:33	=33	}
-{assign:94	=94	}
-{assign:447	=447	}
+{uses:3_0-preface.lbl}
+
 ' original: 3099 bytes
 '  revised: 3053 bytes
 {step:2}
