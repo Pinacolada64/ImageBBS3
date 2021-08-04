@@ -132,7 +132,7 @@
 {:78}
 	a$="sub."+a$:p2$=a$+"":new60000
 {:79}
-	gosub{:20}:cm$="L:"+a$:gosub{:9}:gosub{:2}:loaddr$+a$,dv%:return
+	gosub{:20}:cm$=a$:gosub{:9}:gosub{:2}:loaddr$+a$,dv%:return
 {:80}
 	a$=z$:z$=mid$(p1$,3):gosub{:72}:a$=z$:dr=5:on-(lc<>1)goto{:77}:return
 {:82}
@@ -146,12 +146,16 @@
 {:86}
 	x=2:on-(bf<35)goto{:390}:im=1:goto{:444}
 {:90}
-' TODO: change this to one-liner (double-check bytes saved)
-	q$="":on-(ll%<42)goto{:999}:forr=1toint((ll%-42)/2):q$=q$+" ":next:return
+' 60 bytes:
+'	q$="":on-(ll%<42)goto{:999}:forr=1toint((ll%-42)/2):q$=q$+" ":next:return
+' 57 bytes:
+	q$="":ifll%>42thenforr=1toint((ll%-42)/2):q$=q$+" ":next
+{:91}
+	return
 {:92}
 	&"{f6}{lt. blue}>{cyan}>{white}Canceled!{f6}":return
 {:93}
-	gosub {:98} ' &"{f6}Are You Sure?: "
+	gosub {:98} ' &"{f6}Are You Sure?: " ' 19 bytes
 {:94}
 	&"{cyan}[{white}No{cyan}]":gosub{:7}:&"{pound}h4":a=-(a$="Y"):goto{:97}
 {:95}
@@ -170,7 +174,7 @@
 {:104}
 	return
 {:110}
-	gosub{:20}:dr=5:gosub{:2}:im$=a$:cm$="L:sub."+a$:gosub{:9}:a$=dr$+"sub."+a$:loada$,dv%
+	gosub{:20}:dr=5:gosub{:2}:im$=a$:cm$="sub."+a$:gosub{:9}:a$=dr$+"sub."+a$:loada$,dv%
 {:112}
 	return
 {:200}
@@ -204,7 +208,7 @@
 {:226}
 	f4=.:a%=zz:b%=2^ac%:&,42:ifa%thenef$=b$:ep$=a$:ec=a%:ec%=b%:goto{:260}
 {:228}
-	on-(a$="O"or(lc=1anda$="Q"))-2*(a$="{f2}")goto{:230},250:rs=0:return
+	on-(a$="O"or(lc=1anda$="Q"))-2*(a$="{f2}")goto{:230},{:250}:rs=0:return
 {:230}
 	f4=0:ifright$(an$,1)<>"!"then:&"{f6:2}Logoff?: ":gosub{:96}:ifa=0thenreturn
 {:232}
@@ -214,6 +218,7 @@
 {:235}
 '	&"{f6}Update Message/File Scan Date?: ":gosub{:96}:ona+1goto{:302}:ld$=lt$:goto{:302} ' 70 bytes
 	&"{f6}Update Message/File Scan Date?: ":gosub{:96}:if a then ld$=lt$ ' 68 bytes
+{:236}
 	goto{:302}
 {:240}
 	&"{f6}Sorry, Time Limit Exceeded.{f6}":mm=3:gosub{:3000}:f1=1:goto{:302}
@@ -222,8 +227,6 @@
 {:250}
 	im=1:goto{:436}
 {:260}
-	rem
-{:261}
 	ifec%>0andcr-ec%<0then:&"{red}Not Enough Credits!{f6}":return
 {:262}
 	cr=cr-ec%:ifep$=""orid=1then{:264}
@@ -248,11 +251,12 @@
 {:288}
 	return
 {:289}
-'	&"{pound}i0":ifan$=""thenreturn
-	&"{pound}i0":ifan$<>""then:&,15,2
+' WARNING: both 289 and 290 are called many times from other modules. tempting is as is, don't do:
+' 289 &"{pound}i0":ifan$<>""then:&,15,2
+' 290 return
+	&"{pound}i0":ifan$=""thenreturn
 {:290}
-'	&,15,2:return
-	return
+	&,15,2:return
 {:300}
 	&,28,1:&,52,$30,3:ona%gosub{:309}:mm=.:a$="main":goto{:70}
 {:302}
@@ -264,7 +268,7 @@
 {:308}
 	dima%(61),c%(61),d%(61),e%(31),f%(61),ac%(31),so%(31):return
 {:309}
-	cm$="L: 1.3 Emulator":gosub{:9}:dr=5:gosub{:3}:loaddr$+"im.emul13",dv%:goto{:304}
+	cm$="1.3 Emulator":gosub{:9}:dr=5:gosub{:3}:loaddr$+"im.emul13",dv%:goto{:304}
 {:310}
 	pu$=an$:on-(an$="{f8}{f2}")goto{:315}
 {:311}
@@ -523,14 +527,15 @@
 	open4,4,7:poke836,1:poke650,128
 	poke56328,.:poke56579,peek(56579)or38:poke56577,peek(56577)or36
 	dimtt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
-	dimec%(19,24),es%(3,49),ei%(50)
+' ECS commands (short/long) were never implemented, saves 1.5k
+'	dimec%(19,24),es%(3,49),ei%(50)
 {:3073}
 	restore:fori=1to9:reada$:co$(i)=a$+"":next
 ' bd$=boot drive?
 {:3074}
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys49155:&,53
 {:3075}
-	&,69,1,1,"im Revision: Nov 11, 2020 12:39 AM",3
+	&,69,1,1,"im Revision: Aug  4, 2021 11:22 AM",3
 {:3076}
 	a$="NTSC":ifpeek(678)thena$="PAL"
 {:3078}
@@ -575,7 +580,7 @@
 {:3108}
 	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub{:5}:&"{cyan}Done...{f6}"
 {:3110}
-	&"{lt. blue}LightBar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub{:5}:&"{cyan}Done...{f6}"
+	&"{lt. blue}Lightbar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub{:5}:&"{cyan}Done...{f6}"
 {:3111}
 	z3$="Setting Alarm Tables...":gosub{:3404}
 {:3112}
@@ -609,8 +614,7 @@
 ' moved l2 reservation stuff here
 	x=21:gosub{:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3)):ifl2then:&,52,40,1
 {:3136}
-' FIXME: record 35 is read twice
-	x=35:gosub{:1}:&,2,2:am$=a$:x=36:gosub{:1}:&,2,2:mc=val(a$)
+	x=35:gosub{:1}:&,2,2:am$=a$:an$=a$:&,15:d6$=an$+"M"
 {:3138}
 	x=37:gosub{:1}:&,2,2:y%=val(a$):x=38:gosub{:1}:&,2,2:lk%=val(a$)
 {:3140}
@@ -619,9 +623,8 @@
 	x=41:gosub{:1}:&,2,2:a=val(a$):ifa$<>""thenclose4:open4,4,a
 {:3144}
 	x=42:gosub{:1}:&,2,2:a=val(a$):ifathenpoke17136,a
-' FIXME: record 35 is read twice
 {:3146}
-	x=35:gosub{:1}:&,2,2:an$=a$:&,15:d6$=an$+"M":x=45:gosub{:1}:&,2,2:tz$=a$
+	x=45:gosub{:1}:&,2,2:tz$=a$
 {:3148}
 	x=47:gosub{:1}:&,2,2:bn$=a$
 {:3150}
@@ -669,7 +672,7 @@
 {:3188}
 	z3$="Reading Blocks Free...":gosub{:3404}:forq=1to6:dr=q:gosub{:61}
 {:3190}
-' FIXME: can we do {pound}!a at the end?
+' Since LtK drives can have 6-digit block counts, str$(a) will stand instead of {pound}!a (which can display max. 5 digits)
 	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk{pound}{back arrow}30:{cyan}"+str$(a):next:q=.:return
 
 ' subroutine:
@@ -692,7 +695,8 @@
 {:3224}
 	z3$="Convert from Image BBS 2.0":goto {:3228}
 {:3226}
-	z3$="Reset C64":gosub {:3404}:gosub {:93}:on a+1 goto {:999}:sys 64738 ' FIXME
+ ' FIXME: if "No" is selected, clear lines
+	z3$="Reset C64":gosub {:3404}:gosub {:93}:on a+1 goto {:999}:sys 64738
 {:3228}
 ' TODO: there's a subroutine at 3414 for clearing this screen area...
 	gosub{:3404}:&"{f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}{pound}{back arrow}39 {f6}"
@@ -739,13 +743,11 @@
 	gosub{:3364}:sys49152:sys49155:goto{:3362}
 {:3400}
 ' TODO: overhaul this
-	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
+	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}"+mid$(ak$,2,36)+"{$ae}{f6}"
 {:3401}
-	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
-{:3402}
-	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+	forx=2to3:&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}":next
 {:3403}
-	&" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
+	&" {gray2}{$ad}"+mid$(ak$,2,36)+"{$bd}{f6}":return
 {:3404}
 	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
 {:3406}
@@ -755,7 +757,7 @@
 {:3409}
 	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 {:3410}
-' this must stay 3410 since called by i/su.config
+' NOTE: immutable line number, called by i/su.config
 	getan$:z=z+1:ifan$<>""thenz2$="":z=.:gosub{:3400}:return
 {:3411}
 	ifz=20thenz=.:goto{:3408}
@@ -811,16 +813,19 @@
 {:4048}
 	a$="FATAL ERROR!!":gosub{:51}:sys64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
 {:4050}
-	&,52,4,3:if(a%=1)ori%orid=1then{:4068}
+	&,52,4,3:ifa%ori%orid=1then{:4068}
 	gosub{:4092}:kk=.:a$="s.errmail,s,r":dr=1:gosub{:4}:ife%thenclose2:goto{:4068}
 {:4054}
 	kk=kk+1:&,2,2:s=(64andst):tt$(kk)=a$:ifs=.then{:4054}
 	close2:tt$=na$:a$="a":gosub{:32}:ife%thena$="w":gosub{:32}
 	a$="[System Error ("+d$+")]":a=.:print#2,i1$r$1;r$d1$r$a$r$
-' TODO: &,14,2 instead?
-	forx=1tokk:print#2,tt$(x):next:print#2,"{^}":close2:close15
+' TODO: gosub 39 instead? saves 32 bytes
+'	forx=1tokk:print#2,tt$(x):next:print#2,"{^}":close2:close15
+	gosub{:39}:close15
 	gosub{:30}:i=1:x=14:gosub{:16}:x=25:gosub{:16}:x=32:gosub{:16}:close2
-	&"{pound}h9{pound}h9{pound}h7ed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub{:96}
+' 9+9+7=25: hoh9
+'	&"{pound}h9{pound}h9{pound}h7ed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub{:96}
+	&"{pound}ho{pound}h9ed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub{:96}
 	ifathena$="E"+"M":goto{:70}
 {:4068}
 	pr$="":goto{:300}
@@ -839,4 +844,4 @@
 	gosub{:35}:x=1:gosub{:1}:&,2,2:i1$=a$:close2:return
 {crunch:off}
 	rem copr. 1996 new image 5/6/96-jlf
-	rem:"im (c)nissa 200929 lh-ad"
+	rem im (c)nissa 200929 lh-ad, 2021-08-04 rs
