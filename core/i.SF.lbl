@@ -22,7 +22,7 @@
 	&"{f6:2}Creating...":gosub{:3002}:ife%then:&"{f6:2}Error Creating File.":goto{:3010}
 	&"{pound}h6ed...{f6:2}Filling: ":forx=1tour
 	&mid$("{white}{cyan}{purple}{green}{yellow}{lt. red}{lt. green}{lt. blue}{gray3}",int(rnd(1)*9)+1,1)+mid$("{^}*+{pound}=[]$#",int(rnd(1)*9)+1,1)
-	gosub{:1}:print#2,"{^}":next:&"{f6:2}{lt. green}Finished!!":goto{:3010}
+	gosub1:print#2,"{^}":next:&"{f6:2}{lt. green}Finished!!":goto{:3010}
 {:3030}
 	&"{clear}Edit Sysop Record:"
 {:3032}

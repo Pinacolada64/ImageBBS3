@@ -3,7 +3,7 @@
 {:4000}
 	gosub{:4480}:onlmgoto{:4100},{:4200},{:4010}:mm=.:f1=3:goto{:3000}
 {:4006}
-	cm$="Connected":gosub{:9}:&,69,5,21,cm$,$85
+	cm$="Connected":gosub9:&,69,5,21,cm$,$85
 {:4008}
 	lt$=d1$:lt%=mn%:poke53248,.:mm=.:f1=.:goto{:3000}
 {:4010}
@@ -20,10 +20,10 @@
 	return
 	&,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:return
 {:4040}
-	cm$="System Idle":gosub{:9}:&,69,5,21,cm$,$8a:return
-	cm$="Connected":gosub{:9}:&,69,5,21,cm$,$85:return
+	cm$="System Idle":gosub9:&,69,5,21,cm$,$8a:return
+	cm$="Connected":gosub9:&,69,5,21,cm$,$85:return
 {:4044}
-	gosub{:84}:&,52,7,3:ifa%thenpt%=1-pt%:ifp1%<1thenp1%=30
+	gosub84:&,52,7,3:ifa%thenpt%=1-pt%:ifp1%<1thenp1%=30
 	b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):onpt%+1goto{:4050}
 	fory=1to5:&,69,26,y+16,mid$("PRIME",y,1),135:next:goto{:4052}
 {:4050}
@@ -31,41 +31,41 @@
 {:4052}
 	return
 {:4100}
-	a=.:gosub{:375}:b$="logoff":x=10:mm=4:gosub{:3000}:&,52,4:&,52,5:tr%=.
-	f1=.:&,28,1:dr=3:b$="e.idle cmds":a$=b$:gosub{:4}:ife%thenwc=.:close2:goto{:4106}
+	a=.:gosub375:b$="logoff":x=10:mm=4:gosub{:3000}:&,52,4:&,52,5:tr%=.
+	f1=.:&,28,1:dr=3:b$="e.idle cmds":a$=b$:gosub4:ife%thenwc=.:close2:goto{:4106}
 	wc=1:dimwc%(15,30):&,60,2,0,wc%(0,0),b$,dv%
 {:4106}
-	im=.:gosub{:446}:ifac%=16thenmm=5:gosub{:3000}
+	im=.:gosub446:ifac%=16thenmm=5:gosub{:3000}
 	ak$=" {$c0:38}"+"{f6}":pf=.:poke951,40
-	gosub{:33}:x=17:gosub{:1}:&,2,2:d3$=a$:x=19:gosub{:1}:&,2,2:close2
-	an$=a$:&,15:d2$=an$+"M":uf$="01000"+tz$:im=6:gosub{:447}
+	gosub33:x=17:gosub1:&,2,2:d3$=a$:x=19:gosub1:&,2,2:close2
+	an$=a$:&,15:d2$=an$+"M":uf$="01000"+tz$:im=6:gosub447
 	lc=.:em=.:zz=.:gs=.:cf=.:cr=.:lf=1:nl=.:ul=.:le=.:pm=1:c9=.
 	&,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:ifa=.then:&,52,2,4
 	i%=.:ac%=16:dc%=.:ct%=.:tc%=.:u$="":sy$="":ba$="":na$="":ph$="":id=.
 	poke830,3:poke53248,.:&,52,16,1:&,52,17,1:&,52,18,.:&,52,19,.
-	gosub{:82}:gosub{:12}:forj=217to242:pokej,peek(j)or128:next:dr=3:gosub{:61}
-	gosub{:33}:x=21:gosub{:1}:&,2,2:l2=val(a$):l2$=mid$(a$,3):close2
+	gosub82:gosub12:forj=217to242:pokej,peek(j)or128:next:dr=3:gosub61
+	gosub33:x=21:gosub1:&,2,2:l2=val(a$):l2$=mid$(a$,3):close2
 	gosub{:4010}:ifpeek(1010)thena$=d1$:t1=mn%
-	a$="clock":gosub{:28}:goto{:4200}
+	a$="clock":gosub28:goto{:4200}
 {:4200}
-	q=.:k=1:im=10:gosub{:446}:poke53248,.:poke53252,.:onf3gosub{:4400},{:4420},{:4430}
+	q=.:k=1:im=10:gosub446:poke53248,.:poke53252,.:onf3gosub{:4400},{:4420},{:4430}
 {:4202}
 	t1%=mn%:ti$="000000"
 {:4204}
 	on-(ti>36000)gosub{:4044}
 	mm=6:on-(ti>36000)gosub{:3000}:ifmn%<>t1%thent1%=mn%
 	&,52,41,3:z%=a%:&,52,40,3:z%=z%+2*a%:on-(z%<>kk)gosub{:4010}
-	&,52,4,3:zz=a%:ifzzthenim=4:gosub{:446}:goto{:4008}
+	&,52,4,3:zz=a%:ifzzthenim=4:gosub446:goto{:4008}
 	ifpeek(1010)>.andmid$(am$,2,6)<>mid$(d1$,2,6)thenmm=7:goto{:3000}
 	&,52,29,3:ifpeek(1010)>.anda%thenmm=3:goto{:3000}
 	poke646,df%:&,16:a$="":ifpeek(198)thengeta$
 	on-(a$="")goto{:4230}:poke198,.:onwc+1goto{:4222}
 	b=.:lm=1:fori=1towc%(0,0):ifasc(a$)=wc%(0,i)thenb=i:i=wc%(0,0)+1
-	next:on-(b=.)goto{:4224}:&,60,1,16,wc%(8,b),cm$:gosub{:9}:&,60,1,11,wc%(2,b),a$
-	lm=wc%(1,b):mm=8:goto{:72}
+	next:on-(b=.)goto{:4224}:&,60,1,16,wc%(8,b),cm$:gosub9:&,60,1,11,wc%(2,b),a$
+	lm=wc%(1,b):mm=8:goto72
 {:4222}
 	x=val(a$):ifxthenonxgoto{:4450},{:4465},{:4465},{:4465},{:4462},{:4464},{:4452},{:4454}
-	ifa$="R"thenb$="reload":x=11:mm=4:gosub{:3000}:f1=3:pr$="":goto{:302}
+	ifa$="R"thenb$="reload":x=11:mm=4:gosub{:3000}:f1=3:pr$="":goto302
 {:4224}
 	x=.:x=-(a$="+")-2*(a$="-")-3*(a$="{pound}")-4*(a$="T")-5*(a$="A")-6*(a$="{back arrow}")
 	onx+1goto{:4230},,,,{:4259},{:4258},{:4260}:onxgosub{:4250},{:4252},{:4254},{:4256}:goto{:4232}
@@ -73,13 +73,13 @@
 	k=k+(k>.):on-(a$=" "ork=1)goto{:4200}:on-(a$<>""and(a$<"{f1}"ora$>"{f8}"))gosub{:4270}
 	&,52,43,3:ona%goto{:4204}
 {:4232}
-	im=5:gosub{:446}:onagoto{:4006},{:4264},{:4266}:goto{:4204}
+	im=5:gosub446:onagoto{:4006},{:4264},{:4266}:goto{:4204}
 {:4250}
-	mf=1:a$="m1":im=8:goto{:446}
+	mf=1:a$="m1":im=8:goto446
 {:4252}
-	mf=.:a$="m0":im=8:goto{:446}
+	mf=.:a$="m0":im=8:goto446
 {:4254}
-	im=7:goto{:446}
+	im=7:goto446
 {:4256}
 	poke53258,16-peek(53258):return
 {:4258}
@@ -87,10 +87,10 @@
 {:4259}
 	poke53258,16-peek(53258):goto{:4204}
 {:4260}
-	poke2042,.:poke53248,1:&"{clear}{f6:2}Loading Image-Term..{f6}":gosub{:304}:b$="term":x=11
-	mm=4:gosub{:3000}:a$="t":goto{:70}
+	poke2042,.:poke53248,1:&"{clear}{f6:2}Loading Image-Term..{f6}":gosub304:b$="term":x=11
+	mm=4:gosub{:3000}:a$="t":goto70
 {:4264}
-	cm$="Ring Detected":gosub{:9}:&,69,5,21,cm$,$83:goto{:4202}
+	cm$="Ring Detected":gosub9:&,69,5,21,cm$,$83:goto{:4202}
 {:4266}
 	gosub{:4040}:goto{:4204}
 {:4270}
@@ -113,7 +113,7 @@
 	f3=1:poke53248,1:poke2042,1:x%=st(20):y%=st(24):z%=st(23):w%=st(29)
 	&"{clear}{f6}{pound}{back arrow}22{lt. red}{rvrs on} Feedback   {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}22{rvrs on} SysOp Mail {pound}#3{pound}# {pound}%y {gray1} {f6}"
 	&"{pound}{back arrow}22{lt. red}{rvrs on} Calls/Log  {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}22{lt. red}{rvrs on} New Users  {pound}#3{pound}# {pound}%w {gray1} {f6}"
-	&"{pound}{back arrow}23{rvrs on}                {f6}{up}":&,27,3:diml%(30,9):dr=3:gosub{:3}
+	&"{pound}{back arrow}23{rvrs on}                {f6}{up}":&,27,3:diml%(30,9):dr=3:gosub3
 {number:4408}
 {step:1}
 ' d$=mm/dd @ t$=time m$=xxx min c$=caller
@@ -139,7 +139,7 @@
 	&,28,3:close2:poke53248,.:goto{:4040}
 
 {:4420}
-	f3=2:poke53248,1:poke2042,.:&"{clear}":im=2:a$="bar":gosub{:74}:poke53248,.:goto{:4040}
+	f3=2:poke53248,1:poke2042,.:&"{clear}":im=2:a$="bar":gosub74:poke53248,.:goto{:4040}
 {:4430}
 	f3=3:poke53248,1:poke2042,.:&"{clear}{f6} {rvrs on}{cyan} Blocks Free On System Disks {f6:2}"
 	dr=1
@@ -155,7 +155,7 @@
 {:4454}
 	lm=3:goto{:4460}
 {:4460}
-	z$="lo."+"misc":gosub{:80}:goto{:4200}
+	z$="lo."+"misc":gosub80:goto{:4200}
 {:4462}
 	&,40:goto{:4204}
 {:4464}

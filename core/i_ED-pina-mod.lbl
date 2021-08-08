@@ -56,7 +56,7 @@
 ' Sorry, this ED only works with Image BBS
 ' v3.0 and above.
 	&,5:if lp<3 then lp=1:&"Sorry, this ED only works with Image BBS v3.0 and above.":return
-	&,27:gosub {:_100}:&,28:goto {:300}
+	&,27:gosub {:_100}:&,28:goto 300
 
 {nice:5}
 {:sub.change_prompt}
@@ -295,11 +295,11 @@
 
 	&"{f6}":gosub {:sub.change_prompt}
 	if an$="N" then p=1-p:goto {:header}
-	on -(tr%<1)-2*(a<1 or a>24) goto {:300},{:_132}
+	on -(tr%<1)-2*(a<1 or a>24) goto 300,{:_132}
 
 ' changing password with/without permission:
 ' if not sysop, display "Sorry, restricted function." from e.text:
-	if a=2 then on -(id=1) gosub {:sub.existing_pw}:if id<>1 then x=3:gosub {:390}:&"{pound}w2":goto {:header}
+	if a=2 then on -(id=1) gosub {:sub.existing_pw}:if id<>1 then x=3:gosub 390:&"{pound}w2":goto {:header}
 
 ' edit Last date:
 	if a=6 then an$=tt$(a):gosub {:sub.time_date_edit}:goto {:header}

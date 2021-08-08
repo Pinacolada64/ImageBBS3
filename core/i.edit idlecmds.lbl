@@ -239,7 +239,7 @@
 '{number:2630}
 '{:2630}
 ' load module in a$, minus "i/" prefix:
-'	lm$=a$+"":dr=5:gosub {:3}:a$=dr$+"i/"+lm$:new 4000:load a$,dv%:return
+'	lm$=a$+"":dr=5:gosub 3:a$=dr$+"i/"+lm$:new 4000:load a$,dv%:return
 
 ' so looks like the struct layout is thus:
 ' from 4220- i/lo.idle:

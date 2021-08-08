@@ -439,15 +439,13 @@
 ' NOTE: im=6: 61098 and 61100 are in IM (212)
 ' {:61100}
 ' 12: reset output defaults
-	s=.:sh=.:gosub 12:poke53252,38:cm$=p$:gosub 9
-' {:61908}
-	poke970,.:an$=d1$:&,15:&"{f6:2} - "+right$(an$,7)+"M"
-' im: 208
-	a%=tr%:ifa%<100then:&" - {pound}%a Min. Left"
+	s=.:sh=.:gosub 12:poke53252,38:cm$=p$:gosub 9:poke970,.:an$=d1$:&,15
+' {:61908} + im: 208
+	&"{f6:2} - "+right$(an$,7)+"M":a%=tr%:ifa%<100then:&" - {pound}%a Min. Left"
 	ifzzthena%=usr(0):&"{f6} - Stack Free: {pound}%a"
 ' 6: command stacking stuff
 	&"{f6:2}":gosub 6:cm$=left$(p$,17)+":"+left$(an$,4):gosub 9:cm$=p$:return
-' 2020-10-30 size: 10066 bytes
-' 2021-08-02 size: 10029 bytes
+' 2020-10-30 size:  9901 bytes
+' 2021-08-02 size: 10025 bytes
 {number:3999}
 	rem "i.SB" (c)nissa 201030 lh-ad, 2021-07-31 rs
