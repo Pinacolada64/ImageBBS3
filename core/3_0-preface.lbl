@@ -1,4 +1,4 @@
-' {uses:3_0-preface.lbl}
+{'uses:3_0-preface.lbl}
 
 {undef:use_static_labels}
 {ifdef:use_static_labels}
@@ -111,8 +111,8 @@
 {assign:50	=50	}
 {assign:60	=60	} ' im.getFreeDirEntry
 {assign:61	=61	} ' im.getBlocksFree
-{assign:62	=62	}
-{assign:70	=70	} ' im.preploadIfile
+
+{assign:70	=70	} ' im.prepLoadIfile
 {assign:71	=71	} ' im.loadIfile
 {assign:72	=72	}
 {assign:73	=73	} ' im.loadIslashFile
@@ -138,11 +138,12 @@
 {assign:216	=216	} '
 {assign:220	=220	} '
 {assign:234	=234	} '
-
+{assign:289	=289	} ' input an$, fall through:
+{assign:290	=290	} ' convert special characters
 {assign:300	=300	} ' im.main_prompt
 {assign:304	=304	} '
-{assign:349	=349	} ' im.get_device_drive
-{assign:350	=350	} ' im.set_drive
+{assign:349	=349	} ' im.getDeviceDrive
+{assign:350	=350	} ' im.setDrive
 {assign:304	=304	}
 {assign:370	=370	}
 {assign:375	=375	} '
