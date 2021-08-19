@@ -76,7 +76,7 @@ for the ((Euro)) symbol will have to do, however unlikely its usage will be, oth
 Generate this output using the following ((command line)) for ((Linux)) or _Windows Subsystem for Linux_ (because it looks _so_ much better with the serif fonts in Linux):
 
 .Command Line:
-`asciidoctor-pdf pdf-book-unicode-test.adoc -o pdf-book-unicode-test`
+`asciidoctor-pdf pdf-book-unicode-test.adoc -o pdf-book-unicode-test.pdf`
 
 .Test Table
 [%header]
