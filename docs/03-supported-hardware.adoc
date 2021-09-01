@@ -152,7 +152,7 @@ It provides 20 mHz speed enhancements to software.
 
 icon:check[role=green] This is emulated only in `xscpu64`, the C64 SuperCPU version of VICE.
 
-### SwiftLink-232
+#### SwiftLink-232
 
 (((hardware, SwiftLink))) Created by Dr. Evil Labs, this cartridge uses a high-speed ACIA (Asynchronous Communications Interface Adapter) chip to allow the C64 and C128 to communicate at higher BPS (_bits per second_) rates than modems connected to the user port.
 
