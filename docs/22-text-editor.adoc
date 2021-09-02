@@ -20,7 +20,7 @@ There is no need to press kbd:[Return] at the end of each line.
 The editor uses _word-wrap_, so words which extend past the edge of the screen will be erased and put at the beginning of the next line.
 
 As the sysop, you can define how many lines of text (in multiples of ten) a user can type into the editor.
-(Refer to <<user-flags>> for more information.)
+(#TODO#: Refer to User Flags for more information.)
 If a user is in local or pseudo-local mode, they are allowed 253 lines in the editor.
 
 The amount of free memory is kept track of.
@@ -34,26 +34,34 @@ appears, and you must use kbd:[.S] to save, or kbd:[.A] to abort.
 
 Entering the editor in local or pseudo-local also mode reports how many bytes are free.
 
+=== Dot Commands [[dot-commands]]
+
+The commands available in the editor are grouped into related commands, discussed here.
+
+====
+TIP: kbd:[/] (slash) can now be used for those more used other BBS programs which use that as a command prefix; _i.e._, kbd:[/s] can be typed in place of kbd:[.s] to save text.
+====
+
 === Command Mode
 
 When you need to do something with the text you have entered:
 
 . Type kbd:[Return] if necessary to start a new line.
-. Type kbd:[.] (period) as the first character on the line.
+. Type kbd:[.] (period) or kbd:[/] (slash) as the first character on the line.
 
-This displays `Command:` and waits for you to press another key (called a "`dot command`").
+This displays `Editor Command:` and waits for you to press another key (called a "`dot command`").
 This is _Command Mode_.
 
 ====
-TIP: When you reach the end of the text buffer, you are automatically put into Command Mode in order to edit your existing text or save it.
+TIP: When you type as many lines as your Editor Lines user flag allows, you are automatically put into Command Mode in order to either edit your existing text or save it.
 ====
 
-* If you press kbd:[DELete] or kbd:[Return] keys, the `Command:` prompt is removed, and you are returned to the editor.
+* If you press kbd:[DELete] or kbd:[Return] keys, the `Editor Command:` prompt is removed, and you are returned to the editor.
 
 * If you press an unrecognized command key, the editor exits to BASIC to check if you have added that command before assuming it is an illegal command.
 
 ====
-TIP: The `+.WF` program uses this technique extensively for the  kbd:[.P]ut, kbd:[.G]et, and kbd:[.$] View Directory commands.
+TIP: The `i.WF` program uses this technique extensively for the  kbd:[.P] (`Put File`), kbd:[.G] (`Get File`), kbd:[.$] (`View Directory`), kbd:[.&] (`Read SEQ File`) and kbd:[.!] (`DOS Command`) extensions to the editor.
 If you wish to program your own commands, we suggest you examine that file to see how it is done.
 No documentation is available for this as yet.
 ====
@@ -61,22 +69,22 @@ No documentation is available for this as yet.
 If you press a key corresponding to a command, the editor displays the command, waiting for you to enter either:
 
 * a _line range_, discussed next
-* another character, for some commands
+* another character or string, for some commands
 
 ====
-TIP: You can tell a command accepts a line range or parameter when there is an extra space after the command, like `List&#00a0;`.
+TIP: You can tell a command accepts a line range or parameter when there is an extra space after the command, like `List&#160;`.
 ====
 
 * or press kbd:[Return] to accept the command
-
-=== Editor Commands
-
-#FIXME#
 
 === Line Ranges
 
 Most commands allow a _line range_ to be entered after the command, just like BASIC's `list` command.
 A line range can be specified in one of the following ways:
+
+====
+NOTE: _x_ represents the beginning line number in the range command, _y_ represents the ending line number.
+====
 
 .Line Range Specifiers
 [%autowidth]
@@ -91,10 +99,6 @@ A line range can be specified in one of the following ways:
 
 Any delimiter (comma, etc.) may be used in place of the `-`, depending on one's preference.
 
-=== Dot Commands [[dot-commands]]
-
-The commands available in the editor are grouped into related commands, discussed here.
-
 === Exit the Editor
 
 There are two ways to get out of the editor:
@@ -103,7 +107,7 @@ There are two ways to get out of the editor:
 
 ====
 WARNING: There is no confirmation, unfortunately.
-This is something I have mostly working and plan on adding to Image BBS 1.2 and up.
+This is something I have mostly working in Image 1.2, and plan on adding to Image BBS 3.0.
 ====
 
 * The second way is to save the message with the kbd:[.S]ave Text command.
@@ -115,17 +119,43 @@ This is something I have mostly working and plan on adding to Image BBS 1.2 and 
 There are several options to view the text you have already typed:
 
 * First, the kbd:[.R]ead command.
-This displays each line just as it was typed, including each color change character and MCI command; this might be useful to "`proofread`" your message.
+This displays each line just as it was typed, including displaying each color change character and MCI command literally and not interpreting it; this might be useful to "`proofread`" your message:
+
+.Example:
+
+`Editor Command: kbd:[R]ead`
+
+`&#163;s1This is line one.`
+
+`&#163;k1This is line two.`
+
 * Next, the kbd:[.M]CI Read command.
 This interprets MCI commands, and displays color change codes.
-* Finally, you can also kbd:[.L]ist the text, which displays line numbers, used in line ranges for other commands.
+
+* Finally, you can also kbd:[.L]ist the text.
+This displays line numbers, used in line ranges for other commands, and the text of each line:
+
+`Editor Command: kbd:[L]ist kbd:[1-2]`
+
+```
+1:
+This is line one.
+2:
+This is line two.
+```
 
 If no line range is given for the kbd:[.R]ead, kbd:[.L]ist, or kbd:[.M]CI Read commands, all text in the buffer is read or listed.
 
 You can pause text with kbd:[Ctrl+S] or kbd:[Home] keys at any time.
 Messages may be aborted while paused with the spacebar or kbd:[/] keys.
 
+If enabled, the More Prompt also pauses after the number of lines equal to the user's screen height have been displayed, asking `...More (Y/n)`. 
+kbd:[N]o aborts reading, while keys other than kbd:[N] are taken to mean the default of kbd:[Y]es, and reading continues.
+
 === Manipulate Text
+
+These commands delete, edit, insert, move, or copy lines of text.
+You can also add "`signatures`" created with the kbd:[PS] command at the main command level.
 
 ==== Delete Lines
 
@@ -138,25 +168,96 @@ kbd:[.D]elete removes lines of text from your message permanently; there is no "
 
 kbd:[.E]dit changes lines of text.
 When a line is edited this way, the line number is displayed, then the text itself, just like the kbd:[.L]ist command does.
-You may then type the new line below it.
-(Refer to <<editor-control-keys>> for useful editor keystrokes.)
+Then the same line number is displayed, and you may then type the new line below it.
+(Refer to <<editor-control-keys>> for useful editor keystrokes which edit the current line.)
 
-* kbd:[DELete] or kbd:[Return] as the first character on the line causes the editor responds with `(No Change.)` and returns to the main editor.
-* kbd:[.] as the first character causes `Command: Exit` to appear and abort the Edit command.
+.Example:
+`kbd:[.]Editor Command: kbd:[E]dit kbd:[1]`
+```
+1:
+This is line one.
+1:
+_
+```
+
+* kbd:[DELete] or kbd:[Return] as the first character on the line causes the editor to respond with `(No Change.)` and return to the main editor.
+* kbd:[.] as the first character causes `Editor Command:Exit` to appear and abort the Edit command.
 * If no line range is specified, kbd:[.E]dit defaults to the last line of text entered.
 
 ==== Personal Signatures
 
-kbd:[.U] allows you to append a personal signature (made with the kbd:[PS] command) to your message.
-You are prompted for `Which Signature (0-9):`, and you can type the number of the signature file to append.
+kbd:[.U]se Signature allows you to append a personal signature (made with the kbd:[PS] command) to your message.
+
+Respond to the prompt `Which Signature (0-9):` with the number of the signature file to append.
 
 ==== Move Lines
 
-kbd:[.Y]
+kbd:[.Y] (`Move`) allows you to move a range of lines to the line you specify.
+Enter the line range after the `Move&#160;` prompt.
+
+.Example
+
+Enter these lines:
+
+```
+line 1
+line 2
+line 3
+```
+
+`Editor Command:Move kbd:[1]`
+
+`Move To: kbd:[3]`
+
+`Editor Command:kbd:[L]ist`
+
+```
+1:
+line 2
+2:
+line 1
+3:
+line 3
+```
 
 ==== Copy Lines
 
-kbd:[.Z]
+kbd:[.Z] (`Copy`) will copy a line range of text to a specified line number.
+
+Continuing our previous `Move` example:
+
+```
+line 2
+line 1
+line 3
+```
+
+Enter a line number or line range here:
+
+`Editor Command:kbd:[C]opy kbd:[1-3]`
+
+Respond to the `Copy To` prompt with a line number, and the selected line range is copied to that line number:
+
+`Copy To: kbd:[4]`
+
+This example copies lines 1-3 to lines 4-6.
+
+`Editor Command:kbd:[L]ist`
+
+```
+1:
+line 2
+2:
+line 1
+3:
+line 3
+4:
+line 2
+5:
+line 1
+6:
+line 3
+```
 
 === Editor Modes
 
@@ -171,19 +272,66 @@ If no line number is specified, the first line is assumed.
 As you type each line of text, text on subsequent lines is moved down in the buffer, then your line is put in its place.
 
 You can exit Insert Mode by typing a kbd:[.] as the first character on the line.
-This responds with `Command: Exit` and goes back to the normal editor.
+This responds with `Editor Command: Exit` and goes back to the normal editor.
 
 ==== Line Numbering Mode
 
 Each use of the kbd:[.O] command toggles Line Numbering Mode on or off.
 This mode, when on, displays line numbers as you type text.
 
+Type kbd:[.O] and the editor displays:
+
+ Editor Command:Line Numbers On.
+
+.Line Numbering Mode Example:
+
+(Type the bold text.)
+
+`1:`
+
+``**text** kbd:[Return]``
+
+`2:`
+
+``**more text** kbd:[Return]``
+
+Type kbd:[.O] and the editor displays:
+
+ Editor Command:Line Numbers Off.
+
 ==== Text Transfer Mode
 
 The kbd:[.T] command enters Text Transfer Mode.
-This is most useful when sending text from a buffer to the BBS--it prevents text from being echoed back to your terminal.
+This is most useful when sending text from a buffer to the BBS--it prevents text from being echoed from the BBS to your terminal, which speeds up the process.
+
+Type kbd:[.T] and the editor displays:
+
+ Editor Command:Text Transfer On
+
+Then send your buffer contents.
+Afterwards, you can use the editor normally.
+There is no need to type kbd:[.T] again to toggle Text Transfer Mode off.
 
 === Shape Your Text
+
+You can perform operations on text which can change it in a variety of ways.
+
+==== Banner Text
+
+The kbd:[.B]anner command creates large letters from text you enter.
+Type the text you wish directly after the ``Editor Command: Banner&#160;`` prompt, hit kbd:[Return], then use kbd:[.M]CI Read to view it.
+
+In a 40-column display, you are limited to 10 characters before the text will wrap around.
+
+====
+TIP: Color controls (kbd:[Ctrl+1-8] and kbd:[C=+1-8]) are accepted, and do not count towards the character limit.
+====
+
+==== Columns
+
+The kbd:[.C]olumns command followed by a two-digit number (`22`-`80`) changes the number of characters the editor allows you to type on a line before word-wrapping text.
+
+If you do not specify a column width after the command, the current column width is displayed.
 
 ==== Justify Text
 
@@ -225,21 +373,6 @@ TIP: Set the right margin with kbd:[.C]olumns first, if you wish.
 |kbd:[U]n-indent |Moves text one column to the left, if possible
 |===
 
-==== Banner Text
-
-The kbd:[.B]anner command creates large letters from text you enter.
-Type the text you wish directly after the ``Command: Banner`` prompt, hit kbd:[Return], then use kbd:[.M]CI Read to view it.
-
-====
-TIP: Color characters are accepted, and do not count towards the character limit.
-====
-
-==== Columns
-
-The kbd:[.C]olumns command followed by a two-digit number (`22`-`80`) changes the number of characters the editor allows you to type on a line before word-wrapping text.
-
-If you do not specify a column width after the command, the current column width is displayed.
-
 #### Scale
 
 A related command is kbd:[.#] `Scale`.
@@ -269,48 +402,57 @@ If the replacement phrase is too large to fit within the current line length, th
 
 === Disk Access
 
-(These commands are available from local/pseudo-local mode only.)
+====
+NOTE: These commands are available from local/pseudo-local mode only.
+====
 
 ==== Get and Put
 
+====
+NOTE: While in WF, kbd:[.S]ave will not work.
+Instead, use the kbd:[.P]ut command.
+====
+
 The kbd:[.G]et and kbd:[.P]ut commands allow you to:
 
-. Load (kbd:[.G]et) a file from a device
+. Load (kbd:[.G]et) a file from a device into the buffer
 . Edit using all the normal editor facilities
-. Save that file (kbd:[.P]ut) to any device and drive
+. Save the buffer (kbd:[.P]ut) to any device and drive
 
-You can re-save the file to the same device/drive (you are prompted for the current filename, and can change it in the process).
+kbd:[.G]et appends the file to any text already in the editor's buffer.
+
+====
+TIP: If you are editing SEQ files with C/G codes in them, before using kbd:[.G]et, use kbd:[.C]olumns kbd:[80] first to set the editor line length to 80 characters.
+This helps prevent the editor from word-wrapping long lines with C/G characters in them.
+====
+
+kbd:[.P]ut can re-save the file to the same device/drive (you are prompted for the current filename, and can change it in the process).
 Or, you can save to a different device/drive if desired.
 
-If the file already exists, you are prompted:
+If the filename entered already exists, you are prompted:
 
  [A]ppend [R]eplace [Q]uit:
 
-* rename it
-* append to the current file
+* kbd:[A]ppend: add the text currently in the buffer to the file on disk
+* kbd:[R]eplace: scratch the current file and replace it with text currently in the buffer
+* kbd:[Q]uit: Exit back to the editor
 
-.Rewrite
-
-(These commands are only available from local or pseudo-local mode.)
-
-kbd:[.G]et allows you to load a text file from any device and drive.
-It appends the file to any text already in the editor's buffer.
-
-You can then use all the normal editor facilities.
-
-====
-TIP: if you are trying to work with SEQ files with C/G codes in them, use kbd:[.C]olumns kbd:[80] first, so lines don't word-wrap.
-
-kbd:[.P]ut allows you to save the text file in the buffer to a specified device and drive.
-If the specified filename already exists, you can either replace the file or append the text in the buffer to the existing file.
-====
+==== View Directory
 
 kbd:[.$] (View Directory) command views a disk directory of any device and drive, with a pattern if desired.
 
-kbd:[.&] reads an existing file. A filename, device and drive are prompted for.
+==== Read SEQ File
+
+kbd:[.&] reads an existing SEQ file.
+A filename, device and drive are prompted for.
+
+==== DOS Command
 
 kbd:[.!] issues a DOS command.
-If a "`new`" (starts with `n`) or "`scratch`" (starts with `s`) DOS command is issued, you are prompted to confirm your actions.
+
+====
+TIP: If a "`new`" (starts with `n`) or "`scratch`" (starts with `s`) DOS command is issued, you are prompted to confirm your actions.
+====
 
 === Get Help
 
@@ -321,35 +463,123 @@ Type kbd:[.?] or kbd:[.H] to read a condensed version of this manual section.
 Certain key combinations are used to edit your text while you are typing it, whether in the BBS editor or at a BBS prompt.
 For example, any character that you delete with the kbd:[DELete] key can be "`re-typed`" with kbd:[Ctrl+U].
 
+// Unicode &#2588 is solid block, but it won't render properly in HTML
+====
+NOTE: In the following examples, the `line of text needing correction` is shown, and `&#095;` represents the cursor position.
+The editing key combinations are shown (_e.g.,_ kbd:[Ctrl+B]), then the next line represents the corrected line.
+====
+
 Other control keys:
 
 .Text Editor & Input Control Keys
 [cols="20%,80%"]
+// [%autowidth] breaks on + character
 [%header]
 |===
 | Key(s) | Purpose
-| kbd:[DELete] | Move back one character
+| kbd:[DELete] | Erase one character to the left in the line
+
+_Example:_
+
+```The quick brown fox jumped over the lazy dog.&#095;``` kbd:[DELete]
+
+```The quick brown fox jumped over the lazy dog&#095;```
 
 | kbd:[Ctrl+B] | Move back to beginning of line
 
-| kbd:[Ctrl+D] |Delete character under cursor
+_Example:_
+
+```The quick brown fox jumped over the lazy dog.&#095;``` kbd:[Ctrl+B]
+
+```&#095;``` (at the beginning of the line, having erased the entire line of text)
+
+| kbd:[Ctrl+D] | Delete character under cursor
+
+_Example:_
+
+To correct this error:
+
+```The quick brown fox jummped&#095;``` kbd:[Delete] 4x
+
+```The quick brown fox jum&#095;``` kbd:[Ctrl+D] (deletes the extra `m`)
+
+```The quick brown fox jum&#095;``` kbd:[Ctrl+N] (re-types to the end of the line)
+
+```The quick brown fox jumped&#095;``` Line corrected
 
 | kbd:[Ctrl+I] |Insert character under cursor
 
+_Example:_
+
+A different way of correcting this error:
+
+```The quick brown fox juped&#095;``` kbd:[Ctrl-W] (erases to the previous word)
+
+```The quick brown fox&#095;``` kbd:[Ctrl+U] 3x (re-types `&#160;ju` one character at a time)
+
+```The quick brown fox ju&#095;``` kbd:[Ctrl+I] (inserts a space for the `m`)
+
+```The quick brown fox ju&#095;``` kbd:[m] (re-types missing `m`)
+
+```The quick brown fox jum&#095;``` kbd:[Ctrl+N] (re-types to the end of the line)
+
+```The quick brown fox jumped&#095;``` Line corrected
+
 | kbd:[Ctrl+N] |Move forward to end of line
 
-| kbd:[Ctrl+O] |Duplicate all text on current line
+_Example:_
+
+```The quick brown fox jumped over the lazy dog.&#095;``` kbd:[Ctrl+B] (erases to the beginning of the line)
+
+```&#095;``` kbd:[Ctrl+N] (line erased; re-types to the end of the line)
+
+```The quick brown fox jumped over the lazy dog.&#095;``` Line re-typed
+
+// this doesn't seem to work anymore
+// | kbd:[Ctrl+O] |Duplicate all text on current line
 
 | kbd:[Ctrl+U] |Re-type one character from buffer (move forward one
 character)
 
+_Example:_
+
+```The quick brown fox jumped over the lazy dog.&#095;``` kbd:[Ctrl+W] 3x (erase `dog`, `lazy`, and `the`, one word per keypress)
+
+```The quick brown fox jumped over&#095;``` kbd:[Ctrl+U] 5x (re-type `&#160;the&#160;`, one letter per keypress)
+
+```The quick brown fox jumped over the &#095;```
+
 | kbd:[Ctrl+V] |Verify (re-display) current line; useful for poor connections
+
+_Example:_
+
+```Image BBS has a pretty decent line-based editor.&#095;``` kbd:[Ctrl-V] Re-display current input
+
+```Image BBS has a pretty decent line-based editor.&#095;```
 
 | kbd:[Ctrl+W] |Move back one word
 
-| kbd:[Ctrl+X] |Abort input (prints a British pound sign, kbd:[£], on Commodore equipment, or a backslash, kbd:[+\+], on ASCII terminals)
+_Example:_
+
+| kbd:[Ctrl+X] |Abort input
+
+Aborts inputting or editing of the current line and starts editing a new line.
+
+* Prints a British pound sign (kbd:[&#163;]) on Commodore terminals
+
+* Prints a backslash (kbd:[&#92;]) on ASCII terminals.
+
+```Mangled, impossibly broken line&#095;``` kbd:[Ctrl+X]
+
+```Mangled, impossibly broken line&#163;```
+
+```&#095;``` (re-start editing on an empty line)
 
 | kbd:[Ctrl+Y] |Re-type word from buffer (move forward one word)
+
+_Example:_
+
+
 |===
 
 === Dot Command Quick Reference
@@ -358,28 +588,28 @@ character)
 [%autowidth]
 |===
 | Command | Purpose
-| kbd:[.A]bort | Exit editor (icon::exclamation-triangle[] no confirmation)
+| kbd:[.A]bort | Exit editor (no confirmation)
 | kbd:[.B]anner | Create large letters out of typed text
-| kbd:[.C]olumns | Set width of text entry allowed
+| kbd:[.C]olumns | Set number of characters allowed per line
 | kbd:[.D]elete | Delete line(s)
 | kbd:[.E]dit | Edit line(s)
 | kbd:[.F]ind | Find text in specified line(s)
-| kbd:[.H]elp, kbd:[.?] Help | Show help menu file `s.menu 3`
+| kbd:[.H]elp, kbd:[.?] Help | Show help menu file (`s.menu 3`)
 | kbd:[.I]nsert | Insert line(s) at specified line
 | kbd:[.J]ustify | Justify text in various ways
 | kbd:[.K] Replace | Search for and replace text
 | kbd:[.L]ist | List line numbers and lines of text
 | kbd:[.M]CI Read | Read with MCI interpreted
-| kbd:[.N]ew Text | Erase buffer (icon::exclamation-triangle[] no confirmation)
-| kbd:[.O] Line Numbering | Show line numbers as text is typed
+| kbd:[.N] Clear Text | Erase buffer (no confirmation)
+| kbd:[.O] Line Numbering | Toggle between showing and hiding line numbers as text is typed
 | kbd:[.Q]uery | Show lines used and remaining
 | kbd:[.R]ead | Read without MCI interpreted
 | kbd:[.S]ave Text | Save text to disk
-| kbd:[.T]ext Transfer Mode | Don't echo text back to terminal
+| kbd:[.T]ext Transfer Mode | Don't echo text back to caller
 | kbd:[.U]se Signature | Append signature made with kbd:[PS]
 | kbd:[.V]ersion | Show editor version
-| kbd:[.Y] Move Lines | Move line range to specified line 
-| kbd:[.Z] Copy Lines | Copy line range to specified line
+| kbd:[.Y] Move | Move line range to specified line 
+| kbd:[.Z] Copy | Copy line range to specified line
 | kbd:[.#] Scale | Show 40-column scale
 |===
 
@@ -391,9 +621,9 @@ These commands can be used if in local mode.
 [%autowidth]
 |===
 | Command | Purpose
-| kbd:[.G]et File | Append to buffer a disk file's contents (filename is prompted for)
+| kbd:[.G]et File | Append to buffer a disk file's contents (filename, device, and drive are prompted for)
 | kbd:[.P]ut File | Save a file (filename is prompted for); can Append or Replace existing file
-| kbd:[.U]nborder | Remove characters put by kbd:[.B]order
-| kbd:[.!] DOS Command | Send DOS command (device and drive are prompted for)
-| kbd:[.&] Read File | Read SEQ file (filename is prompted for)
+| kbd:[.!] DOS Command | Send DOS command (device, drive, and command are prompted for)
+| kbd:[.$] View Directory | View disk directory (device, drive, and pattern are prompted for)
+| kbd:[.&] Read File | Read SEQ file (filename, device and drive are prompted for)
 |===
