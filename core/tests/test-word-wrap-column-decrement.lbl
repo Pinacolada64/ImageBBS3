@@ -80,4 +80,4 @@
 	goto 300
 {:sub.output}
 	rem output prompt, box, accept character, output it
-	&"{pound}n5{pound}$p{pound}$b{pound}g1{pound}v6{f6}":return
+	&"{pound}n5{pound}$p{pound}$b{pound}g1{pound}v7{f6}":return
