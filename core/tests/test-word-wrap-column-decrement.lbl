@@ -48,15 +48,36 @@
 ' - modclmn ($3b7)      constant $28 (40 decimal, must be caller's column width)
 ' - scnpos  ($d3)
 
-	rem "i.test col dec" 04/19/2022 pinacolada
+	rem "i.test col dec" 04/20/2022 pinacolada
 {quoter:221=vertical_line}
 {quoter:192=horizontal_line}
 {quoter:176=upper_left_corner}
 {quoter:174=upper_right_corner}
 {quoter:173=lower_left_corner}
 {quoter:189=lower_right_corner}
-	b$="{cyan}{up}{upper_left_corner}{horizontal_line}{upper_right_corner}{down}{left:3}{vertical_line} {vertical_line}{down}{left:3}{lower_left_corner}{horizontal_line}{lower_right_corner}{up}{left:2}{brown}X":rem box
-	p$="{pound}n5{purple}{rvrs on}[Time left=101]{rvrs off} {lt. red}{rvrs on}<?=Menu>{rvrs off} {lt. blue}{rvrs on}Command?{rvrs off} "
-	lp=.:&"Word wrap off:{pound}$p{pound}$b"
-	lp=1:&"Word wrap on:{pound}$p{pound}$b"
+'                                          3
+'   0----|----|----|----|----|----|----|---9
+' 0 Test word-wrap column update after
+' | cursor-left output:
+' |
+' | The prompt and box enclosure for the
+' | input character you type should both be
+' 5 displayed inline of each other, i.e.:
+' |
+' |                                   +-+
+' | [Time left=101] <?=Menu> Command? | |
+' 9                                   +-+
+
+	lp=1:&"{clear}Test word-wrap column update after cursor-left output:{f6}"
+	lp=1:&"The prompt and box enclosure for the input character you type should both be "
+	lp=1:&"displayed inline of each other, i.e.:{f6:3}"
+	b$="{cyan}{up}{upper_left_corner}{horizontal_line}{upper_right_corner}{down}{left:3}{vertical_line} {vertical_line}{down}{left:3}{lower_left_corner}{horizontal_line}{lower_right_corner}{up}{left:2}{brown}":rem box
+	p$="{purple}{rvrs on}[Time left=101]{rvrs off} {lt. red}{rvrs on}<?=Menu>{rvrs off} {lt. blue}{rvrs on}Command?{rvrs off} ":rem prompt
+	rem force correct display via &,61: console cursor position (column, row):
+	&,61,0,8:&p$:&,61,34,8:&b$
+	lp=.:&"Word wrap off:":gosub {:sub.output}
+	lp=1:&"Word wrap on:":gosub {:sub.output}
 	goto 300
+{:sub.output}
+	rem output prompt, box, accept character, output it
+	&"{pound}n5{pound}$p{pound}$b{pound}g1{pound}v6{f6}":return
