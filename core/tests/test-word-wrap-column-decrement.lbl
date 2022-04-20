@@ -1,0 +1,62 @@
+{alpha:alt}
+{number:3000}
+{step:2}
+{assign:300=300}
+{crunch:on}
+
+' summary of problem:
+' if word-wrap is enabled (lp=1), outputting cursor-left or backspace does not
+' decrement column position, forcing unwanted word-wrap at the position of the
+' box as shown here. see /core/tests/test-word-wrap-column-decrement.lbl
+
+' testing some MCI in the editor like the following could work:
+' £s1£o-£ho£h4
+' 1) [.M]CI Read in editor
+' 2) Alt-H to enable monitor
+' 3) w store <memory_location>
+' 4) x
+' 5) <Return> to do MCI Read
+' 6) observe X register value in this register dump:
+'    - A:0D X:00 Y:01
+
+' - also try:
+' £p0£o>£p6£o<
+
+' separate issue: print modes - what "s.menu 3" says:
+' £p0: normal printing
+' £p1:
+' £p2:
+' £p3: character, backspace
+' £p4: space, character, 2 backspaces, character
+' £p5: character, bell
+' £p6: character, 2 cursor lefts [left]
+' £p7: character, cursor left, cursor up [up]
+' £p8: character, cursor left, cursor down [down]
+
+' menu does not include these print modes:
+' £p9: character, cursor down [diagonal: up -> down, left -> right]
+' £pj:
+
+' to enable memory location write watch in monitor:
+' w store $03bc
+
+' disable 1 ; disable breakpoint on write
+' enable 1 ; re-enable breakpoint
+
+' possible memory locations to put watches on:
+' - modclm  ($3bc)  [x] $03bc does increment/decrement properly
+' - modclmn ($3b7)      constant $28 (40 decimal, must be caller's column width)
+' - scnpos  ($d3)
+
+	rem "i.test col dec" 04/19/2022 pinacolada
+{quoter:221=vertical_line}
+{quoter:192=horizontal_line}
+{quoter:176=upper_left_corner}
+{quoter:174=upper_right_corner}
+{quoter:173=lower_left_corner}
+{quoter:189=lower_right_corner}
+	b$="{cyan}{up}{upper_left_corner}{horizontal_line}{upper_right_corner}{down}{left:3}{vertical_line} {vertical_line}{down}{left:3}{lower_left_corner}{horizontal_line}{lower_right_corner}{up}{left:2}{brown}X":rem box
+	p$="{pound}n5{purple}{rvrs on}[Time left=101]{rvrs off} {lt. red}{rvrs on}<?=Menu>{rvrs off} {lt. blue}{rvrs on}Command?{rvrs off} "
+	lp=.:&"Word wrap off:{pound}$p{pound}$b"
+	lp=1:&"Word wrap on:{pound}$p{pound}$b"
+	goto 300

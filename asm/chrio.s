@@ -102,7 +102,7 @@ outchr2:
 		bcs outchr3
 		cmp #13
 		beq outchr3
-		cmp #20
+		cmp #20		// C= DELete
 		beq outchr3
 		pha
 		lda #reverse_on
@@ -141,7 +141,7 @@ outchr6:
 		sta $fe
 		clc
 		lda wrapind
-		adc scnpos
+		adc scnpos	// is scnpos relevant? scnclm = scnpos
 		adc mright
 		cmp #41
 		bcc outchr6a
@@ -197,7 +197,7 @@ outmdm:
 		bcs outmdm2
 outmdm0:
 		lda $fe
-		ldx modclm
+		ldx modclm	// modem column #?
 		ldy usrlin
 		jsr outadj
 		stx modclm
@@ -568,6 +568,7 @@ chatchk:
 		rts
 
 outadj:
+// rns: cursor column does not decrement when cursor_left/backspace are output
 		cmp #13
 		beq outadj1
 		cmp #20
@@ -592,9 +593,13 @@ outadj2:
 		ldx #0
 		rts
 outadj3:
+// .x is modclm
+// backspace/cursor left output:
 		cpx #0
 		beq outadj5
 		dex
+// hack: decrement scnpos (console column)
+		dec scnpos
 		rts
 outadj4:
 		inx
