@@ -1,0 +1,257 @@
+{alpha:alt}
+' C64List4_03.exe "i.edit idlecmds.lbl" -d64:utils.d64::"I.EDIT IDLECMDS" -verbose
+{step:2}
+
+{uses:3_0-preface.lbl}
+
+' an adaptation of "i.menuedit" to:
+' a) learn how structs work
+' b) add additional keys to idle screen
+
+' two-dimensional array wc%(chars_per_struct,items_per_struct) ?
+' dimension the wc%() array, 15 items of 30 chars each:
+
+' wc%(0,x) is (always?) the configuration info
+' wc%(0,0) is the # of commands
+
+' GetString:
+' &,60,1,16,wc%(8,x),a$
+' 16 is how many bytes the particular "field" is (Image docs call them "elements")
+'	(which makes sense for a filename)
+' wc%(8,x) is the "record" in each "field" to start getting data from
+' x is the "record" in struct
+
+{number:3000}
+	rem "i.edit idle cmds", by pinacolada 11/2020
+	&"{pound}{back arrow}06{purple}{pound}o{192}{192:8}{f6}"
+	&"{pound}{back arrow}07{rvrs on}{lt blue} Edit Idle Commands v0.1 {rvrs off}{f6}"
+	&"{pound}{back arrow}06{purple}{pound}o{192}{192:8}{f6:2}{pound}q0"
+
+	&,28,1:dim wc%(15,30) ' ,fd%(30)
+
+' 19 chars; 7 chars
+'10 printtab(7)"------------------";"-------"
+'20 printtab(8) "edit idle commands v0.1
+'30 printtab(7)"------------------";"-------"
+'ready.
+'run
+'       -------------------------
+'        edit idle commands v0.1
+'       -------------------------
+{:3010}
+' load struct:
+	m$="e.idle cmds":&"Loading {f5}{pound}$m{f5}..."
+	dr=3:gosub 3:&,60,2,0,wc%(0,0),dr$+m$,dv%
+' check error channel:
+	gosub 5:if e%=. then:&" Ok{f6}":goto {:3108}
+	&"{f6}Initializing new struct..."
+' erase key table:
+	for i=0 to 30:wc%(0,i)=0:next
+' tz (edit flag) = 1 [no "edits" have taken place, but it forces a save prompt on quit]
+' wc%(0,0) = 1 [# of items in struct]
+' sample keypress: "0", lm=0
+	tz=1:wc%(0,0)=1:wc%(0,1)=asc("0"):wc%(1,1)=0
+' sample filename: "test"
+	&,60,0,11,wc%(2,1),"test"
+' sample menu item text: "Test"
+	&,60,0,16,wc%(8,1),"Test"
+
+'{:3104}
+'	for x=0 to 49:&,60,1,30,wc%(5,x),a$:a%=x:b%=wc%(1,x)and 32767
+'                         [1][2]   [3]  [4]
+' [1] GetString      [3] from element wc%(5,x)
+' [2] 30 elements    [4] into string a$
+'	&"{white}{pound}#2{pound}%a:{pound}#5{pound}%b {pound}$a{f6}":x=x+rc*50:next
+
+{:3108}
+	&"{f6}Options: [L]ist [E]dit [Q]uit{f6:2}>"
+{:3110}
+	&"{pound}g1":if tr%<1 then {:quit}
+
+' TODO:  need [a]dd function which updates wc%(0,0)
+
+' capital letters must be in this range for Image to compare properly:
+'	{$d1} Q   {$cc} L   {$c5} E
+	on -(an$="{$d1}")-2*(an$="{$cc}")-3*(an$="{$c5}") goto {:menu_quit},{:menu_list},{:menu_edit}:goto {:3110}
+{:menu_quit}
+	&"Quit{f6:2}"
+
+{:save}
+	if tz=. then {:quit}
+	&"Changes made. Save? ":gosub 96:if a=. then {:quit}
+' scratch struct: disregard 62,file not found in the case of a new file:
+	dr=3:gosub 3:print# 15,"s"dr$m$
+' save struct: 16*31 is # of bytes [accounting for wc%(0,0) also]
+	&,60,3,0,wc%(0,0),16*31,dr$+m$,dv%
+
+{:quit}
+' restore variable pointers, exit to main prompt
+	&,28,1:goto 300
+
+{:menu_list}
+' list:
+	&"List{f6:2}"
+
+' from Jack's IM:
+' show extended idle commands:
+{:list_idlekeys}
+	a=.:for i=1 to wc%(.,.):a$=mid$("{cyan}{rvrs on}{$a1}{lt. blue}",a*4+1):e$=mid$("{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{pound}{back arrow}20",(1-a)*8+1,8)
+
+' the resulting filename is "i/lo." + 11 chars (like i/lo-varlist)
+
+' TODO: would be nice to check if 1st line is really 4000
+' (get #2,a$,a$,a$,a$: toss load address, line link pointer)
+' $0fa0 = 4000, $a0 $0f on disk)
+
+'	on-(wc%(0,i)=0)goto {:4288}:b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
+'	&a$+b$+")"+c$+e$:a=1-a
+
+' b$=keypress
+' c$=title
+
+	if wc%(.,i) then b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$:&a$+b$+")"+c$+e$:a=1-a
+	next:if a then:&"{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+	&"{lt. blue}{$bc}{blue}{rvrs on}{pound}o{$a2}{pound}o{$a2}{pound}h1{rvrs off}{$be}{pound}q0{f6}"
+	goto {:3108}
+
+{number:3200}
+{:menu_edit}
+' edit:
+	poke 53252,2:&"Edit #{pound}i1":x=val(an$):if x<0 or x>wc%(0,0) then {:menu_edit}
+{:edit}
+'   Item #{pound}!x:
+'[K]eypress..: <None>
+'[L]M Value..: 1
+'[F]ilename..: i/lo.<filename>
+'[T]ext......:
+	&"{clear}   Item #{pound}!x:{f6:2}"
+	a=wc%(0,x):if a then a$=chr$(a):goto {:3228}
+	a$="<None>"
+{:3228}
+	&"[K]eypress..: {pound}$a{f6}"
+'	if wc%(.,i) then b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
+	a=wc%(1,x)
+{:lm_value}
+	&"[L]M Value..: {pound}!a{f6}"
+
+	&,60,1,11,wc%(2,x),a$
+	&"[F]ilename..: i/lo.{pound}$a{f6}"
+
+	&,60,1,16,wc%(8,x),a$
+	&"[T]ext......: {pound}$a{f6:2}"
+	&"[Return]....: Done{f6}"
+'	{$d1} Q   {$cb} K   {$cc} L   {$c6} F   {$d4} T
+
+'	&"{f6}>{pound}i1":on -(an$="{$cb}")-2*(an$="{$cc}")-3*(an$="{$c6}")-4*(an$="{$d4}") gosub {:edit_keypress},{:edit_lm},{:edit_filename},{:edit_text}
+'	on -(an$="Q") goto {:3108}:goto {:edit}
+
+	an$="":&"{f6}>{pound}i1":on -(an$="K")-2*(an$="L")-3*(an$="F")-4*(an$="T") goto {:edit_keypress},{:edit_lm},{:edit_filename},{:edit_text}
+	on -(an$="") goto {:3108}:goto {:edit}
+
+{:edit_keypress}
+' tz could have separate bits per edited item like in setup, each independent
+' item changed sets/clears a bit, instead of just setting tz=1, maybe
+
+' TODO: check for duplicate entries
+' TODO: check for conflict with idle screen keys (<- 1-8 + - {pound} A T R {space})
+' PutString:
+' &,60,0,<#_bytes>,wc%(<field>,<record>),<string$>
+
+' to store a numeric value: wc%(<field>,<record>)=<number>
+
+' &,1,32 displays like:
+' Keypress: C
+' Keypress: _ (cursor blinks here)
+' pl=0 allows uppercase/lowercase input (read by ML)
+	poke 53252,1:pl=.:p$="Keypress":w$=chr$(wc%(0,x)):&,1,32
+' kp% is maintained by ml: keypress PETSCII value, replaces "a=asc(an$)"
+'	if an$<>"" then if kp% then wc%(0,x)=kp%:tz=1
+	if an$<>"" then wc%(0,x)=asc(an$):tz=1
+' FIXME:
+'	if an$="" then gosub {:sub.remove}:if a then n=.
+'	if an$<>w$ then n=asc(an ... tz=1
+	goto {:edit}
+
+{:edit_lm}
+' works
+' TODO: range is 1-9 I'm assuming? add check
+	poke 53252,1:p$="LM Value":w$=chr$(wc%(1,x)):&,1,32
+	if an$<>w$ then wc%(1,x)=val(an$):tz=1
+'	if an$="" then gosub {:sub.remove}:if a then n=.
+' FIXME
+'	if an$<>w$ then n=asc(an ... tz=1
+	goto {:edit}
+
+{:edit_filename}
+	poke 53252,11:p$="i/lo.* Filename"
+' TODO: possibly get directory with '$'
+' TODO: check for blank entry
+	&,60,1,11,wc%(2,x),w$
+'	PutString: put string into structure
+'	Usage	&,60,0,<#_bytes>,wc%(<field>,<record>),<string$>
+' ( 2,record) 11 bytes - [f]ilename ("i/lo."+a$)
+	&,1,32:if an$<>w$ or an$<>"" then:&,60,0,11,wc%(2,x),an$:tz=1
+	goto {:edit}
+
+{:edit_text}
+' pl=0: allow uppercase/lowercase input
+	poke 53252,16:p$="Text":pl=0:&,60,1,16,wc%(8,x),w$
+
+'	PutString: put string into structure
+'	Usage:	&,60,0,<#_bytes>,wc%(<field>,<record>),<string$>
+
+' ( 8,row) 16 bytes - [t]itle to display in menu/Area window
+
+	&,1,32:if an$<>w$ or an$<>"" then:&,60,0,16,wc%(8,x),an$:tz=1
+	goto {:edit}
+
+{:sub.remove}
+' FIXME: finish this
+	& "FIXME{f6:2}"
+	& "Delete: ":goto 94
+
+' scanning for key hit already in struct:
+' i think there's a "scan struct for a string" call, but for now this loop
+' suffices until I learn more about programming structs:
+'	b=.:lm=1:for i=1 to wc%(0,0):if asc(a$)=wc%(0,i)then b=i:i=wc%(0,0)+1
+
+' FIXME
+'	use &,nn,9,num,siz,a(a,b) (scansum)? returns a%, count?
+
+' b=0 if no match found
+' put filename suffix (11 chars) into a$
+'	next:on -(b=.) goto {:4224}:&,60,1,16,wc%(8,b),cm$:gosub 1360:&,60,1,11,wc%(2,b),a$
+' set lm (sub-task), load "+/"+lm$ module, goto 4000:
+
+' jack's call:
+'	lm=wc%(1,b):mm=8:goto 72
+
+' load "i/lo."+a$
+'	a$="lo."+a$:lm=wc%(1,b):gosub 2620
+
+'{number:2620}
+'{:2620}
+' build string "i/lo."+a$, load module, exec at 4000:
+'	gosub {:2630}:if e%=. then gosub {:4000}:return
+' proposed change:
+'	gosub {:2630}:if st=. then gosub {:4000}
+'	return
+'{number:2630}
+'{:2630}
+' load module in a$, minus "i/" prefix:
+'	lm$=a$+"":dr=5:gosub 3:a$=dr$+"i/"+lm$:new 4000:load a$,dv%:return
+
+' so looks like the struct layout is thus:
+' from 4220- i/lo.idle:
+' dim wc%(15,30)
+' <n>=struct
+' wc%(0,<n>) 1  byte  - [k]ey
+' wc%(1,<n>) 1  byte  - [l]m value, "sub-task" within a multi-function module
+' wc%(2,<n>) 11 bytes - [f]ilename ("i/lo-"+a$)
+' wc%(8,<n>) 16 bytes - [t]itle to display in menu/Area window
+
+' *** each element uses two bytes if stored in an integer array ***
+
+' 0   1   2    7   8     15
+'[k] [l] [ffffff] [tttttttt]
+' 1   1     11        16     bytes

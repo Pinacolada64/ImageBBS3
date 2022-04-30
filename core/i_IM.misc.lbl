@@ -1,0 +1,144 @@
+{uses:3_0-preface.lbl}
+
+' original: 3099 bytes
+'  revised: 3053 bytes
+{step:2}
+
+{:4000}
+	onlmgoto{:4010},{:4004},{:4016},{:4030},{:4036},{:4040},{:4002},{:4046},{:4054},{:4082},{:4090},{:4108},{:4062}:return
+{:4002}
+	im=3:gosub447:tz$=an$:return
+{:4004}
+	p$="Autoweed Cutoff in Months":w$=str$(a%(2)):l=.:h=48:t=1:gosub {:sub.input_range}
+	gosub {:sub.check_change}:if tz then x=39:gosub {:sub.write_e_data}:a%(2)=n
+	return
+{:4010}
+	&"{f6}(0 If None){f6}":p$="Lt. Kernal Device":w$=str$(lk%):l=7:h=32:t=1:gosub {:sub.input_range}
+' FIXME: allow '0' to be entered, too
+'	ifnand(n<7orn>32)then:&"{f6}7 to 32 Please. Press RETURN to Abort.{f6}":goto{:4010}
+	gosub {:sub.check_change}:if tz then x=38:gosub {:sub.write_e_data}:lk%=n
+	return
+{:4016}
+' FIXME: show colors in 2 columns, 1-8, 9-14=5
+	&"{f6}":fori=1to15:a%=i:a$=tt$(i):&"{white}{pound}#2{pound}# {pound}%a{pound}c"+chr$(48+i)+" {pound}$a"
+	ifiand1then:&"{pound}{back arrow}20"
+	if(iand1)=.then:&"{f6}"
+	next:&"{white}"
+{:4024}
+	p$="Default Color":w$=str$(a%(3)):l=1:h=15:t=1:gosub {:sub.input_range}
+	if an$<>"" then x=40:gosub {:sub.write_e_data}:a%(3)=n:df%=n
+	return
+{:4030}
+	p$="Printer Secondary Address":w$=str$(a%(4)):l=.:h=32:t=1:gosub {:sub.input_range}
+	gosub {:sub.check_change}:if tz then x=41:gosub {:sub.write_e_data}:a%(4)=n:close 4:open 4,4,n
+	return
+{:4036}
+	&"{f6}Send Linefeeds to the printer? ":gosub94:n=.:if a then n=10
+	an$=str$(n):x=42:gosub {:sub.write_e_data}:a%(5)=n:poke 17136,n:return
+{:4040}
+	poke 53252,30:pl=.:p$="{gray3}Mask{white}":w$=mm$:&,1,41 ' 32+8+1
+'	if an$="" or an$=w$ or an$=r$ or tr%<1 then:&"(No Change.)":return
+	gosub {:sub.check_change}:if tz then:&,15,2:x=43:gosub {:sub.write_e_data}:mm$=an$
+	return
+{:4046}
+	poke 53252,20:pl=.:w$=po$:p$="Main":&"{f6}":&,1,41:if tr%<1 or an$=w$ then return
+	po$=an$:dr=5:a$="bd.data,s,r":gosub4:fori=1to4:&,2,2:tt$(i)=a$:next
+	tt$(3)=po$:dr=5:a$="bd.data":gosub18:fori=1to4:print#2,tt$(i):next:close2
+{:4052}
+	return
+{:4054}
+	poke53252,30:pl=.:w$=bn$:p$="BBS Name":&"{f6}":&,1,32
+	gosub {:sub.check_change}:if tz then x=47:gosub {:sub.write_e_data}:bn$=an$
+	return
+{:4062}
+	&"{clear}{f6} {lt. green}Chat Message Editor{f6}{white}{pound}vj 1) {gray3}Entry Message{f6} {white}2) {gray3}Exit Message{f6}{white}{pound}vj"
+	poke53252,30:&" {green}Which? {pound}i1{f6}":if tr%<1 then return
+	gosub {:4100}:on a goto{:4068},{:4074}:return
+{:4068}
+	pl=.:w$=mid$(c1$,4,len(c1$)-5):p$="{gray3}Entry{white}":&"{f6}":&,1,32
+	gosub {:sub.check_change}:if tz then x=48:gosub{:sub.write_e_data}:c1$="{clear}{f6}{$07}"+an$+"{f6:2}"
+	goto{:4062}
+{:4074}
+	pl=.:w$=mid$(c2$,3,len(c2$)-4):p$="{gray3}Exit{white}":&"{f6}":&,1,32
+	gosub {:sub.check_change}:if tz then x=49:gosub{:sub.write_e_data}:c2$="{f6:2}"+an$+"{f6:2}"
+	goto{:4062}
+
+{:4082}
+' string, must be 2 characters: l=h
+	poke 53252,2:pl=1:p$="{yellow}System ID{white}":w$=cc$:l=2:h=l:t=2:gosub {:sub.input_range}
+	gosub {:sub.check_change}:if tz then x=51:gosub{:sub.write_e_data}:cc$=an$
+	return
+{:4090}
+	poke 53252,5:p$="{cyan}New User Credits":w$=str$(nc):l=1:h=65000:t=1:gosub {:sub.input_range}
+	gosub {:sub.check_change}:if tz then x=58:gosub {:sub.write_e_data}:nc=n
+	return
+{:4100}
+	a=abs(int(val(an$))):return
+{:4102}
+	&"Press A Key: {pound}g1{f6}":return
+{:4104}
+	&"{f6:2}Changes Saved.{f6:2}":goto{:4102}
+{:4106}
+	gosub 33:x=20:gosub 10:print#2,p1%","p2%","p3%:close 2:return
+{:4108}
+	b$="Prime Time":gosub{:4152}
+	b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
+	a%=1
+	b$="Minutes/Call: "+mid$(str$(p1%),2):gosub{:4148}:ifp1%<1thenp2%=.:p3%=.:b=.:d=.
+	a%=2
+	b$="Start Time  :"+str$(band15)+mid$("AMPM",(band16)/8+1,2):gosub{:4148}
+	a%=3
+	b$="End Time    :"+str$(dand15)+mid$("AMPM",(dand16)/8+1,2):gosub{:4148}
+	ifp1%=.then:&"{pound}{back arrow}08-(No Prime Time Set)-{f6}"
+	gosub{:4150}:r=-(a<1ora>3):onagosub{:4130},{:4136},{:4142}:ifr=.thengosub{:4106}:c=1:goto{:4108}
+	oncgoto{:4104}:return
+{:4130}
+	&"( 0 Means NO Prime Time ){f6}"
+	p$="Minutes/Call":w$=str$(p1%):l=0:h=999:gosub{:4156}:ifan$<>""thenp1%=a
+	return
+{:4136}
+' TODO: prompt: 'Enter times like "4A" or "11P"'
+	p$="Start Time":w$=mid$(str$(b and 15)+mid$("AP",(band16)/16+1,1),2):gosub{:4156}
+	if an$<>"" then p2%=a-12*(right$(an$,1)="P")
+	return
+{:4142}
+	p$="End Time":w$=mid$(str$(d and 15)+mid$("AP",(dand16)/16+1,1),2):gosub{:4156}
+	if an$<>"" then p3%=a-12*(right$(an$,1)="P")
+	return
+{:4148}
+	&"{pound}{back arrow}08{yellow}{pound}%a>{cyan} {pound}$b{f6}":return
+{:4150}
+	&"{f6}{pound}{back arrow}13Option? {pound}i1":goto{:4100}
+{:4152}
+	&"{clear}{white}{pound}vj {cyan}{pound}{back arrow}"+right$(str$(int(120-len(b$)/2)),2)
+	&"{pound}$b{f6}{white}{pound}vj{cyan}":return
+{:4156}
+'	b$=w$:pl=1:&,1,32:on-(an$<>"")goto{:4100}:an$=b$:goto{:4100} '54 bytes
+	b$=w$:pl=1:&,1,32:if an$="" then an$=b$
+	goto{:4100} ' 49 bytes
+{number:4160}
+{:sub.input_range}
+' show range l-h, drop leading space for numeric values
+	p$=p$+" ({pound}!l-{pound}!h)":if t=1 then w$=mid$(w$,2)
+{:4162}
+	&,1,32
+{:sub.check_change}
+	tz=1:if an$="" or an$=w$ or an$=r$ or tr%<1 then tz=.:&"(No Change.)"
+	return
+' ----+----+----+----+----+----+----+----+
+' 1-10 Please. (RETURN aborts.)
+' t=1: numeric
+	if t=1 then n=int(val(an$)):if n<l or n>h then t$="":gosub {:sub.range_message}:goto {:4162}
+' t=2: string value
+	if t=2 then if len(an$)<l or len(an$)>h then t$="Characters":gosub {:sub.range_message}:goto {:4162}
+	return
+{:sub.range_message}
+	&"{f6}{pound}!l":if t=1 then if l<>h then:&"-{pound}!h"
+	&"{pound}$t, Please. (RETURN Aborts.){f6}":return
+{nice:10}
+{:sub.write_e_data}
+' call with 'x'=record number, 'an$'=data
+	gosub33:gosub1:print#2,an$:close 2:return
+{crunch:off}
+	rem "i/IM.misc (c)nissa 200519 lh"
+	rem 2021-06-28 pinacolada

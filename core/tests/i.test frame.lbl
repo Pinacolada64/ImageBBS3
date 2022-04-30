@@ -1,0 +1,137 @@
+{step:2}
+{crunch:on}
+{alpha:alt}
+{assign:300	=300	}
+' C64List4_04.exe "i.test frame.lbl" -prg -alpha:alt -crunch -ovr
+{:3000}
+	rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
+' NOTE: &,27,2 at startup / &,28,2 at quit not needed, we don't create any new arrays
+	&"{clear}":s$="{space:36}"
+{:menu}
+'	&"{home}{pound}n7"
+	gosub {:sub.clear_lines}
+	d$={usedef:__BuildDate}:t$={usedef:__BuildTime}
+	&,70,0,7:&"i.test frame{f6}{pound}vjBuild date:  {pound}$d {pound}$t{f6:2}"
+	&"0) Quit{f6}1) Draw frame{f6}"
+	&"2) Scroll header{f6}3) Flash header, get keyboard input{f6:2}"
+{:prompt}
+	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":goto 300
+	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
+' calculated gosub: [save 2 bytes vs. a%=3000+(a%*100)]
+' a%=1: 3100, a%=2: 3200, a%=3: 3300
+	a%=a%*100+3000:&,66,1:goto {:menu}
+
+{:3100}
+' draw frame:
+	gosub {:3400}:return
+
+{:3200}
+' scroll text:
+' does not work
+'	j=j+1:z1$="Line {pound}!j":j=j+1:z2$="Line {pound}!j":gosub {:3404}:goto {:menu}
+' scroll the numbers 1-20 up as a counter:
+	for j=1 to 20 step 2
+	z3$="Line"+str$(j):gosub {:3404}:&,22,5
+	z3$="Line"+str$(j+1):gosub {:3404}:&,22,5
+	next:return
+
+{:3300}
+' flash header message: (max. 34 chars)
+' display two lines in header
+' ----+----+----+----+----+----+----+----+
+'    Insert All System Disks In Correct
+'         Drives and Press RETURN
+	z1$="Insert All System Disks In Correct"
+	z2$="     Drives and Press RETURN      "
+' 3405: draw header
+' 3406: display menu
+' 3410: flash border, get input
+	gosub {:3405}:gosub {:3406}:return
+
+' NOTE: Immutable line number
+' draw frame:
+' ----+----+----+----+----+----+----+----+
+'0 (empty line)
+'1 (empty line)
+'2 +------------------------------------+
+'3 | &,69,3,3 (column 3, row 3)         |
+'4 | &,69,3,4 (column 3, row 4)         |
+'5 +------------------------------------+
+{:3400}
+' 3400 z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
+' &,69 can't do special petscii characters like {$b0}
+	z1$="":z2$="":&,70,1,2:&"{gray2}{$b0}"+mid$(ak$,2,36)+"{$ae}"
+' 3401 &" {gray2}{$dd}{gray3}{rvrs on}{space:36}{rvrs off}{gray2}{$dd}{f6}"
+{:3401}
+	for i=3 to 4:&,70,1,i:&"{gray2}{$dd}{gray3}{rvrs on}{pound}$s{rvrs off}{gray2}{$dd}":next
+' 3402 &" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
+' 3403 &" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
+{:3402}
+	&,70,1,5:&"{gray2}{$ad}"+mid$(ak$,2,36)+"{$bd}":return
+
+'	c$="{yellow}{gray3}":return
+'	&"{pound}c7{pound}cl"
+' scroll z1$ up, display z2$
+' add trailing spaces after z2$
+' 3404 z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
+
+' NOTE: Immutable line number
+' pass z3$ as new line of info to scroll
+' scroll z1$ and z2$ up. z3$ is new line to display
+' pad z2$ out with spaces
+{:3404}
+	z1$=z2$:c=$8f:z2$=left$(z3$+s$,34)
+' 3406 b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
+' display both z2$ and z3$, don't scroll
+{:3405}
+	&,69,3,3,z1$,c:&,69,3,4,z2$,c:return
+
+' FIX: remove z=z+1 stuff. this does not delay 1/2 second on a SuperCPU system. use timer instead:
+' 'i=not i' does not work
+{:3406}
+' i=color index (0=gray, 1=yellow)
+	gosub {:sub.clear_lines}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
+{:3408}
+' NOTE: Immutable line number
+' flash frame contents:
+' t=ti, e=30 ('elapsed time': 1/2 second delay [30 jiffies], instead of continuously interpreting floating point)
+	t=ti:e=t+30
+{:3410}
+	on peek(198) goto {:3420}:if ti<e then {:3410}
+' jiffy delay has run out. toggle color index 'i' for new interior text color 'c':
+' $87=rvs yellow, $8f=rvs gray3
+{:3411}
+	i=1-i:c=$87:if i then c=$8f
+' draw interior text, reset jiffy delay
+{:3412}
+	gosub {:3405}:goto {:3408}
+' 3409 b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
+' &,69,<column>,<row>,<text>,<color>
+
+' ### neat color highlighting in Kate text editor ###
+
+' color index
+' 5 c=1
+' t=time, e=elapsed time (1/2 second, 30 jiffies)
+' 10 t=ti:e=30
+' an=non-zero when key is hit, check for expired timeout (elapsed jiffies>30)
+' 20 on peek(198) goto 40:if ti<t+e then 20
+' if so, toggle color index, print color and index value
+' 30 c=1-c:printmid$("{yellow}{light gray}",c+1,1)c:goto 10
+' key hit: read key buffer, convert to numeric value
+' 40 get an$:print"key:"an$:lm=val(an$):if lm<1 and lm>3 then 20
+
+' NOTE: Immutable line number
+{number:3414}
+{:sub.clear_lines}
+' clear screen lines 7-24 (0-based)
+' reposition cursor on row 7, col 0
+' TODO: clear line links?
+	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}38":next:&,70,.,6:return
+
+{:3420}
+' NOTE: &,48 (character-io.asm: getkbd): returns char in peek(198), non-blocking
+' convert keypress into numeric value:
+	get an$:if an$="{back arrow}" then gosub {:sub.clear_lines}:goto {:menu}
+	lm=asc(an$+nl$)-48:if lm<1 and lm>3 then {:3410}
+	gosub {:sub.clear_lines}:&"Selected option {pound}v7.{pound}w2":goto {:3410}

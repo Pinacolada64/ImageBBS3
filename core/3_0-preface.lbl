@@ -1,0 +1,180 @@
+{'uses:3_0-preface.lbl}
+
+{undef:use_static_labels}
+{ifdef:use_static_labels}
+{info:INFO: assigning static labels}
+
+{assign:im.rel_pointer	=1}
+{assign:im.get_drive	=2}
+{assign:im.open_cmd_channel=3}
+{assign:im.open_file	=4}
+{assign:im.read_cmd_channel=5}
+{assign:im.prompt	=6}
+{assign:im.get_key	=7}
+{assign:im.area_window	=9}
+{assign:im.rel_command	=10}
+{assign:im.get_user_flag	=11}
+{assign:im.output_defaults=12}
+{assign:im.seqReadClear	=13}
+{assign:im.seqRead	=14}
+{assign:im.BAR.adjust	=16}
+{assign:im.BAR.write	=17}
+{assign:im.seqWrite	=18}
+{assign:im.fileScratch	=19}
+{assign:im.loadProtocol	=28}
+{assign:im.open_e_stats	=30}
+{assign:im.open_e_data	=33}
+{assign:im.open_u_config=35}
+{assign:im.writeTTarray	=39}
+{assign:im.getFreeDirEntry	=60}
+{assign:im.getBlocksFree	=61}
+{assign:im.SetIslashDrive	=72}
+{assign:im.loadIslashFile	=73}
+{assign:im.loadSubFile	=74}
+{assign:im.prepSubLoad	=78}
+{assign:im.loadModule	=79}
+{assign:im.clearArrays	=82}
+{assign:im.clearTTarray	=83}
+{assign:im.leaveFeedback	=85}
+
+' messages:
+{assign:im.center	90}
+{assign:im.canceled	92}
+{assign:im.are_you_sure.no=93}
+{assign:im.no		94}
+{assign:im.are_you_sure.yes=95}
+{assign:im.yes		=96}
+
+{assign:im.main_prompt=300}
+
+' toggles:
+{assign:im.toggle_mode=370}
+{assign:im.toggle_user_flag=371}
+{assign:im.toggleExpertMode=372}
+{assign:im.toggleMorePrompt=373}
+{assign:im.toggleMenuMode	=374}
+' 375?
+{assign:im.togglePromptMode	=376}
+{assign:im.open_e_text	=390}
+
+{assign:im.subComm1	=428}
+{assign:im.subComm2	=429}
+{assign:im.subParam1	=430}
+{assign:im.subParam2	=431}
+{assign:im.subMenus	=436}
+{assign:im.subSysDos	=437}
+{assign:im.subStats	=438}
+{assign:im.subBar	=439}
+{assign:im.subEditor	=440}
+{assign:im.subHandles	=441}
+{assign:im.subProtos	=442}
+{assign:im.subMisc	=445}
+{assign:im.subModem	=446}
+{assign:im.subInfo	=447}
+{assign:im.subLocal	=448}
+{assign:im.subMisc2	=449}
+
+{assign:im.find_id	=505}
+
+{assign:genericReturn	=999}
+{assign:iPeriodModule	=3000}
+{assign:iSlashModule	=4000}
+{assign:imSubroutine	=60000}
+
+{else}
+{info:INFO: assigning regular labels}
+{assign:1	=1	} ' im.rel_pointer
+{assign:2	=2	} ' im.get_drive
+{assign:3	=3	} ' im.open_cmd_channel
+{assign:4	=4	} ' im.open_file
+{assign:5	=5	} ' im.read_cmd_channel
+{assign:6	=6	} ' im.prompt
+{assign:7	=7	} ' im.get_key
+{assign:9	=9	} ' im.area_window
+{assign:10	=10	} ' im.rel_pointer_cmd
+{assign:11	=11	} ' im.get_user_flag
+{assign:12	=12	} ' im.output_defaults
+{assign:13	=13	} ' im.seqReadClear
+{assign:14	=14	} ' im.seqRead
+{assign:16	=16	} ' im.BAR.adjust
+{assign:17	=17	} ' im.BAR.write
+
+' DOS stuff:
+{assign:18	=18	} ' im.seqWrite
+{assign:19	=19	} ' im.fileScratch
+{assign:28	=28	} ' im.loadProtocol
+{assign:30	=30	} ' im.open_e_stats
+{assign:32	=32	}
+{assign:33	=33	} ' im.open_e_data
+{assign:35	=35	} ' im.open_u_config
+{assign:39	=39	} ' im.writeTTarray
+{assign:50	=50	}
+{assign:60	=60	} ' im.getFreeDirEntry
+{assign:61	=61	} ' im.getBlocksFree
+
+{assign:70	=70	} ' im.prepLoadIfile
+{assign:71	=71	} ' im.loadIfile
+{assign:72	=72	}
+{assign:73	=73	} ' im.loadIslashFile
+{assign:74	=74	} ' im.loadSubFile
+{assign:78	=78	} ' im.prepSubLoad
+{assign:79	=79	} ' im.loadModule
+{assign:80	=80	} '
+
+{assign:82	=82	} ' im.clearArrays
+{assign:83	=83	} ' im.clearTTarray
+{assign:84	=84	} ' im.calc_prime_time
+
+{assign:85	=85	} ' im.leaveFeedback
+
+' messages:
+{assign:90	=90	} ' im.center
+{assign:93	=93	} ' im.are_you_sure.no
+{assign:94	=94	} ' im.no
+{assign:95	=95	} ' im.are_you_sure.yes
+{assign:96	=96	} ' im.yes
+
+{assign:200	=200	} '
+{assign:216	=216	} '
+{assign:220	=220	} '
+{assign:234	=234	} '
+{assign:289	=289	} ' input an$, fall through:
+{assign:290	=290	} ' convert special characters
+{assign:300	=300	} ' im.main_prompt
+{assign:304	=304	} '
+{assign:349	=349	} ' im.getDeviceDrive
+{assign:350	=350	} ' im.setDrive
+{assign:304	=304	}
+{assign:370	=370	}
+{assign:375	=375	} '
+
+{assign:390	=390	} ' im.open_e_text
+
+{assign:428	=428	} ' im.subComm1
+{assign:429	=429	} ' im.subComm2
+{assign:430	=430	} ' im.subParam1
+{assign:431	=431	} ' im.subParam2
+{assign:436	=436	} ' im.subMenus
+{assign:437	=437	} ' im.subSysDos
+{assign:438	=438	} ' im.subStats
+{assign:439	=439	} ' im.subBar
+{assign:440	=440	} ' im.subEditor
+{assign:441	=441	} ' im.subHandles
+{assign:442	=442	} ' im.subProtos
+{assign:445	=445	} ' im.subMisc
+{assign:446	=446	} ' im.subModem
+{assign:447	=447	} ' im.subInfo
+{assign:448	=448	} ' im.subLocal
+{assign:449	=449	} ' im.subMisc2
+
+{assign:505	=505	} ' im.find_id
+{assign:563	=563	} '
+
+{assign:999	=999	} ' im.genericReturn
+{assign:3000	=3000	}
+
+{assign:4000	=4000	}
+{assign:4500	=4500	} ' starting line of i/lo.* login modules
+{assign:60000	=60000	} ' starting line of sub.* modules
+
+{endif}

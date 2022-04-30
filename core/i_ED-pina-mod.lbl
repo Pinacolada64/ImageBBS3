@@ -6,12 +6,11 @@
 {uses:3_0-assigns.lbl}
 
 {quoter:32=space}
-
 ' TODO: add weedinfo routines from 2.0's +.ED
 
-' wine c64list3_50.exe plus_ED-pina-mod.lbl -d64:test.d64::+.ed -ovr -verbose
-
+' wine c64list4_04.exe i_ED-pina-mod.lbl -d64:test.d64::I.ed -ovr -verbose
 ' 6 bytes: &:&"{f6}"
+' 7 bytes: &"{pound}$a{f6}"
 ' 7 bytes: &"{pound}$a{f6}"
 
 ' changelog:
@@ -72,7 +71,8 @@
 {nice:5}
 {:sub.verbose_date}
 ' have to do left$() now because of potential added carrier drop flag suffix
-	an$=left$(tt$(i),11):&,15:c$=an$+"M":return ' c$="{$04}"+tt$(i) <-- does not work!
+	an$=left$(tt$(i),11):&,15:c$=an$+"M":return
+' c$="{$04}"+tt$(i) <-- does not work!
 
 {nice:5}
 {:sub.time_date_edit}
@@ -179,7 +179,7 @@
 	cm$="{green}User Account Editor":gosub {:im.area_window}
 
 ' FIXME: currently line 2110 takes care of this, I think
-'	restore:read x:dim ed$(x):for i=1 to x:read ed$(i):next	restore:read x:for i=1 to x:read ed$(i):next
+'	restore:read x:dim ed$(x):for i=1 to x:read ed$(i):next
 
 ' TODO: act on main prompt "EDx" param:
 ' EDx param on command line - user # to edit
@@ -191,6 +191,7 @@
 
 {ifdef:show_build_date}
 	a$="62204298340":&"{f6}Built {$04}"+a$+"{f6}"
+'	d$={usedef:__BuildDate}:t$={usedef:__BuildTime}:&"{f6}Built {pound}$d {pound}$t{f6}"
 {endif}
 
 	a%=ur:b%=l1:&"{cyan}{f6} Users: {pound}%a{pound}{back arrow}25Next open: {pound}%b"
@@ -222,10 +223,10 @@
 '  DE#10         (Type "N" for next page)
 '
 '  1) Handle    : PINACOLADA
-'  2) Password  : NILREM
+'  2) Password  : (Private)
 '  3) First Name: RYAN
 '  4) Last Name : SHERWOOD
-'  5) Phone #   : [xxx] xxx-xxxx
+'  5) Email     : x@example.com
 '  6) Last Date : May 15, 2019 10:54 PM
 '  7) Accs Grp  : 9 (\$q)\_25af% [?]: \%q
 '  8) CallsToday: 0
@@ -234,7 +235,6 @@
 ' 22) Last Call : May 15, 2019 10:54 PM
 
 '  # to change (1-22):
-'  Asc  Ans  Exp  UnvZZTrc ZBel ZNet ZMac
 
 ' page 0: 1-9, 13, 22-23
 	for i=1 to 9:a%=i:b$=ed$(i):c$=tt$(i)
@@ -278,12 +278,31 @@
 	if i=11 then c%=v:h%=c%/256:w%=c%-256*h%:c$="{pound}%wx{pound}%h" ' e.g., 80x25
 
 ' FIXME: transfer protocol: - maybe get list of protocols from s.m.proto?
-	if i=12 then c$="Unknown":if p<1 and p>4 then c$=mid$("Punter        Xmodem        Copier        Relaxed Punter",v*14-13,14)
+' 4/30/2022: don't crash with ?illegal quantity error on out-of-bounds protocol numbers, display "Unknown" instead
+' 10 i=12:p$="Punter        Xmodem        Copier        Relaxed Punter"
+' 15 for v=-2 to 7
+' 20 if i=12 then c$="Unknown":if v>-1 and v<4 then c$=mid$(p$,(v+1)*14-13,14)
+' 25 printv;c$:next
+' ready.
+' run
+' -2 Unknown
+' -1 Unknown
+'  0 Punter
+'  1 Xmodem
+'  2 Copier
+'  3 Relaxed Punter
+'  4 Unknown
+'  5 Unknown
+'  6 Unknown
+'  7 Unknown
+
+	if i=12 then p$="Punter        Xmodem        Copier        Relaxed Punter"
+	if i=12 then c$="Unknown":if v>-1 and v<4 then c$=mid$(p$,(v+1)*14-13,14)
 ' 13: user flags (linefeeds, time zone)
 ' 14: Expert Mode
 	if i=14 then c$=mid$("OffOn",(v+1)*3-2,3)
-' 1 dim tt$(13):tt$(13)="0":i=13
-' 2 if i=13 or i=14 then c$=mid$("No Yes",(val(tt$(i))+1)*3-2,3)
+' 1 dim tt$(13):tt$(13)="0":i=13:v=val(tt$(i))
+' 2 if i=13 or i=14 then c$=mid$("No Yes",(v+1)*3-2,3)
 ' 3 print c$
 
 {:end_loop}
@@ -297,11 +316,11 @@
 
 	&"{f6}":gosub {:sub.change_prompt}
 	if an$="N" then p=1-p:goto {:header}
-	on -(tr%<1)-2*(a<1 or a>24) goto 1811,{:_132}
+	on -(tr%<1)-2*(a<1 or a>24) goto 300,{:_132}
 
 ' changing password with/without permission:
 ' if not sysop, display "Sorry, restricted function." from e.text:
-	if a=2 then on -(id=1) gosub {:sub.existing_pw}:if id<>1 then x=3:gosub 1980:&"{pound}w2":goto {:header}
+	if a=2 then on -(id=1) gosub {:sub.existing_pw}:if id<>1 then x=3:gosub 390:&"{pound}w2":goto {:header}
 
 ' edit Last date:
 	if a=6 then an$=tt$(a):gosub {:sub.time_date_edit}:goto {:header}
@@ -586,4 +605,5 @@
 '	 6-:	3 letter time zone abbreviation, hour/minute offset
 
 	rem "i.ED" 3.0 2022/04/28 pinacolada
+
 	rem copr. 1988-2019 new image

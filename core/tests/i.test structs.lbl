@@ -1,0 +1,187 @@
+' C64List4_04.exe "i.test structs.lbl" -crunch -alpha:alt -ovr -prg
+' copied from fs driver as "i.test structs2/"
+{step:2}
+{assign:300	=300	} ' main prompt
+{assign:370	=370	} ' b$ mode: a
+
+{:3000}
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
+' get Trb-L status (db=debug mode):
+' 370 inverts a, so pre-inverting it reports true status
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+	gosub {:sub.struct_setup}
+{number:3010}
+{:menu}
+	s$="Structure"
+	&"&,60,0  Put String{f6}"
+	&"&,60,1  Get String{f6}"
+	&"&,60,2  Load {pound}$s from Disk{f6}"
+	&"&,60,3  Save {pound}$s to Disk{f6}"
+	&"&,60,4  Put Date{f6}"
+	&"&,60,5  Get Date{f6}"
+	&"&,60,6  Scan {pound}$s{f6}"
+	&"&,60,7  Sort {pound}$s{f6}"
+	&"&,60,8  Scan Numbers{f6}"
+	&"&,60,9  Scan Sum{f6}"
+	&"&,60,10 Copy {pound}$s{f6}"
+	&"&,60,11 Scan for String{f6}"
+	&"&,60,12 Game Scan{f6}"
+	&"&,60,13 Text Read{f6}"
+	&"&,60,14 Unknown{f6:2}"
+	&"(0-14, {f5}Q{f5}=Quit, {f5}{f2}{f5}=List){f6}"
+{:prompt}
+	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{f2}") goto {:quit}, {:menu}
+' calcgoto: routines start on 50-line increments
+'	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
+' &,66,1: calcgosub:
+	a%=abs(val(an$)):if a%<15 then a%=3100+a%*50:&,66,1
+	goto {:prompt}
+{nice:10}
+{:sub.which_record}
+' if q=1, a is out of bounds
+	&"[1-{pound}!t]":p$="Which Record":&,1:a=int(val(an$)):q=-(a<1 or a>t)
+	return
+{:3100} ' &,60,0
+	&"&,60,0{f6}":return
+{:3150} ' &,60,1
+	&"&,60,1{f6}":return
+{:3200} ' &,60,2
+	&"&,60,2{f6}":return
+{:3250} ' &,60,3
+	&"&,60,3{f6}":return
+{:3300} ' &,60,4
+	&"&,60,4{f6}"
+	gosub {:sub.which_record}:if q=. then gosub {:sub.make_random_date}:&,60,4,s%(2,a),dt$
+	return
+{:3350} ' &,60,5
+	&"&,60,5{f6}"
+' demonstrate that dates only take 3 bytes
+	gosub {:sub.which_record}:if q then return
+	&,60,5,s%(2,n),b$:&,60,4,s%(5,n),c$
+	&" Random: {pound}$b":an$=b$:&,15:&" {pound}v7{f6}"
+	&"Today's: {pound}$c":an$=c$:&,15:&" {pound}v7{f6}"
+	return
+
+{:3400} ' &,60,6
+	&"&,60,6{f6}":return
+{:3450} ' &,60,7
+	&"&,60,7{f6}"
+	&"Unsorted:{f6}":gosub {:sub.display_animals}
+' only example of this being used is:
+' i/lo/tt maint
+' for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next
+
+' sort s%(8,x) struct, starting element 1:
+' both these get stuck in an infinite loop and chews up a lot of CPU (clock updates every 5 seconds):
+' whether (8,1) is saying only sort 1 element,
+' or ScanStruct is only *meant* to sort non-struct  string arrays...
+'	&"Sorted:{f6}":&,60,7,0,s%(8,1),1
+	&"Sorted:{f6}":&,60,7,0,s%(11,1),1
+{:sub.display_animals}
+' get string from struct, l bytes:
+	for x=1 to t:n%=x:&,60,1,l,s%(11,x),a$:&"{pound}#2{pound}%n) {pound}$a{f6}"
+	if x=24 then:&"Paused:{pound}g1{pound}h7"
+	next:return
+{:3500} ' &,60,8
+	&"&,60,8{f6}":return
+{:3550} ' &,60,9
+	&"&,60,9{f6}":return
+{:3600} ' &,60,10
+	&"&,60,10{f6}":return
+{:3650} ' &,60,11
+	&"&,60,11{f6}":return
+{:3700} ' &,60,12
+	&"&,60,12{f6}":return
+{:3750} ' &,60,13
+	&"&,60,13{f6}":return
+{:3800} ' &,60,14
+	&"&,60,14{f6}":return
+
+{:quit}
+	&,28,2:goto 300
+
+{:sub.make_random_date}
+' not calendar-accurate (i.e., Sept. 19th may not fall on a Tuesday of the given year, but too lazy to code it properly)
+' we just want some random dates to sort and do comparisons on and stuff
+' 10 d1$="32105118447"
+' random day of week, "1"..."7":
+	dt$=chr$(49+rnd(1)*7)
+' d: random year from 2000...(current_year):
+' 20 y=int(rnd(1)*val(mid$(d1$,2,2))):?2000+y
+	d=int(rnd(1)*val(mid$(d1$,2,2))):w=2:gosub {:sub.pad_number}
+' d: a random month (1...12)
+	d=int(rnd(1)*12)+1:w=2:gosub {:sub.pad_number}
+' d: a random date within the # of days per month 'd':
+	d=int(rnd(1)*asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",d,1))+1):w=2:gosub {:sub.pad_number}
+' random hour 1...12, plus 50% chance of it being PM (+80):
+'	d=int(rnd(1)*12)+1:if rnd(1)>.5 then d=d+80
+	d=int(rnd(1)*12)-(rnd(1)>.5)*80:w=2:gosub {:sub.pad_number}
+' random minute 00...59
+	d=int(rnd(1)*59):w=2:gosub {:sub.pad_number}
+' ----+----+----+----+----+----+----+----+
+' dt$="xxxxxxxxxxx", len=11
+' Wed May 12, 2021  2:20:17 PM
+' FIXME: it's dropping the weekday
+'	if db then l=len(dt$):an$=dt$:&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
+	if db then an$=dt$:l=len(an$):&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
+	return
+{:sub.pad_number}
+' add to dt$ the digit 'd'. w=1: 'd', w=2: '0d'
+	dt$=dt$+right$("0"+mid$(str$(d),2),w):return
+
+{:sub.struct_setup}
+' struct layout:
+' ex.: ud%(21,xn) 21=byte,xn=file #
+' s%(byte,element) -or- s%(column,row)
+' -or- s%(record,field)
+' s%(1,n) | s%(2,n) | s%(5,n) | s%(8,n) | s%(11,n)
+' int     | date1   | date2   | int     | string
+' 1...n   | random  | d1$     | random  | animal
+' &,60,6  | &,60,7? |         | &,60,8? | &,60,
+	if db then:&"Populating struct...{f6}"
+' t=total # of records in struct
+' [using 1...t+1 instead of 0...t because some config info will be in s%(0,x)]
+' tt$() is animal names array
+' x=current animal name length
+' l=length of longest animal name (to create proper size struct)
+' tt$() does not need to be re-DIMensioned
+' DATA pointer does need to be RESTOREd (to not read error strings, I guess)
+' TODO: expand to power of 2 (32)
+	&,27,2:t=30:l=.:restore
+	if db then:&"Longest animal name:"
+	for n=1 to t:read tt$(n):x=len(tt$(n)):if x>l then l=x:if db then:&" {pound}!l"
+' save max length of animal names in s%(11,0):
+	next:dim s%(11+l,t+1):s%(0,0)=t:s%(11,0)=l
+' generate a set of non-repeating random numbers from 1-t:
+' 1 forx=1to30:x$=x$+chr$(x):next
+' 2 dim s%(30)
+' 3 forx=30to1step-1:n=int(rnd(1)*x)+1
+' 4 s%(x)=asc(mid$(x$,n,1)):x$=left$(x$,n-1)+mid$(x$,n+1)
+' 5 printright$("   "+str$(s%(x)),4)" ";:next
+' ----+----+----+----+----+----+----+----+
+' Generating 30 non-repeating random numbers...
+	if db then lp=1:&"Generating {pound}!t non-repeating random numbers..."
+	for x=1 to t:x$=x$+chr$(x):next
+	for x=t to 1 step -1:n%=(rnd(1)*x)+1
+	s%(1,x)=n%:s%(8,x)=asc(mid$(x$,n%,1)):x$=left$(x$,n%-1)+mid$(x$,n%+1)
+' put length l animal name tt$(n%) in s%(11,x):
+	&,60,0,l,s%(11,x),tt$(n%):if db then a%=s%(8,x):lp=1:&"{pound}#2{pound}# {pound}%a "
+	next:if db then:&"Done{f6}"
+
+' make some random dates
+	if db then lp=1:&"Generating {pound}!t random dates..."
+	for n=1 to t
+	gosub {:sub.make_random_date}:&,60,4,0,s%(2,n),dt$:&,60,4,0,s%(5,n),d1$
+	if db then if n/11=int(n/11) then:&"Paused:{pound}g1{pound}h7"
+	next:if db then:&"Done{f6}"
+	return
+
+' animals to mix up and sort with &,60,7:
+	data "anaconda","beaver","cat","dog","emu"
+	data "fox","goat","hippo","ibex","jackal"
+	data "king cobra","llama","mustang","n","okapi"
+	data "penguin","q","rhino","snake","tiger"
+	data "unicorn","vole","walrus","yak","zebra"
+	data "a","boar","c","deer","elephant"
+{nice:100}
+	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}

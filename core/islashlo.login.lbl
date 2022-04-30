@@ -1,0 +1,132 @@
+{alpha:alt}
+{uses:3_0-preface.lbl}
+{crunch:on}
+{step:2}
+{quoter:32=space}
+
+{number:4000}
+	rem"** i/lo.login **  6/08/95 JLF           User Login Routine"
+	goto{:4100}
+{:4004}
+	dr=5:b$="i/lo!"+a$:a$=b$:gosub 4:close2:ife%then:&"{f6}{white}[Module {pound}$b Failed]{f6}":return
+	new4500:loaddr$+b$,dv%:goto 4500
+{:4010}
+	p$="FIRST Name":t$=ff$:return
+{:4012}
+	p$="LAST Name":t$=ll$:return
+{:4014}
+	p$="Email Address ":t$=ph$:p=1:return
+{:4020}
+' logoff
+	mm=.:f1=3:goto 3000
+{:4022}
+	im=2:gosub 445:a=-(an$="RES"oran$="{^}"):onagoto 999:a$="{space:18}"
+	&,69,.,17,"User",$8f:an$=na$:&,15,1:&,69,5,17,left$(an$+a$,22),$8c
+{:4025}
+	&,69,.,18,"Name",$8f
+{:4026}
+	an$=left$(ff$+" "+ll$+a$,22):&,15,1:&,69,5,18,an$,$8c
+	&,69,.,19,"Mail",$8f:&,69,5,19,left$(ph$+a$,22),$8c:return
+{:4030}
+	&"Logoff!{f6:2}":tr%=.:im=3:gosub 446:return
+{:4032}
+	&"ASCII Re-Detect{f6:2}":c=2:return
+{:4034}
+	&"Xpress Login{f6}":x%=1:return
+{:4040}
+' TODO: optimize this
+	&"Mail-Check{f6:2}{gray3}  Enter the HANDLE of the user you want to check for.{f6:2}"
+'	c=1:&"{white}> {pound}i1":on-(tr%<1oran$="")goto 999:a$="r":tt$=an$:gosub 32:close2
+	c=1:&"{white}> {pound}i1":if (tr%<1oran$="")then return
+'	a$=mid$(" no",3*-(e%=.)+1,3):&"{f6} {cyan}{pound}v7 {lt. blue}has{pound}$a mail.{f6}":return
+	a$="r":tt$=an$:gosub 32:close 2:&"{f6} {cyan}{pound}v7 {lt. blue}has ":if e% then:&"no "
+	&"mail.{f6}":return
+{:4050}
+	&,52,10,3:ifa%=.then{:4056}
+{:4052}
+' called from multiple places
+	&"{f6:2} Sorry, no new users are being accepted at this time.{f6:2}":goto{:4102}
+{:4056}
+' called from multiple places
+	a$="lo."+"new":goto 72
+' NEW: linefeed toggle option
+{:4058}
+	b$="Linefeeds":&"Toggle {pound}$b{f6:2}":&,52,17,2:&,52,17,3:a=a%:goto 370 'display status
+{:4060}
+	a$="help":gosub{:4004}:ifa=2then{:4200}
+{:4100}
+	pw$="":k=.
+{:4102}
+' x%: Xpress Login
+' i%: Immediate Login
+' k%: Console Login
+	poke53252,20:ac%=16:id=.:x%=.:i%=.:k%=.:gosub 90
+' {pound}{back arrow}39: should this be {pound}$q to account for 80 columns?
+
+'----+----+----+----+----+----+----+----+
+' Press RETURN/ENTER To Login
+' Press "!" To Logoff
+' Press "*" To Change ASCII Translation
+' Press "L" To Toggle Linefeeds
+' Press "M" For Mail-Check
+' Press "X" For XPress Login
+
+' Login:
+{:4104}
+' tab 10, q$? this doesn't look like it accounts for 80 column displays
+' (40/80 column question will already have been asked earlier in the connect process)
+	&" {f6}{blue}{pound}vj {rvrs on}{cyan}{pound}{back arrow}10{pound}$qLogin Options Menu{pound}{back arrow}39{f6}{blue}{pound}vj{f6:2}":x=.
+{:4105}
+	b$="RETURN{cyan}/{yellow}ENTER {cyan}to Login":gosub {:4130}:b$="!{cyan}{f5} to Logoff":gosub {:4130}
+{:4106}
+	b$="*{cyan}{f5} to Change ASCII Translation":gosub {:4130}:b$="L{cyan}{f5} to Toggle Linefeeds":gosub {:4130}
+{:4108}
+' TODO: bitwise checks to make sure users can type only the options they have access to
+	&,52,32,3:if a% then b$="M{cyan}{f5} for Mail-Check":gosub {:4130}
+{:4110}
+	&,52,46,3:if a% then b$="X{cyan}{f5} for Xpress Login":gosub {:4130}
+	&"{f6:2} {yellow}Login{white}: {pound}g1":on-(tr%<1)goto{:4020}:a$=an$
+	x=-(a$="!")-2*(a$="{f7}")-3*(a$="X")-4*(a$="M")-5*(a$="L"):ifa$="I"thenmm=11:goto 3000
+	c=.:on x gosub {:4030},{:4032},{:4034},{:4040},{:4058}:on -(tr%<1) goto {:4020}:mm=14:on c goto{:4102}, 3000
+	if x=. then:&"Continue Login{f6:2}"
+	goto {:4150}
+
+' compensate for a variable # of items in login menu, and maintain 40/80 column spacing:
+' if (x and 1)=. ensures the count 'x' is even
+{:4130}
+	b$="{cyan} Press {f5}{yellow}"+b$:x=x+1:if (x and 1)=. then:&"{pound}{back arrow}39{pound}$b":return
+	&"{f6}{pound}$b":return
+
+{:4150}
+	&"{f6}{cyan}Enter Your {white}Handle {cyan}Or {white}Login {cyan}ID#{f6:2}{pound}b1: {white}{pound}i1":on-(tr%<1)goto{:4020}:dd$=an$
+	ifdd$="VISITOR"then:&"{f6}Sorry, that handle is reserved.":goto{:4150}
+	a=-(left$(dd$,3)="RES")-2*(dd$="NEW")-3*(dd$="HELP"ordd$="{f2}")
+	onagoto{:4056},{:4050},{:4060}:ifval(an$)thendd$=cc$+an$:goto{:4180}
+	ifleft$(dd$,len(cc$))=cc$andval(mid$(dd$,len(cc$)+1))>.then{:4180}
+	i=len(dd$):b$=left$(dd$,1):ifi<4ori>20orb$<"A"orb$>"Z"thenid=.:goto{:4194}
+	im=1:gosub 441
+	ifithenid=i:lp=1:&"{f6}{cyan} Your ID# Is {white}{pound}!i.  {cyan}Use It For A Faster Logon.{f6}":goto{:4182}
+	&"{f6:2} {f5}{pound}v7{f5} Not Found!{f6:2}":&,52,10,3:ifa%then{:4052}
+	lp=1:&" Would You Like To Apply For An Account Using That Handle?: "
+	gosub 94:ifathenf1=1:g$=dd$:dd$="NE"+"W":goto{:4056}
+{:4170}
+	ac%=16:k=k+1:on-(k>4)goto{:4020}:lp=1:&"{f6:2}Enter {f5}NEW{f5} if you have no Login"
+	lp=1:&" ID, or {f5}HELP{f5} if you are having trouble logging on.{f6}":goto{:4102}
+{:4180}
+	id=val(mid$(dd$,len(cc$)+1)):ifid<.orid>urthenid=.:goto{:4194}
+{:4182}
+	gosub{:4022}:ifathen:&"{f6:2}That account has been deleted.{f6}":goto{:4170}
+	&"{f6}{cyan}Please Enter Your {white}Password{cyan}.{f6:2}{pound}b1:{white} ":&,6:on-(tr%<1)goto{:4020}
+	z$=an$:ifz$=""thenid=.:goto{:4194}
+	&,52,$32,3:ona%goto{:4193}
+	&"{f6}Additional Information:{f6}":a=int(rnd(1)*3)+1:p=.:onagosub{:4010},{:4012},{:4014}
+	ifpthenpl=.:poke53252,78:&,1,32:c$=an$
+	ifpthenon-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto{:4194},4200
+	&"{f6:2}":gosub 6:c$=an$:on-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto{:4194},{:4200}
+{:4193}
+	ifpw$=z$then{:4200}
+{:4194}
+	&"{f6:2}Login is not valid.":a$="telecheck":gosub{:4004}:goto{:4170}
+{:4200}
+	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke951,ll%:mm=10:goto {:3000}
+	rem i/lo.login (c)nissa 200621 lh-ad

@@ -1,0 +1,35 @@
+{uses:3_0-preface.lbl}
+{number:3000}
+	gosub90:onmmgoto{:3010},{:3004},{:3006}
+{:3002}
+	&,28,1:&,11:lc=1:&,27,1:sy$="":goto200
+{:3004}
+	p$=po$:return
+{:3006}
+	return
+{:3010}
+	ifzzandan$="R"then{:3030}
+	ifval(an$)thengosub{:3020}:ifa$<>""thenuu$=a$:goto{:3002}
+	remifan$="NORM"thenmm=0:goto2006
+	gosub90:&"{f6}{lt. red}{pound}vj{lt. blue} {rvrs on} Unknown Command. Enter {f5}?{f5} For Help. {f6}{lt. red}{pound}vj":goto{:3002}
+{:3020}
+	a%=val(an$):a$="{^}":ifa%<1ora%>4thenreturn
+	dr=3:a$="e.macs":gosub4:a$="{^}":ife%=0thenx=id*4-4+a%:gosub1:&,2,2
+	close2:return
+{:3030}
+	&,52,$30,3:ona%+1goto{:3032}
+	gosub304:poke53252,14:&"{f6:2}Run: +.{pound}i0":a$=an$:on-(a$="")goto{:3002}:goto 70
+{:3032}
+	gosub304:&"{f6:2}{lt. blue}Which Class{cyan}? ({lt. blue}3{cyan},{lt. blue}4{cyan},{lt. blue}5{cyan}): {white}{pound}g1":a=val(an$):ifa<3ora>5then{:3032}
+	&mid$(str$(a),2)+"{f6}":c=a-2:poke53252,14:&"{f6}{lt. blue}Run{cyan}: {white}i":&mid$("./",c,1)
+	ifc=3then:&"{left}sub.":poke53252,12
+	&"{pound}i0":c$=an$:on-(c$="")goto{:3002}:on-(c=3)goto{:3046}:gosub349:gosub350
+	ifa<>.thenx=6:gosub390:goto{:3002}
+{:3046}
+	&"{f6}{lt. blue}Enter Value for "+mid$("mmlmim",c*2-1,2)+"{cyan}: {white}{pound}i1"
+	a$=c$:onc-1goto{:3048},{:3050}:mm=val(an$):goto71
+{:3048}
+	lm=val(an$):gosub73:goto{:3002}
+{:3050}
+	im=val(an$):gosub74:goto{:3002}
+	rem i.main (c)nissa 200802 lh
