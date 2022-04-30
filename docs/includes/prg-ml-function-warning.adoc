@@ -1,0 +1,13 @@
+// include::includes/prg-ml-function-warning.adoc[]
+// :function_count: 1
+ifeval::[{function_count} == 1]
+====
+WARNING: This following routine is used by Image BBS machine language itself; there is little reason to call it from BASIC.
+====
+endif::[]
+
+ifeval::[{function_count} > 1]
+====
+WARNING: These following {function_count} routines are used by Image BBS machine language themselves; there is little reason to call them from BASIC.
+====
+endif::[]

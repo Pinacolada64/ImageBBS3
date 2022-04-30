@@ -1,0 +1,83 @@
+:experimental:
+:toc:
+
+## Convert a 2.0 System
+
+NOTE: This is the recommended way of converting 2.0 to 3.0.
+Other ways may work but have not been tested.
+Since you are already running Image 2.0, keep the same Image drive assignments for the 3.0 upgrade.
+
+****
+The file `im` line `3074` is preconfigured to run from drive 0.
+This is the default partition on most drives.
+
+NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in line `3074` to the number of your boot LU.
+****
+
+. Make a complete backup of all your Image 2.0 drives.
+. Copy `bd.data` from your programs drive to your Etcetera Disk.
+. Remove all your 2.0 boot and program files from your Program Disk.
+. Copy all the files from IMAGE 3.0 D1 to your Program Disk.
+. Copy `bd.data` from the Etcetera Disk to the Program Disk, but rename it to `d.data`.
+. Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your Etcetera Disk, replacing the existing files.
+. Remove all the Image 2.0 `s.*` files from your System Disk.
+
+CAUTION: What if you've written custom board entry files or login screens?
+
+[start=8]
+. Copy all the `s.*` files from IMAGE 3.0 D2 to your System Disk.
+
+****
+If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your Etcetera Disk.
+****
+
+[start=9]
+include::sub_modem-config.adoc[]
+
+include::includes\boot-command.adoc[]
+
+. When prompted, type kbd:[3] `Convert a 2.0 system`.
+
+. Image 3.0 will perform all the necessary tasks of converting your 2.0 to 3.0 and will end up at the idle screen.
+
+NOTE: Since the 3.0 modem configuration is different from 2.0, Image BBS won't communicate with your virtual modem yet.
+You can fix this in a later step.
+
+[start=6]
+. Log on to your BBS from the console.
+. Type kbd:[IM] to go to the Configuration Editor.
+
+Continue to the <<setting-up.adoc#Shared Image BBS 3.0 Setup,Shared Image BBS 3.0 Setup>> section.
+
+////
+. Configure your modem.
+
+. Configure any items not already configured in `Misc. Features`.
+
+. Go into the `Logon Editor` and configure your `Login Mods` (login modules).
+There is a Help function which will explain how to do it.
+
+. Configure your new `Maint Mods` (Nightly AutoMaintenance modules).
+
+. Configure your `Lightbar Defs` (lightbar defaults).
+
+. When back at the IM Configuration Editor, select the option for `Base Editors`.
+
+****
+This takes you to the menu page that used to be called by the kbd:[SM] command in 2.0.
+You shouldn’t have to do anything here, but you can look around if you want to.
+****
+
+When done, use the `Quit` option to go back to the Configuration Editor.
+Then `Quit` from there back to the Main Prompt.
+
+20. Enter kbd:[NF] to go to the News files and configure any news files needing to be edited, added or configured.
+(`n.$Welcome!`, perhaps?)
+kbd:[Q]uit back to the Main Prompt when done.
+
+21. Type kbd:[GF] to go to the General Files section.
+Notice that nothing is configured.
+You will need to reconfigure your GF section due to the incompatibility between 3.0 and 2.0 file formats.
+
+#TODO:# Converter should be possible...
+////

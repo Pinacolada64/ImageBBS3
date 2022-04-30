@@ -1,0 +1,10 @@
+[start=1]
+. Turn on (or reset) your computer. 
+
+. Change device numbers to your Program Disk.
+
+. From there, type:
+
+* `load"boot",x,1` (standard Commodore DOS, where _x_ is your boot device number)
+* `boot` (Lt. Kernal DOS)
+* `%boot` (JiffyDOS)

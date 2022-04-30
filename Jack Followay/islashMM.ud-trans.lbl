@@ -1,0 +1,125 @@
+{assign:3048	=make_filename}
+
+{:4000}
+{step:2}
+	rem "i/MM.ud-trans"
+'	on -(((f2 and 1)=1) and (q=.)) goto 3048:&"{f6} - {pound}$l To {pound}v8:{f6}"
+	on -(f2 and 1)+q=1 goto 3048:&"{f6} - {pound}$l To {pound}v8:{f6}"
+	fl=-(z$="UM"):gosub 3002:on l% goto {:4012}:gosub 3004:gosub 61:if a<250 then x=2:gosub 390:goto 3214
+' TODO: this could be optimized!
+' TODO: check blocks free from directory entry? or the saved blocks free count (gosub 61: return 'a', blocks free)
+	on -(co%>2) goto {:4008}:if a<664 then b$=str$(a):&"{f6}{lt. blue}{pound}$b Blocks Free: Room Enough? ":gosub 94:on a+1 goto 3214:goto {:4010}
+	d$="Blocks":if co%>2 then d$="Kbytes":a=int((a*254)/1024)
+{:4008}
+'	if a<664 then a=int((a*254)/1024):b$=str$(a):&"{f6}{lt. blue}{pound}$b Kbytes Free: Room Enough? ":gosub94:ona+1goto3214
+	if a<664 then:&"{f6}{lt. blue}{pound}!a {pound}$b Free: Room Enough? ":gosub94:if a=. then 3214
+{:4010}
+	gosub 60:if a<. then b$="Time":gosub 3487:goto 3214
+{:4012}
+	if rn>59 then gosub 3032:goto 3214
+	gosub 3002:if l% then:&"{f6}{yellow}LOCAL MODE UPLOAD{f6}"
+	rs=tr%:on fl goto {:4052}:poke 53252,16:&"{f6}{white}({f7} = Batch) {green}{pound}$l ":gosub 3022:tt$=an$:if an$="{f7}" then {:4052}
+	on-(tt$=""ortt$="$"orleft$(tt$,1)="@"ormid$(tt$,2,1)=":")goto3214:gosub3004
+	&"{f6}{lt. green}[P]RG (Binary) Or{f6}[S]EQ (Text) {pound}$j?{f6:2}U: {lt. blue}{pound}g1"
+	t$=chr$(asc(an$) and 127):a$="SEQ{f6}":if t$<>"s" then t$="p":a$="PRG{f6}"
+	&:gosub 3002:on l% goto {:4026}:gosub 3004:a$=tt$+","+t$+",r":gosub 4:close 2:if e%=. then {:4050}
+{:4026}
+	b$=co$(co%):&"{f6}{lt. red}{pound}$b Only {pound}$j?: ":gosub94:ifathenz%=co%*a:goto{:4032}
+'	&"{f6}{lt. green}Which Computer?:{f6}":for x=1 to 9:b%=x:b$=co$(x):&"{f6} {pound}%b. {pound}$b":next
+	&"{f6}{lt. green}Which Computer?:{f6}":for x=1 to 9:&"{f6} {pound}!x. "+co$(x):next
+	&"{f6:2}{lt. blue}({white}RETURN{lt. blue} = Any Computer): {pound}g1{pound}v7{f6}":gosub3012:z%=-a*(a>.anda<10)
+{:4032}
+	&"{f6}{lt. green}Please Enter A {pound}$j Description{f6}({white}RETURN{lt. green} to abort upload):"
+	poke 53252,78:&"{f6}{lt. blue}-{pound}i0":g$="-"+an$:if an$="" then 3214
+	gosub 3002:if l% then:&"{f6}# Blocks?: {pound}i1":gosub 3012:on tr%+1 goto 3264:f=a:goto{:4042}
+	gosub 3444:an$="Send":gosub 3030:a$=tt$+","+t$+",w":gosub 4
+' 513: which module does it call?
+	an$=tt$+","+t$:x=2:gosub 513:gosub 3495:&,16,1:gosub 3124
+	gosub{:4078}:f=a%:&,52,22,3:cu=a%:a%=f:if e% or b=. then {:4048}
+{:4042}
+' FIXME
+'	gosub{:4112}:f$=d1$+d1$+tt$+"{f1}"+t$:gosub{:4075}:gosub3150:gosub3002:ifl%then{:4046}
+	f$=d1$+d1$+tt$+"{f1}"+t$:gosub {:4075}:gosub 3150:gosub 3002:if l% then {:4046}
+	gosub 3040:c$=l$:a%=1:tt$(1)=tt$:gosub 3068
+{:4046}
+	a%=1:d=c%(rn):gosub 3002:onl%+1goto{:4066},{:4068}
+{:4048}
+	gosub 92:jm=.:gosub 3004:a$=tt$:gosub 19:goto{:4072}
+{:4050}
+	&"{f6:2}{$0f}{orange}{pound}$j Exists.{f6}":goto3214
+{:4052}
+' Batch upload
+	on nb goto {:4104}:gosub 3444:an$=m$+"Send":gosub 3030:gosub {:4092}:rk=x:gosub 3124:if b=. then gosub 92:jm=.:b%=.
+' cu=Credits Unvalidated
+	gosub{:4078}:&,52,22,3:cu=a%:a%=f:d=.:gosub{:4078}:lp=1
+	if a%=. then gosub 92:jm=.:goto{:4072}
+'	g$=m$+l$:y%=a%:for i=1 to a%:b=asc(tt$(i)+nl$)+asc(mid$(tt$(i),2)+nl$)*256
+' g$=?, y%=save a$, b=block size?
+	g$=m$+l$:y%=a%:for i=1 to a%:b=asc(tt$(i)+nl$)+asc(mid$(tt$(i),2)+nl$)*256
+	b$=mid$(tt$(i),3):a$=right$(b$,1):gosub 3062:tt$(i)=b$+"{f1}"+a$
+	d=d+b:z%=co%:f$=d1$+d1$+tt$(i):g$="-"+m$+l$:gosub{:4074}:gosub{:4080}:next:y%=a%:gosub 3150
+	g$=m$+l$:gosub 3040:a$="  "+g$:gosub 51:c$=l$:a%=y%:gosub 3068
+{:4066}
+	x=3:&,25,.,x:gosub 3004:gosub 62:tr%=rs:on-(cu=1)goto{:4068}:a=2:gosub 11:cr=cr+(a*d)
+{:4068}
+	uc=uc+a%:bu=bu+d:gosub 30
+	i=a%:x=6:gosub 16:x=17:gosub 16:x=28:gosub 16:x=35:gosub 16:close 2
+{:4072}
+	&"{f6}":gosub 3066:on x goto 3264:on jm goto 3448:goto 3214
+{:4074}
+' add entry to U/D directory:
+' FIXME
+' because Xmodem block size is 1/2 the size of other protocols, this junk:
+' 3058: deprecated, concatenate uploader id and handle ("00001PINACOLADA")
+'	rn=rn+1:gosub 3058:c%(rn)=b:nn$(rn)=a$:dt$(rn)=f$:goto{:4076}
+
+{:4075}
+' since Xmodem blocks are 1/2 the size of other protocols', divide blocks by 2
+	if left$(d4$,1)="X" then b=b/2
+'	rn=rn+1:gosub 3058:c%(rn)=f:nn$(rn)=a$:dt$(rn)=f$
+'	rn=rn+1:gosub 3058:c%(rn)=f/2:nn$(rn)=a$:dt$(rn)=f$
+' add block size (b), uploader handle (a$), date uploaded [dt$(rn)], date last downloaded (f$)?
+	rn=rn+1:&,60,u%(1,rn)=b:&,60,0,10,u%(11,rn),a$:&,60,4,0,u%(3,rn),d1$:&,60,4,0,u%(6,rn),d1$
+{:4076}
+' cf=1: configuration changed, so save struct later
+' 3008: return
+'	ed$(rn)=g$:d%(rn)=z%:gosub 3002:f%(rn)=1:on l% goto 3008:f%(rn)=-cu:return
+	ed$(rn)=g$:d%(rn)=z%:gosub 3002:f%(rn)=1:on l% goto 3008:f%(rn)=-cu:return
+{:4078}
+' 3074: poke 668,peek(667):return
+	gosub 3074:gosub 5:close 2:return
+{:4080}
+'	&"{f6}{lt. green}Please Enter A Description For"
+'	an$="":poke53252,78:&"{f6}{white}{pound}$b{lt. green} (No Desc. Will KILL Upload!){f6}:{lt. blue}-{pound}i0"
+	lp=1:&"{f6}{lt. green}Please Enter a Description For {white}{f5}{pound}$b{f5}{lt. green}. (No Desc. Will KILL Upload!){f6}"
+'	on-(an$=""oran$=r$)goto{:4086}:ed$(rn)="-"+an$:return
+' TODO: add to "e.UD {bn}.desc", maybe new routine in i.UD-structs
+	an$="":poke 53252,78:&":{lt. blue}-{pound}i0":if an$<>"" and an$<>r$ then x=f:gosub xxx:x=f:gosub 10:print#2,an$:return
+{:4086}
+' 3066=carrier check
+	gosub 3066:on -(tr%<1 and x=1) goto 3008:if x=. and rk=1 then return
+	d=d-c%(rn):rn=rn-1:tt$(i)=tt$(i)+" (Deleted!)":y=i:i=-1:gosub 30:x=28:gosub 16:i=y
+' scratch file from disk
+	a$=b$:gosub 3004:goto 19
+{:4092}
+	f=.
+{:4094}
+	on -(rn+f>=60) goto {:4102}:an$="":gosub 3495:&,16,3
+	on -(an$="") goto {:4102}:f=f+1:tt$(f)=an$:x=2:gosub 513
+	a$=an$+",w":gosub 3004:gosub 4:if e% then close 2:f=f-1:goto {:4102}
+	&,16,1:gosub 3124:gosub 3066:on x goto {:4102}
+	if b=. then a$=left$(tt$(f),len(tt$(f))-2):jm=0:f=f-1:gosub 3004:goto 19
+' update block count (b) + filename [tt$(f)]
+' 3066: carrier/local mode check. x=1: carrier or local mode.
+'	tt$(f)=chr$(band255)+chr$(b/256)+tt$(f):gosub3066:onxgoto{:4102}:goto{:4094}
+	&,60,.,16,ud%(29,1),tt$(f):ud%(1,f)=b:gosub 3066:if x=. then {:4094}
+{:4102}
+	print#131,"{$18:3}";:goto3066
+{:4104}
+	lp=1:&"{f6}Sorry, Batch {pound}$ls Using {pound}vl Are Not Currently Supported.":goto3214
+' 4112
+' lh	if left$(d4$,1)="X" then f=f/2
+' 	return
+' rs ?	f=f/(-1*left$(d4$,1)="X"):return
+	copr. 1990 new image 10/28/90
+	rem "i/MM.ud-trans (c)nissa 200409 lh"

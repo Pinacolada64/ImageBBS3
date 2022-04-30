@@ -1,0 +1,51 @@
+// IM - GGLabs modem configuration
+// include::include\im-gglabs-config.adoc[]
+
+:experimental:
+
+The following will guide you through how to set up a GGLabs GLink232 (or SwiftLink) modem interfaced to BBS Server.
+
+[start=1]
+
+. Type `IM` at the Main Prompt.
+
+NOTE: If the BBS is configured for a Lt. Kernal, entering the modem configuration will allow you to configure not only the port your host adapter is set for but any other ports which might be multiplexed. 
+
+----
+Enter Modem Brand/Name: GLINK232
+Enter Author (Return=New Image): GGLABS
+Enter Custom Init String:
+----
+
+(Just hit kbd:[Return] here. No custom Hayes initialization string is necessary.)
+
+Answer the following setup questions with the answers provided:
+
+----
+ 1. What is the Max. Connection Rate For This Modem? 6
+ 2. Select Hang-Up Method For This Modem: D
+ 3. Auto-Answer (ATS0=1): A
+ 4. Use an ATH After ESCape Codes?: H
+ 5. When In Local Mode, Should Phone Be: H
+ 6. Does This Modem Need a 0 After ATH?: 0
+ 7. Should ATH be in the Modem Reset/Init String?: H
+ 8. Select Value For ATX Setting: 1
+ 9. Is DTR on This Modem Normal or Reverse?: N
+10. Select CCITT or Bell Labs Standard: 0
+11. Select RS232 Interface Type: 1
+12. Is Caller ID Available (Both Modem AND Phone Line): 0
+----
+
+The BBS will create a file on the Etcetera Disk, then display a `Setup Completed` message.
+(Ignore the statement about doing customized result codes, we skipped that earlier.)
+
+Then hit any key to return to the `Modem Config` page.
+
+Review your settings.
+If any changes need to be made, type the corresponding number (such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type kbd:[2] and select kbd:[E]).
+
+NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<setting-up.adoc#Configure a New BBS,Configure a New BBS>>.
+
+When finished configuring your modem, type kbd:[X] to `Exit Modem Config`. Answer `Update Modem Flags?` with kbd:[Y]es.
+
+#TODO#: More details will be available in the relevant `IM` documentation.
