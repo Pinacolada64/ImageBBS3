@@ -45,11 +45,11 @@
 	' tz: edit flag - 0: edits made, prompt to save
 
 ' 12/May/2015 11:24
-' - "reboot required" prompted for and notice printed if # next available user # 
+' - "reboot required" prompted for and notice printed if # next available user #
 '	modified
-' - {:input} - checked for "N" (switch pages) before normalizing input, wasn't 
+' - {:input} - checked for "N" (switch pages) before normalizing input, wasn't
 '	changing pages - c64list oddity, need {$Cx-D0} in quotes
-' - changed back to old code of checking for handle change for deleted or 
+' - changed back to old code of checking for handle change for deleted or
 '	REServed users since {:res_pw} is not called with GOSUB
 
 	rem "i.ED 3.0"
@@ -222,19 +222,18 @@
 '  DE#10         (Type "N" for next page)
 '
 '  1) Handle    : PINACOLADA
-'  2) Password  : NILREM
+'  2) Password  : xxxxxx
 '  3) First Name: RYAN
 '  4) Last Name : SHERWOOD
-'  5) Phone #   : [xxx] xxx-xxxx
+'  5) E-Mail    : x@example.com
 '  6) Last Date : May 15, 2019 10:54 PM
 '  7) Accs Grp  : 9 (\$q)\_25af% [?]: \%q
 '  8) CallsToday: 0
-'  9) Total Calls: 0
+'  9) TotalCalls: 0
 ' 13) User Flags: 0
 ' 22) Last Call : May 15, 2019 10:54 PM
 
 '  # to change (1-22):
-'  Asc  Ans  Exp  UnvZZTrc ZBel ZNet ZMac
 
 ' page 0: 1-9, 13, 22-23
 	for i=1 to 9:a%=i:b$=ed$(i):c$=tt$(i)
@@ -562,7 +561,7 @@
 ' 13, 14, 15
 ' TODO: verify 14 is now Unlimited Editor Lines?
 	data "Files Maint","MCI Access","UDs at Prime Time"
-' New:
+' New as compared to Image 1.2:
 ' 16, 17, 18 (1st byte)
 	data "Max Idle Time","Calls/Day","Time/Call"
 ' 19 (2nd byte), 20

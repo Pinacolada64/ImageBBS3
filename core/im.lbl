@@ -109,57 +109,63 @@
 {:61}
 	if dr<7 then if bf(dr)>-1 then gosub {:2}:a=bf(dr):bf=a:return
 {:62}
-' check blocks free (xx bytes):
-	gosub {:3}:on-(dv%<>lk%)goto {:64}:a$=dr$:ifdr$="10:"thena$="a"
-' not sure this would work:
-'	gosub {:3}:on-(dv%<>lk%)goto {:64}:a$=mid$(hx$,val(dr$)+1,1)
+' check blocks free (lk%=Lt.Kernal HD device #):
+	gosub {:3}:on -(dv%<>lk%) goto {:64}:a$=dr$:if dr$="10:" then a$="a"
+' TODO: reasonably sure using hex string would work:
+'	gosub {:3}:on -(dv%<>lk%) goto {:64}:a$=mid$(hx$,val(dr$)+1,1)
 {:63}
 	a=2:print#15,"lg"left$(a$,1):input#15,e%,a$,a$,a$,a$,a$:goto {:65}
 {:64}
 	a=1:close2:open2,dv%,0,"$"+dr$+"{black}":get#2,a$,a$:&,8,2,1:&,8,2,1:close2
 {:65}
-	a=val(a$)*a:bf=a:fora=1to6:ifdv%(a)=dv%anddr%(a)=val(dr$)thenbf(a)=bf
+	a=val(a$)*a:bf=a:for a=1 to 6:if dv%(a)=dv% and dr%(a)=val(dr$) then bf(a)=bf
 {:66}
 	next:a=bf:return
 {:70}
 	dr=5
 {:71}
-	on-(pr$<>"i."+a$)gosub {:76}:goto {:3000}
+	on -(pr$<>"i."+a$) gosub {:76}:goto {:3000}
 {:72}
 	dr=5
 {:73}
-	on-(p1$<>"i/"+a$)gosub {:77}:goto {:4000}
+	on -(p1$<>"i/"+a$) gosub {:77}:goto {:4000}
 {:74}
-	on-(a$<>"modem")goto {:100}:dr=5:on-(p2$<>"sub."+a$)gosub {:78}:is=is+1:im$(is)=p2$
+	on -(a$<>"modem") goto {:100}:dr=5:on -(p2$<>"sub."+a$) gosub {:78}:is=is+1:im$(is)=p2$
 {:75}
-	gosub60000:is=is-1:on-(is<1)goto {:999}:a$=mid$(im$(is),5):goto {:78}
+	gosub 60000:is=is-1:on -(is<1) goto {:999}:a$=mid$(im$(is),5):goto {:78}
 {:76}
-	a$="i."+a$:pr$=a$+"":p1$="":p2$="":new3000:goto {:79}
+	a$="i."+a$:pr$=a$+"":p1$="":p2$="":new 3000:goto {:79}
 {:77}
-	a$="i/"+a$:p1$=a$+"":p2$="":new4000:goto {:79}
+	a$="i/"+a$:p1$=a$+"":p2$="":new 4000:goto {:79}
 {:78}
-	a$="sub."+a$:p2$=a$+"":new60000
+	a$="sub."+a$:p2$=a$+"":new 60000
 {:79}
-' 6/23/2021: remove gosub 20, "L:", add error check (goto 5)
-	cm$=a$:gosub {:9}:gosub {:2}:loaddr$+a$,dv%:goto {:5}
+' 6/23/2021:
+' - remove gosub 20 (debug code no longer exists)
+' - remove "L:"
+' - add error check (goto 5)
+	cm$=a$:gosub {:9}:gosub {:2}:load dr$+a$,dv%:goto {:5}
 {:80}
-	a$=z$:z$=mid$(p1$,3):gosub {:72}:a$=z$:dr=5:on-(lc<>1)goto {:77}:return
+	a$=z$:z$=mid$(p1$,3):gosub {:72}:a$=z$:dr=5:on -(lc<>1) goto {:77}:return
 {:82}
-	fori=1to4:&,11,i:next
+	for i=1 to 4:&,11,i:next
 {:83}
 	&,11,.:return
 {:84}
-	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+' a=hour of day, get prime time status
+	a=int(mn%/60):pt%=-(a>=p2% and a<p3%)*sgn(p1%):return
 {:85}
-	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:ona+1goto {:999}:dr=3:gosub {:61}
+	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:on a+1 goto {:999}:dr=3:gosub {:61}
 {:86}
-	x=2:on-(bf<35)goto {:390}:im=1:goto {:444}
+	x=2:on -(bf<35) goto {:390}:im=1:goto {:444}
 {:90}
-' TODO: double-check bytes saved
-'	q$="":on-(ll%<42)goto {:999}:forr=1toint((ll%-42)/2):q$=q$+" ":next:return
-	q$="":ifll%>42thenforr=1toint((ll%-42)/2):q$=q$+" ":next
-{:91}
-	return
+' center a string
+' TODO: double-check bytes difference
+' original:
+	q$="":on -(ll%<42) goto {:999}:for r=1 to int((ll%-42)/2):q$=q$+" ":next:return
+'	q$="":if ll%>42 then for r=1 to int((ll%-42)/2):q$=q$+" ":next
+' {:91}
+'	return
 
 {:92}
 	&"{f6}{lt. blue}>{cyan}>{white}Canceled!{f6}":return
@@ -199,7 +205,7 @@
 {:204}
 	s=.:sh=.:gosub {:12}
 {:206}
-	poke970,0:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
+	poke 970,0:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
 {:208}
 	mm=2:gosub {:3000}:gosub {:9}:&"{f6} {blue}- {white}{pound}$bM{pound}q0":if tr%<100 then a%=tr%:&" {blue}- {white}{pound}%a {cyan}Min Left{pound}q0"
 {:209}
@@ -293,9 +299,9 @@
 {:309}
 	cm$="L: 1.3 Emulator":gosub {:9}:dr=5:gosub {:3}:load dr$+"im.emul13",dv%:goto {:304}
 {:310}
-' FIXME:
-' 	pu$=an$:if an$="{f8}{f2}" then {:315}
-	pu$=an$:on -(an$="{f8}{f2}") goto {:315}
+' REWRITE
+ 	pu$=an$:if an$="{f8}{f2}" then {:315}
+'	pu$=an$:on -(an$="{f8}{f2}") goto {:315}
 {:311}
 	if left$(an$,1)="{f8}" then an$=hs$(10-val(mid$(an$,2,1))):goto {:314}
 {:312}
@@ -317,7 +323,8 @@
 {:324}
 ' get flags:
 ' 6: lines allowed in editor *10
-' 16:
+' 16: max idle time
+' 20: downloads per call
 	a=6:gosub {:11}:le=(a+1)*10:a=16:gosub {:11}:poke 830,a:a=20:gosub {:11}:da%=a
 {:325}
 	return
@@ -563,7 +570,7 @@
 {:3096}
 	dr=5:gosub {:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
 	z3$="Reading System Info...":gosub {:3404}
-	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3096}
+	gosub {:35}:if e% then close 2:gosub {:3250}:goto {:3096}
 	x=1:gosub {:1}:&,2,2:bs$=a$:close2
 	im=.:gosub {:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
 	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
@@ -582,7 +589,7 @@
 '	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8):z3$="Setting Up Variables... (e.data)":gosub {:3404}
 	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8)
 {:3128}
-	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:ife%thenclose2:gosub {:3250}:goto {:3128}
+	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:if e% then close 2:gosub {:3250}:goto {:3128}
 	x=1:gosub {:1}:&,2,2:ca=val(a$):x=12:gosub {:1}:&,2,2:ur=val(a$)-1
 	x=17:gosub {:1}:&,2,2:d3$=a$:x=18:gosub {:1}:&,2,2:pp$=a$
 	x=19:gosub {:1}:&,2,2:z$=a$:x=20:gosub {:1}:input#2,p1%,p2%,p3%
@@ -603,33 +610,35 @@
 	x=48:gosub {:1}:&,2,2:c1$="{clear}{f6}{$07}"+a$+"{f6:2}":x=49:gosub {:1}:&,2,2:c2$="{f6:2}"+a$+"{f6:2}"
 	x=51:gosub {:1}:&,2,2:cc$=a$
 	x=58:gosub {:1}:&,2,2:nc=val(a$)
+' clock set stuff:
 	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
 	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
 {:3158}
-	poke970,.:poke971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
-	gosub {:30}:forx=1to38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2
+	poke 970,.:poke 971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
+	gosub {:30}:for x=1 to 38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2
 	an$=am$:lt$=am$:tk$=left$(am$,1):gosub {:3300}
-	close2:gosub {:3186}:&,37
-	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":fori=54272toi+24:pokei,.:next
+	close 2:gosub {:3186}:&,37
+	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":for i=54272 to i+24:poke i,.:next
 	f1=3:&,27,1:goto {:302}
 {:3170}
-	a=val(left$(z$,1)):gosub {:3184}:poke52935,a
-	a=val(mid$(z$,2,2)):gosub {:3184}:poke52938,a
-	a=val(mid$(z$,4,2)):gosub {:3184}:poke52936,a
-	a=val(mid$(z$,6,2)):gosub {:3184}:poke52937,a
+	a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
+	a=val(mid$(z$,2,2)):gosub {:3184}:poke 52938,a
+	a=val(mid$(z$,4,2)):gosub {:3184}:poke 52936,a
+	a=val(mid$(z$,6,2)):gosub {:3184}:poke 52937,a
 	b=val(mid$(z$,8,2))
 	c=val(mid$(z$,10,2))
 	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.:return
 {:3184}
 	a=16*int(a/10)+a-int(a/10)*10:return
 {:3186}
-	forq=.to6:bf(q)=-1:next
+	for q=. to 6:bf(q)=-1:next
 	rem
 '	z3$="im Revision: Sep. 29, 2020 9:00 AM":gosub {:3404}
-	z3$="Reading Blocks Free...":gosub {:3404}:forq=1to6:dr=q:gosub {:61}
+	z3$="Reading Blocks Free...":gosub {:3404}:for q=1 to 6:dr=q:gosub {:61}
 ' NOTE: can we do {pound}!a at the end?
-' NOTE: with LtK emulation, blocks free could be 6 digit value, and so str$(a) should stand
-	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
+' with Lt.Kernal emulation, blocks free could be 6 digits, beyond the limit of 5 digit MCI value output
+' using str$(a) stands
+	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
 {:3200}
 	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
@@ -641,28 +650,28 @@
 	&"{f6:2}":gosub {:3408}:lm=val(an$):if lm<1 or lm>4 then {:3220}
 	return
 {:3220}
-	iflm=1thenz3$="Configure New Image 3.0 System"
-	iflm=2thenz3$="Convert from Image 1.2"
-	iflm=3thenz3$="Convert from Image 2.0"
+	if lm=1 then z3$="Configure New Image 3.0 System"
+	if lm=2 then z3$="Convert from Image 1.2"
+	if lm=3 then z3$="Convert from Image 2.0"
 ' FIXME: "Are You Sure?: [No]" -> confirm reset
-	iflm=4then:&"{f6}Reset C64: ":gosub {:93}:ona+1goto {:999}:sys64738
+	if lm=4 then:&"{f6}Reset C64: ":gosub {:93}:on a+1 goto {:999}:sys 64738
 ' TODO: there's a subroutine at 3414 for clearing this screen area...
 	gosub {:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
 ' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto {:73}
 '	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
 	a$="su.config":new4000:&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000:return ' FIXME
 {:3250}
-	dr=3:a$="e.lightdefs,s,r":gosub {:4}:ife%thenclose2:goto {:3300}
+	dr=3:a$="e.lightdefs,s,r":gosub {:4}:if e% then close 2:goto {:3300}
 	z3$="Setting Default Checkmarks...":gosub {:3404}
 ' FIXME: if e% (error condition), don't jump into the middle of a for-next loop. change to 3210 at least
-	forx=.to7:&,2,2:iflen(a$)<>16then{:3258}
+	for x=. to 7:&,2,2:if len(a$)<>16 then {:3258}
 '	fori=1to16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
-	fori=1to16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
+	for i=1 to 16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
 {:3258}
-	next:close2
+	next:close 2
 {:3300}
-	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:ife%=.thenreturn
-	dr=3:a$="e.log"+left$(lt$,1):gosub {:18}:close2:an$=d1$:&,15:d6$=an$
+	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:if e%=. then return
+	dr=3:a$="e.log"+left$(lt$,1):gosub {:18}:close 2:an$=d1$:&,15:d6$=an$
 	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub {:51}
 	gosub {:33}:x=44:gosub {:1}:print#2,d6$:close2
 	gosub {:30}:forx=12to22:st(x)=.:gosub {:17}:next:return
@@ -671,7 +680,7 @@
 	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
 	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
 	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
-	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke1010,1:return
+	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1:return
 {:3358}
 	gosub {:3364}:sys 49155:goto {:3362}
 ' 1010: timeflag: 1=time set
