@@ -1,0 +1,117 @@
+' labels for Image BBS 3.0
+' work in progress
+{assign:im.rel_record	=1}
+{assign:im.get_drive	=2}
+{assign:im.open_cmd_channel=3}
+{assign:im.open_file	=4}
+{assign:im.read_cmd_channel=5}
+{assign:im.prompt	=6}
+{assign:im.get_key	=7}
+{assign:im.area_window	=9}
+{assign:im.rel_command	=10}
+{assign:im.get_flag	=11}
+' reset output defaults:
+{assign:im.reset_output_defaults=12}
+
+' file reads/writes:
+{assign:im.seqReadClear	=13}
+{assign:im.seqRead	=14}
+{assign:im.BAR.adjust	=16}
+{assign:im.BAR.write	=17}
+' scratch-and-save (gosub im.fileScratch):
+{assign:im.seqRewrite	=18}
+{assign:im.fileScratch	=19}
+{assign:im.loadProtocol	=28}
+{assign:im.open_e_stats	=30}
+{assign:im.open_e_access=31}
+{assign:im.open_m_file	=32}
+{assign:im.open_e_data	=33}
+{assign:im.open_u_config=35}
+{assign:im.save_tt_array=39}
+{assign:im.open_s_config=41}
+{assign:im.open_s_file	=42}
+' routine spans 43-46:
+{assign:im.open_e_say	=43}
+
+{assign:im.check.InstantMode=50}
+' routine spans 53-54:
+{assign:im.check.Printer=53}
+
+' DOS stuff:
+{assign:im.getFreeDirEntry	=60}
+' routine spans 61-66:
+{assign:im.getBlocksFree	=61}
+{assign:im.set_module_drive	=70}
+{assign:im.setIslashDrive	=72}
+{assign:im.loadIslashFile	=73}
+{assign:im.loadSubFile	=74}
+{assign:im.prepSubLoad	=78}
+{assign:im.loadModule	=79}
+{assign:im.clearArrays	=82}
+{assign:im.clearTTarray	=83}
+{assign:im.get_prime_time_status=84}
+
+' messages/strings:
+{assign:im.leaveFeedback=85}
+{assign:im.center	=90}
+{assign:im.canceled	=92}
+' asks "Are You Sure?: ", defaults to No:
+{assign:im.are_you_sure.no=93}
+' prints "No":
+{assign:im.no		=94}
+' asks "Are You Sure?: ", defaults to Yes:
+{assign:im.are_you_sure.yes=95}
+' prints "Yes":
+{assign:im.yes		=96}
+
+{assign:im.main_prompt	=300}
+
+' toggles:
+{assign:im.toggleMode=370}
+{assign:im.toggleUserFlag=371}
+{assign:im.toggleExpertMode=372}
+{assign:im.toggleMorePrompt	=373}
+{assign:im.toggleMenuMode	=374}
+' 375?
+' e.g., end-of-bulletin prompt:
+{assign:im.togglePromptMode	=376}
+
+{assign:im.open.e_text	=390}
+
+' "sub.*" module loading:
+{assign:im.subComm1	=428}
+{assign:im.subComm2	=429}
+{assign:im.subParam1	=430}
+{assign:im.subParam2	=431}
+{assign:im.subMenus	=436}
+{assign:im.subSysDos	=437}
+{assign:im.subStats	=438}
+{assign:im.subBar	=439}
+{assign:im.subEditor	=440}
+{assign:im.subHandles	=441}
+{assign:im.subProtos	=442}
+{assign:im.subMisc	=445}
+{assign:im.subModem	=446}
+{assign:im.subInfo	=447}
+{assign:im.subLocal	=448}
+{assign:im.subMisc2	=449}
+
+' user handles:
+{assign:im.find_id	=505}
+
+{assign:im.return	=999}
+
+' im module starting line #s:
+{assign:im.iPeriodModule=3000}    ' im.*
+{assign:im.iSlashModule	=4000}    ' im/*
+{assign:im.imSubroutine	=60000}
+
+' quoter handiness for quoted function keys:
+{quoter:comma	=133}	' f1
+{quoter:colon	=135}	' f3
+{quoter:quote	=137}	' f5
+{quoter:asterisk=139}	' f7
+{quoter:question=134}	' f2
+{quoter:equal	=136}	' f4
+{quoter:return	=138}	' f6
+{quoter:up_arrow=140}	' f8
