@@ -1,12 +1,19 @@
 ## POKEs and Memory Locations [[pokes]]
 
-``poke``s control various flags maintained by the Image BBS ML.
+``poke``s control various flags maintained by the Image BBS machine language (ML).
 
 [%autowidth]
 [%header]
 |===
-| Decimal | Hex     | Purpose 
-| `53252` | `$d004` | Control input line length
+| Decimal | Hex     | ML Label | BASIC Variable | Purpose 
+| `951`   | `$3b7`  | `modclmn`| `ll%` | Terminal width in columns.
+| `970`   | `$3ca`  | `usrlin` | _n/a_ | Number of lines output.
+If the **More Prompt** is enabled, compare `usrlin` to `usrlinm` to know when to display the prompt.
+Line output count can be reset with `poke 970,0`.
+| `971`   | `$3cb`  | `usrlinm` | `mp%` | Terminal height in rows.
+| `1010`  | `$3f2`  | `timeset` | _n/a_ | Time set flag. `0`=Clock has been set, stop flashing bottom status line.
+Non-zero values flash the bottom status line in the same color as the MCI &#163;C__x__ (Color) command.
+| `53252` | `$d004` | `llen`    | _n/a_ | Control input line length.
 |===
 
 ====
