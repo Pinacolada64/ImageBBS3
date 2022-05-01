@@ -111,6 +111,7 @@
 	z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
 {:60126}
 	pl=.:poke53249,pl:lp=.:&,1:return
+' FIXME: this line seems un-referenced
 	&"{f6}Sorry, {pound}$b Limit Exceeded.{f6}":return
 {:60130}
 	gosub350:onagoto{:60134}:&"{f6}Pattern: ":gosub289:b$="*"
