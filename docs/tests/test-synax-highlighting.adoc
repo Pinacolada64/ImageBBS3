@@ -1,0 +1,30 @@
+:source-highlighter: pygments
+:pygments-style: manni
+:pygments-linenums-mode: inline
+
+.Source code
+
+[source,"cbm basic v2"]
+----
+10 rem help?
+20 print"string"
+----
+
+// cbm basic v2 is contained within
+// https://github.com/pygments/pygments/blob/0ac8a20677442eb08e56ac0e27aa3758350756f1/pygments/lexers/basic.py#L325
+// but I'm not sure how to specifically reference 'cbmbas'
+// replacing "basic" with 'cbmbas' does not highlight basic v2 keywords
+// [source,"CBM BASIC V2"]
+[source,"basic"]
+----
+10 rem test cbm basic v2 syntax highlighting
+12 print"hello"
+14 &"whatever{f6}"
+16 print"test 1":print"test 2"
+18 a=int(rnd(1)*102546):sys a
+20 open 15,8,15:print#15,"blah":close 15
+22 if a then b
+24 rem this is a silly example
+26 atn sys log(3) sys 49152,3,n,a$(1)
+30 goto 10
+----
