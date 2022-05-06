@@ -198,7 +198,7 @@
 	goto300
 	on-(ac%<>ao%)gosub{:1634}:an$=an$+"":rs=1:a$=left$(an$,1):z$=left$(an$,2)
 	&,52,20,3:em=a%:&,52,5,3:zz=a%
-	rs=.:return:rem**" √ommand ”can Œot Ÿet …mplemeted -  Ã∆ "
+	rs=.:return:rem**" Command Scan Not Yet Implemented - JLF "
 	poke970,mp%:&"{f6}":return
 	goto93
 	goto94
