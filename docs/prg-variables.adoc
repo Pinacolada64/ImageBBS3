@@ -1,0 +1,16 @@
+## Variables
+
+### Integer
+
+
+[width="100%",options="header"]
+|====================
+|  |  
+|  |  
+|  |  
+|====================
+### Floating Point
+
+### String
+
+### Arrays

@@ -36,15 +36,7 @@ include::prg-ampersand-calls.adoc[]
 
 include::prg-structures.adoc[]
 
-## Variables
-
-### Integer
-
-### Floating Point
-
-### String
-
-### Arrays
+include::prg-variables.adoc[]
 
 include::prg-pokes.adoc[]
 
