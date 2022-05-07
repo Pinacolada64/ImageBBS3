@@ -5,6 +5,7 @@ v0.2, 2022-05-06
 :toc: left
 :toclevels: 4
 :icons: font
+:source-highlighter: pygments // enable source code highlighting
 
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
