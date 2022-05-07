@@ -11,19 +11,26 @@ A lot of this is from 1.2, although some newer hardware will be talked about.
 * 1541 (((disk drive, 1541)))
 * 1571 (((disk drive, 1571)))
 * 1581 (((disk drive, 1581)))
-* CMD FD-2000 (((disk drive, CMD FD-2000)))
+
+icon:check[role=green] This hardware is emulated in VICE 3.5.
+
+These are higher capacity disk drives manufactured by Creative Micro Designs:
+
+* CMD FD-2000 (((disk drive, CMD FD-2000))) stores up to 16MB per 3&#189;" disk.
 * CMD FD-4000 (((disk drive, CMD FD-4000)))
+
+icon:times-circle[role=red] This hardware is not emulated in VICE by default, since the CMD FD ROMs do not ship with VICE.
 
 ### JiffyDOS
 
 ((JiffyDOS)) is a serial I/O speed enhancement system.
 It consists of two ROM chip replacements: a Kernal replacement chip for the C64, and a DOS ROM replacement chip for each disk drive you wish to upgrade.
 
-It offers a built-in DOS wedge, file copier, and many other features.
+It offers faster disk access, a built-in DOS wedge, a built-in two drive file copier, and many other features.
 
 Jim Brain sells physical JiffyDOS chips and emulator ROM files at his store, http://www.go4retro.com.
 
-icon:check[role=green] This is emulated in VICE.
+icon:check[role=green] This hardware is emulated in VICE, if you purchase the JiffyDOS ROMs.
 
 ### Mass Storage
 
@@ -31,21 +38,25 @@ icon:check[role=green] This is emulated in VICE.
 
 The (((hard drive, Creative Micro Designs))) Creative Micro Designs hard drive was manufactured by CMD for a high degree of compatability with Commodore 64/128 computers.
 
-icon:check[role=green] As of October 2020, it is emulated in VICE.
+icon:check[role=green] As of October 2020, this hardware is emulated in VICE 3.5.
 
-Jim Brain sells the http://store.go4retro.com/commodore/cmd-hdd-boot-rom-2-80-binary-image/[CMD HD Boot ROM] in his store.
+Jim Brain sells the http://store.go4retro.com/commodore/cmd-hdd-boot-rom-2-80-binary-image/[CMD HD 2.80 Boot ROM] in his store.
 
 #### ThunderDrive
 
 This (((hard drive, ThunderDrive))) is a clone of the CMD hard drive.
 
-icon:times-circle[role=red] It is not emulated in VICE since the CMD HD is already emulated.
+icon:times-circle[role=red] This hardware is not emulated in VICE since the CMD HD is already emulated.
 
 #### Lt. Kernal Hard Drive
 
 The (((hard drive, Lt. Kernal))) Lt. Kernal hard drive was manufactured by Fiscal Information, Inc.
 
-icon:check[role=green] As of October 2020, it is emulated in VICE, although it needs a Host Adapter cartridge image not shipped with VICE.
+icon:check[role=green] As of October 2020, this hardware is emulated in VICE 3.5, although it needs a Host Adapter cartridge image not shipped with VICE.
+
+====
+TIP: Both the cartridge image and setup instructions are available for download from a ZIP file in a https://sourceforge.net/p/vice-emu/patches/_discuss/thread/fe9b5cbac1/0628/attachment/LTK-testfiles.zip[VICE development thread].
+====
 
 #### Rear Admiral Hard Drive
 
@@ -58,18 +69,18 @@ icon:times-circle[role=red] It is not emulated in VICE since the Lt. Kernal is a
 The (((hardware, RAMLink))) RAMLink was manufactured by CMD to be a battery-backed RAM expansion unit.
 Optionally, you can plug in a Commodore REU into the pass-through port and maintain its memory contents.
 
-icon:check[role=green] It is emulated in VICE.
+icon:check[role=green] This hardware is emulated in VICE 3.5.
 
 #### SD2IEC
 
-The (((hardware, SD2IEC))) SD2IEC is a mass storage device using an SD/MMC card and interfacing with the IEC bus.
+The (((hardware, SD2IEC))) SD2IEC is a mass storage device which uses an SD/MMC card and interfaces with the IEC bus.
 The most prominent use of SD2IEC is replacement of a Commodore 1541 disk drive for a C64.
 
-icon:times-circle[role=red] This is not emulated within VICE.
+icon:times-circle[role=red] This hardware is not emulated within VICE.
 
-#### 1541 Ultimate II
+#### 1541 Ultimate II+
 
-(((hardware, 1541 Ultimate II))) This is a Commodore 64 compatible expansion port cartridge that carries an Action Replay and Final Cartridge III (whichever the user prefers).
+(((hardware, 1541 Ultimate II+))) This is a Commodore 64 compatible expansion port cartridge that carries an Action Replay and Final Cartridge III (whichever the user prefers).
 Its main feature is fully-compatible FPGA-based Commodore 1541 emulation that is fed from a built-in SD card slot with C64 compatible files (_e.g._, `.d64` disk images or `.prg` single program files) and connects to the IEC port of the C64 using a separate cable.
 
 It has many functions:
@@ -78,24 +89,49 @@ It has many functions:
 * Kernal replacement
 * SwiftLink emulation on the II+
 
-icon:times-circle[role=red] This is not emulated within VICE.
+It is available for purchase from the https://ultimate64.com/[1541 Ultimate web site].
+
+icon:times-circle[role=red] This hardware is not emulated within VICE.
 
 ### Real-Time Clock Chips
 
-((RTC))s update the timestamps of files on mass storage devices.
-There are several options available to handle this.
+_Real-time clocks_ (RTCs) update the timestamps when files are created or modified using mass storage devices like large capacity disk drives, hard drives or RAMdrives.
+
+There are several pieces of hardware which support this.
 
 #### CMD FD 2000/4000
 
-(((RTC, CMD FD-2000))) (((RTC, CMD FD-4000))) These floppy disk drives have real-time clock chips to timestamp files.
+(((RTC, CMD FD-2000))) (((RTC, CMD FD-4000))) These high-capacity floppy disk drives have real-time clock chips to timestamp files.
+
+icon:check[role=green] These devices are emulated within VICE 3.5, if you get the drive ROM files.
 
 #### CMD Hard Drive
 
 (((RTC, CMD HD))) This hard drive has a real-time clock chip to timestamp files.
 
+#### CMD RAMLink
+(((RTC, RAMLink))) This RAM expansion device by Creative Micro Designs supports timestamping files using its DOS.
+
 #### Dallas Semiconductor DS12C887 Emulation
 
-icon:check[role=green] (((real-time clock, DS12C887))) It is emulated within VICE.
+This is a RTC which plugs into the expansion (cartridge) port.
+It reads the date and time from the host operating system.
+
+icon:check[role=green] (((real-time clock, DS12C887))) This feature is emulated within VICE.
+
+====
+TIP: The DS12C887 emulation has a number of addresses it can be set to in order to read the operating system's date and time  while in BASIC.
+While running the BBS, addresses `$d500` or `$d600` should be used.
+Other addresses conflict with either:
+
+// TODO: check LtK and DS12C887 interoperability!
+
+* the BBS's existing ML
+* a SwiftLink-232/Turbo232 cartridge's default memory addressing at `$de00`
+* _possibly_ the Lt. Kernal's host adapter; tests need to be done. (If this works, it will be a good way to set the clock on boot.)
+====
+
+icon:times-circle[role=red] While test code has been written to read the RTC and set the BBS clock, it is not yet officially integrated into Image BBS.
 
 ### Modems
 
@@ -107,38 +143,58 @@ icon:check[role=green] (((real-time clock, DS12C887))) It is emulated within VIC
 
 (((RS232 bridge, telnet cable)))
 
-### Interfaces
+### Peripherals
 
 #### CMD SuperCPU
 
 (((hardware, CMD SuperCPU))) A 65816 CPU 8/16-bit upgrade for the C64 and C128.
 It provides 20 mHz speed enhancements to software.
 
-icon:check[role=green] This is emulated only in `x64scpu`, the C64 SuperCPU version of VICE.
+icon:check[role=green] This is emulated only in `xscpu64`, the C64 SuperCPU version of VICE.
 
-#### SwiftLink
+#### SwiftLink-232
 
-(((hardware, SwiftLink))) On a physical C64, this plugs into the expansion (cartridge) port and provides high-speed RS232 communication.
+(((hardware, SwiftLink))) Created by Dr. Evil Labs, this cartridge uses a high-speed ACIA (Asynchronous Communications Interface Adapter) chip to allow the C64 and C128 to communicate at higher BPS (_bits per second_) rates than modems connected to the user port.
 
-(((hardware, CMD Turbo232))) A newer version of the hardware was produced by CMD, called the Turbo232.
+On a physical C64, the SwiftLink-232 cartridge plugs into the expansion (cartridge) port and provides speeds up to 38,400 BPS.
 
-icon:check[role=green] Both features are emulated within VICE.
-
-#### GGlabs GLink232-LT
-
-(((RS232 interface, GGlabs GLink232-LT)))
-
-icon:times-circle[role=red] This is not emulated within VICE.
+icon:check[role=green] This is emulated within VICE.
 
 #### 1541 Ultimate II+ SwiftLink Emulation
 
 (((RS232 interface, 1541 Ultimate II+ SwiftLink Emulation)))
 
-icon:times-circle[role=red] This is not emulated within VICE.
+Starting with firmware version 3.7, basic emulation of the SwiftLink cartridge is possible, using the Ethernet port on the 1541 Ultimate for RS232 I/O and allow incoming and outgoing connections using terminal programs or BBSes.
+
+With firmware version 3.10a dated July 2021, the `atv1` Hayes command (terse numeric modem responses) is supported, which Image BBS uses.
+
+icon:times-circle[role=red] The 1541 Ultimate II+ is not emulated within VICE...
+
+icon:check[role=green] ...although the SwiftLink-232 and Turbo232 are.
+
+#### CMD Turbo232
+
+(((hardware, CMD Turbo232))) A re-engineered version of the SwiftLink-232 cartridge was produced by Creative Micro Designs, called the Turbo232.
+It is capable of up to 230,400 BPS, thanks to a faster clock crystal.
+It is backwards-compatible with the SwiftLink cartridge, and "`Turbo232`" can be substituted wherever you see "`SwiftLink.`"
+
+====
+NOTE: 38.4K is the highest BPS rate that the Image 3.0 RS232 routines support.
+====
+
+icon:check[role=green] This hardware is emulated within VICE.
+
+#### GGlabs GLink232-LT
+
+(((RS232 interface, GGlabs GLink232-LT)))
+
+A clone of the Turbo232 interface, it can be ordered from https://gglabs.us/node/2057[GGLabs' store].
+
+icon:times-circle[role=red] This hardware is not emulated within VICE.
 
 ### Printers
 
 (((hardware, printers))) Most Commodore compatible printers should work with Image BBS.
 Standard Commodore routines are used by the program; using logical file #4, device #4, with a secondary address of 7 to allow for upper- and lower-case.
 
-icon:check[role=green] This is emulated within VICE.
+icon:check[role=green] This hardware is emulated within VICE.

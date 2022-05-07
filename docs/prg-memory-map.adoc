@@ -61,7 +61,7 @@ While running:
 | `$C000`-`$CAFF` | "`Protocol`" block for loadable ML code
 | `$CB00`-`$CCFF` | swapper area
 | `$CD00`-`$CDFF` | interface page
-| `$CE00`-`$CDFF` | buffer page
+| `$CE00`-`$CEFF` | buffer page
 | `$CF00`-`$CFFF` | ???
 | `$D000`-`$DFFF` | I/O memory
 | `$D000`-`$DFFF` | Character ROM

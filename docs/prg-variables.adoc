@@ -1,0 +1,151 @@
+## Variables
+
+BASIC variables can be overwhelming to keep track of.
+These charts should help.
+
+### Read/Write
+
+&check; in the _Read_ column indicates you can get its value.
+
+&check; in the _Write_ column indicates you can assign a value.
+
+====
+WARNING: If there isn't a check mark in the _Write_ column, the variable is maintained by the BBS ML or BASIC modules.
+User data corruption or other unwanted side effects may occur if this variable is reassigned.
+
+====
+
+### Purpose
+
+`BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
+
+`User`: this is a user statistic, saved to `u.config`.
+
+// if a variable is read-only or write-only, don't need *Read* or *write* listed in "purpose" column
+// template:
+// | `%` | | |
+
+### Integer
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Read | Write | Purpose 
+| `a%` | | |
+| `ac%` | &check; | &check; | `BBS` User access level, `0-9`.
+
+*Read:* Get user's access level.
+
+*Write:* Set user's access level.
+| `ao%` | | | ``BBS`` Old access level ("`Access Old`").
+If `ac%<>ao%`, the user`'s access level has changed during the call.
+| `cd%` | | | `User` Carrier drop flag
+| `co%` | | | `User` Computer type: `co$(co%)` is the computer name
+| `ct%` | &check; | | `User` Calls today
+| `da%` | | | `User` Downloads allowed per day
+| `db%` | | | `User` Downloaded blocks
+| `ll%` | &check; | &check; | `User` Line length
+| `mn%` | &check; | | `BBS` Minute of the day, `1-1440`
+| `p1%` | | | `BBS` Prime Time: `0`=disabled, `1`=enabled 
+| `p2%` | | | `BBS` Prime Time: Starting hour
+| `p3%` | | | `BBS` Prime Time: Ending hour
+| `tc%` | &check; | | `BBS` total calls
+|====================
+
+### Floating Point
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Read | Write | Purpose 
+| `am` | &check; | &check; | `BBS` AutoMaint flag
+| `ca` | | | `BBS` Total calls to BBS
+| `em` | &check;| | `User` Expert mode flag: `0`=disabled, `1`=enabled
+| `l1` | | | `BBS` System reservation: 
+| `l2` | | |
+| `l3` | | |
+| `lp` | &check; | &check; | *Read:* `&,5` (get ML version data)
+`lp` returns the ML major/minor version number, _e.g._, `1.3`. 
+
+*Write:* Disable or enable word-wrap for `&` text output.
+
+`lp=0`: disable word-wrap
+
+`lp=1`: enable word-wrap.
+| `pm` | | | `User` Prompt Mode flag: `0`=disabled, `1`=enabled
+| `zz` | | | `BBS` Pseudo-local mode flag: `0`=disabled, `1`=enabled
+|====================
+
+### String
+
+`b$`-`z$` are work variables used throughout the BBS by different subsections.
+They are available for use and may be read and written freely.
+
+Some specific information about certain variables is outlined below.
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Read | Write | Purpose 
+| `a$`  | &check; | &check; | *Read:* Output using `&`.
+
+*Write:* Work variable.
+| `ag$` | &check; | | Access group information, including 4 control characters and access group name.
+| `ak$` | | | *Read:* A horizontal line 2 characters less than the user's screen width.
+Also MCI variable `&#163;vj` 
+| `an$` | &check; | &check; | *Read:* `&,1` (input string): `an$` returns the user's input
+
+*Write:* `&,15,_x_` (convert `an$` commands): perform various conversions on `an$`
+| `cm$` | &check; | | Current Message, sometimes used for debugging information in `e.errlog`
+Displays in the `Area` window.
+| `ep$` | &check; | | `BBS` ECS command password
+| `hx$` | &check; | | `BBS` 16 hexadecimal digits: `0123456789abcdef`
+| `mp$` | &check; | | `BBS` More prompt text: ``  ...More (Y/n)?``
+| `na$` | &check; | | `BBS` Handle of current caller
+|====================
+
+### Arrays
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Read | Write | Purpose 
+| `tt$()` | &check; | &check; | *Read:* Read text entered into text editor.
+
+*Write:* Can use this array outside of modules using the text editor.
+|  |  | |
+|====================
+
+////
+	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
+	dimb$,b%,bd,bd$,bn$,bu
+	dimc$,c%,c1$,c2$,c3$,ca,cc,cc$,cd%,ch$,cm$,cn,co$,co%,cr,ct,ct%
+	dimd$,d%,d1$,d1%,d2$,d2%,d3%,d3$,d4$,d5$,d6$,da%,db%,dc,dc%,dd$,dr,dr$,dv%
+	dimdf%
+	dime$,e%,el,em,ef$,ep$,ec,ec%
+	dimf$,f%,f1,f2,f3,f4,ff$,fl,fl$,f1$,f2$,f3$,f4$,f5$,f6$,f7$,f8$
+	dimg$,g%
+	dimh$,h%,hx$
+	dimi$,i%,id,im$,im,in$,is
+	dimj$,j%,jn$
+	dimk$,k%,kk,kp%
+	diml$,l%,l1,l1$,l2,l2$,l3,l3$,lc,ld$,le,lf,lk%,ll$,ll%,lm$,lp,lt$,lt%
+	dimm$,m%,mc,mf,ml$,mp$,mt$,mw,mp%,mn%
+	dimn$,n%,na$,nc,nf,nl,nl$,nm,nm$
+	dimo$,o%
+	dimp$,p%,p1%,p2%,p3%,pf,ph$,pl,pm,po$,pp$,pr,pr$,ps,pu$,pw$,p1$,p2$
+	dimq$,q%,qb,qe,qt$
+	dimr$,r%,rc,rn$,rp,rq
+	dims$,s%,sa%,sh,sg
+	dimt$,t%,t1,tc%,tf,tk$,tr%,tt,tt$,tz$
+	dimu$,u%,uc,uh,ul,ur,uf$,uu$
+	dimv$,v%
+	dimw$,w%
+	dimx$,x%
+	dimy$,y%
+	dimz$,z%,zz
+////

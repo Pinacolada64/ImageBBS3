@@ -14,10 +14,10 @@ NOTE: Preliminary start on documentation. Feedback welcome!
 include::preface.adoc[]
 
 [preface]
-include::typography.adoc[]
+include::whats-new.adoc[]
 
 [preface]
-include::whats-new.adoc[]
+include::typography.adoc[]
 
 include::03-supported-hardware.adoc[]
 

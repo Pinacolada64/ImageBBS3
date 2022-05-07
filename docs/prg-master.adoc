@@ -1,10 +1,11 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1, 2021-06-22
+v0.2, 2022-05-06
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
 :icons: font
+:source-highlighter: pygments // enable source code highlighting
 
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
@@ -36,15 +37,7 @@ include::prg-ampersand-calls.adoc[]
 
 include::prg-structures.adoc[]
 
-## Variables
-
-### Integer
-
-### Floating Point
-
-### String
-
-### Arrays
+include::prg-variables.adoc[]
 
 include::prg-pokes.adoc[]
 
