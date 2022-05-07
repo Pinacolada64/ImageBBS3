@@ -1,12 +1,9 @@
 ## Variables
 
-BASIC variables can 
+BASIC variables can be overwhelming to keep track of.
+These charts should help.
 
-### Purpose column
-
-`BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
-
-`User`: this is a user statistic, saved to `u.config`.
+### Read/Write
 
 &check; in the _Read_ column indicates you can get its value.
 
@@ -17,6 +14,12 @@ WARNING: If there isn't a check mark in the _Write_ column, the variable is main
 User data corruption or other unwanted side effects may occur if this variable is reassigned.
 
 ====
+
+### Purpose
+
+`BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
+
+`User`: this is a user statistic, saved to `u.config`.
 
 // if a variable is read-only or write-only, don't need *Read* or *write* listed in "purpose" column
 // template:
@@ -92,16 +95,16 @@ Some specific information about certain variables is outlined below.
 *Write:* Work variable.
 | `ag$` | &check; | | Access group information, including 4 control characters and access group name.
 | `ak$` | | | *Read:* A horizontal line 2 characters less than the user's screen width.
-Also MCI variable &#163;v7 
-| `an$` | &check; | &check; | *Read:* `&,1` (input string): `an$` returns the user's input.
+Also MCI variable `&#163;vj` 
+| `an$` | &check; | &check; | *Read:* `&,1` (input string): `an$` returns the user's input
 
-*Write:* `&,15,_x_` (convert `an$` commands): perform various conversions on `an$`.
-| `cm$` | &check; | | Current Message, sometimes used for debugging information in `e.errlog`.
+*Write:* `&,15,_x_` (convert `an$` commands): perform various conversions on `an$`
+| `cm$` | &check; | | Current Message, sometimes used for debugging information in `e.errlog`
 Displays in the `Area` window.
-| `ep$` | &check; | | `BBS` ECS command password.
-| `hx$` | &check; | | `BBS` 16 hexadecimal digits: `0123456789abcdef`.
+| `ep$` | &check; | | `BBS` ECS command password
+| `hx$` | &check; | | `BBS` 16 hexadecimal digits: `0123456789abcdef`
 | `mp$` | &check; | | `BBS` More prompt text: ``  ...More (Y/n)?``
-| `na$` | &check; | | `BBS` Handle of current caller.
+| `na$` | &check; | | `BBS` Handle of current caller
 |====================
 
 ### Arrays
