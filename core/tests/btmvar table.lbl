@@ -1,7 +1,7 @@
 {alpha:alt}
 {step:2}
 {:3450} ' &,9
-	print"&,9: btmvar"
+	print"&,9: btmvar":print:rem 6/1/2022
 ' enumerate variables that can be displayed, from &,9,x table:
 ' 0-9:
 	:::v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
@@ -13,26 +13,26 @@
 	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
 ' 40-49:
 	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
-' display table row:
-' a%) a$   b%) b$   c%) c$   d%) d$   e%) e$
+' display table row, e.g.:
+' a% a$   b% b$   c% c$   d% d$   e% e$
 	for rw=0 to 9
 ' column indices:
-	a%=rw:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
-' row's variable names:
+	a%=rw+1:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
+' extract row's variable names:
 
 ' forx=1to9:?mid$(v$,x*3-2,3)" ";:next
 ' an$ a$  b$  tr$ d1$ d2$ d3$ d4$ d5$
 
 	a$=mid$(v$,a%*3-2,3):b$=mid$(v$,b%*3-2,3):c$=mid$(v$,c%*3-2,3)
-	d$=mid$(v$,d%*3-2,3):e$=mid$(v$,e%,3-2,3)
+	d$=mid$(v$,d%*3-2,3):e$=mid$(v$,e%*3-2,3)
 ' display a row:
-' FIXME: index numbers are off by 1
 	n=a%:gosub {:sub.justify_number}:print a$"  ";
 	n=b%:gosub {:sub.justify_number}:print b$"  ";
 	n=c%:gosub {:sub.justify_number}:print c$"  ";
 	n=d%:gosub {:sub.justify_number}:print d$"  ";
-	n=e%:gosub {:sub.justify_number}:print e$"  "
+	n=e%:gosub {:sub.justify_number}:print e$
 	next:end
 {:sub.justify_number}
-' right-justify two digit number with leading space if <10, + ") "
-	print right$(" "+mid$(str$(n),2),2)") ";:return
+' right-justify two-digit number with leading space if <10
+' (takes advantage of positive numbers having a leading space)
+	print right$(" "+str$(n-1),2)" ";:return
