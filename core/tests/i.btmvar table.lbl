@@ -1,8 +1,12 @@
 {step:2}
 {alpha:alt}
-{assign:main_prompt	=300	}
+
+{assign:300=300}	' main prompt
+
 ' encoded f-keys
-{quoter:134=question}
+' can't use "quote", that puts a literal quote mark in the string
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
 
 {:3000} ' &,9
 	&"&,9: btmvar{f6}"
@@ -41,7 +45,7 @@
 	an=int(val(an$)):if an<0 or an>49 then:&"Out of range.{f6}":goto {:prompt}
 	gosub {:sub.display}:goto {:prompt}
 {:all}
-	&"[At {quote}Key:{quote} prompt, {quote}Q{quote} quits.]{f6}"
+	&"[At {quotation}Key:{quotation} prompt, {quotation}Q{quotation} quits.]{f6}"
 	for an=0 to 49:i%=an:&"[#{pound}#2{pound}# {pound}%i/50] "
 	gosub {:sub.display}:if an$="Q" then:&"Quitting.{f6}":an=50
 	next:goto {:prompt}
@@ -52,4 +56,4 @@
 {:quit}
 ' restore window to computer type string
 	&"Restoring window to computer type."
-	an$=co$(co%):&,9:goto {:main_prompt}
+	an$=co$(co%):&,9:goto 300
