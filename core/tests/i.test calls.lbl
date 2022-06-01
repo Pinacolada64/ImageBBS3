@@ -1,0 +1,228 @@
+' C64List4_04.exe "i.test calls.lbl" -crunch -alpha:alt -ovr -prg
+' "-crunch:on" must be specified from command-line
+' copied from fs driver as "i.test calls.prg"
+
+' encoded f-key representations within strings:
+{quoter:133=comma}	' f1
+{quoter:137=quote}	' f5
+{quoter:140=up_arrow}	' f8
+
+{step:2}
+{assign:300	=	300} ' main prompt
+{assign:370	=	370} ' b$ mode: a
+
+{:3000}
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
+' get Trb-L status (db=debug mode):
+' 370 inverts a, so pre-inverting it reports true status
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+{number:3010}
+{:menu}
+' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
+	a%=3000+a%*20:&,66,1:goto {:menu}
+{:3020}
+	&" 0) &,0  Output a${f6}"
+	&" 1) &,1  Input{f6}"
+	&" 2) &,2  Disk File Input{f6}"
+	&" 3) &,3  Read File from Disk{f6}"
+	&" 4) &,4  Get Byte from Modem{f6}"
+	&" 5) &,5  Get Version{f6}"
+	&" 6) &,6  Password Input{f6}"
+	&" 7) &,7  Load File{f6}"
+	&" 8) &,8  Disk Directory{f6}"
+	&" 9) &,9  Bottom Variable{f6}"
+	&"10) &,10 Terminal Mode{f6}"
+{:3040}
+	&"11) &,11 Clear Array{f6}"
+	&"12) &,12 New User{f6}"
+	&"13) &,13 inchr{f6}"
+	&"14) &,14 Dump Array{f6}"
+	&"15) &,15 Convert an${f6}"
+	&"16) &,16 sys 49152{f6}"
+	&"17) &,17 sys 49155{f6}"
+	&"18) &,18 Set Screen Mode{f6}"
+' call &,5 routine
+	&"19) &,19 Get Version{f6}"
+	&"20) &,20 Read from Interface Table{f6}"
+{:3060}
+	&"21) &,21 Write to Interface Table{f6}"
+	&"22) &,22 Delay x Tenths of a Second{f6}"
+	&"23) &,23 Get Character from Modem{f6}"
+	&"24) &,24 xchrout1{f6}"
+	&"25) &,25 Sound{f6}"
+	&"26) &,26 callmod{f6}"
+	&"27) &,27 Save Variable Pointers{f6}"
+	&"28) &,28 Restore Variable Pointers{f6}"
+	&"29) &,29 usevar{f6}"
+	&"30) &,30 putvar{f6}"
+	p$="Option":gosub {:sub.input_range}:if q then return
+
+{:3080}
+	&"ML Functions:{f6:2}"
+	&"31) &,31 zero{f6}"
+	&"32) &,32 minusone{f6}"
+	&"33) &,33 getarr{f6}"
+	&"34) &,34 putarr{f6}"
+	&"35) &,35 getln{f6}"
+	&"36) &,36 putln{f6}"
+	&"37) &,37 trapon{f6}"
+	&"38) &,38 trapoff{f6}"
+	&"39) &,39 prtln{f6}"
+	&"40) &,40 forcegc{f6}"
+
+	&"&,41 setbaud{f6}"
+	&"&,42 ECS Commands{f6}"
+
+	&"&,52 Lightbar Interface{f6}"
+	&"&,53 Logoff{f6}"
+	&"&,54 Text editor interface{f6}"
+	&"&,55 output{f6}"
+	&"&,56 chatmode{f6}"
+	&"&,57 relread{f6}"
+	&"&,58 setalarm{f6}"
+	&"&,59 farerr{f6}"
+	&"&,60 Structures  (run {f5}i.test structs{f5}){f6}"
+	&"&,61 poscrsr{f6}"
+	&"&,62 Set Time{f6}"
+	&"&,63 inline1{f6}"
+	&"&,64 convstr{f6}"
+	&"&,65 convert{f6}"
+	&"&,66 Calculated GOTO{f6}"
+	&"&,66,1 Calculated GOSUB{f6}"
+	&"&,67 copyrite{f6}"
+	&"&,68 struct (run {f5}i.test structs{f5}){f6}"
+	&"&,69 Display String on Console{f6}"
+	&"&,70 Position Terminal Cursor{f6}"
+
+	&"(0-70, {f5}Q{f5}=Quit, {f5}{f2}{f5}=List){f6}"
+{:prompt}
+	p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{f2}") goto {:quit}, {:menu}
+' &,66: calcgoto: routines start on 50-line increments
+'	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
+' &,66,1: calcgosub:
+	a%=abs(val(an$)):if a%<70 then a%=3100+a%*50:&,66,1
+	goto {:prompt}
+{nice:10}
+{:sub.which_record}
+' if q=1, a is out of bounds
+	&"[1-{pound}!t]{f6}":p$="Which Record":&,1:a=int(val(an$)):q=-(a<1 or a>t)
+	return
+
+{:3100} ' &,1
+	&"&,1{f6}":return
+{:3150} ' &,2
+	&"&,2{f6}":return
+{:3200} ' &,3
+	&"&,3{f6}":return
+{:3250} ' &,4
+	&"&,4{f6}":return
+{:3300} ' &,5
+	&"&,5{f6}":&,5
+{:3302}
+' call for &,19 also
+' returns:
+' lp: major/minor (1.3)
+' a%: revision (1)
+' a$: date (e.g., "12/29/91  1:18p")
+	v=lp:&"Image BBS 64 v{pound}!v.{pound}%a: "+a$+"{f6}"
+	return
+
+{:3350} ' &,6
+	&"&,6{f6}":return
+
+{:3350} ' &,7
+	&"&,7{f6}":return
+
+{:3400} ' &,8
+	&"&,8{f6}":return
+
+{:3450} ' &,9
+	&"&,9: btmvar{f6}"
+' enumerate variables that can be displayed, from &,9,x table:
+' 0-9:
+	:::v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
+' 10-19:
+	v$=v$+"tt$na$rn$ph$ak$lp pl rc sh mw "
+' 20-29:
+	v$=v$+"nl ul qe rq ac%ef lf w$ p$ tr%"
+' 30-39:
+	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
+' 40-49:
+	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
+' display table row:
+' a%) a$   b%) b$   c%) c$   d%) d$   e%) e$
+	for rw=0 to 9
+' column indices:
+	a%=rw+0:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
+' column values:
+	a$=mid$(v$,a%,3):b$=mid$(v$,b%,3):c$=mid$(v$,c%,3):d$=mid$(v$,d%,3):e$=mid$(v$,e%,3)
+' display a row:
+	&"{pound}#2{pound}# {pound}%a) {pound}$a  "
+	&"{pound}#2{pound}# {pound}%b) {pound}$b  "
+	&"{pound}#2{pound}# {pound}%c) {pound}$c  "
+	&"{pound}#2{pound}# {pound}%d) {pound}$d  "
+	&"{pound}#2{pound}# {pound}%e) {pound}$e  "
+	&"{f6}":next
+
+	return
+
+{:3500} ' &,10
+	&"&,10{f6}":return
+
+{:3550} ' &,11
+	&"&,11{f6}":return
+
+{:3600} ' &,12
+	&"&,12{f6}":return
+
+{:3650} ' &,13
+	&"&,13{f6}":return
+
+{:3700} ' &,14
+	&"&,14{f6}":return
+
+{:3750} ' &,15
+	&"&,15 functions:{f6:2}"
+	&"0) &,15   Convert Date{f6}"
+	&"1) &,15,1 Title Case{f6}"
+	&"2) &,15,2 Decode Function Keys{f6}"
+' they both point to same call
+	&"3) &,15,3 {f6}"
+	&"4) &,15,4 (points to &,15,3){f6}"
+	&"5) &,15,5 newdate{f6}"
+	&"6) &,15,6 Split string{f6}"
+	l=0:h=6:gosub {:sub.input_range}:if q then return
+
+{:15_5}' &,15,5
+	an$="19011038045":gosub {:sub.test_newdate} ' 2090
+	an$="11410288045":gosub {:sub.test_newdate} ' 2014
+	return
+{:sub.test_newdate}
+	&" Before: {$04}"+an$:&,15,5:&"{f6} After: {$04}"+an$+"{f6}"
+	return
+
+{:15_6}
+' from programmer's reference guide
+	&"&,15,6,x: Scan string{f6:2}"
+	&"Split String Two Ways [from PRG]:{f6}"
+	&"1) Scan Using CHR$() Value{f6}"
+	&"2) Scan Using  ASC() Value{f6:2}"
+	&"3) Simulate {quote}instring{quote} function"
+	&"4) Input scan and split strings"
+	return
+
+{:15,6,1}
+' TODO: finish reporting strings
+	&"an$={quote}Hello world{quote}:&,15,6,32"
+	an$="Hello world":&,15,6,32
+	&"an$={quote}{pound}v7{quote} "
+
+	&"an$={quote}Hello world{quote}:&,15,6,asc({quote} {quote}){f6}"
+	an$="Hello world":&,15,6,asc(" ")
+	&"an$={quote}{pound}v7{quote} "
+
+{:quit}
+	&,28,2:goto 300
+
+{:sub.load_module}
+' TODO: possibly load sub-modules with more functions
