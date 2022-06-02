@@ -3,13 +3,17 @@
 ' copied from fs driver as "i.test calls.prg"
 
 ' encoded f-key representations within strings:
+{assign:300	=	300} ' main prompt
+{assign:370	=	370} ' b$ mode: a
+
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string
 {quoter:133=comma}	' f1
-{quoter:137=quote}	' f5
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
 {quoter:140=up_arrow}	' f8
 
 {step:2}
-{assign:300	=	300} ' main prompt
-{assign:370	=	370} ' b$ mode: a
 
 {:3000}
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
@@ -70,33 +74,32 @@
 	&"39) &,39 prtln{f6}"
 	&"40) &,40 forcegc{f6}"
 
-	&"&,41 setbaud{f6}"
-	&"&,42 ECS Commands{f6}"
+	&"41) &,41 setbaud{f6}"
+	&"42) &,42 ECS Commands{f6}"
 
-	&"&,52 Lightbar Interface{f6}"
-	&"&,53 Logoff{f6}"
-	&"&,54 Text editor interface{f6}"
-	&"&,55 output{f6}"
-	&"&,56 chatmode{f6}"
-	&"&,57 relread{f6}"
-	&"&,58 setalarm{f6}"
-	&"&,59 farerr{f6}"
-	&"&,60 Structures  (run {f5}i.test structs{f5}){f6}"
-	&"&,61 poscrsr{f6}"
-	&"&,62 Set Time{f6}"
-	&"&,63 inline1{f6}"
-	&"&,64 convstr{f6}"
-	&"&,65 convert{f6}"
-	&"&,66 Calculated GOTO{f6}"
-	&"&,66,1 Calculated GOSUB{f6}"
-	&"&,67 copyrite{f6}"
-	&"&,68 struct (run {f5}i.test structs{f5}){f6}"
-	&"&,69 Display String on Console{f6}"
-	&"&,70 Position Terminal Cursor{f6}"
+	&"52) &,52 Lightbar Interface{f6}"
+	&"53) &,53 Logoff{f6}"
+	&"54) &,54 Text editor interface{f6}"
+	&"55) &,55 output{f6}"
+	&"56) &,56 chatmode{f6}"
+	&"57) &,57 relread{f6}"
+	&"58) &,58 setalarm{f6}"
+	&"59) &,59 farerr{f6}"
+	&"60) &,60 Structures  (run {f5}i.test structs{f5}){f6}"
+	&"61) &,61 poscrsr{f6}"
+	&"62) &,62 Set Time{f6}"
+	&"63) &,63 inline1{f6}"
+	&"64) &,64 convstr{f6}"
+	&"65) &,65 convert{f6}"
+	&"66) &,66 Calculated GOTO/GOSUB{f6}"
+	&"67) &,67 copyrite{f6}"
+	&"68) &,68 struct (run {f5}i.test structs{f5}){f6}"
+	&"69) &,69 Display String on Console{f6}"
+	&"70) &,70 Position Terminal Cursor{f6}"
 
-	&"(0-70, {f5}Q{f5}=Quit, {f5}{f2}{f5}=List){f6}"
+	&"[0-70, Q)uit, {question}=List]{f6}"
 {:prompt}
-	p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{f2}") goto {:quit}, {:menu}
+	p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:menu}
 ' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
 ' &,66,1: calcgosub:
@@ -150,20 +153,16 @@
 ' 40-49:
 	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
 ' display table row:
-' a%) a$   b%) b$   c%) c$   d%) d$   e%) e$
+' a% a$   b% b$   c% c$   d% d$   e% e$
 	for rw=0 to 9
 ' column indices:
 	a%=rw+0:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
 ' column values:
 	a$=mid$(v$,a%,3):b$=mid$(v$,b%,3):c$=mid$(v$,c%,3):d$=mid$(v$,d%,3):e$=mid$(v$,e%,3)
 ' display a row:
-	&"{pound}#2{pound}# {pound}%a) {pound}$a  "
-	&"{pound}#2{pound}# {pound}%b) {pound}$b  "
-	&"{pound}#2{pound}# {pound}%c) {pound}$c  "
-	&"{pound}#2{pound}# {pound}%d) {pound}$d  "
-	&"{pound}#2{pound}# {pound}%e) {pound}$e  "
-	&"{f6}":next
-
+	&"{pound}#2{pound}# {pound}%a {pound}$a  {pound}#2{pound}# {pound}%b {pound}$b  "
+	&"{pound}#2{pound}# {pound}%c {pound}$c  {pound}#2{pound}# {pound}%d {pound}$d  "
+	&"{pound}#2{pound}# {pound}%e {pound}$e{f6}":next
 	return
 
 {:3500} ' &,10
@@ -182,7 +181,7 @@
 	&"&,14{f6}":return
 
 {:3750} ' &,15
-	&"&,15 functions:{f6:2}"
+	&"&,15: convan functions:{f6:2}"
 	&"0) &,15   Convert Date{f6}"
 	&"1) &,15,1 Title Case{f6}"
 	&"2) &,15,2 Decode Function Keys{f6}"
@@ -190,7 +189,7 @@
 	&"3) &,15,3 {f6}"
 	&"4) &,15,4 (points to &,15,3){f6}"
 	&"5) &,15,5 newdate{f6}"
-	&"6) &,15,6 Split string{f6}"
+	&"6) &,15,6 Scan string{f6}"
 	l=0:h=6:gosub {:sub.input_range}:if q then return
 
 {:15_5}' &,15,5
@@ -207,19 +206,19 @@
 	&"Split String Two Ways [from PRG]:{f6}"
 	&"1) Scan Using CHR$() Value{f6}"
 	&"2) Scan Using  ASC() Value{f6:2}"
-	&"3) Simulate {quote}instring{quote} function"
+	&"3) Simulate {quotation}instring{quotation} function"
 	&"4) Input scan and split strings"
 	return
 
 {:15,6,1}
 ' TODO: finish reporting strings
-	&"an$={quote}Hello world{quote}:&,15,6,32"
+	&"an$={quotation}Hello world{quotation}:&,15,6,32"
 	an$="Hello world":&,15,6,32
-	&"an$={quote}{pound}v7{quote} "
+	&"an$={quotation}{pound}v7{quotation} "
 
-	&"an$={quote}Hello world{quote}:&,15,6,asc({quote} {quote}){f6}"
+	&"an$={quotation}Hello world{quotation}:&,15,6,asc({quotation} {quotation}){f6}"
 	an$="Hello world":&,15,6,asc(" ")
-	&"an$={quote}{pound}v7{quote} "
+	&"an$={quotation}{pound}v7{quotation} "
 
 {:quit}
 	&,28,2:goto 300
