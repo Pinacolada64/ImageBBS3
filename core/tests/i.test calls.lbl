@@ -20,13 +20,21 @@
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports true status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-{number:3010}
-{:menu}
+	goto {:menu}
+
+{sub.input_range}
+	p$="Option [{pound}!l-{pound}!h]":&,1:an=int(val(an$)):er=-(an<l or an>h)
+' quick way of checking for menu/help input: 'if q then...'
+	q=-(an$="{question}")
+	return
+
+{nice:10}
 ' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
-	a%=3000+a%*20:&,66,1:goto {:menu}
-{:3020}
+' calcgosub example:
+'	a%=3000+a%*20:&,66,1:goto {:menu}
+{:menu_page_1}
 	&" 0) &,0  Output a${f6}"
-	&" 1) &,1  Input{f6}"
+	&" 1) &,1  Input an${f6}"
 	&" 2) &,2  Disk File Input{f6}"
 	&" 3) &,3  Read File from Disk{f6}"
 	&" 4) &,4  Get Byte from Modem{f6}"
@@ -35,20 +43,22 @@
 	&" 7) &,7  Load File{f6}"
 	&" 8) &,8  Disk Directory{f6}"
 	&" 9) &,9  Bottom Variable{f6}"
-	&"10) &,10 Terminal Mode{f6}"
-{:3040}
+	&"10) &,10 Terminal Mode{f6}":return
+
+{:menu_page_2}
 	&"11) &,11 Clear Array{f6}"
 	&"12) &,12 New User{f6}"
-	&"13) &,13 inchr{f6}"
+	&"13) &,13 arbit{f6}"
 	&"14) &,14 Dump Array{f6}"
 	&"15) &,15 Convert an${f6}"
 	&"16) &,16 sys 49152{f6}"
 	&"17) &,17 sys 49155{f6}"
 	&"18) &,18 Set Screen Mode{f6}"
-' call &,5 routine
+' TODO: call &,5 routine
 	&"19) &,19 Get Version{f6}"
-	&"20) &,20 Read from Interface Table{f6}"
-{:3060}
+	&"20) &,20 Read from Interface Table{f6}":return
+
+{:menu_page_3}
 	&"21) &,21 Write to Interface Table{f6}"
 	&"22) &,22 Delay x Tenths of a Second{f6}"
 	&"23) &,23 Get Character from Modem{f6}"
@@ -58,10 +68,9 @@
 	&"27) &,27 Save Variable Pointers{f6}"
 	&"28) &,28 Restore Variable Pointers{f6}"
 	&"29) &,29 usevar{f6}"
-	&"30) &,30 putvar{f6}"
-	p$="Option":gosub {:sub.input_range}:if q then return
+	&"30) &,30 putvar{f6}":return
 
-{:3080}
+{:menu_page_4}
 	&"ML Functions:{f6:2}"
 	&"31) &,31 zero{f6}"
 	&"32) &,32 minusone{f6}"
@@ -72,11 +81,15 @@
 	&"37) &,37 trapon{f6}"
 	&"38) &,38 trapoff{f6}"
 	&"39) &,39 prtln{f6}"
-	&"40) &,40 forcegc{f6}"
+	&"40) &,40 forcegc{f6}":return
 
+{:menu_page_5}
 	&"41) &,41 setbaud{f6}"
 	&"42) &,42 ECS Commands{f6}"
+	&"[&,43 - &,50 are ML functions]":return
 
+{:menu_page_6}
+	&"[&,51 is an ML function]"
 	&"52) &,52 Lightbar Interface{f6}"
 	&"53) &,53 Logoff{f6}"
 	&"54) &,54 Text editor interface{f6}"
@@ -85,33 +98,30 @@
 	&"57) &,57 relread{f6}"
 	&"58) &,58 setalarm{f6}"
 	&"59) &,59 farerr{f6}"
-	&"60) &,60 Structures  (run {f5}i.test structs{f5}){f6}"
+	&"60) &,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
+
+{:menu_page_7}
 	&"61) &,61 poscrsr{f6}"
 	&"62) &,62 Set Time{f6}"
 	&"63) &,63 inline1{f6}"
 	&"64) &,64 convstr{f6}"
 	&"65) &,65 convert{f6}"
-	&"66) &,66 Calculated GOTO/GOSUB{f6}"
+	&"66) &,66 Calculated goto/gosub{f6}"
 	&"67) &,67 copyrite{f6}"
-	&"68) &,68 struct (run {f5}i.test structs{f5}){f6}"
+	&"68) &,68 struct (run {quotation}i.test structs{quotation}){f6}"
 	&"69) &,69 Display String on Console{f6}"
-	&"70) &,70 Position Terminal Cursor{f6}"
+	&"70) &,70 Position Terminal Cursor{f6}":return
 
-	&"[0-70, Q)uit, {question}=List]{f6}"
-{:prompt}
-	p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:menu}
-' &,66: calcgoto: routines start on 50-line increments
-'	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
-' &,66,1: calcgosub:
-	a%=abs(val(an$)):if a%<70 then a%=3100+a%*50:&,66,1
-	goto {:prompt}
 {nice:10}
-{:sub.which_record}
-' if q=1, a is out of bounds
-	&"[1-{pound}!t]{f6}":p$="Which Record":&,1:a=int(val(an$)):q=-(a<1 or a>t)
-	return
+{:menu}
+	&"[0-70, Px) Page 1-6, Q)uit, {question}=List]{f6}"
+{:prompt}
+	l=0:h=70:p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' &,66,1: calcgosub: routines start on 50-line increments
+'	a%=3000+a%*50:&,66,1:goto {:prompt}
 
 {:3100} ' &,1
+' TODO: implement &,1,x,<password_mode> flags
 	&"&,1{f6}":return
 {:3150} ' &,2
 	&"&,2{f6}":return
@@ -131,7 +141,8 @@
 	return
 
 {:3350} ' &,6
-	&"&,6{f6}":return
+' TODO: test "don't echo chars" &,1,x,y - from Ray's notes
+	&"&,6 - password{f6}":return
 
 {:3350} ' &,7
 	&"&,7{f6}":return
@@ -143,7 +154,7 @@
 	&"&,9: btmvar{f6}"
 ' enumerate variables that can be displayed, from &,9,x table:
 ' 0-9:
-	:::v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
+	v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
 ' 10-19:
 	v$=v$+"tt$na$rn$ph$ak$lp pl rc sh mw "
 ' 20-29:
@@ -152,18 +163,39 @@
 	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
 ' 40-49:
 	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
+{:amp_9_help}
 ' display table row:
 ' a% a$   b% b$   c% c$   d% d$   e% e$
 	for rw=0 to 9
-' column indices:
-	a%=rw+0:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
-' column values:
-	a$=mid$(v$,a%,3):b$=mid$(v$,b%,3):c$=mid$(v$,c%,3):d$=mid$(v$,d%,3):e$=mid$(v$,e%,3)
+' column indices [must be >=1, mid$() doesn't handle negative values]:
+	a%=rw+1:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
+' extract row's variable names:
+	a$=mid$(v$,a%*3-2,3):b$=mid$(v$,b%*3-2,3):c$=mid$(v$,c%*3-2,3)
+	d$=mid$(v$,d%*3-2,3):e$=mid$(v$,e%*3-2,3)
+' decrement indices so they display properly (0-49, not 1-50):
+	a%=a%-1:b%=b%-1:c%=c%-1:d%=d%-1:e%=e%-1
 ' display a row:
 	&"{pound}#2{pound}# {pound}%a {pound}$a  {pound}#2{pound}# {pound}%b {pound}$b  "
 	&"{pound}#2{pound}# {pound}%c {pound}$c  {pound}#2{pound}# {pound}%d {pound}$d  "
 	&"{pound}#2{pound}# {pound}%e {pound}$e{f6}":next
-	return
+
+{:amp_9_prompt}
+	&"{f6}[0-49, A)ll, M)ain Menu, {question}=List]{f6}":p$="Display variable":&,1:op$=an$
+	on -(op$="A")-2*(op$="M")-3*(op$="{question}") goto {:amp_9_all}, {:amp_9_quit}, {:amp_9_help}
+	an=int(val(op$)):if an<0 or an>49 then:&"Out of range.{f6}":goto {:amp_9_prompt}
+	gosub {:sub.amp_9_display}:goto {:amp_9_prompt}
+{:amp_9_all}
+	&"[At {quotation}Key:{quotation} prompt, {quotation}Q{quotation} quits.]{f6}"
+	for an=0 to 49:i%=an:&"[#{pound}#2{pound}# {pound}%i/49] "
+	gosub {:sub.amp_9_display}:if an$="Q" then:&"Quitting.{f6}":an=50
+	next:goto {:amp_9_prompt}
+{:sub.amp_9_display}
+	&"Displaying "+mid$(v$,(an+1)*3-2,3)
+	&,9,an:&" - Key: {pound}g1{f6}":return
+{:amp_9_quit}
+' restore window to computer type string
+' var 36 is co$, computer type:
+	&"Restoring window to computer type.":&,9,36:return
 
 {:3500} ' &,10
 	&"&,10{f6}":return
@@ -208,20 +240,31 @@
 	&"2) Scan Using  ASC() Value{f6:2}"
 	&"3) Simulate {quotation}instring{quotation} function"
 	&"4) Input scan and split strings"
-	return
-
-{:15,6,1}
-' TODO: finish reporting strings
-	&"an$={quotation}Hello world{quotation}:&,15,6,32"
+{:15_6_menu}
+	l=1:h=4:gosub {sub.input_range}:on an goto {:todo}, {:todo}, {:todo}, {:15_6_scan_string}
+	on q goto {:15_6}:if an$="M" then return
+	goto {:15_6_menu}
+{:15_6_scan_string}
+	v$="an$={quotation}Hello world{quotation}:&,15,6,":&"{pound}$v32{f6}"
 	an$="Hello world":&,15,6,32
-	&"an$={quotation}{pound}v7{quotation} "
+	' should return an$="Hello", a$="world"
+	&"an$={quotation}{pound}v7{quotation}, a$={quotation}{pound}$a{quotation}"
 
-	&"an$={quotation}Hello world{quotation}:&,15,6,asc({quotation} {quotation}){f6}"
+	&"{pound}$vasc({quotation} {quotation}){f6}"
 	an$="Hello world":&,15,6,asc(" ")
-	&"an$={quotation}{pound}v7{quotation} "
+	&"an$={quotation}{pound}v7{quotation}, a$={quotation}{quotation}{f6}":return
 
-{:quit}
-	&,28,2:goto 300
+{:15_6_quit}
+	&,28,2:return
+
+' &,57: relread
+{nice:10}
+{:sub.which_record}
+' if er=1, a is out of bounds
+	rem for &,57 (relread)
+	&"[1-{pound}!t]{f6}":p$="Which Record":&,1:a=int(val(an$)):er=-(a<1 or a>t)
+	return
 
 {:sub.load_module}
 ' TODO: possibly load sub-modules with more functions
+	rem sub.load_module
