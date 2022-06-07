@@ -99,12 +99,14 @@ Also MCI variable `&#163;vj`
 | `an$` | &check; | &check; | *Read:* `&,1` (input string): `an$` returns the user's input
 
 *Write:* `&,15,_x_` (convert `an$` commands): perform various conversions on `an$`
-| `cm$` | &check; | | Current Message, sometimes used for debugging information in `e.errlog`
-Displays in the `Area` window.
+| `cm$` | &check; | | Current Message, displayed in the `Area` window.
+(Sometimes used for debugging information in `e.errlog`.)
+| `co$` | &check; | | User`'s computer type, displayed in 16-character programmable window.
+Equivalent to `co$(co%)`.
 | `ep$` | &check; | | `BBS` ECS command password
 | `hx$` | &check; | | `BBS` 16 hexadecimal digits: `0123456789abcdef`
-| `mp$` | &check; | | `BBS` More prompt text: ``  ...More (Y/n)?``
-| `na$` | &check; | | `BBS` Handle of current caller
+| ``mp$`` | &check; | | ``BBS`` More prompt text: ``  ...More (Y/n)?``
+| ``na$`` | &check; | | ``BBS`` Handle of current caller
 |====================
 
 ### Arrays
@@ -114,10 +116,12 @@ Displays in the `Area` window.
 [cols=">,^,^,<"]
 |====================
 | Variable | Read | Write | Purpose 
+
+| `co$()` | &check; | | Text of computer types
+
 | `tt$()` | &check; | &check; | *Read:* Read text entered into text editor.
 
 *Write:* Can use this array outside of modules using the text editor.
-|  |  | |
 |====================
 
 ////
