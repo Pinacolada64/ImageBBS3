@@ -1,13 +1,15 @@
 ' C64List4_04.exe "i.test calls.lbl" -crunch -alpha:alt -ovr -prg
 ' "-crunch:on" must be specified from command-line
 ' copied from fs driver as "i.test calls.prg"
+{crunch:on}	' BUG: doesn't crunch resulting PRG file, must specify "-crunch" on command line
+{alpha:alt}
 
-' encoded f-key representations within strings:
+' out-of-module line numbers
 {assign:300	=	300} ' main prompt
 {assign:370	=	370} ' b$ mode: a
 
 ' encoded f-keys
-' can't use "quote", that puts a literal quote mark in the string
+' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
 {quoter:133=comma}	' f1
 {quoter:135=quotation}	' f5
 {quoter:137=question}	' f2
@@ -18,17 +20,41 @@
 {:3000}
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
 ' get Trb-L status (db=debug mode):
-' 370 inverts a, so pre-inverting it reports true status
+' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-	goto {:menu}
+	i$="(investigating)"
+' set menu page number, display menu:
+	p=1:goto {:menu}
 
-{sub.input_range}
-	p$="Option [{pound}!l-{pound}!h]":&,1:an=int(val(an$)):er=-(an<l or an>h)
-' quick way of checking for menu/help input: 'if q then...'
-	q=-(an$="{question}")
+{:sub.input_range}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) Help chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) Help"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"]":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
 	return
 
-{nice:10}
+{nice:5}
+{:sub.out_of_range}
+	&"Out of range.{f6}":return
+{:sub.todo}
+	&"TODO: Finish this!{f6}":return
+
+{number:3020}
+{step:1}
 ' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
 ' calcgosub example:
 '	a%=3000+a%*20:&,66,1:goto {:menu}
@@ -46,6 +72,7 @@
 	&"10) &,10 Terminal Mode{f6}":return
 
 {:menu_page_2}
+{number:3040}
 	&"11) &,11 Clear Array{f6}"
 	&"12) &,12 New User{f6}"
 	&"13) &,13 arbit{f6}"
@@ -59,6 +86,7 @@
 	&"20) &,20 Read from Interface Table{f6}":return
 
 {:menu_page_3}
+{number:3060}
 	&"21) &,21 Write to Interface Table{f6}"
 	&"22) &,22 Delay x Tenths of a Second{f6}"
 	&"23) &,23 Get Character from Modem{f6}"
@@ -71,6 +99,7 @@
 	&"30) &,30 putvar{f6}":return
 
 {:menu_page_4}
+{number:3080}
 	&"ML Functions:{f6:2}"
 	&"31) &,31 zero{f6}"
 	&"32) &,32 minusone{f6}"
@@ -84,11 +113,13 @@
 	&"40) &,40 forcegc{f6}":return
 
 {:menu_page_5}
+{number:3100}
 	&"41) &,41 setbaud{f6}"
 	&"42) &,42 ECS Commands{f6}"
 	&"[&,43 - &,50 are ML functions]":return
 
 {:menu_page_6}
+{number:3120}
 	&"[&,51 is an ML function]"
 	&"52) &,52 Lightbar Interface{f6}"
 	&"53) &,53 Logoff{f6}"
@@ -101,6 +132,7 @@
 	&"60) &,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
 
 {:menu_page_7}
+{number:3140}
 	&"61) &,61 poscrsr{f6}"
 	&"62) &,62 Set Time{f6}"
 	&"63) &,63 inline1{f6}"
@@ -113,25 +145,29 @@
 	&"70) &,70 Position Terminal Cursor{f6}":return
 
 {nice:10}
+' 3150?
 {:menu}
-	&"[0-70, Px) Page 1-6, Q)uit, {question}=List]{f6}"
+' display menu page, commands
+	a%=3000+p*20:&,66,1:&"{f6}[0-70, Px) Page 1-7, Q)uit, {question}=List]{f6}"
 {:prompt}
-	l=0:h=70:p$="& Option":&,1:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+	l=0:h=70:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
-'	a%=3000+a%*50:&,66,1:goto {:prompt}
+	a%=3200+an*50:&,66,1:goto {:prompt}
 
-{:3100} ' &,1
+{:3200} ' &,0
+	&"&,0{f6}":return
+{:3250} ' &,1
 ' TODO: implement &,1,x,<password_mode> flags
 	&"&,1{f6}":return
-{:3150} ' &,2
+{:3300} ' &,2
 	&"&,2{f6}":return
-{:3200} ' &,3
+{:3350} ' &,3
 	&"&,3{f6}":return
-{:3250} ' &,4
+{:3400} ' &,4
 	&"&,4{f6}":return
-{:3300} ' &,5
+{:3450} ' &,5
 	&"&,5{f6}":&,5
-{:3302}
 ' call for &,19 also
 ' returns:
 ' lp: major/minor (1.3)
@@ -140,17 +176,17 @@
 	v=lp:&"Image BBS 64 v{pound}!v.{pound}%a: "+a$+"{f6}"
 	return
 
-{:3350} ' &,6
+{:3500} ' &,6
 ' TODO: test "don't echo chars" &,1,x,y - from Ray's notes
 	&"&,6 - password{f6}":return
 
-{:3350} ' &,7
+{:3550} ' &,7
 	&"&,7{f6}":return
 
-{:3400} ' &,8
+{:3600} ' &,8
 	&"&,8{f6}":return
 
-{:3450} ' &,9
+{:3650} ' &,9
 	&"&,9: btmvar{f6}"
 ' enumerate variables that can be displayed, from &,9,x table:
 ' 0-9:
@@ -197,62 +233,65 @@
 ' var 36 is co$, computer type:
 	&"Restoring window to computer type.":&,9,36:return
 
-{:3500} ' &,10
+{:3700} ' &,10
 	&"&,10{f6}":return
 
-{:3550} ' &,11
+{:3750} ' &,11
 	&"&,11{f6}":return
 
-{:3600} ' &,12
+{:3800} ' &,12
 	&"&,12{f6}":return
 
-{:3650} ' &,13
+{:3850} ' &,13
 	&"&,13{f6}":return
 
-{:3700} ' &,14
+{:3900} ' &,14
 	&"&,14{f6}":return
 
-{:3750} ' &,15
+{:3950} ' &,15
 	&"&,15: convan functions:{f6:2}"
 	&"0) &,15   Convert Date{f6}"
 	&"1) &,15,1 Title Case{f6}"
 	&"2) &,15,2 Decode Function Keys{f6}"
 ' they both point to same call
-	&"3) &,15,3 {f6}"
+	&"3) &,15,3 {pound}$i{f6}"
 	&"4) &,15,4 (points to &,15,3){f6}"
-	&"5) &,15,5 newdate{f6}"
-	&"6) &,15,6 Scan string{f6}"
-	l=0:h=6:gosub {:sub.input_range}:if q then return
+	&"5) &,15,5 newdate {pound}$i{f6}"
+	&"6) &,15,6 Scan string...{f6}"
+{:amp_15_prompt}
+	l=0:h=6:m=1:gosub {:sub.input_range}:if m then return
+	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
 
 {:15_5}' &,15,5
-	an$="19011038045":gosub {:sub.test_newdate} ' 2090
-	an$="11410288045":gosub {:sub.test_newdate} ' 2014
+	an$="19011038045":gosub {:sub.test_newdate} ' before: sun nov  3, 2090  8:45 pm
+	an$="11410288045":gosub {:sub.test_newdate} ' before: sun oct 28, 2014  8:45 pm
 	return
 {:sub.test_newdate}
-	&" Before: {$04}"+an$:&,15,5:&"{f6} After: {$04}"+an$+"{f6}"
-	return
+	&"{f6}Before: an$={quotation}{$04}{quotation}"+an$:&,15,5:&"{f6} After: an$={quotation}{$04}"+an$+"{quotation}{f6}":return
 
 {:15_6}
 ' from programmer's reference guide
 	&"&,15,6,x: Scan string{f6:2}"
-	&"Split String Two Ways [from PRG]:{f6}"
-	&"1) Scan Using CHR$() Value{f6}"
-	&"2) Scan Using  ASC() Value{f6:2}"
-	&"3) Simulate {quotation}instring{quotation} function"
-	&"4) Input scan and split strings"
-{:15_6_menu}
-	l=1:h=4:gosub {sub.input_range}:on an goto {:todo}, {:todo}, {:todo}, {:15_6_scan_string}
-	on q goto {:15_6}:if an$="M" then return
-	goto {:15_6_menu}
-{:15_6_scan_string}
-	v$="an$={quotation}Hello world{quotation}:&,15,6,":&"{pound}$v32{f6}"
-	an$="Hello world":&,15,6,32
-	' should return an$="Hello", a$="world"
-	&"an$={quotation}{pound}v7{quotation}, a$={quotation}{pound}$a{quotation}"
-
-	&"{pound}$vasc({quotation} {quotation}){f6}"
-	an$="Hello world":&,15,6,asc(" ")
-	&"an$={quotation}{pound}v7{quotation}, a$={quotation}{quotation}{f6}":return
+	&"Split String Two Ways [from PRG]:{f6:2}"
+	&"1) Scan Using chr$(value){f6}"
+	&"2) Scan Using  asc({quotation}char{quotation}){f6:2}"
+	&"Other Examples:{f6:2}"
+	&"3) Simulate {quotation}instring{quotation} function{f6}"
+	&"4) Input scan string/split char{f6:2}"
+{:15_6_prompt}
+	l=1:h=4:m=1:q=1:gosub {:sub.input_range}
+	v$="an$={quotation}Hello world{quotation}:&,15,6,":on an gosub {:sub.15_6_scan_string_chr}, {:sub.15_6_scan_string_asc}, {:sub.todo}, {:sub.todo}
+' q="?" entered, m="M"main menu:
+	on -(m=1) -2* (q=1) goto {:15_6}, {:15_6_quit}:goto {:15_6_prompt}
+{:sub.15_6_scan_string_chr}
+' an$="Hello world":&,15,6,32
+	&"{pound}$v32{f6}":an$="Hello world":&,15,6,32:gosub {:sub.15_6_results}:return
+{:sub.15_6_scan_string_asc}
+' an$="Hello world":&,15,6,asc(" ")
+	&"{pound}$vasc({quotation} {quotation}){f6}":an$="Hello world":&,15,6,asc(" "):gosub {:sub.15_6_results}:return
+{:sub.15_6_results}
+' returns a$="Hello", an$="world":
+	&"a$={quotation}{pound}$a{quotation}, an$={quotation}{pound}v7{quotation}{f6:2}":return
 
 {:15_6_quit}
 	&,28,2:return
@@ -268,3 +307,6 @@
 {:sub.load_module}
 ' TODO: possibly load sub-modules with more functions
 	rem sub.load_module
+
+{:quit}
+	goto 300
