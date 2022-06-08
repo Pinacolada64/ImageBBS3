@@ -218,7 +218,7 @@
 {:amp_9_prompt}
 	&"{f6}[0-49, A)ll, M)ain Menu, {question}=List]{f6}":p$="Display variable":&,1:op$=an$
 	on -(op$="A")-2*(op$="M")-3*(op$="{question}") goto {:amp_9_all}, {:amp_9_quit}, {:amp_9_help}
-	an=int(val(op$)):if an<0 or an>49 then:&"Out of range.{f6}":goto {:amp_9_prompt}
+	an=int(val(op$)):if an<0 or an>49 then gosub {:sub.out_of_range}:goto {:amp_9_prompt}
 	gosub {:sub.amp_9_display}:goto {:amp_9_prompt}
 {:amp_9_all}
 	&"[At {quotation}Key:{quotation} prompt, {quotation}Q{quotation} quits.]{f6}"
