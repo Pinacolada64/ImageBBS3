@@ -22,11 +22,11 @@
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-	i$="(investigating)"
 ' set menu page number, display menu:
-	p=1:goto {:menu}
+	i$="(investigating)":p=1:goto {:menu}
 
 {:sub.input_range}
+{step:1}
 ' on entry:
 ' m=1: print M)ain Menu option
 ' q=1: print ?) Help
@@ -48,6 +48,7 @@
 	return
 
 {nice:5}
+{step:2}
 {:sub.out_of_range}
 	&"Out of range.{f6}":return
 {:sub.todo}
