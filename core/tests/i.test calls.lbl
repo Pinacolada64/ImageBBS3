@@ -5,8 +5,10 @@
 {alpha:alt}
 
 ' out-of-module line numbers
-{assign:300	=	300} ' main prompt
-{assign:370	=	370} ' b$ mode: a
+{assign:92	=	92	} ' ">>> Canceled!"
+{assign:96	=	96	} ' default "[Yes]"
+{assign:300	=	300	} ' main prompt
+{assign:370	=	370	} ' b$ mode: a
 
 ' encoded f-keys
 ' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
@@ -18,7 +20,7 @@
 {step:2}
 
 {:3000}
-	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}:rem "i.test calls"
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
@@ -152,6 +154,8 @@
 	a%=3000+p*20:&,66,1:&"{f6}[0-70, Px) Page 1-7, Q)uit, {question}=List]{f6}"
 {:prompt}
 	l=0:h=70:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' FIXME: temporary hook:
+	if an=23 then {:4350}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
 	a%=3200+an*50:&,66,1:goto {:prompt}
@@ -296,6 +300,18 @@
 
 {:15_6_quit}
 	&,28,2:return
+
+{:4350}
+	&"&,23 - xgetin{f6}"
+{:4352}
+	&"{f6}(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
+{:23_loop}
+' 92: ">>> Canceled!"
+	i=i-1:&"{f6}{pound}!i":&,22,10:&,23:&" rc="+str$(rc):if peek(780)=32 then gosub 92:goto {:23_again}
+	on i goto {:23_loop}:&"Timed out.{f6}"
+{:23_again}
+' 96: "[Yes]"
+	&"Again [Y/n]?: ":gosub 96:on a goto {:4352}:return
 
 ' &,57: relread
 {nice:10}
