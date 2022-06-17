@@ -325,11 +325,11 @@ When using edit mode, if only kbd:[Return] is typed at a prompt, `an$` is set to
 The module can check for this and not update the original string.
 An example is given below.
 
-#TODO# double check this:
+// from &,1 documentation
 
-`pl=0`: convert lowercase input to uppercase.
+`pl=0`: allow both lowercase and uppercase.
 
-`pl=1`: allow both lowercase and uppercase.
+`pl=1`: convert lowercase input to uppercase.
 
 _Parameters:_
 
@@ -366,6 +366,33 @@ Bits may be combined together to perform multiple functions.
 | `%10000000` | 128 | disable typing kbd:[Delete] on column one to exit input
 |=====
 
+_Returns:_
+
+[%header]
+[%autowidth]
+|=====
+| Variable | Purpose
+| `an$` | 1 | disable typing graphics characters
+|=====
+
+[%header]
+[%autowidth]
+|=====
+| `peek()` | Purpose
+| `$d006/53254` | 0: normal
+
+1: kbd:[Delete], kbd:[.] or kbd:[/] typed on column 1
+
+
+|=====
+
+//* location (chat) holds:
+//* 0 = normal *
+//* 1 = delete on column one *
+//* or dot on column one *
+//* 2 = chat check hit *
+//* 3 = carrier/time loss *
+
 _Explanations:_
 
 #TODO#: demonstrations of each mode in `i.test calls`
@@ -376,7 +403,7 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 
 * kbd:[Return] accepts the default (`w$`)
 * a new string can be typed
-* the current string can be edited using kbd:[Ctrl] key shortcuts)
+* the current string can be edited using kbd:[Ctrl] key shortcuts
 
 `password`: password flags:
 
@@ -385,7 +412,7 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 [%header]
 [%autowidth]
 |=====
-| Bits | Decimal | Purpose
+| Binary | Decimal | Purpose
 | `%00000001` | 1| password mask enabled for output
 
 [uses mask character in `peek(17138)`]
@@ -1285,7 +1312,9 @@ _Prerequisite:_
 
 (Refer to variable table #FIXME#.)
 
-_Returns:_ `$61`: Start of buffer holding the variable contents.
+_Returns:_
+
+`$61`: Start of buffer holding the variable contents.
 
 ---
 
@@ -1300,7 +1329,9 @@ _Prerequisite:_
 
 (Refer to variable table #FIXME#.)
 
-_Returns:_ `$61`: Start of buffer holding the variable contents.
+_Returns:_
+
+`$61`: Start of buffer holding the variable contents.
 
 ---
 
