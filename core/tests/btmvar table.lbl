@@ -1,5 +1,6 @@
 {alpha:alt}
 {step:2}
+' filesystem driver saves as i.btmvar table<x>/
 {:3450} ' &,9
 	print"&,9: btmvar":print:rem 6/1/2022
 ' enumerate variables that can be displayed, from &,9,x table:

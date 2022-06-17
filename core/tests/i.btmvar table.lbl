@@ -64,4 +64,3 @@
 	' FIXME: &,9 displays garbage instead of floating-point/integer variables
 	' maybe a regular logon is needed instead of an instant logon, to populate variables?
 	' no, regular logon makes no difference. must be a bug in the ml.
-
