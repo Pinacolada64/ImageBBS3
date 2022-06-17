@@ -25,7 +25,7 @@
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
 ' set menu page number, display menu:
-	i$="(investigating)":p=1:goto {:menu}
+	f$="(fixme)":i$="(investigating)":p=1:goto {:menu}
 
 {:sub.input_range}
 {step:1}
@@ -36,18 +36,18 @@
 
 ' on exit:
 ' m=1: M)ain menu chosen
-' q=1: ?) Help chosen
+' q=1: ?) List chosen
 ' an: value of option chosen
 ' er=1: an is not within the range of l-h
 ' er=0: it is within the range
-	&"[{pound}!l-{pound}!h":if q then:&", {question}) Help"
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) List"
 	if m then:&", M)ain Menu"
 ' q: quick way of checking for menu/help...
-	&"]":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
 ' ...or main menu input: 'if [q|m] then <whatever>'
 	if m then m=-(an$="M")
 	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
-	return
+	&"{f6}":return
 
 {nice:5}
 {step:2}
@@ -151,19 +151,47 @@
 ' 3150?
 {:menu}
 ' display menu page, commands
-	a%=3000+p*20:&,66,1:&"{f6}[0-70, Px) Page 1-7, Q)uit, {question}=List]{f6}"
+	a%=3000+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit, {question}=List]{f6}"
 {:prompt}
-	l=0:h=70:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' m=0: "main menu" not displayed
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
 ' FIXME: temporary hook:
-	if an=23 then {:4350}
+	if an=23 then gosub {:4350}:goto {:prompt}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
 	a%=3200+an*50:&,66,1:goto {:prompt}
 
 {:3200} ' &,0
 	&"&,0{f6}":return
-{:3250} ' &,1
-' TODO: implement &,1,x,<password_mode> flags
+
+{:3250} ' &,1,x,y
+' TODO: implement testing &,1,x,<password_mode> flags
+
+' &,1,x:
+
+' Binary    | Decimal | Purpose (if set)
+' %00000001 | 1       | disable typing graphics characters
+' %00000010 | 2       | "." or "/" on column one exits input
+' %00000100 | 4       | disable prompt (p$)
+' %00001000 | 8       | disable typing £ (the MCI command character)
+' %00010000 | 16      | enable word-wrap
+' %00100000 | 32      | enable edit mode
+' %01000000 | 64      | ignore time remaining
+' %10000000 | 128     | disable typing Delete on column one to exit input
+
+' &,1,x,y:
+
+' Binary    | Decimal | Purpose (if set)
+' %00000001 | 1       | password mask enabled for output [uses mask character in `peek(17138)`]
+' %00000010 | 2       | no output
+
+' returns:
+' location chat ($d006/53254) holds:
+' 0 = normal
+' 1 = delete or dot on column one
+' 2 = chat check hit
+' 3 = carrier/time loss
+
 	&"&,1{f6}":return
 {:3300} ' &,2
 	&"&,2{f6}":return
@@ -182,7 +210,6 @@
 	return
 
 {:3500} ' &,6
-' TODO: test "don't echo chars" &,1,x,y - from Ray's notes
 	&"&,6 - password{f6}":return
 
 {:3550} ' &,7
@@ -231,8 +258,7 @@
 	gosub {:sub.amp_9_display}:if an$="Q" then:&"Quitting.{f6}":an=50
 	next:goto {:amp_9_prompt}
 {:sub.amp_9_display}
-	&"Displaying "+mid$(v$,(an+1)*3-2,3)
-	&,9,an:&" - Key: {pound}g1{f6}":return
+	&,9,an:&"Displaying "+mid$(v$,(an+1)*3-2,3)+"- Key: {pound}g1{f6}":return
 {:amp_9_quit}
 ' restore window to computer type string
 ' var 36 is co$, computer type:
@@ -264,15 +290,27 @@
 	&"5) &,15,5 newdate {pound}$i{f6}"
 	&"6) &,15,6 Scan string...{f6}"
 {:amp_15_prompt}
-	l=0:h=6:m=1:gosub {:sub.input_range}:if m then return
+	l=0:h=6:q=1:m=1:gosub {:sub.input_range}:on q goto {:3950}:if m then return
 	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
 
 {:15_5}' &,15,5
+' Old: d1$="19011038045"
+'      an$="Sun Nov  3, 2090 12:45 PM PST"
+' New: d1$="9011038045"
+'      an$="??? Oct 38, 2001  4:57 AM PST"
+'
+' Old: d1$="11410288045"
+'      an$="Sun Oct 28, 2014 12:45 PM PST"
+' New: d1$="1410288045"
+'      an$="Sun Feb 88, 2041  4:57 AM PST"
+
 	an$="19011038045":gosub {:sub.test_newdate} ' before: sun nov  3, 2090  8:45 pm
 	an$="11410288045":gosub {:sub.test_newdate} ' before: sun oct 28, 2014  8:45 pm
 	return
 {:sub.test_newdate}
-	&"{f6}Before: an$={quotation}{$04}{quotation}"+an$:&,15,5:&"{f6} After: an$={quotation}{$04}"+an$+"{quotation}{f6}":return
+	&"{f6}Old":gosub {:sub.show_newdate}:&,15,5:&"New"
+{:sub.show_newdate}
+	&": d1$={quotation}{pound}v7{quotation}{f6}{pound}{back arrow}05an$={quotation}{$04}"+an$+"{quotation}{f6}":return
 
 {:15_6}
 ' from programmer's reference guide
@@ -301,13 +339,21 @@
 {:15_6_quit}
 	&,28,2:return
 
+' test code from image bbs 2.0:
+' https://github.com/Pinacolada64/ImageBBS/blob/5b564adb919f49e7644c303e7c21e8b75fd192f0/v2/core/jack/i_UD.lbl#L93-L97
+' 10 x=10:print"auto-logoff. press space to abort"
+' 20 printx;:ford=1to500:next:geta$:ifa$<>" " thenonxgoto40:x=x-1:goto20
+' 30 print"aborted":end
+' 40 print"auto-logoff"
+
 {:4350}
 	&"&,23 - xgetin{f6}"
 {:4352}
 	&"{f6}(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
 {:23_loop}
 ' 92: ">>> Canceled!"
-	i=i-1:&"{f6}{pound}!i":&,22,10:&,23:&" rc="+str$(rc):if peek(780)=32 then gosub 92:goto {:23_again}
+' NOTE: using &,4 gives inconsistent results, and never the PetSCII value of the typed character
+	i=i-1:&"{f6}{pound}!i":&,22,10:&,4:c=peek(780):&" c={pound}!c, rc="+str$(rc):if c=32 then gosub 92:goto {:23_again}
 	on i goto {:23_loop}:&"Timed out.{f6}"
 {:23_again}
 ' 96: "[Yes]"
