@@ -1,0 +1,141 @@
+{step:1}
+{number:3000}
+	goto {:menu}
+
+{:sub.input_range}
+{step:1}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) List chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) List"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
+	&"{f6}":return
+
+{nice:5}
+{step:2}
+{:sub.out_of_range}
+	&"Out of range.{f6}":return
+{:sub.todo}
+	&"TODO: Finish this!{f6}":return
+
+{:3020}
+{:header_page_1}
+' when menu option selected, just show header:
+'  &,0  Output a$
+'  &,1  Input an$
+' (etc.)
+	a%=3021+n%:&,66,1:return
+	&"&,0  Output a${f6}":return
+	&"&,1  Input an${f6}":return
+	&"&,2  Disk File Input{f6}":return
+	&"&,3  Read File from Disk{f6}":return
+	&"&,4  Get Byte from Modem{f6}":return
+	&"&,5  Get Version{f6}":return
+	&"&,6  Password Input{f6}":return
+	&"&,7  Load File{f6}":return
+	&"&,8  Disk Directory{f6}":return
+	&"&,9  Bottom Variable{f6}":return
+	&"&,10 Terminal Mode{f6}":return
+
+{:header_page_2}
+{number:3040}
+	&"&,11 Clear Array{f6}"
+	&"&,12 New User{f6}"
+	&"&,13 arbit{f6}"
+	&"&,14 Dump Array{f6}"
+	&"&,15 Convert an${f6}"
+	&"&,16 sys 49152{f6}"
+	&"&,17 sys 49155{f6}"
+	&"&,18 Set Screen Mode{f6}"
+' TODO: call &,5 routine to save RAM
+	&"&,19 Get Version{f6}"
+	&"&,20 Read from Interface Table{f6}":return
+
+{:header_page_3}
+{number:3060}
+	&"&,21 Write to Interface Table{f6}"
+	&"&,22 Delay x Tenths of a Second{f6}"
+	&"&,23 Get Character from Modem{f6}"
+	&"&,24 xchrout1{f6}"
+	&"&,25 Sound{f6}"
+	&"&,26 callmod{f6}"
+	&"&,27 Save Variable Pointers{f6}"
+	&"&,28 Restore Variable Pointers{f6}"
+	&"&,29 usevar{f6}"
+	&"&,30 putvar{f6}":return
+
+{:header_page_4}
+{number:3080}
+	&"ML Functions:{f6:2}"
+	&"&,31 zero{f6}"
+	&"&,32 minusone{f6}"
+	&"&,33 getarr{f6}"
+	&"&,34 putarr{f6}"
+	&"&,35 getln{f6}"
+	&"&,36 putln{f6}"
+	&"&,37 trapon{f6}"
+	&"&,38 trapoff{f6}"
+	&"&,39 prtln{f6}"
+	&"&,40 forcegc{f6}":return
+
+{:header_page_5}
+{number:3100}
+	&"&,41 setbaud{f6}"
+	&"&,42 ECS Commands{f6}"
+	&"[&,43 - &,50 are ML functions]":return
+
+{:header_page_6}
+{number:3120}
+	&"[&,51 is an ML function]"
+	&"&,52 Lightbar Interface{f6}"
+	&"&,53 Logoff{f6}"
+	&"&,54 Text editor interface{f6}"
+	&"&,55 output{f6}"
+	&"&,56 chatmode{f6}"
+	&"&,57 relread{f6}"
+	&"&,58 setalarm{f6}"
+	&"&,59 farerr{f6}"
+	&"&,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
+
+{:header_page_7}
+{number:3140}
+	&"&,61 poscrsr{f6}"
+	&"&,62 Set Time{f6}"
+	&"&,63 inline1{f6}"
+	&"&,64 convstr{f6}"
+	&"&,65 convert{f6}"
+	&"&,66 Calculated goto/gosub{f6}"
+	&"&,67 copyrite{f6}"
+	&"&,68 struct (run {quotation}i.test structs{quotation}){f6}"
+	&"&,69 Display String on Console{f6}"
+	&"&,70 Position Terminal Cursor{f6}":return
+
+{nice:20}
+{:menu_pages}
+' when menu pages are displayed, show option number and
+' header text:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next
+
+' when menu item is selected, displays header text:
+' &,10 Terminal Mode
+{:menu}
+' display "ii) ", print option text:
+	p=1 ' 1-7
+' an=menu option
+	&"{pound}#2{pound}# {pound}%i) ":a%=3001+p*20+an:&,66,1:goto {:menu}
