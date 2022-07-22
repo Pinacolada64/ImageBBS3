@@ -1,4 +1,13 @@
 {step:1}
+{alpha:alt}
+
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
+{quoter:133=comma}	' f1
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
+{quoter:140=up_arrow}	' f8
+
 {number:3000}
 	goto {:menu}
 
@@ -27,10 +36,11 @@
 {nice:5}
 {step:2}
 {:sub.out_of_range}
-	&"Out of range.{f6}":return
+	&"Out of range ({pound}!l-{pound}!h).{f6}":return
 {:sub.todo}
 	&"TODO: Finish this!{f6}":return
 
+{step:1}
 {:3020}
 {:header_page_1}
 ' when menu option selected, just show header:
@@ -49,9 +59,17 @@
 	&"&,8  Disk Directory{f6}":return
 	&"&,9  Bottom Variable{f6}":return
 	&"&,10 Terminal Mode{f6}":return
+{number:3032}
+{:display_page_1}
+' when menu pages are displayed, show option number and
+' header text, e.g.:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
 
-{:header_page_2}
 {number:3040}
+{:header_page_2}
 	a%=3041+n%:&,66
 	&"&,11 Clear Array{f6}":return
 	&"&,12 New User{f6}":return
@@ -64,6 +82,9 @@
 ' TODO: call &,5 routine to save RAM
 	&"&,19 Get Version{f6}":return
 	&"&,20 Read from Interface Table{f6}":return
+{number:3052}
+{:display_page_2}
+	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
 
 {:header_page_3}
 {number:3060}
@@ -78,6 +99,9 @@
 	&"&,28 Restore Variable Pointers{f6}":return
 	&"&,29 usevar{f6}":return
 	&"&,30 putvar{f6}":return
+{number:3072}
+{:display_page_3}
+	for n=21 to 30:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
 
 {:header_page_4}
 {number:3080}
@@ -92,6 +116,9 @@
 	&"&,38 trapoff{f6}":return
 	&"&,39 prtln{f6}":return
 	&"&,40 forcegc{f6}":return
+{number:3092}
+{:display_page_4}
+	for n=31 to 40:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
 
 {:header_page_5}
 {number:3100}
@@ -99,11 +126,14 @@
 	&"&,41 setbaud{f6}":return
 	&"&,42 ECS Commands{f6}":return
 	&"[&,43 - &,50 are ML functions]":return
+{number:3112}
+{:display_page_5}
+	for n=41 to 43:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
 
 {:header_page_6}
 {number:3120}
 	a%=3121+n%:&,66
-	&"[&,51 is an ML function]"
+	&"[&,51 is an ML function]":return
 	&"&,52 Lightbar Interface{f6}":return
 	&"&,53 Logoff{f6}":return
 	&"&,54 Text editor interface{f6}":return
@@ -113,6 +143,9 @@
 	&"&,58 setalarm{f6}":return
 	&"&,59 farerr{f6}":return
 	&"&,60 Structures (run {quotation}i.test structs{quotation}){f6}":return
+{number:3132}
+{:display_page_6}
+	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
 
 {:header_page_7}
 {number:3140}
@@ -127,20 +160,32 @@
 	&"&,68 struct (run {quotation}i.test structs{quotation}){f6}":return
 	&"&,69 Display String on Console{f6}":return
 	&"&,70 Position Terminal Cursor{f6}":return
-
-{nice:20}
-{:menu_pages}
-' when menu pages are displayed, show option number and
-' header text, e.g.:
-'  0) &,0  Output a$
-'  1) &,1  Input an$
-' (etc.)
-	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next
+{number:3152}
+{:display_page_7}
+	for n=61 to 70:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
 
 ' when menu item is selected, displays header text, e.g.:
 ' &,10 Terminal Mode
 {:menu}
-' display "ii) ", print option text:
-	p=1 ' 1-7
+' p=menu page, 1-7
+	p=1
+' display menu page, commands
+' p=1: 3012, p=2: 3032, p=3: 3052, p=4: 3072, p=5: 3092, p=6: 3112, p=7: 3132
+	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit, {question}=List]{f6}"
+{:prompt}
+' m=0: "main menu" not displayed
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' Px (switch to Page x) hook:
+	if left$(an$,1)<>"P" then {:dispatch}
+	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:prompt}
+	gosub {:sub.out_of_range}:goto {:prompt}
+{:dispatch}
+' &,66,1 (calcgosub): routines start on 50-line increments
+' an=0: 3200, an=1: 3250, an=2: 3300, an=3: 3350...
+	a%=3200+an*50:&,66,1:goto {:prompt}
+
 ' an=menu option
 	&"{pound}#2{pound}# {pound}%i) ":a%=3001+p*20+an:&,66,1:goto {:menu}
+
+{:quit}
+	&,28,2:goto {:300}
