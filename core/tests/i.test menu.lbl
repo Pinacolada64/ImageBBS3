@@ -1,5 +1,6 @@
 {step:1}
 {alpha:alt}
+{assign:300	=300	}	' main prompt
 
 ' encoded f-keys
 ' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
@@ -9,7 +10,7 @@
 {quoter:140=up_arrow}	' f8
 
 {number:3000}
-	goto {:menu}
+	goto {:setup}
 
 {:sub.input_range}
 {step:1}
@@ -70,7 +71,8 @@
 
 {number:3040}
 {:header_page_2}
-	a%=3041+n%:&,66
+' 3030+11=3041
+	a%=3030+n%:&,66
 	&"&,11 Clear Array{f6}":return
 	&"&,12 New User{f6}":return
 	&"&,13 arbit{f6}":return
@@ -88,7 +90,8 @@
 
 {:header_page_3}
 {number:3060}
-	a%=3061+n%:&,66
+' 3040+21=3061
+	a%=3040+n%:&,66
 	&"&,21 Write to Interface Table{f6}":return
 	&"&,22 Delay x Tenths of a Second{f6}":return
 	&"&,23 Get Character from Modem{f6}":return
@@ -105,7 +108,8 @@
 
 {:header_page_4}
 {number:3080}
-	&"ML Functions:{f6:2}":a%=3081+n%:&,66
+' 3050+31=3081
+	&"ML Functions:{f6:2}":a%=3050+n%:&,66
 	&"&,31 zero{f6}":return
 	&"&,32 minusone{f6}":return
 	&"&,33 getarr{f6}":return
@@ -122,18 +126,20 @@
 
 {:header_page_5}
 {number:3100}
-	a%=3101+n%:&,66
+' 3060+41=3101
+	a%=3060+n%:&,66
 	&"&,41 setbaud{f6}":return
 	&"&,42 ECS Commands{f6}":return
-	&"[&,43 - &,50 are ML functions]":return
+	&"[&,43 - &,50 are ML functions]{f6}":return
 {number:3112}
 {:display_page_5}
 	for n=41 to 43:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
 
 {:header_page_6}
 {number:3120}
-	a%=3121+n%:&,66
-	&"[&,51 is an ML function]":return
+' 3070+51=3121
+	a%=3070+n%:&,66
+	&"[&,51 is an ML function]{f6}":return
 	&"&,52 Lightbar Interface{f6}":return
 	&"&,53 Logoff{f6}":return
 	&"&,54 Text editor interface{f6}":return
@@ -145,11 +151,12 @@
 	&"&,60 Structures (run {quotation}i.test structs{quotation}){f6}":return
 {number:3132}
 {:display_page_6}
-	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
+	for n=51 to 60:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
 
 {:header_page_7}
 {number:3140}
-	a%=3141+n%:&,66
+' 3080+61=3141
+	a%=3080+n%:&,66
 	&"&,61 poscrsr{f6}":return
 	&"&,62 Set Time{f6}":return
 	&"&,63 inline1{f6}":return
@@ -164,28 +171,46 @@
 {:display_page_7}
 	for n=61 to 70:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
 
+{:setup}
+' p=menu page, 1-7
+	p=1:&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+
 ' when menu item is selected, displays header text, e.g.:
 ' &,10 Terminal Mode
 {:menu}
-' p=menu page, 1-7
-	p=1
 ' display menu page, commands
 ' p=1: 3012, p=2: 3032, p=3: 3052, p=4: 3072, p=5: 3092, p=6: 3112, p=7: 3132
-	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit, {question}=List]{f6}"
+	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit]{f6}"
 {:prompt}
 ' m=0: "main menu" not displayed
 	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
 ' Px (switch to Page x) hook:
 	if left$(an$,1)<>"P" then {:dispatch}
-	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:prompt}
+	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:menu}
 	gosub {:sub.out_of_range}:goto {:prompt}
 {:dispatch}
-' &,66,1 (calcgosub): routines start on 50-line increments
-' an=0: 3200, an=1: 3250, an=2: 3300, an=3: 3350...
-	a%=3200+an*50:&,66,1:goto {:prompt}
+' this is a dirty hack:
+' an=10s digit of 2-digit value (0 if <10): page #
+' n%= 1s digit of 2-digit value: item within the menu header block
 
-' an=menu option
-	&"{pound}#2{pound}# {pound}%i) ":a%=3001+p*20+an:&,66,1:goto {:menu}
+' TODO: I know there's a faster method, like d1=(an/10)*10, d2=(an/100)*100 ?
+'  tried switching * and /, no luck
+
+' 10 an=59:an$=mid$(str$(an),2):dh=.:ifan>9thendh=val(left$(an$,1))
+' 20 dl=val(right$(an$,1))
+' 30 printdh;dl:rem 1st/2nd digit
+' run
+'  5  9
+	an$=mid$(str$(an),2):n%=val(right$(an$,1)):an=.:if val(an$)>9 then an=val(left$(an$,1))
+
+' &,66,1 (calcgosub): routines start on 20-line increments
+' an=0-10: 3020, an=11-20: 3040, an=21-30: 3060, an=31-40: 3080...
+	a%=3000+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}"
+
+' n%=menu option (used in 1st line), display item # + menu item
+	&"{pound}#2{pound}# {pound}%n) ":&,66,1:goto {:menu}
 
 {:quit}
-	&,28,2:goto {:300}
+' TODO: array pointers will be restored once struct stuff is re-added
+'	&,28,2:
+	goto 300
