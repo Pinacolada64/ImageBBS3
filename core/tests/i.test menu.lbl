@@ -204,11 +204,11 @@
 	an$=mid$(str$(an),2):n%=val(right$(an$,1)):an=.:if val(an$)>9 then an=val(left$(an$,1))
 
 ' &,66,1 (calcgosub): routines start on 20-line increments
-' an=0-10: 3020, an=11-20: 3040, an=21-30: 3060, an=31-40: 3080...
-	a%=3000+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}"
+' an=0/1: 3020, an=2: 3040, an=3: 3060, an=4: 3080...
+	a%=3020+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}"
 
-' n%=menu option (used in 1st line), display item # + menu item
-	&"{pound}#2{pound}# {pound}%n) ":&,66,1:goto {:menu}
+' n%=menu option (used in 1st line), display item # + item text
+	&"{pound}#2{pound}# {pound}%n) ":&,66,1:&"{f6}":goto {:menu}
 
 {:quit}
 ' TODO: array pointers will be restored once struct stuff is re-added
