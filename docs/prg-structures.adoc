@@ -453,10 +453,11 @@ _string$_: the 11-digit date string
 
 .Details: Binary Coded Decimal
 
-Structs store an 11-digit date in 3 bytes using Binary Coded Decimal (BCD) format.
-Two decimal digits are stored per byte, using the high and low _nybbles_ (i.e., two 4-bit halves of an 8-bit number).
+Structs store an 11-digit date in 3 elements (6 bytes) using Binary Coded Decimal (BCD) format.
+Two decimal digits are stored per byte, using the high and low _nybbles_ (_i.e._, 4-bit halves of an 8-bit number).
 
- an$="10412208234":&,60,4,0,u%(0,1),an$
+[code, basic]
+an$="10412208234":&,60,4,0,u%(0,1),an$
 
 [cols="8"]
 [%autowidth]
@@ -805,15 +806,15 @@ _Parameters:_
 
 `&,60,12,_count_,_size_,_a$_,_a%(a,b)_,_b$_`
 
-`count`: 
+`count`:
 
 `size`: size of the record to scan
 
-`a$`: 
+`a$`:
 
-`a%(a,b)`: 
+`a%(a,b)`:
 
-`b$`: 
+`b$`:
 
 _Example:_
 
