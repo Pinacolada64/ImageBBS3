@@ -3,28 +3,55 @@
 
 // https://github.com/Pinacolada64/ImageBBS/blob/534f39f7cbe3f8c896725bc1db94fa23416ecacf/v2/docs/%26%20commands.txt
 
-## Static Arrays (Structures) [[structures]]
+## Structures [[structures]]
 
-_Structures_ (or _structs_) allow you to treat the memory used by arrays as blocks of memory.
-You can store multiple types of data in this memory, and perform operations on the data using `&,60` and various sub-commands.
-This is much faster than a BASIC `for...next` loop.
+_Structures_ (or _structs_ for short) allow you to access and manipulate the memory used by arrays at machine language speeds.
+
+Programmed properly, structs save RAM compared to having multiple string and numeric arrays defined to, say, hold information about a U/D library:
+
+* filename and filetype
+* the block size
+* times downloaded
+* upload date and last download date
+
+You can now hold all this information within a _single_ struct array, performing:
+
+* searches
+* sorts
+* filtering the list of files based on a substring match
+* and more.
+
+You can store multiple types of data in a single struct, and perform operations on the data using `&,60` or `&,68`, and various sub-commands.
+
+Performing a struct search operation is much faster than searching through an array in BASIC with a `for...next` loop.
+
+### Static Arrays
+
+The arrays are considered _static_ because, like strings embedded in BASIC text, the length of a string can't change (unless the string is concatenated to or redefined entirely).
+
+====
+NOTE: Currently there's no option to resize a struct without first copying data to another struct.
+====
 
 There are functions to:
 
-* put and get strings, and Image-formatted 11-digit dates
+* put and get strings, and Image BBS-style 11-digit dates
 * sort and filter data
-* collect information from one structure, and put the results in another array
-* load and save structures
+* test and collect information from the struct, then put the results in another array
+* copy pieces of information from one part of the struct to another
+* load and save structs
 
-#FIXME: more functions#
+#FIXME# more functions
 
 _Elements_ are the individual "`boxes`" in the array that data is held in.
 
-Strings can be stored in either a floating point or integer array.
-Two bytes per element of the string text can be stored per element of an integer array.
+Strings can be stored in either a floating point [like `a()` or `b()`], or integer  [like `a%()` or `b%()`] array.
 
+* Two bytes of a string's text can be stored per element of an integer array
 
-.Representation of Sample 2D Integer Array
+* Four bytes , or 4 bytes .
+
+.Representation of a Sample 2D Integer Array
 [%autowidth]
 |===
 | `x%(0,0)` | `x%(0,1)` | `x%(0,2)`
@@ -37,25 +64,25 @@ TODO: later
 Let's write a BASIC program to fill and display the elements of an integer array, and then we'll show how to refer to the elements:
 
 .Sample Array
-#TODO: finish this#
+#TODO#: x%(field,record)
 ```
 10 print
 20 end
 ```
 ////
 
-It is suggested that you use numeric type arrays, since this will allow you to access the elements as numeric data, as well as put and get strings.
+It is suggested that you use numeric instead of string arrays, since this will allow you to both access the elements as numeric data, as well as put and get strings.
 
 // TODO: can you use string arrays?
 
-Floating point arrays (like `a()` or `b()`) use 5 bytes per element.
-Integer arrays (like `a%()` or `b%()`) use 2 bytes per element.
-When deciding to use structures, you should determine what types of data you will need to store, and how much memory that data will require.
+Floating point arrays use 5 bytes per element.
+Integer arrays use 2 bytes per element.
+When deciding to use structs, you should determine what types of data you will need to store, and how much memory that data will require.
 
 
 ====
-As a running example, let`'s design a structure to hold a user’s ID#, handle, and password.
-A module will be written to store, edit, and retrieve data to/from this structure.
+As a running example, let`'s design a struct to hold a user’s ID#, handle, and password.
+A module will be written to store, edit, and retrieve data to/from this struct.
 
 * The ID is an integer type (never > 32767), requiring 2 bytes.
 * The handle can be up to 20 characters.
@@ -70,12 +97,12 @@ _or_
 
 * 8 floating point elements (5 bytes per element &times; 8 elements  &equals; 40 bytes).
 
-Now that you have the basic concept of the structure, let’s look in a little more detail.
-Here is a byte-by-byte map of the structure we designed.
+Now that you have the basic concept of the struct, let’s look in a little more detail.
+Here is a byte-by-byte map of the struct we designed.
 
 [%header]
 [%autowidth]
-.Sample Structure layout
+.Sample Struct Layout
 |===
 | Element Position | Byte Position | Data | Type | Bytes Used
 | Element 0 | Bytes 00-01 | ID# | Integer | 2 bytes
@@ -86,7 +113,7 @@ Here is a byte-by-byte map of the structure we designed.
 
 // Representation of user data struct
 
-.Structure Data Storage
+.Struct Data Storage
 [cols="12"]
 [%autowidth]
 |===
@@ -177,6 +204,7 @@ Here is a byte-by-byte map of the structure we designed.
 ^| _unused_
 |===
 
+
 TIP: Because the unused byte 37 is _not_ on an even element boundary (the previous element is an odd number of bytes), it cannot be used.
 
 Since the ID# is an integer anyway, it would be best to use an integer array.
@@ -185,42 +213,53 @@ The definition would look like this:
  dim u%(18)
 
 TIP: Remember that arrays start at element 0!
-There are 19 bytes in this structure, 0-18.
+There are 19 bytes in this struct, 0-18.
 
-Of course, you may want to store more than one of these structures in memory.
-To do so, you would need a 2-dimensional array.  This would change the `dim` statement to:
+Of course, you may want to store more than one of these records in memory.
+To do so, you would need a 2-dimensional array.
+(Suppose that _x_ is the number of structs you want.)
+This would change the `dim` statement to:
 
  dim u%(18,x-1)
 
-(Suppose that _x_ is the number of structures you want.)
-
 ====
 
-// Ryan added this next bit, and changed "element number/byte number" to "record" and "field"
+### Some New Terminology
 
-To refer to bytes in a structure:
+// Ryan added this next bit, and changed e.g., s%(2,n) ("element,byte") to "field,record"
 
-* the first number in the array notation is the _record number_ (like a field of a record in a RELative file)
-* the second number is the _field number_ (or _byte number_).
+To refer to bytes in a struct, and hopefully reduce confusion about "`elements`" and "`bytes,`" the following terminology will be used:
 
-TIP: Record `0`, field `0` (_e.g._, `u%(0,0)`) is often used to hold the number of elements in the structure.
+* The first number in the array notation is the _field number_ (like a field within a record of a RELative file).
+It's reccommended to be an even number since integers occupy at least two bytes.
+* The second number is the _record number_.
+When the size of the struct is decided upon, you use a multiple of that size to address individual records within the struct.
+
+#TODO#: a visualization of fields in a record.
+
+====
+TIP: Record `0`, field `0` [_e.g._, `u%(0,0)`] is often used to hold the number of records in the struct.
+Record 0 may hold additional information during the lifetime of the struct.
+====
+
+### Using Structs
 
 Now down to the important part: how to use all of this!
-The structure system is called with either `&,60,_x_,...` or `&,68,_x_,...`.
+The struct system is called with either `&,60,_sub-function_,...` or `&,68,_sub-function_,...`.
 
-There are currently 14 sub-functions supported by the structure routines.
+There are currently 14 sub-functions supported by the struct routines.
 They are documented below.
 
-### Numeric Values and Structures
+### Numeric Values and structs
 
-The array used with structures is either an integer or floating point type.
-To put numeric values into--or get numeric values from--a structure requires no special structure calls.
+The array used with structs is either an integer or floating point type.
+To put numeric values into--or get numeric values from--a struct requires no special struct calls.
 
 // Is this supported?
 // If you are using string arrays,
 You may use code similar to the following examples:
 
-.Get number from and put number into structure
+.Get number from and put number into struct
 [%header]
 [%autowidth]
 |===
@@ -239,16 +278,16 @@ TIP: Integer arrays can store values from `-32768` to `32767`.
 
 ### `&,60,0` Put String
 
-Copies a specified string variable of a fixed length into a field in a structure.
+Copies a specified string variable of a fixed length into a field of a struct.
 
 .Syntax
-`&,60,0,_length_,_struct(record,field)_,_string$_`
+`&,60,0,_length_,_struct(field,record)_,_string$_`
 
 _length_: the maximum string length to put into the record.
 
-_array()_: the array name assigned to the structure you're reading the string from.
+_array()_: the array name assigned to the struct you're reading the string from.
 
-_string$_: the string name to read the structure data into.
+_string$_: the string name to read the struct data into.
 
 .Example
  &,60,0,20,u%(1,1),na$
@@ -273,13 +312,13 @@ _string$_: the string name to read the structure data into.
 
 `&,60,0,20,u%(1,1),**na$**`
 
-TODO: show putting string longer than _length_ into struct, is it truncated?
+#TODO#: show putting string longer than _length_ into struct, is it truncated?
 
 ---
 
 ### `&,60,1` Get String
 
-This copies a string from a structure into a specified string variable.
+This copies a string from a struct into a specified string variable.
 
 _Syntax:_
 
@@ -312,7 +351,7 @@ _Example:_
 `&,60,1,20,u%(11,2),**a$**`
 
 ====
-In our earlier example user data structure, to access the third user’s password, you would:
+In our earlier example user data struct, to access the third user’s password, you would:
 
 [start=1]
 . get a string:
@@ -338,9 +377,9 @@ In our earlier example user data structure, to access the third user’s passwor
 
 ---
 
-### `&,60,2` Load structure from disk
+### `&,60,2` Load struct from disk
 
-Loads the specified structure on disk into an array.
+Loads the specified struct on disk into an array.
 
 _Syntax:_
 
@@ -357,7 +396,7 @@ NOTE: You do not have to load the file at the start of the array.
 `**&,60,2,0,**u%(0,0),dr$+"u.handles",dv%`
 
 [start=1]
-. Load a structure:
+. Load a struct:
 
 `**&,60,2,0**,u%(0,0),dr$+"u.handles",dv%`
 
@@ -374,19 +413,19 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 `&,60,2,0,u%(0,0),**dr$+"u.handles"**,dv%`
 
 [start=4]
-. `dv%` is the device number to load the structure from:
+. `dv%` is the device number to load the struct from:
 
 `&,60,2,0,u%(0,0),dr$+"u.handles",**dv%**`
 
 ---
 
-### `&,60,3` Save a structure to disk
+### `&,60,3` Save a struct to disk
 
-This saves a structure to a specified disk file.
+This saves a struct to a specified disk file.
 
 _Parameters:_
 
-`&,60,3,0,_struct%(record,field)_,_bytes_,_filename$_,_device_`
+`&,60,3,0,_struct%(field,record)_,_bytes_,_filename$_,_device_`
 
 The parameters _struct%(record,field)_, _bytes_, and _filename$_ are the same as in previous commands.
 
@@ -414,7 +453,7 @@ Don't forget: records start at `0`!
 The starting field and record is specified with (as above) `u%(0,0)`.
 
 [start=1]
-. Save a structure:
+. Save a struct:
 
 `**&,60,3,0**,u%(0,0),3*38,dr$+"u.handles",dv%`
 
@@ -424,7 +463,7 @@ The starting field and record is specified with (as above) `u%(0,0)`.
 `&,60,3,0,**u%(0,0)**,3*38,dr$+"u.handles",dv%`
 
 [start=3]
-. _bytes_: the number of bytes per structure, multiplied by the number of structures (3 structures &times; 38 bytes in the example):
+. _bytes_: the number of bytes per struct, multiplied by the number of structs (3 structs &times; 38 bytes in the example):
 
 `&,60,3,0,u%(0,0),**3*38**,dr$+"u.handles",dv%`
 
@@ -437,12 +476,12 @@ The starting field and record is specified with (as above) `u%(0,0)`.
 
 ### `&,60,4` Put Date
 
-Put an 11-digit date into a structure (stored in Binary Coded Decimal).
+Put an 11-digit date into a struct (stored in Binary Coded Decimal).
 
 .Syntax
 `&,60,4,0,_array(a,b)_,_string$_`
 
-_array(a,b)_: array name(`a`=starting structure, `b`=starting byte)
+_array(a,b)_: array name(`a`=starting struct, `b`=starting byte)
 
 _string$_: the 11-digit date string
 
@@ -495,7 +534,7 @@ an$="10412208234":&,60,4,0,u%(0,1),an$
 
 ### `&,60,5` Get Date
 
-Get an 11-digit date from structure.
+Get an 11-digit date from struct.
 The date is stored in Binary Coded Decimal (BCD) format as shown above.
 
 _Parameters:_
@@ -517,17 +556,33 @@ _string$_: string name
 
 ---
 
-### `&,60,6` Scan Structures
+### `&,60,6` Scan Struct
 
-Scan through a field in a structure, testing whether various conditions are true on variables.
-If the condition is true, perform an operation on another field in the structure.
+Scan through a field in a struct, testing whether various conditions are true on variables.
+If the condition is true, perform an operation on another field in the struct.
 
 _Syntax:_
 
 `&,60,6,_num_,_command_,_a%(a,b)_,_b%(a,b)_,_size_,_bits_,_test_`
 
 .i.GF
- a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+ 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+
+[%header]
+[%autowidth]
+|===
+| Statement | Variable | Purpose
+| `if s%(0,0) then...` | _n/a_ | There is an implied `if s%(0,0)<>0` here, meaning "`if the record count is non-zero, then...`"
+| `&,60,6,`... | _n/a_ | scansum
+| `s%(0,0),`... |_num_ | for the record count
+| `0,`... | _command_ | `0`: 2-byte `and` between bits in `s%(0,1)` and `s%(1,1)`? 
+| `s%(0,1),`... | a%(_field,record_) | #FIXME#
+| `s%(1,1),`... | b%(_field,record_) | #FIXME#
+| `80,`... | _size_ | each record is 80 bytes wide 
+| `1,`... | _bits_ | set bit 1 on ... if _command_ returns zero 
+| `2^ac%` | _test_ | access level
+
+|===
 
 .i.MM.load
  &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
@@ -545,21 +600,21 @@ updated:
 Example:
 &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
-ud%(0,1),ud%(0,1) -> reads and puts it back?
+ud%(0,1),ud%(0,1) -> reads field 0, record 1 and sets bit 7 on a match?
 ////
 
 `num`: # of fields in the struct to scan
 
 `bits`: the bits to set if _test_ is true
 
-`flag%(_record_,_field_)`: the field on which to set `bits` if `test` is true.
+`flag%(_field,record_)`: the field on which to set `bits` if `test` is true.
 
 ====
 NOTE: _record_ may be a dummy parameter, more tests needed.
 ====
 
 // `b(a,b)`: starting object(_element_,_byte_)
-`scan%(_rec_,_field_)`: field to scan
+`scan%(_field,record_)`: field to scan
 
 `size`: record size in bytes
 
@@ -567,28 +622,41 @@ NOTE: _record_ may be a dummy parameter, more tests needed.
 
 .Scan Struct Commands
 [%autowidth]
+[%header]
+[%align "^^<"]
 |===
-| 0| 2 byte and, <>0
-| 1| 2 byte and, ==0
-| 2| 2 byte cmp, <
-| 3| 2 byte cmp, >=
-| 4| date cmp, <
-| 5| date cmp, >=
+| Num | Command | Add If Result
+^| 0 | 2 byte `and` | not equal to `0`
+| 1 | 2 byte `and` | equal to `0`
+| 2 | 2 byte `cmp` | less than (`<`)
+| 3 | 2 byte `cmp` | greater than or equal to (`>=`)
+| 4 | date `cmp` | date is less than (`<`)
+| 5 | date `cmp` | date is greater than or equal to (`>=`)
 |===
+
+_Num_:: bla
+
+_Command_:: bla
+
+_Add If Result_:: Add this record (field?) to the #FIXME# only if _object_ meets the command's criteria
 
 _test_: the object to test for
 (apparently can be either a variable or a number, maybe the byte number?)
 
+====
 .Example: `i.UD` from Image 2.0
-The following code scans the U/D directory for entries which have an upload date older than `ld$`, (setting `$4f` on `ud%(0,1)` if the entry matches):
+NOTE: This is still being researched.
 
- 3950 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
+The following code scans the U/D directory for entries which have an upload date older than `ld$`, setting `$4f` on `ud%(3,1)` (if the entry matches?):
 
 //    &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
 `&,60,6`: scan struct
 
-`rn`: record number, how many structures to scan in the directory
+.i.UD:
+ 3950 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
+
+`rn`: highest record number to scan in the directory struct
 
 `$4f`: `%01001111` in binary, #FIXME# still researching the purpose of this
 
@@ -596,7 +664,7 @@ The following code scans the U/D directory for entries which have an upload date
 
 `ud%(3,1)`: Upload date
 
-`60`: record size, in bytes
+`60`: record is 60 bytes wide
 
 `4`: date comparison, `<` (less than)
 
@@ -611,7 +679,7 @@ _Returns:_
 
 ---
 
-### `&,60,7` Sort Structure
+### `&,60,7` Sort Struct
 
 Sort a string array (only multi-dimensional?).
 Does not work with numeric values.
@@ -629,7 +697,7 @@ _Example:_
 
 ### `&,60,8` Scan Numbers
 
-Scan through a specified field in a structure for non-zero values.
+Scan through a specified field in a struct for non-zero values.
 `a%` holds how many non-zero values there are.
 The list of non-zero values is put in a specified array.
 
@@ -706,7 +774,7 @@ _Returns:_
 
 ---
 
-### `&,60,10` Copy Structure
+### `&,60,10` Copy Struct
 
 Copy one record to another.
 
@@ -726,13 +794,13 @@ _Example:_
 ----
 4694 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next <1>
 ----
-<1> `if x<>fb%(0,0)`: if `x` does not equal the number of records in the structure [`fb%(0,0)`], then copy record `a+1` to record `a` in a loop.
+<1> `if x<>fb%(0,0)`: if `x` does not equal the number of records in the struct [`fb%(0,0)`], then copy record `a+1` to record `a` in a loop.
 
 ---
 
 ### `&,60,11` Scan for String
 
-Scan structure for a string present in a specified array.
+Scan struct for a string present in a specified array.
 
 _Parameters:_
 
