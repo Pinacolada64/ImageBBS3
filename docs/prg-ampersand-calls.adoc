@@ -41,7 +41,7 @@ On other terminals or operating systems, a carriage return moves the cursor to t
 
 Sometimes an additional _linefeed_ character is needed, which keeps the cursor in the current column, but moves the cursor down a row.
 
- Hello 
+ Hello
        there!
 
 This stairstep-looking result is what printing looks like with only a linefeed, when the terminal needed both a carriage return and a linefeed.
@@ -99,14 +99,14 @@ As it relates to carriage returns, though, we can see in the following table:
 [%autowidth]
 [%header]
 |==============
-| Key | Quoted | Character | Key | Quoted | Character 
-| kbd:[f1] ^| kbd:[E] | kbd:[,] comma ^| kbd:[f2] ^| kbd:[I] | kbd:[?] question mark 
+| Key | Quoted | Character | Key | Quoted | Character
+| kbd:[f1] ^| kbd:[E] | kbd:[,] comma ^| kbd:[f2] ^| kbd:[I] | kbd:[?] question mark
 | kbd:[f3] ^| kbd:[F] | kbd:[:] colon ^| kbd:[f4] ^| kbd:[J] | kbd:[=] equal sign
-| kbd:[f5] ^| kbd:[G] | kbd:["] quotation mark ^| kbd:[f6] ^| kbd:[K] | kbd:[Return] `chr$(13)` 
+| kbd:[f5] ^| kbd:[G] | kbd:["] quotation mark ^| kbd:[f6] ^| kbd:[K] | kbd:[Return] `chr$(13)`
 | kbd:[f7] ^| kbd:[H] | kbd:[*] asterisk ^| kbd:[f8] ^| kbd:[L] | kbd:[^] up arrow
 |==============
 
-_Key_ is what you type on the Commodore 64 keyboard. 
+_Key_ is what you type on the Commodore 64 keyboard.
 
 _Quoted_ is what it looks like in "`quote mode.`"
 
@@ -150,7 +150,7 @@ if b then:&"hello"
 #### Quote Mode
 In the BASIC editor, once the quote mark (kbd:[Shift+2], kbd:["]) is typed, color or cursor controls stop changing the cursor color or moving the cursor.
 Instead, they start displaying reversed characters which stand for the color control, cursor control or symbol you are typing.
-Once the text inside the quotes is ``print``ed, they perform their functions as if typed manually. 
+Once the text inside the quotes is ``print``ed, they perform their functions as if typed manually.
 The kbd:[Inst/Del] key is the only cursor control not affected by "`quote mode.`"
 
 Typing a second kbd:["] exits quote mode, and allows you to use the cursor keys to edit the program line again.
@@ -432,7 +432,7 @@ _Examples:_
 [source,basic]
 poke 53252,10:p$="Name":&,1
 
-`poke 53252,10`: Set the input length to 10 characters. 
+`poke 53252,10`: Set the input length to 10 characters.
 
 `p$="Name"`: Set the prompt to `Name:`.
 
@@ -442,7 +442,7 @@ poke 53252,10:p$="Name":&,1
 [source,basic]
 poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$
 
-`poke 53252,20`: Set the input length to 20 characters. 
+`poke 53252,20`: Set the input length to 20 characters.
 
 `w$=na$`: Assign the user's handle (`na$`) to `w$` (the prompt's default).
 
@@ -455,7 +455,7 @@ Editing mode looks like this:
 
  Handle: PINACOLADA
  Handle: _
- 
+
 The string typed in response to a prompt is returned in `an$`.
 
 `if an$<>"" then na$=an$`: Just typing kbd:[Return] (to accept the default, `w$`) sets `an$` to a null string.
@@ -465,7 +465,7 @@ If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
 [source,basic]
 poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$
 
-`poke 53252,30`: Set the input length to 30 characters. 
+`poke 53252,30`: Set the input length to 30 characters.
 
 `p$="New Prompt"`: Set the prompt to `New Prompt:`.
 
@@ -615,7 +615,7 @@ _Returns_:
 
 ### `&,6` Password Input
 
-Sets the input length to 14, and displays a definable mask character rather than the actual characters typed. 
+Sets the input length to 14, and displays a definable mask character rather than the actual characters typed.
 The text typed is returned in plain (non-masked) text.
 
 _Parameters:_
@@ -663,7 +663,7 @@ Not all segments are currently defined.
 [%autowidth]
 [%header]
 |====================
-^| Segment <| Purpose 
+^| Segment <| Purpose
 ^| 2  | Protocols or blocks of ML
 ^| 7  | Print mode table
 ^| 8  | Lightbar text
@@ -919,8 +919,8 @@ NOTE: Extra spaces between the numbers have been added for ease of reading, but 
 [%header]
 [cols="<,^,<,<"]
 |===
-| Position | Abbreviation | Purpose | Range 
-| 1     | `**&nbsp;w**` | weekday | `1`=Sun...`7`=Sat 
+| Position | Abbreviation | Purpose | Range
+| 1     | `**&nbsp;w**` | weekday | `1`=Sun...`7`=Sat
 | 2-3   | `**yr**` | year    | `00`...`99` (the year within the century, `20xx`, is displayed using `&,15`)
 | 4-5   | `**mo**` | month   | `01`...`12`
 | 6-7   | `**dt**` | date    | `01`...`31`
@@ -942,8 +942,8 @@ Let's break down how the string is encoded.
 [%header]
 [cols="<,^,<,<"]
 |===
-| Position | Value | Purpose | Meaning 
-| 1     | `&nbsp;2` | weekday | `Mon` 
+| Position | Value | Purpose | Meaning
+| 1     | `&nbsp;2` | weekday | `Mon`
 | 2-3   | `21` | year    | `2021`
 | 4-5   | `05` | month   | `May`
 | 6-7   | `17` | date    | `17`
@@ -1004,7 +1004,7 @@ NOTE: This function is currently being researched.
 #### `&,15,6` Scan String
 
 Scan `an$` for the first occurrence of a specified character.
-You can specify the character to scan for in one of two ways: 
+You can specify the character to scan for in one of two ways:
 
 * _x_, the PETSCII value of the character
 * use the `asc("_x_")` function, which returns the ASCII (or PETSCII) value of character _x_
@@ -1030,7 +1030,7 @@ After the split, the two strings look like this:
 
 [%autowidth]
 |===
-| `a$="Hello"` | `chr$(32)` | `an$="world"` 
+| `a$="Hello"` | `chr$(32)` | `an$="world"`
 |===
 
 ////
@@ -1071,23 +1071,28 @@ _Parameters:_
 
 Following `&,16` with a _sub-function_ number (_e.g._, `&,16,2`) calls a sub-function of the module through a _jump table_.
 
-====
-Jump tables are useful for giving assembly language routines entry points that don't change.
-In other words, if a particular routine changes in size, that would shift all the addresses to jump to around from that point forward.
+.Details: Jump Tables
+****
+A _jump table_ is used to give assembly language routines stable entry point addresses that don't change even if routines pointed to change in size.
+This is done by maintaining a list of addresses to be ``jmp``ed to in 6510 assembly code.
 
-You probably don't want to search for all the BASIC `sys` references to the changed addresses throughout your code.
-Instead, just change the address that the jump table entry points to, and you can keep the BASIC `sys` address that calls the routine the same (stable).
-====
+In other words: when _not_ using a jump table, changing a routine's size shifts subsequent inline routine entry points around by the number of bytes added or subtracted by the modification.
+You probably don't want to search for all the BASIC `sys` addresses referencing the changed entry points throughout your code.
 
-Each of these instructions in a fictitious protocol assembly-language jump table take 3 bytes:
+Instead, just change the address that the jump table entry ``jmp``s to, and you can keep the BASIC ``sys`` address that calls the routine the same (stable).
 
-`jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
+As an example, each of these instructions in a fictitious protocol assembly-language jump table starting at ``$c000`` take 3 bytes:
 
-`jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
+`c000: jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
 
-`jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+`c003: jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
 
-TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information.
+`c006: jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+
+`c009:` _<first byte of first routine>_ 
+****
+
+TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information and listings of jump tables.
 
 ---
 
@@ -1111,7 +1116,7 @@ The 9 lines of the screen mask show:
 
 * the lightbar interface
 * system, caller, protocol or network transfer information depending on the BBS's mode
-* the modem I/O windows, `M=` free memory, and `L=` BASIC line number currently executing 
+* the modem I/O windows, `M=` free memory, and `L=` BASIC line number currently executing
 
 ---
 
@@ -1143,7 +1148,7 @@ _Parameters:_
 [%autowidth]
 [%header]
 |====================
-| Index | `peek()` | Hexadecimal | Purpose 
+| Index | `peek()` | Hexadecimal | Purpose
 | 0     | `53252`  | `$d004`     | Input line length
 |====================
 
@@ -1556,20 +1561,30 @@ _Parameters:_
 
 `dv%`: device #
 
-_Preparation:_
+_BASIC Setup:_
 
----
- xxxx a$="e.ecs.main":dr=5:gosub 19 <1>
----
+TIP: Line 4016 is the root example, lines 4010 and 4018 are provided for context.
 
-<1> set system drive to the Etcetera disk. `gosub 19`: scratch existing `e.ecs.main` file
+.i.IM/ecs:
 
-_Example:_
+[source,basic]
+----
+4010 tt$(n+1)=chr$(0):&,42,3,n+1:return <1>
 
-.i/IM.ecs
+4016 &"Save To Disk{f6:2}":gosub 4010:gosub 4018:gosub 19:a$=dr$+a$:&,42,5:tz=0:return <2>
 
- 4016 ... a$=dr$+a$:&,42,5:return
+4018 dr=3:a$="e.ecs.main":return <3>
+----
 
+<1> Set end of ECS command list.
+
+<2> `gosub 4010`: see callout 1.
+`gosub 4018`: see callout 3.
+`gosub 19`: scratch existing `e.ecs.main` file.
+`&,42,5`: Save ECS definitions to disk.
+`tz=0`: Clear "`file modified`" flag.
+
+<3> assign `dr=3` (Image drive) to the Etcetera disk, and `a$="e.ecs.main"`, the ECS filename.
 
 ---
 
@@ -1702,14 +1717,14 @@ The text editor is called with the `&,54,_mode_` command.
 The editor can be entered in different ways, depending on the value of _mode_.
 
 Line 60100 of `sub.editor` uses `&,54,a`.
-The values of _a_ and the purpose for entering the editor are as follows: 
+The values of _a_ and the purpose for entering the editor are as follows:
 
 .Text editor calls
 [%autowidth]
 [%header]
 [cols="<,^,<"]
 |====================
-| Line | Variable | Purpose 
+| Line | Variable | Purpose
 | `60086` | `a=0` | Normal entry, empty buffer
 | `60110` | `a=1` | Buffer not cleared
 | `60108` | `a=2` | Extended editor command
@@ -1806,9 +1821,9 @@ Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
 
 ### `&,60` Structures
 
-Structures (or _structs_) are 
+Structures (or _structs_ for short) allow you to access and manipulate the memory used by arrays at machine language speeds.
 
-See the xref:prg-structures.adoc#structures[Static Arrays (Structures)] chapter for more information.
+See the xref:prg-structures.adoc#structures[Structures] chapter for more information.
 
 ////
 [Ray: &,60 handles X=0,1,2,3,14,15, any other x calls &,68]
@@ -1846,7 +1861,7 @@ Set BBS clock.
 
 _Parameters:_
 
-`&,62,_hour_,_minute_`
+`&,62,` _hour_, _minute_
 
 `hour`: hour
 
@@ -1885,12 +1900,20 @@ _BASIC Setup:_
 
 `a%`: line number to `goto`
 
-_Example:_
-
 Instead of writing this (which uses 73 bytes):
 
+[NOTE]
+====
+Spaces between line number targets have been added for clarity's sake.
+====
+
+.Calculated GOTO
+====
 [source,basic]
-on a% goto 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300
+on a% goto 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300
+====
+
+
 
 The same thing can be written like so (which uses 19 bytes):
 
