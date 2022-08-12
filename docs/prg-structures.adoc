@@ -5,6 +5,11 @@
 
 ## Structures [[structures]]
 
+====
+NOTE: 8/1/2022: Documentation under heavy development and discovery.
+Feedback welcome.
+====
+
 _Structures_ (or _structs_ for short) allow you to access and manipulate the memory used by arrays at machine language speeds.
 
 Programmed properly, structs save RAM compared to having multiple string and numeric arrays defined to, say, hold information about a U/D library:
@@ -31,7 +36,7 @@ The arrays are considered _static_ because, like static strings embedded in BASI
 // (unless the string is concatenated to or redefined entirely).
 
 ====
-NOTE: Currently there's no option to resize a struct without first copying data to another struct (accomplished with .
+NOTE: Currently there's no option to resize a struct without first copying data to another struct (accomplished with <<copy-record>>).
 ====
 
 There are functions to:
@@ -50,7 +55,7 @@ Strings can be stored in either a floating point [like `a()` or `b()`], or integ
 
 * Two bytes of a string's text can be stored per element of an integer array
 
-* Five bytes of a floating point , or 4 bytes . #FIXME#
+* Five bytes of a floating point array, or 4 bytes... #FIXME#
 
 .Representation of a Sample Two-Dimensional Integer Array
 [%autowidth]
@@ -237,15 +242,15 @@ dim u%(18,x-1)
 
 // Ryan added this next bit, and changed previous PRG 3.0 terminology, e.g., s%(2,n) ("element,byte") to "field,record"
 
-To refer to bytes in a struct, and hopefully reduce confusion about "`elements`" and "`bytes,`" the following terminology will be used:
+To refer to data in a struct, and hopefully reduce confusion about "`elements`" and "`bytes,`" the following terminology will be used:
 
 * The first number in the array notation is the _field number_ (like a field within a record of a RELative file).
 It's reccommended to be an even number since integers occupy at least two bytes.
 * The second number is the _record number_.
-When the size of the struct is decided upon, you use a multiple of that size to address individual records within the struct.
+When the size of the struct is ``dim``ensioned, you use this value to address individual records within the struct.
 
 ====
-NOTE: _Field_ and _record_ are probably specified in reverse order compared to how most programs and people specify them (in a database, a record is composed of fields of information).
+NOTE: _Record_ and _field_ are specified in what most people and programs would consider reverse order (in a database, a record is composed of fields of information).
 Sorry, there's no way around this (that we're aware of).
 ====
 
@@ -254,9 +259,10 @@ Sorry, there's no way around this (that we're aware of).
 .Fields in Records
 [width="100%",options="header",cols="6"]
 |====================
-^| `u%(f,r)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4  
-| Record 0 5+^| -- _configuration information_ -- 
-| Record 1 2+^| a \| b ^| c ^| d ^| e 
+^| `u%(_field,record_)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4  
+| Record 0 [`u%(0,0)`] 5+^| -- _configuration information_ -- 
+// | Record 1 2+^| a \| b ^| c ^| d ^| e 
+| Record 1 ^| a ^| b ^| c ^| d ^| e 
 | Record 2 2+^| f \| g ^| h ^| i ^| j
 | Record 3 2+^| k \| l ^| m ^| n ^| o
 |====================
@@ -685,8 +691,8 @@ If the condition is true, perform an operation on another field in the struct.
 | `&,60,6,`... | _n/a_ | scansum
 | `s%(0,0),`... |_num_ | for the record count
 | `0,`... | _command_ | `0`: 2-byte `and` between bits in `s%(0,1)` and `s%(1,1)`? #FIXME#
-| `s%(0,1),`... | s%(_field, record_) | #FIXME#
-| `s%(1,1),`... | s%(_field, record_) | #FIXME#
+| `s%(0,1),`... | s%(_field, record_) | starting flags element
+| `s%(1,1),`... | s%(_field, record_) | starting object element
 | `80,`... | _size_ | each record is 80 bytes wide
 | `1,`... | _bits_ | set bit 1 on ... if _command_ returns zero? #FIXME#
 | `2^ac%` | _test_ | access level
@@ -908,9 +914,9 @@ None yet.
 
 ---
 
-### `&,60,10` Copy Record
+### `&,60,10` Copy Record [[copy-record]]
 
-Copy one record from one struct to another struct.
+Copy one record from one struct to a record in another struct.
 
 .Syntax
 
