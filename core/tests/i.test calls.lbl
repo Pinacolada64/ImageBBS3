@@ -84,7 +84,7 @@
 	&"16) &,16 sys 49152{f6}"
 	&"17) &,17 sys 49155{f6}"
 	&"18) &,18 Set Screen Mode{f6}"
-' TODO: call &,5 routine
+' TODO: call &,5 routine to save RAM
 	&"19) &,19 Get Version{f6}"
 	&"20) &,20 Read from Interface Table{f6}":return
 
@@ -155,6 +155,11 @@
 {:prompt}
 ' m=0: "main menu" not displayed
 	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' Px (switch to Page x) hook:
+	if left$(an$,1)<>"P" then {:dispatch}
+	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:prompt}
+	gosub {:sub.out_of_range}:goto {:prompt}
+{:dispatch}
 ' FIXME: temporary hook:
 	if an=23 then gosub {:4350}:goto {:prompt}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
