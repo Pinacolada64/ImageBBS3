@@ -189,6 +189,9 @@
 	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:menu}
 	gosub {:sub.out_of_range}:goto {:prompt}
 {:dispatch}
+' n%=menu option (used in 1st line), display item #...
+	n%=an:&"{pound}#2{pound}# {pound}%n) "
+
 ' this is a dirty hack:
 ' an=10s digit of 2-digit value (0 if <10): page #
 ' n%= 1s digit of 2-digit value: item within the menu header block
@@ -205,10 +208,7 @@
 
 ' &,66,1 (calcgosub): routines start on 20-line increments
 ' an=0/1: 3020, an=2: 3040, an=3: 3060, an=4: 3080...
-	a%=3020+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}"
-
-' n%=menu option (used in 1st line), display item # + item text
-	&"{pound}#2{pound}# {pound}%n) ":&,66,1:&"{f6}":goto {:menu}
+	a%=3020+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}":&,66,1:goto {:prompt}
 
 {:quit}
 ' TODO: array pointers will be restored once struct stuff is re-added
