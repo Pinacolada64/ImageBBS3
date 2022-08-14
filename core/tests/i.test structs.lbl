@@ -5,37 +5,58 @@
 {assign:300	=300	} ' main prompt
 {assign:370	=370	} ' b$ mode: a
 
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
+{quoter:133=comma}	' f1
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
+{quoter:140=up_arrow}	' f8
+
 {:3000}
+	rem "i.test structs"
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports true status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-	gosub {:sub.struct_setup}
+	gosub {:sub.struct_setup}:goto {:display_page_6}
+
+{:sub.todo}
+	&"TODO: Finish this.{f6}":return
+
+{step:1}
 {number:3010}
-{:menu}
-	s$="Structure"
-	&"&,60,0  Put String{f6}"
-	&"&,60,1  Get String{f6}"
-	&"&,60,2  Load {pound}$s from Disk{f6}"
-	&"&,60,3  Save {pound}$s to Disk{f6}"
-	&"&,60,4  Put Date{f6}"
-	&"&,60,5  Get Date{f6}"
-	&"&,60,6  Scan {pound}$s{f6}"
-	&"&,60,7  Sort Array{f6}"
-	&"&,60,8  Scan Numbers{f6}"
-	&"&,60,9  Scan Sum{f6}"
-	&"&,60,10 Copy {pound}$s{f6}"
-	&"&,60,11 Scan for String{f6}"
-	&"&,60,12 Game Scan{f6}"
-	&"&,60,13 Text Read{f6}"
-	&"&,60,14 Unknown{f6:2}"
-	&"(0-14, {f5}Q{f5}=Quit, {f5}{f2}{f5}=List){f6}"
+{:header_page_6}
+' l=line number of routine, a%=calc goto line (l+61=3141), n%=menu option chosen
+	l=3011:a%=l+n%:&,66
+	&"&,60,0  Put String{f6}":return
+	&"&,60,1  Get String{f6}":return
+	&"&,60,2  Load {pound}$s from Disk{f6}":return
+	&"&,60,3  Save {pound}$s to Disk{f6}":return
+	&"&,60,4  Put Date{f6}":return
+	&"&,60,5  Get Date{f6}":return
+	&"&,60,6  Scan {pound}$s{f6}":return
+	&"&,60,7  Sort Array{f6}":return
+	&"&,60,8  Scan Numbers{f6}":return
+	&"&,60,9  Scan Sum{f6}":return
+	&"&,60,10 Copy Record{f6}":return
+	&"&,60,11 Scan for String{f6}":return
+	&"&,60,12 Game Scan{f6}":return
+	&"&,60,13 Text Read{f6}":return
+	&"&,60,14 Unknown{f6:2}":return
+
+{:display_page_6}
+' when menu pages are displayed, show option number and header text, e.g.:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 14:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
+	&"(0-14, {f5}Q{f5}=Quit, {f5}{question}{f5}=List){f6}"
 {:prompt}
-	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{f2}") goto {:quit}, {:menu}
-' calcgoto: routines start on 50-line increments
+	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:menu}
+' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
-' &,66,1: calcgosub:
-	a%=abs(val(an$)):if a%<15 then a%=3100+a%*50:&,66,1
+' &,66,1: calcgosub: first, gosub the header, then gosub the demo routine
+	n%=abs(val(an$)):if n%<15 then a%=l+n%:&,66,1:a%=3100+n%*50:&,66,1
 	goto {:prompt}
 
 {nice:10}
@@ -44,17 +65,16 @@
 	&"[1-{pound}!t] ":p$="Which Record":&,1:a=int(val(an$)):q=-(a<1 or a>t)
 	return
 
-{:3100} ' &,60,0
-	&"&,60,0: PutString{f6}":return
-{:3150} ' &,60,1
+{:3100} ' &,60,0: PutString
+	gosub {:sub.todo}:return
+{:3150} ' &,60,1: GetString
 ' TODO: GetString: max length l animal name s%(11,x)
-	&"&,60,1: GetString{f6}":return
-{:3200} ' &,60,2
-	&"&,60,2{f6}":return
-{:3250} ' &,60,3
-	&"&,60,3{f6}":return
-{:3300} ' &,60,4
-	&"&,60,4: PutDate{f6}"
+	gosub {:sub.todo}:return
+{:3200} ' &,60,2: Load Structure from Disk
+	gosub {:sub.todo}:return
+{:3250} ' &,60,3: Save Structure to Disk
+	gosub {:sub.todo}:return
+{:3300} ' &,60,4: Put Date
 ' 3302:
 ' choose the record to put the date in:
 	gosub {:sub.which_record}:if q then return
@@ -62,12 +82,12 @@
 	gosub {:sub.make_random_date}:&,60,4,0,s%(2,a),dt$:gosub {:3356}
 	return
 
-{:3350} ' &,60,5
-	&"&,60,5: GetDate{f6}"
-' demonstrate that dates only take 3 bytes (stored in BCD format)
+{:3350} ' &,60,5: Get Date
+' demonstrate that dates only take 3 elements/6 bytes (stored in BCD format)
 ' struct is filled with dates from sub.struct_setup
 	gosub {:sub.which_record}:if q then return
-' &,60,5: GetDate - put random date into b$ and today's date into c$
+' put random date into b$ and today's date into c$
+' TODO: demonstrate that dates only take 3 elements, 6 bytes
 	&,60,5,s%(2,a),b$:&,60,5,s%(5,a),c$
 ' e.g.:
 ' ----+----+----+----+----+----+----+----+
@@ -81,21 +101,21 @@
 	&" (Raw): {pound}v7{f6}":&,15:&"{pound}{back arrow}06(Long): {pound}v7M{f6}"
 	return
 
-{:3400} ' &,60,6
-	&"&,60,6: Scan {pound}$s{f6}":return
+{:3400} ' &,60,6: Scan Structure
+	gosub {:sub.todo}:return
 
-{:3450} ' &,60,7
-	&"&,60,7: Sort Array{f6}"
+{:3450} ' &,60,7: Sort Array
 ' TODO: call {:sub.sort_animals} somewhere
 ' TODO: check what happens after a sorted array is sorted again
 	&"Unsorted:{f6}":gosub {:sub.display_animals}
 ' only example of this being used is:
-' i/lo/tt maint
+' i/lo/tt maint:
 ' 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next
 
 ' this gets stuck in an infinite loop and chews up a lot of CPU (clock updates every 5 seconds):
 ' is Sort Struct only *meant* to sort 2d string arrays?
 '	&"Sorted:{f6}":&,60,7,0,s%(8,1),1
+
 	&"Sorted:{f6}":&,60,7,0,a$(1,1),t
 {:sub.display_animals}
 ' display string array:
@@ -103,24 +123,33 @@
 	if x=24 then:&"Paused:{pound}g1{pound}h7"
 	next:return
 
-{:3500} ' &,60,8
-	&"&,60,8{f6}":return
+{:3500} ' &,60,8: Scan Numbers
+	gosub {:sub.todo}:return
 
-{:3550} ' &,60,9
-	&"&,60,9{f6}":return
-{:3600} ' &,60,10
-	&"&,60,10{f6}":return
-{:3650} ' &,60,11
-	&"&,60,11{f6}":return
-{:3700} ' &,60,12
-	&"&,60,12{f6}":return
-{:3750} ' &,60,13
-	&"&,60,13{f6}":return
-{:3800} ' &,60,14
-	&"&,60,14{f6}":return
+{:3550} ' &,60,9: Scan Sum
+	&"# of records to scan (1-{pound}!t): {pound}i1":an=int(val(an$)):if an<1 or an>t then return
+	&"Summing:{f6}BASIC loop addition:{f6}"
+	x=.:for n=1 to an:y=s%(8,n):&"{pound}!y ":x=x+y:next:&"Total: {pound}!x{f6}"
+' &,60,9, number, record_size (?), struct%(field, record)
+	n%=9:gosub {:header_page_6}:&,60,9,an,11+l,s%(8,1):&"Total: {pound}%a{f6}":return
+
+{:3600} ' &,60,10: Copy Record
+	gosub {:sub.todo}:return
+
+{:3650} ' &,60,11: Scan for String
+	gosub {:sub.todo}:return
+
+{:3700} ' &,60,12: Game Scan
+	gosub {:sub.todo}:return
+
+{:3750} ' &,60,13: Text Read
+	gosub {:sub.todo}:return
+
+{:3800} ' &,60,14: Unknown
+	gosub {:sub.todo}:return
 
 {:quit}
-	&,28,2:goto {:300}
+	&,28,2:goto 300
 
 {:sub.make_random_date}
 ' not calendar-accurate (i.e., Sept. 19th may not fall on a Tuesday of the given year, but too lazy to code it properly)
@@ -131,28 +160,32 @@
 	dt$=chr$(49+rnd(.)*7)
 ' d: random year from 2000...(current_year):
 ' 20 y=int(rnd(1)*val(mid$(d1$,2,2))):?2000+y
-	d=int(rnd(1)*val(mid$(d1$,2,2))):w=2:gosub {:sub.pad_number}
+	d%=rnd(1)*val(mid$(d1$,2,2)):w=2:gosub {:sub.pad_number}
 ' d: a random month (1...12)
-	d=int(rnd(1)*12)+1:w=2:gosub {:sub.pad_number}
+	d%=(rnd(1)*12)+1:w=2:gosub {:sub.pad_number}
 ' d: a random date within the # of days per month 'd':
-	d=int(rnd(1)*asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",d,1))+1):w=2:gosub {:sub.pad_number}
+	d%=(rnd(1)*asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",d,1))+1):w=2:gosub {:sub.pad_number}
 ' random hour 1...12, plus 50% chance of it being PM (+80):
 '	d=int(rnd(1)*12)+1:if rnd(1)>.5 then d=d+80
-	d=int(rnd(1)*12)-(rnd(1)>.5)*80:w=2:gosub {:sub.pad_number}
+	d%=(rnd(1)*12)-(rnd(1)>.5)*80:w=2:gosub {:sub.pad_number}
 ' random minute 00...59
-	d=int(rnd(1)*59):w=2:gosub {:sub.pad_number}
+	d%=(rnd(1)*59):w=2:gosub {:sub.pad_number}
 ' ----+----+----+----+----+----+----+----+
 ' dt$="xxxxxxxxxxx", len=11
 ' Wed May 12, 2021  2:20:17 PM
 ' FIXME: it's dropping the weekday
 '	if db then l=len(dt$):an$=dt$:&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
-	if db then an$=dt$:l=len(an$):&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
+	if db then an$=dt$:l=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}!l{f6}{pound}v7M{f6}"
 	return
 {:sub.pad_number}
-' add to dt$ the digit 'd'. w=1: 'd', w=2: '0d'
-	dt$=dt$+right$("0"+mid$(str$(d),2),w):return
+' add to dt$ the digit 'd%'. w=1: 'd', w=2: '0d'
+	dt$=dt$+right$("0"+mid$(str$(d%),2),w):return
 
 {:sub.struct_setup}
+' s$=string variable, saves a few bytes
+' l=starting line # for menu items
+	s$="Structure":l=3011
+
 ' struct layout:
 ' ex.: ud%(21,xn) 21=byte,xn=file #
 ' s%(byte,element) -or- s%(column,row)
@@ -165,11 +198,11 @@
 	if db then:&"Populating struct...{f6}"
 ' tt$() is sorted animal names from DATA statements
 ' t=total # of records in struct
-' [using 1...t+1 instead of 0...t because some config info will be in s%(0,x)]
+' [using 1...t+1 instead of 0...t because some config info will be in s%(x,0)]
 ' a$(1,x) is animal names array (for &,60,7 sorting purposes)
 ' x=current animal name length
 ' l=length of longest animal name (to create proper size struct)
-' DATA pointer does need to be RESTOREd (to not read error strings, I guess)
+' DATA pointer does need to be RESTOREd (to not read error strings in "im", I guess)
 ' TODO: expand to power of 2 (32)
 	&,27,2:t=30:l=.:dim a$(1,t+1)
 	restore:if db then:&"Longest animal name:"
@@ -190,12 +223,14 @@
 ' ----+----+----+----+----+----+----+----+
 ' Generating 30 non-repeating random numbers...
 {:sub.scramble_animals}
+	x$=""
 	if db then lp=1:&"Generating {pound}!t non-repeating random numbers..."
 	for x=1 to t:x$=x$+chr$(x):next
 	if db then:&"Scrambled list:{f6}"
 	for x=t to 1 step -1:n%=(rnd(1)*x)+1
 ' trim string: remove already-picked number:
-	s%(1,x)=n%:s%(8,x)=asc(mid$(x$,n%,1)):x$=left$(x$,n%-1)+mid$(x$,n%+1)
+' s%(8,n) = random number for &,60,9: ScanStruct
+	s%(1,x)=n%:s%(8,x)=n%:x$=left$(x$,n%-1)+mid$(x$,n%+1)
 ' &,60,0: PutString: max length l animal name a$(1,n%) in s%(11,x):
 ' s%(8,x): random integer
 	&,60,0,l,s%(11,x),tt$(n%):if db then a%=s%(8,x):lp=1:&"{pound}#2{pound}# {pound}%a "
@@ -208,7 +243,7 @@
 	for n=1 to t
 ' &,60,4: PutDate
 	gosub {:sub.make_random_date}:&,60,4,0,s%(2,n),dt$:&,60,4,0,s%(5,n),d1$
-	if db then if n/11=int(n/11) then:&"Paused:{pound}g1{pound}h7"
+	if n/11=int(n/11) then if db then:&"Paused:{pound}g1{pound}h7"
 	next:if db then:&"Done{f6}"
 	return
 
