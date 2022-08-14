@@ -50,7 +50,7 @@
 '  1) &,1  Input an$
 ' (etc.)
 	for n=0 to 14:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
-	&"(0-14, {f5}Q{f5}=Quit, {f5}{question}{f5}=List){f6}"
+	&"(0-14, {quotation}Q{quotation}=Quit, {quotation}{question}{quotation}=List){f6}"
 {:prompt}
 	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:menu}
 ' &,66: calcgoto: routines start on 50-line increments
