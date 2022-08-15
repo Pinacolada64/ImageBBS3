@@ -13,15 +13,15 @@
 {quoter:140=up_arrow}	' f8
 
 {:3000}
-	rem "i.test structs"
-	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
-' get Trb-L status (db=debug mode):
-' 370 inverts a, so pre-inverting it reports true status
-	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-	gosub {:sub.struct_setup}:goto {:display_page_6}
+	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
+	gosub {:sub.setup}:gosub {:sub.struct_setup}:goto {:display_page_6}
 
 {:sub.todo}
 	&"TODO: Finish this.{f6}":return
+
+{:sub.debug_done}
+	if db then:&"Done{f6}"
+	return
 
 {step:1}
 {number:3010}
@@ -52,7 +52,7 @@
 	for n=0 to 14:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
 	&"(0-14, {quotation}Q{quotation}=Quit, {quotation}{question}{quotation}=List){f6}"
 {:prompt}
-	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:menu}
+	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
 ' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
 ' &,66,1: calcgosub: first, gosub the header, then gosub the demo routine
@@ -88,7 +88,9 @@
 	gosub {:sub.which_record}:if q then return
 ' put random date into b$ and today's date into c$
 ' TODO: demonstrate that dates only take 3 elements, 6 bytes
-	&,60,5,s%(2,a),b$:&,60,5,s%(5,a),c$
+' &,60,5,0, struct%(field, record), string$
+' FIXME: illegal quantity here, somewhere
+	&,60,5,0,s%(2,a),b$:&,60,5,0,s%(5,a),c$
 ' e.g.:
 ' ----+----+----+----+----+----+----+----+
 ' Random (Raw): 12345678901
@@ -158,18 +160,18 @@
 ' random day of week, "1"..."7":
 '	dt$=mid$(hx$,int(rnd(1)*7)+2,1)
 	dt$=chr$(49+rnd(.)*7)
-' d: random year from 2000...(current_year):
+' d%: random year from 2000...(current_year):
 ' 20 y=int(rnd(1)*val(mid$(d1$,2,2))):?2000+y
 	d%=rnd(1)*val(mid$(d1$,2,2)):w=2:gosub {:sub.pad_number}
-' d: a random month (1...12)
+' d%: a random month (1...12)
 	d%=(rnd(1)*12)+1:w=2:gosub {:sub.pad_number}
-' d: a random date within the # of days per month 'd':
-	d%=(rnd(1)*asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",d,1))+1):w=2:gosub {:sub.pad_number}
+' d%: a random date within the # of days per month 'd%':
+	d%=(rnd(1)*asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",d%,1))+1):w=2:gosub {:sub.pad_number}
 ' random hour 1...12, plus 50% chance of it being PM (+80):
 '	d=int(rnd(1)*12)+1:if rnd(1)>.5 then d=d+80
 	d%=(rnd(1)*12)-(rnd(1)>.5)*80:w=2:gosub {:sub.pad_number}
 ' random minute 00...59
-	d%=(rnd(1)*59):w=2:gosub {:sub.pad_number}
+	d%=rnd(1)*59:w=2:gosub {:sub.pad_number}
 ' ----+----+----+----+----+----+----+----+
 ' dt$="xxxxxxxxxxx", len=11
 ' Wed May 12, 2021  2:20:17 PM
@@ -181,11 +183,16 @@
 ' add to dt$ the digit 'd%'. w=1: 'd', w=2: '0d'
 	dt$=dt$+right$("0"+mid$(str$(d%),2),w):return
 
-{:sub.struct_setup}
+{:sub.setup}
 ' s$=string variable, saves a few bytes
 ' l=starting line # for menu items
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
 	s$="Structure":l=3011
+' get Trb-L status (db=debug mode):
+' 370 inverts a, so pre-inverting it reports true status
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
 
+{:sub.struct_setup}
 ' struct layout:
 ' ex.: ud%(21,xn) 21=byte,xn=file #
 ' s%(byte,element) -or- s%(column,row)
@@ -209,7 +216,8 @@
 	for n=1 to t:read a$:tt$(n)=a$:x=len(a$):if x>l then l=x:if db then:&" {pound}!l"
 ' s%( 0,0): t, # of animals
 ' s%(11,0): l, max length of animal names
-	next:dim s%(11+l,t+1):s%(0,0)=t:s%(11,0)=l
+	next:gosub {:sub.debug_done}
+	dim s%(11+l,t+1):s%(0,0)=t:s%(11,0)=l
 ' generate a set of non-repeating random numbers from 1-t:
 ' 1forx=1to30:x$=x$+chr$(x):next
 ' 2dim s%(30)
@@ -233,10 +241,10 @@
 	s%(1,x)=n%:s%(8,x)=n%:x$=left$(x$,n%-1)+mid$(x$,n%+1)
 ' &,60,0: PutString: max length l animal name a$(1,n%) in s%(11,x):
 ' s%(8,x): random integer
-	&,60,0,l,s%(11,x),tt$(n%):if db then a%=s%(8,x):lp=1:&"{pound}#2{pound}# {pound}%a "
+	&,60,0,l,s%(11,x),tt$(n%):if db then a%=s%(8,n%):lp=1:&"{pound}#2{pound}# {pound}%a "
 ' a$(1,x): scrambled list of animals to be sorted with &,60,7:
-	a$(1,n%)=tt$(n%):if db then:&a$(1,x)+"{f6}"
-	next:if db then:&"Done{f6}"
+	a$(1,n%)=tt$(n%):if db then:&a$(1,n%)+"{f6}"
+	next:gosub {:sub.debug_done}
 
 ' make some random dates
 	if db then lp=1:&"Generating {pound}!t random dates..."
@@ -244,8 +252,7 @@
 ' &,60,4: PutDate
 	gosub {:sub.make_random_date}:&,60,4,0,s%(2,n),dt$:&,60,4,0,s%(5,n),d1$
 	if n/11=int(n/11) then if db then:&"Paused:{pound}g1{pound}h7"
-	next:if db then:&"Done{f6}"
-	return
+	next:gosub {:sub.debug_done}:return
 
 ' animals to mix up and sort with &,60,7:
 ' https://a-z-animals.com/animals/
