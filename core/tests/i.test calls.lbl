@@ -162,6 +162,7 @@
 {:dispatch}
 ' FIXME: temporary hook:
 	if an=23 then gosub {:4350}:goto {:prompt}
+	if an=67 then gosub
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
 	a%=3200+an*50:&,66,1:goto {:prompt}
@@ -226,6 +227,7 @@
 {:3650} ' &,9
 	&"&,9: btmvar{f6}"
 ' enumerate variables that can be displayed, from &,9,x table:
+' FIXME: can't display ints or floats properly
 ' 0-9:
 	v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
 ' 10-19:
@@ -344,6 +346,27 @@
 {:15_6_quit}
 	&,28,2:return
 
+{:4000} ' &,16
+	return
+
+{:4050} ' &,17
+	return
+
+{:4100} ' &,18
+	return
+
+{:4150} ' &,19
+	return
+
+{:4200} ' &,20
+	return
+
+{:4250} ' &,21
+	return
+
+{:4300} ' &,22
+	return
+
 ' test code from image bbs 2.0:
 ' https://github.com/Pinacolada64/ImageBBS/blob/5b564adb919f49e7644c303e7c21e8b75fd192f0/v2/core/jack/i_UD.lbl#L93-L97
 ' 10 x=10:print"auto-logoff. press space to abort"
@@ -363,6 +386,61 @@
 {:23_again}
 ' 96: "[Yes]"
 	&"Again [Y/n]?: ":gosub 96:on a goto {:4352}:return
+
+{:4350} ' &,24
+	return
+
+{:4400} ' &,25
+	return
+
+{:4450} ' &,26
+	return
+
+{:4500} ' &,27
+	return
+
+{:4550} ' &,28
+	return
+
+{:4600} ' &,29
+	return
+
+{:4650} ' &,30
+	return
+
+{:4700} ' &,31
+	return
+
+{:4750} ' &,32
+	return
+
+{:4800} ' &,33
+	return
+
+{:4850} ' &,34
+	return
+
+{:4900} ' &,35
+	return
+
+{:4950} ' &,36
+	return
+
+{:5000} ' &,37
+	return
+
+{:5050} ' &,38
+	return
+
+{:5100} ' &,39
+	return
+
+{:5150} ' &,40
+	return
+
+{:5200} ' &,41
+	return
+
 
 ' &,57: relread
 {nice:10}
