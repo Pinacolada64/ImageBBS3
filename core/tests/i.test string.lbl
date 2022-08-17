@@ -1,0 +1,16 @@
+' i.test string.1/
+{assign:300	=300}	' main prompt
+{:3000}
+{step:2}
+{alpha:alt}
+    rem jay's struct/putstring/getstring test
+    &"Return quits.{f6:2}Enter string to PutString: {pound}i0":if an$="" then {:quit}
+    c=len(an$):&,28,1:dim hb%(1,c+2)
+    &"Writing {f5}{pound}v7{f5} into hb%(0,1)..."
+    &,60,0,c,hb%(0,1),an$
+    &"{f6}Still alive. Now clearing an$ and using b$ instead:":an$=""
+    &,60,1,c,hb%(0,1),b$
+    &"{f6}Reading b$ as {f5}{pound}$b{f5}."
+    &,28,1:goto {:3000}
+{:quit}
+    &"Quitting.{f6}":&,40:goto 300
