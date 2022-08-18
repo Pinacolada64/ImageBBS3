@@ -56,7 +56,7 @@
 ' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
 ' &,66,1: calcgosub: first, gosub the header, then gosub the demo routine
-	n%=abs(val(an$)):if n%<15 then a%=l+n%:&,66,1:a%=3100+n%*50:&,66,1
+	n%=abs(val(an$)):if n%<15 then gosub {:header_page_6}:a%=3100+n%*50:&,66,1
 	goto {:prompt}
 
 {nice:10}
