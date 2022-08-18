@@ -19,12 +19,8 @@
 {step:2}
 
 {:3000}
-	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}:rem "i.test calls"
-' get Trb-L status (db=debug mode):
-' 370 inverts a, so pre-inverting it reports actual status
-	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
-' set menu page number, display menu:
-	f$="(fixme)":i$="(investigating)":p=1:goto {:menu}
+	rem "i.test calls"
+	gosub {:sub.setup}
 
 {:sub.input_range}
 {step:1}
@@ -51,100 +47,137 @@
 {nice:5}
 {step:2}
 {:sub.out_of_range}
-	&"Out of range.{f6}":return
+	&"Out of range [1-{pound}!t].{f6}":return
 {:sub.todo}
 	&"TODO: Finish this!{f6}":return
 
-{number:3020}
 {step:1}
+{number:3020}
+{:header_page_1}
 ' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
 ' calcgosub example:
-'	a%=3000+a%*20:&,66,1:goto {:menu}
+	a%=3021+n%:&,66
 {:menu_page_1}
-	&" 0) &,0  Output a${f6}"
-	&" 1) &,1  Input an${f6}"
-	&" 2) &,2  Disk File Input{f6}"
-	&" 3) &,3  Read File from Disk{f6}"
-	&" 4) &,4  Get Byte from Modem{f6}"
-	&" 5) &,5  Get Version{f6}"
-	&" 6) &,6  Password Input{f6}"
-	&" 7) &,7  Load File{f6}"
-	&" 8) &,8  Disk Directory{f6}"
-	&" 9) &,9  Bottom Variable{f6}"
-	&"10) &,10 Terminal Mode{f6}":return
+	&"&,0  Output a${f6}":return
+	&"&,1  Input an${f6}":return
+	&"&,2  Disk File Input{f6}":return
+	&"&,3  Read File from Disk{f6}":return
+	&"&,4  Get Byte from Modem{f6}":return
+	&"&,5  Get Version{f6}":return
+	&"&,6  Password Input{f6}":return
+	&"&,7  Load File{f6}":return
+	&"&,8  Disk Directory{f6}":return
+	&"&,9  Bottom Variable{f6}":return
+	&"&,10 Terminal Mode{f6}":return
+{number:3032}
+{:display_page_1}
+' when menu pages are displayed, show option number and header text, e.g.:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
 
-{:menu_page_2}
 {number:3040}
-	&"11) &,11 Clear Array{f6}"
-	&"12) &,12 New User{f6}"
-	&"13) &,13 arbit{f6}"
-	&"14) &,14 Dump Array{f6}"
-	&"15) &,15 Convert an${f6}"
-	&"16) &,16 sys 49152{f6}"
-	&"17) &,17 sys 49155{f6}"
-	&"18) &,18 Set Screen Mode{f6}"
+{:header_page_2}
+' 3030+11=3041
+	a%=3030+n%:&,66
+	&"&,11 Clear Array{f6}":return
+	&"&,12 New User{f6}":return
+	&"&,13 arbit{f6}":return
+	&"&,14 Dump Array{f6}":return
+	&"&,15 Convert an${f6}":return
+	&"&,16 sys 49152{f6}":return
+	&"&,17 sys 49155{f6}":return
+	&"&,18 Set Screen Mode{f6}":return
 ' TODO: call &,5 routine to save RAM
-	&"19) &,19 Get Version{f6}"
-	&"20) &,20 Read from Interface Table{f6}":return
+	&"&,19 Get Version{f6}":return
+	&"&,20 Read from Interface Table{f6}":return
+{number:3052}
+{:display_page_2}
+	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
 
-{:menu_page_3}
+{:header_page_3}
 {number:3060}
-	&"21) &,21 Write to Interface Table{f6}"
-	&"22) &,22 Delay x Tenths of a Second{f6}"
-	&"23) &,23 Get Character from Modem{f6}"
-	&"24) &,24 xchrout1{f6}"
-	&"25) &,25 Sound{f6}"
-	&"26) &,26 callmod{f6}"
-	&"27) &,27 Save Variable Pointers{f6}"
-	&"28) &,28 Restore Variable Pointers{f6}"
-	&"29) &,29 usevar{f6}"
-	&"30) &,30 putvar{f6}":return
+' 3040+21=3061
+	a%=3040+n%:&,66
+	&"&,21 Write to Interface Table{f6}":return
+	&"&,22 Delay x Tenths of a Second{f6}":return
+	&"&,23 Get Character from Modem{f6}":return
+	&"&,24 xchrout1{f6}":return
+	&"&,25 Sound{f6}":return
+	&"&,26 callmod{f6}":return
+	&"&,27 Save Variable Pointers{f6}":return
+	&"&,28 Restore Variable Pointers{f6}":return
+	&"&,29 usevar{f6}":return
+	&"&,30 putvar{f6}":return
+{number:3072}
+{:display_page_3}
+	for n=21 to 30:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
 
-{:menu_page_4}
+{:header_page_4}
 {number:3080}
-	&"ML Functions:{f6:2}"
-	&"31) &,31 zero{f6}"
-	&"32) &,32 minusone{f6}"
-	&"33) &,33 getarr{f6}"
-	&"34) &,34 putarr{f6}"
-	&"35) &,35 getln{f6}"
-	&"36) &,36 putln{f6}"
-	&"37) &,37 trapon{f6}"
-	&"38) &,38 trapoff{f6}"
-	&"39) &,39 prtln{f6}"
-	&"40) &,40 forcegc{f6}":return
+' 3050+31=3081
+	&"ML Functions:{f6:2}":a%=3050+n%:&,66
+	&"&,31 zero{f6}":return
+	&"&,32 minusone{f6}":return
+	&"&,33 getarr{f6}":return
+	&"&,34 putarr{f6}":return
+	&"&,35 getln{f6}":return
+	&"&,36 putln{f6}":return
+	&"&,37 trapon{f6}":return
+	&"&,38 trapoff{f6}":return
+	&"&,39 prtln{f6}":return
+	&"&,40 forcegc{f6}":return
+{number:3092}
+{:display_page_4}
+	for n=31 to 40:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
 
-{:menu_page_5}
+{:header_page_5}
 {number:3100}
-	&"41) &,41 setbaud{f6}"
-	&"42) &,42 ECS Commands{f6}"
-	&"[&,43 - &,50 are ML functions]":return
+' 3060+41=3101
+	a%=3060+n%:&,66
+	&"&,41 setbaud{f6}":return
+	&"&,42 ECS Commands{f6}":return
+	&"[&,43 - &,50 are ML functions]{f6}":return
+{number:3112}
+{:display_page_5}
+	for n=41 to 43:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
 
-{:menu_page_6}
+{:header_page_6}
 {number:3120}
-	&"[&,51 is an ML function]"
-	&"52) &,52 Lightbar Interface{f6}"
-	&"53) &,53 Logoff{f6}"
-	&"54) &,54 Text editor interface{f6}"
-	&"55) &,55 output{f6}"
-	&"56) &,56 chatmode{f6}"
-	&"57) &,57 relread{f6}"
-	&"58) &,58 setalarm{f6}"
-	&"59) &,59 farerr{f6}"
-	&"60) &,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
+' 3070+51=3121
+	a%=3070+n%:&,66
+	&"[&,51 is an ML function]{f6}":return
+	&"&,52 Lightbar Interface{f6}":return
+	&"&,53 Logoff{f6}":return
+	&"&,54 Text editor interface{f6}":return
+	&"&,55 output{f6}":return
+	&"&,56 chatmode{f6}":return
+	&"&,57 relread{f6}":return
+	&"&,58 setalarm{f6}":return
+	&"&,59 farerr{f6}":return
+	&"&,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
+{number:3132}
+{:display_page_6}
+	for n=51 to 60:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
 
-{:menu_page_7}
+{:header_page_7}
 {number:3140}
-	&"61) &,61 poscrsr{f6}"
-	&"62) &,62 Set Time{f6}"
-	&"63) &,63 inline1{f6}"
-	&"64) &,64 convstr{f6}"
-	&"65) &,65 convert{f6}"
-	&"66) &,66 Calculated goto/gosub{f6}"
-	&"67) &,67 copyrite{f6}"
-	&"68) &,68 struct (run {quotation}i.test structs{quotation}){f6}"
-	&"69) &,69 Display String on Console{f6}"
-	&"70) &,70 Position Terminal Cursor{f6}":return
+' 3080+61=3141
+	a%=3080+n%:&,66
+	&"&,61 poscrsr{f6}":return
+	&"&,62 Set Time{f6}":return
+	&"&,63 inline1{f6}":return
+	&"&,64 convstr{f6}":return
+	&"&,65 convert{f6}":return
+	&"&,66 Calculated goto/gosub{f6}":return
+	&"&,67 copyrite{f6}":return
+	&"&,68 struct (run {quotation}i.test structs{quotation}){f6}":return
+	&"&,69 Display String on Console{f6}":return
+	&"&,70 Position Terminal Cursor{f6}":return
+{number:3152}
+{:display_page_7}
+	for n=61 to 70:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
 
 {nice:10}
 ' 3150?
@@ -153,7 +186,7 @@
 	a%=3000+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit, {question}=List]{f6}"
 {:prompt}
 ' m=0: "main menu" not displayed
-	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<-2*(q=goto {:quit}, {:menu}
 ' Px (switch to Page x) hook:
 	if left$(an$,1)<>"P" then {:dispatch}
 	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:prompt}
@@ -191,7 +224,7 @@
 ' %00000010 | 2       | no output
 
 ' returns:
-' location chat ($d006/53254) holds:
+' location chat ($d006/532holds:
 ' 0 = normal
 ' 1 = delete or dot on column one
 ' 2 = chat check hit
@@ -293,14 +326,14 @@
 
 {:3950} ' &,15: convan
 	&"&,15: convan functions:{f6:2}"
-	&"0) &,15   Convert Date{f6}"
-	&"1) &,15,1 Title Case{f6}"
-	&"2) &,15,2 Decode Function Keys{f6}"
+	&"&,15   Convert Date{f6}"
+	&"&,15,1 Title Case{f6}"
+	&"&,15,2 Decode Function Keys{f6}"
 ' they both point to same call
-	&"3) &,15,3 {pound}$i{f6}"
-	&"4) &,15,4 (points to &,15,3){f6}"
-	&"5) &,15,5 newdate {pound}$i{f6}"
-	&"6) &,15,6 Scan string...{f6}"
+	&"&,15,3 {pound}$i{f6}"
+	&"&,15,4 (points to &,15,3){f6}"
+	&"&,15,5 newdate {pound}$i{f6}"
+	&"&,15,6 Scan string...{f6}"
 {:amp_15_prompt}
 	l=0:h=6:q=1:m=1:gosub {:sub.input_range}:on q goto {:3950}:if m then return
 	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
@@ -328,16 +361,16 @@
 ' from programmer's reference guide
 	&"&,15,6,x: Scan string{f6:2}"
 	&"Split String Two Ways [from PRG]:{f6:2}"
-	&"1) Scan Using chr$(value){f6}"
-	&"2) Scan Using  asc({quotation}char{quotation}){f6:2}"
+	&"Scan Using chr$(value){f6}"
+	&"Scan Using  asc({quotation}char{quotation}){f6:2}"
 	&"Other Examples:{f6:2}"
-	&"3) Simulate {quotation}instring{quotation} function{f6}"
-	&"4) Input scan string/split char{f6:2}"
+	&"Simulate {quotation}instring{quotation} function{f6}"
+	&"Input scan string/split char{f6:2}"
 {:15_6_prompt}
 	l=1:h=4:m=1:q=1:gosub {:sub.input_range}
 	v$="an$={quotation}Hello world{quotation}:&,15,6,":on an gosub {:sub.15_6_scan_string_chr}, {:sub.15_6_scan_string_asc}, {:sub.todo}, {:sub.todo}
 ' q="?" entered, m="M"main menu:
-	on -(m=1) -2* (q=1) goto {:15_6}, {:15_6_quit}:goto {:15_6_prompt}
+	on -(m=-2* (q=goto {:15_6}, {:15_6_quit}:goto {:15_6_prompt}
 {:sub.15_6_scan_string_chr}
 ' an$="Hello world":&,15,6,32
 	&"{pound}$v32{f6}":an$="Hello world":&,15,6,32:gosub {:sub.15_6_results}:return
@@ -548,6 +581,15 @@
 	return
 
 {:6700} ' &,70: position terminal cursor
+	return
+
+{:sub.setup}
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}:
+' get Trb-L status (db=debug mode):
+' 370 inverts a, so pre-inverting it reports actual status
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+' set p=menu page number
+	f$="(fixme)":i$="(investigating)":p=1
 	return
 
 {:sub.load_module}
