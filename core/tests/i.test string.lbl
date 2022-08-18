@@ -1,16 +1,37 @@
-' i.test string.1/
+' i.test string.2/ => .prg binary
+
 {assign:300	=300}	' main prompt
 {:3000}
 {step:2}
 {alpha:alt}
     rem jay's struct/putstring/getstring test
     &"Return quits.{f6:2}Enter string to PutString: {pound}i0":if an$="" then {:quit}
-    c=len(an$):&,28,1:dim hb%(1,c+2)
+' &,27,2: save array pointers, level 2
+    c=len(an$):&,27,2:dim hb%(1,c+2)
     &"Writing {f5}{pound}v7{f5} into hb%(0,1)..."
     &,60,0,c,hb%(0,1),an$
     &"{f6}Still alive. Now clearing an$ and using b$ instead:":an$=""
     &,60,1,c,hb%(0,1),b$
-    &"{f6}Reading b$ as {f5}{pound}$b{f5}."
-    &,28,1:goto {:3000}
+    &"{f6}Reading b$ as {f5}{pound}$b{f5}.{f6}"
+' &,28,2: restore array pointers, level 2
+    &,28,2:goto {:3000}
 {:quit}
     &"Quitting.{f6}":&,40:goto 300
+
+' after quit:
+' M=23026 bytes free
+
+' no stack garbage, minimal string usage
+
+' MM before:          | MM after:
+'                     |
+' Main Hall: MM       | Main Hall: MM
+'                     |
+' Program:  7523      | Program:  7523
+' Variables:1505      | Variables:1505
+' Arrays:   2739      | Arrays:   2739
+' Free RAM: 22296     | Free RAM: 22281  (15 bytes)
+' Strings:  752       | Strings:  767
+'                     |
+'  -  5:03 PM         |  -  5:06 PM
+'  - Stack Free: 239  |  - Stack Free: 239
