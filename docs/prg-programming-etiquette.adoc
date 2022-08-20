@@ -39,9 +39,61 @@ You'll eventually run out of space, triggering a garbage collection as the old d
 (Image BBS uses a custom garbage collection routine, which is much faster than the one in standard Microsoft BASIC.)
 ====
 
-But the long and the short of it is that the string definition caused by, _e.g._: `sy$="S"+"ub"` lives higher in memory and the text shouldn't be overwritten by loading another module, causing strings to output weird stuff.
+But the long and the short of it is that the string definition caused by, _e.g._: `sy$="S"+"ub"` lives higher in memory and the text shouldn't be overwritten by loading another module, causing strings to output bytes of your program.
 
 #### Module Structure
+
+When developing a module, bugs are certain to happen.
+These bugs are logged to `e.errlog`.
+There are variables shown in the error log which can be handy to show which line or module the program was in when it crashed.
+
+.`e.errlog` Filename Hints
+[%autowidth]
+[%header]
+|====================
+| Filename Prefix | Starting Line | Variable Name | Label
+| `i.*` | 3000 | `pr$` | Program
+| `i/*` | 4000 | `p1$` | Module
+| `sub.*` | 60000 | `p2$` | Sub-Module
+|====================
+
+[NOTE]
+====
+`pr$` is considered the main program name.
+`p1$` is considered a loadable module name (similar to the Little Modem Program _e.g.,_ `+.XX.YY`) sub-modules of Image 1.2.
+====
+
+If your module spans from, say, lines `3000-4000` (or beyond), it would be a good idea to do something like:
+
+[source,basic]
+----
+pr$="i."+"test calls":p1$=pr$
+----
+
+to assign both `pr$` (error lines 3000-) and `p1$` (error lines 4000-) to the same string.
+This avoids leaving garbage strings in `e.errlog` because of the previously-mentioned "`static string`" issue.
+
+If your module is a collection of sub-modules, it is helpful to define in your main program:
+
+[source,basic]
+----
+3000 pr$="i."+"test calls"
+----
+
+And in your sub-module, define:
+
+
+[source,basic]
+----
+4000 p1$=pr$+".structs"
+----
+
+so that `e.errlog` reads:
+
+```
+Module: i.test calls
+Sub Module: i.test calls.structs
+```
 
 ### Conversion and Backward Compatibility
 
