@@ -4,6 +4,7 @@
 {alpha:alt}
 
 ' out-of-module line numbers
+{assign:9	=	9	} ' "Area" Current Message
 {assign:92	=	92	} ' ">>> Canceled!"
 {assign:96	=	96	} ' default "[Yes]"
 {assign:300	=	300	} ' main prompt
@@ -16,11 +17,10 @@
 {quoter:137=question}	' f2
 {quoter:140=up_arrow}	' f8
 
+{number:3000}
 {step:2}
-
-{:3000}
 	rem "i.test calls" {usedef:__BuildDate} {usedef:__BuildTime}
-	gosub {:sub.setup}:goto {:menu}
+	gosub {:sub.setup}:goto {:show_page}
 
 {:sub.input_range}
 {step:1}
@@ -56,8 +56,8 @@
 {:header_page_1}
 ' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
 ' calcgosub example:
-	a%=3021+n%:&,66
-{:menu_page_1}
+' 3021+0=3021
+	a%=3021+n:&,66
 	&"&,0  Output a${f6}":return
 	&"&,1  Input an${f6}":return
 	&"&,2  Disk File Input{f6}":return
@@ -68,56 +68,56 @@
 	&"&,7  Load File{f6}":return
 	&"&,8  Disk Directory{f6}":return
 	&"&,9  Bottom Variable{f6}":return
-	&"&,10 Terminal Mode{f6}":return
 {number:3032}
 {:display_page_1}
 ' when menu pages are displayed, show option number and header text, e.g.:
 '  0) &,0  Output a$
 '  1) &,1  Input an$
 ' (etc.)
-	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
+	for n=0 to 9:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
 
 {number:3040}
 {:header_page_2}
 ' 3030+11=3041
-	a%=3030+n%:&,66
+	a%=3041+n:&,66
+	&"&,10 Terminal Mode{f6}":return
 	&"&,11 Clear Array{f6}":return
 	&"&,12 New User{f6}":return
 	&"&,13 arbit{f6}":return
 	&"&,14 Dump Array{f6}":return
 	&"&,15 Convert an${f6}":return
-	&"&,16 sys 49152{f6}":return
-	&"&,17 sys 49155{f6}":return
+	&"&,16 sys 49152"+m$+"{f6}":return
+	&"&,17 sys 49155"+m$+"{f6}":return
 	&"&,18 Set Screen Mode{f6}":return
 ' TODO: call &,5 routine to save RAM
 	&"&,19 Get Version{f6}":return
-	&"&,20 Read from Interface Table{f6}":return
 {number:3052}
 {:display_page_2}
-	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
+	for n=0 to 9:n%=n+10:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
 
 {:header_page_3}
 {number:3060}
 ' 3040+21=3061
-	a%=3040+n%:&,66
+	a%=3061+n:&,66
+	&"&,20 Read from Interface Table{f6}":return
 	&"&,21 Write to Interface Table{f6}":return
 	&"&,22 Delay x Tenths of a Second{f6}":return
 	&"&,23 Get Character from Modem{f6}":return
-	&"&,24 xchrout1{f6}":return
+	&"&,24 xchrout1"+m$+"{f6}":return
 	&"&,25 Sound{f6}":return
 	&"&,26 callmod{f6}":return
 	&"&,27 Save Variable Pointers{f6}":return
 	&"&,28 Restore Variable Pointers{f6}":return
-	&"&,29 usevar{f6}":return
-	&"&,30 putvar{f6}":return
+	&"&,29 usevar"+m$+"{f6}":return
 {number:3072}
 {:display_page_3}
-	for n=21 to 30:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
+	for n=0 to 9:n%=n+20:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
 
 {:header_page_4}
 {number:3080}
 ' 3050+31=3081
-	&"ML Functions:{f6:2}":a%=3050+n%:&,66
+	a%=3081+n:&,66
+	&"&,30 putvar{f6}":return
 	&"&,31 zero{f6}":return
 	&"&,32 minusone{f6}":return
 	&"&,33 getarr{f6}":return
@@ -127,83 +127,101 @@
 	&"&,37 trapon{f6}":return
 	&"&,38 trapoff{f6}":return
 	&"&,39 prtln{f6}":return
-	&"&,40 forcegc{f6}":return
 {number:3092}
 {:display_page_4}
-	for n=31 to 40:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
+	&"ML Functions:{f6:2}":for n=0 to 9:n%=n+30:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
 
 {:header_page_5}
 {number:3100}
 ' 3060+41=3101
-	a%=3060+n%:&,66
+	a%=3101+n:&,66
+	&"&,40 forcegc{f6}":return
 	&"&,41 setbaud{f6}":return
 	&"&,42 ECS Commands{f6}":return
-	&"[&,43 - &,50 are ML functions]{f6}":return
+	&"&,43 chatchk"+m$+"{f6}":return
 {number:3112}
 {:display_page_5}
-	for n=41 to 43:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
+	for n=0 to 3:n%=n+40:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
 
 {:header_page_6}
 {number:3120}
-' 3070+51=3121
-	a%=3070+n%:&,66
-	&"[&,51 is an ML function]{f6}":return
+' 3070+51=3121 (from {:display_page_6})
+' FIXME: {:header_page_6}  sets n to 1-10 for selected item number calcgoto
+' FIXME: {:display_page_6} sets n to 51-60
+	a%=3121+n:&,66
+	&"&,50 outscn"+m$+"{f6}":return
+	&"&,51 outmod"+m$+"{f6}":return
 	&"&,52 Lightbar Interface{f6}":return
-	&"&,53 Logoff{f6}":return
-	&"&,54 Text editor interface{f6}":return
-	&"&,55 output{f6}":return
-	&"&,56 chatmode{f6}":return
+	&"&,53 Logoff"+m$+"{f6}":return
+	&"&,54 Text Editor Interface{f6}":return
+	&"&,55 output"+m$+"{f6}":return
+	&"&,56 chatmode"+m$+"{f6}":return
 	&"&,57 relread{f6}":return
 	&"&,58 setalarm{f6}":return
 	&"&,59 farerr{f6}":return
-	&"&,60 Structures  (run {quotation}i.test structs{quotation}){f6}":return
 {number:3132}
 {:display_page_6}
-	for n=51 to 60:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
+' n : loop counter, & call number in {:header_page_6}
+' n%: the displayed menu selection number (51-60)
+	for n=0 to 9:n%=n+50:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
 
 {:header_page_7}
 {number:3140}
 ' 3080+61=3141
-	a%=3080+n%:&,66
+	a%=3141+n:&,66
+	&"&,60 structs (run {quotation}i.test structs{quotation}){f6}":return
 	&"&,61 poscrsr{f6}":return
 	&"&,62 Set Time{f6}":return
-	&"&,63 inline1{f6}":return
-	&"&,64 convstr{f6}":return
-	&"&,65 convert{f6}":return
+	&"&,63 inline1"+m$+"{f6}":return
+	&"&,64 convstr"+m$+"{f6}":return
+	&"&,65 convert"+m$+"{f6}":return
 	&"&,66 Calculated goto/gosub{f6}":return
 	&"&,67 copyrite{f6}":return
-	&"&,68 struct (run {quotation}i.test structs{quotation}){f6}":return
+	&"&,68 structs (run {quotation}i.test structs{quotation}){f6}":return
 	&"&,69 Display String on Console{f6}":return
-	&"&,70 Position Terminal Cursor{f6}":return
 {number:3152}
 {:display_page_7}
-	for n=61 to 70:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
+	for n=0 to 9:n%=n+60:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
+
+' TODO: page 8
+	&"&,70 Position Terminal Cursor{f6}":return
 
 {nice:10}
 ' 3150?
-{:menu}
+{:show_page}
 ' display menu page 'p' commands
-	a%=3000+p*50:&,66,1:&"{f6}[Px) Page 1-7, Q)uit, {question}=List]{f6}"
+' p=1: 3032, p=2: 3052, p=3: 3072, p=4: 3092, p=5: 3112, p=6: 3132, p=7: 3152
+	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-8, Q)uit]{f6}"
 {:prompt}
 ' m=0: "main menu" not displayed
-	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:show_page}
 ' Px (switch to Page x) hook:
 	if left$(an$,1)<>"P" then {:dispatch}
-	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:prompt}
+	an=val(mid$(an$,2,1)):if an>. or an<9 then p=an:goto {:show_page}
 	gosub {:sub.out_of_range}:goto {:prompt}
 {:dispatch}
+' separate input into tens (t) and ones (n) digits:
+' an=option # chosen
+	an$=mid$(str$(an),2):n=val(right$(an$,1)):t=.:if val(an$)>9 then t=val(left$(an$,1))
+' display function name:
+' &,66,1 (calcgosub): routines start on 20-line increments for {display_page_<an>} routines
+	a%=3020+t*20:&"[header line] a%={pound}%a, [item] 10s: an="+str$(an)+", 1s: n={pound}!n{f6}":&,66,1
+
 ' FIXME: temporary hook:
 	if an=23 then gosub {:4350}:goto {:prompt}
 	if an=67 then gosub {:sub.copyright}:goto {:prompt}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
-	a%=3200+an*50:&,66,1:goto {:prompt}
+	a%=3200+an*50:&"[& line] a%={pound}%a{f6}":&,66,1:goto {:prompt}
 
 {:3200} ' &,0: output a$
 	gosub {:sub.todo}:return
 
 {:3250} ' &,1,x,y: input an$
 ' TODO: implement testing &,1,x,<password_mode> flags
+' TODO: implement bitwise display of &,1 options
+' if (op and 1)=1 then:&"Disable typing graphics characters{f6}"
+' ...etc.
 
 ' &,1,x:
 
@@ -305,7 +323,7 @@
 {:amp_9_quit}
 ' restore window to computer type string
 ' var 36 is co$, computer type:
-	&"Restoring window to computer type.":&,9,36:return
+	&"Restoring window to computer type.{f6}":&,9,36:return
 
 {:3700} ' &,10: Terminal Mode
 	&"C= + Ctrl exits terminal mode.{f6}"
@@ -415,10 +433,9 @@
 ' 40 print"auto-logoff"
 
 {:4350} ' &,23: xgetin
-	gosub {:sub.todo}:return
+	&"FIXME:{f6:2}"
 
 {:4352}
-	&"FIXME:{f6:2}"
 	&"(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
 {:23_loop}
 ' 92: ">>> Canceled!"
@@ -585,18 +602,32 @@
 {:6700} ' &,70: position terminal cursor
 	gosub {:sub.todo}:return
 
+{nice:10}
 {:sub.setup}
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}:
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
 ' set p=menu page number
-	f$="(fixme)":i$="(investigating)":p=1
+	f$="(fixme)":i$="(investigating)":m$="{pound}{back arrow}26[ML function]":p=1
+' current line number to correctly calculate gosub targets regardless of where code gets moved to:
+	def fn cl(x)=peek(57)+256*peek(58)
+' line variable
+' 3000 pr$
+' 4000 p1$
+' 60000 p2$
+' in e.errlog (im line 4024)
+' since this module spans 3000-4000, define pr$ and p1$ as the same
+	pr$="i."+"test calls":p1$=pr$
+	cm$="Test & Calls":gosub 9
 	return
 
+{nice:10}
 {:sub.load_module}
 ' TODO: possibly load sub-modules with more functions
 	rem sub.load_module
 
+{nice:10}
 {:quit}
-	goto 300
+	&"Quitting.{f6}":&,40:goto 300
+	rem i.test calls
