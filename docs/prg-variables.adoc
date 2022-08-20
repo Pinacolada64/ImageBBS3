@@ -284,7 +284,7 @@ template:
 |===
 | Variable | Read | Write | Purpose 
 
-| `bf()` | | | Blocks free on system disks.
+| `bf()` | &check; | | Blocks free on system disks.
 
 |===
 

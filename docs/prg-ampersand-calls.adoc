@@ -960,6 +960,8 @@ Both these statements output the same string as above:
 * `a$="22105178944":&"kbd:[Ctrl+d]"+a$`
 * `a$="22105178944":&chr$(4)+a$`
 
+// Jay Campey:
+Outputting the date and time this way also outputs the user's time zone.
 ====
 
 ---

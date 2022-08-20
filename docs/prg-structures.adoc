@@ -308,7 +308,7 @@ TIP: Integer arrays can store values from `-32768` to `32767`.
 
 ### `&,60,0` Put String
 
-Copies a specified string variable (up to a specified length) into a field of a struct.
+Copies a specified string variable (up to a specified length) into a field of a record of a struct.
 
 .Syntax
 `&,60,0,` _length_, _struct%(field, record)_, _string$_
@@ -317,7 +317,7 @@ Copies a specified string variable (up to a specified length) into a field of a 
 
 _length_: the maximum string length to put into the record.
 
-_struct%(field, record)_: the struct name, field and record you're reading the string from.
+_struct%(field, record)_: the struct name, field and record you're putting the string into.
 
 _string$_: the string variable name to assign the struct data to.
 
@@ -340,7 +340,7 @@ _string$_: the string variable name to assign the struct data to.
 `&,60,0,**20**,u%(1,1),na$`
 
 [start=3]
-. from the `u%()` array (record 1, field 1):
+. from the `u%()` array (field 1, record 1):
 
 `&,60,0,20,**u%(1,1)**,na$`
 
@@ -359,7 +359,7 @@ _string$_: the string variable name to assign the struct data to.
 
 ### `&,60,1` Get String
 
-This copies a string from a struct into a specified string variable.
+This copies data from a struct into a specified string variable.
 
 .Syntax
 

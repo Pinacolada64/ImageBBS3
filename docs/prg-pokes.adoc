@@ -17,6 +17,7 @@ This replaces using a memory location with a number in the interface table.
 
 Instead of using `poke 53252,22`, the call would be similar to `&,21,0,1`. 
 
-Refer to the xref:prg-ampersand-calls.adoc#read-from-interface-table[`&,20`: Read from Interface Table] or xref:prg-ampersand-calls.adoc#write-to-interface-table[`&,21`: Write to Interface Table] commands for more information.
+// https://docs.asciidoctor.org/asciidoc/latest/macros/inter-document-xref/
 
+Refer to the xref:prg-ampersand-calls.adoc#read-from-interface-table[`&,20`: Read from Interface Table] or xref:prg-ampersand-calls.adoc#write-to-interface-table[`&,21`: Write to Interface Table] commands for more information.
 ====

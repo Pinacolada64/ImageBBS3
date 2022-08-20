@@ -321,7 +321,7 @@ You can perform operations on text which can change it in a variety of ways.
 The kbd:[.B]anner command creates large letters from text you enter.
 Type the text you wish directly after the ``Editor Command: Banner&#160;`` prompt, hit kbd:[Return], then use kbd:[.M]CI Read to view it.
 
-In a 40-column display, you are limited to 10 characters before the text will wrap around.
+In a 40-column display, you are limited to 9 characters before the text will wrap around.
 
 ====
 TIP: Color controls (kbd:[Ctrl+1-8] and kbd:[C=+1-8]) are accepted, and do not count towards the character limit.

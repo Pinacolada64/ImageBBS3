@@ -11,29 +11,41 @@ _name_
 
 Variable names made of two words are tied together with an underscore (`_`).
 
-.Example
-_first_name_
+.Variable Name
+====
+``__first_name__``
+====
 
 This method differentiates _first_name_ as being separate from two variables named _first_ and _name_.
 
-// *Bold text* represents #FIXME#.
+The highlighted words #FIXME# and #TODO# represent things in the documentation which aren't complete yet, but are intended to be finished as soon as possible.
 
 Letters enclosed in rounded, shaded squares represent keys on the Commodore 64 keyboard.
 They generally are either options, or should be pressed, during a series of instructions in the manual.
 
-.Examples
-kbd:[Shift+T], kbd:[Ctrl], or kbd:[f1]
- 
+.Keyboard Keys
+====
+kbd:[Ctrl] or kbd:[f1]: A single keypress.
+
+kbd:[Shift+T]: Two keys with a **+** between them represent holding down the first key while typing the second key.
+
+kbd:[.C]: Two keystrokes in sequence
+====
+
 The same notation can also represent BBS commands typed at a prompt.
 
-.Examples
+.User Commands
+====
 * kbd:[ST], kbd:[AT], or kbd:[O!]
 * Type kbd:[Y]es
+====
 
-Monospace text on a gray background usually represents text shown on the screen.
+Monospace text on a gray background usually represents output shown on the screen.
 
-.Example
-`Enter your user name or ID#:`
+.Output or Prompt
+====
+ Enter your user name or ID#:
+====
 
 Bold monospace text represents text typed by the user in response to a prompt.
 
