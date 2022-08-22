@@ -1,5 +1,7 @@
+' C64List4_04.exe "i.test menu.lbl" -crunch -alpha:alt -ovr -prg
 {step:1}
 {alpha:alt}
+' out-of-module line numbers
 {assign:300	=300	}	' main prompt
 
 ' encoded f-keys
@@ -10,7 +12,9 @@
 {quoter:140=up_arrow}	' f8
 
 {number:3000}
-	goto {:setup}
+{step:2}
+	rem "i.test menu" {usedef:__BuildDate} {usedef:__BuildTime}
+	gosub {:sub.setup}:goto {:menu}
 
 {:sub.input_range}
 {step:1}
@@ -62,8 +66,7 @@
 	&"&,10 Terminal Mode{f6}":return
 {number:3032}
 {:display_page_1}
-' when menu pages are displayed, show option number and
-' header text, e.g.:
+' when menu pages are displayed, show option number and header text, e.g.:
 '  0) &,0  Output a$
 '  1) &,1  Input an$
 ' (etc.)
@@ -178,9 +181,9 @@
 ' when menu item is selected, displays header text, e.g.:
 ' &,10 Terminal Mode
 {:menu}
-' display menu page, commands
+' display menu page 'p' commands
 ' p=1: 3012, p=2: 3032, p=3: 3052, p=4: 3072, p=5: 3092, p=6: 3112, p=7: 3132
-	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit]{f6}"
+	a%=3022+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit]{f6}"
 {:prompt}
 ' m=0: "main menu" not displayed
 	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
