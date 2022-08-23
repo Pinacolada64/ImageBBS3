@@ -1,0 +1,62 @@
+{assign:1	=1	} ' relative pointer
+{assign:4	=4	} ' open file a$
+{assign:300	=300	} ' main prompt
+
+{:3000}
+	&,28,1:dim ud%(29,61),a$(61):gosub {:3002}:&,28,1:goto 300
+{:3002}
+	dr=3:a$="e.U/D":gosub 4:if e% then close 2:&:return
+{:3004}
+	&,2,2:bz=val(a$):close 2:if bz=0 then:&"No U/Ds.":return
+{:3006}
+	fi=1:for i=1 to bz:dr=4:a$="d.u/d"+str$(i)+",s,r":gosub 4
+{:3008}
+	&"{f6}U/D {pound}!i: {pound}#2{pound}%e,{pound}$e.":on -(e%=0) gosub {:3010}:next:return
+{:3009}
+	rem get # of files in directory
+{:3010}
+	&,2,2:rn=val(a$):ud%(0,0)=rn:ud%(1,1)=0:if rn=. then return
+{:3012}
+	for j=1 to rn:&".":ud%(0,j)=0
+{:3013}
+	rem get file size in blocks. &,60,14: unknown purpose
+{:3014}
+	&,2,2:fs=val(a$):&,60,14,0,ud%(1,j),fs
+{:3015}
+	rem get 5-digit user id, handle of uploader
+{:3016}
+	&,2,2:ud%(10,j)=val(left$(a$,4)):&,60,0,20,ud%(11,j),mid$(a$,5)
+{:3017}
+	rem get ul date, dl date, filename, filetype
+{:3018}
+	&,2,2:&,60,4,0,ud%(3,j),left$(a$,11):&,60,4,0,ud%(6,j),mid$(a$,12,11)
+{:3019}
+	rem b$=filetype, c$=filename, from "1111111111122222222222filename,t(ype)"?
+{:3020}
+	a$=mid$(a$,23):b$=right$(a$,1):c$=left$(a$,len(a$)-2)
+{:3021}
+	rem put filename and filetype in struct
+{:3022}
+	&,60,0,16,ud%(21,j),c$:&,60,0,2,ud%(29,j),b$
+{:3023}
+	rem get file description. write file size, file type, a$=?
+{:3024}
+	&,2,2:a$(j)=str$(fs)+r$+c$+","+b$+r$+a$:ud%(9,j)=fi:fi=fi+1
+{:3025}
+	rem get # of downloads based on filetype?
+{:3026}
+	&,2,2:ud%(2,j)=-(b$="p")+val(a$)*256
+{:3027}
+	rem get computer type (0=any)
+{:3028}
+	&,2,2:ud%(2,j)=val(a$):if ud%(2,j)<1 then ud%(2,j)=0:ud%(0,j)=1
+{:3030}
+	next:close 2:&"."
+{:3032}
+	&,60,3,0,ud%(0,0),60*(rn+1),dr$+"d.UD"+str$(i),dv%:gosub 5
+{:3034}
+	dr=3:a$="e.UD.desc"+str$(i)+",l,"+chr$(110):gosub 4:x=1:gosub 1:print#2,fi
+{:3036}
+	for j=1 to rn:x=ud%(9,j)+1:gosub 1:print#2,a$(j):next:x=1:gosub 1:close 2
+{:3038}
+	return
