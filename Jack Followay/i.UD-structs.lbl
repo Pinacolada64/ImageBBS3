@@ -1,3 +1,4 @@
+' C64List.exe "i.UD-structs.lbl" -d64:"ud test"::@:I.UD-STRUCTS -crunch -alpha:alt -verbose
 {assign:1	=1	} ' relative pointer
 {assign:3	=3	}
 {assign:4	=4	} ' open file a$
@@ -87,8 +88,8 @@
 {:3040}
 ' NEW: 3014 repurposed to print Blocks/Kbytes
 '	on -(a%=1) goto {:3014}:&"s":return
-	on -(a%=1) goto {:999}:&"s":return
-	&"{f6}Sorry, {pound}$ks Only{f6}":return
+	on -(a%=1) goto 999:&"s":return
+	&"{f6}Sorry, {pound}$ks Only.{f6}":return
 {:3044}
 	lc=9:yy%=0:h$="Library":j$="File":k$="Download":l$="Upload":m$="Multi-"
 '	i$=" Subop ":r$=chr$(13):return
@@ -148,11 +149,14 @@
 	return
 {:3100}
 ' *** initialization ***
-' TODO: do away with all these arrays, but ud%()!
+' TODO: do away with all these arrays, except ud%()!
 	&,28,1:dim bb$(31),e%(31),ac%(31),so%(31),ud%(29,61),f%(61)
 	sy$="U/D"+"":sg$="":ba$="":oc$="":bz=0:an$=mid$(an$,3)
 ' FIXME: user flag 8:
 	q=0:a=8:gosub 11:if a then q=1
+{:3105}
+' program name, build date/time
+	pr$="i.UD-structs":p1$=pr$:lp=1:&"{f5}"+pr$+"{f5}{f6}Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 {:3106}
 	gosub {:3002}:mm=1:gosub {:3990}:on lm goto {:3118}
 	on -(bz=0) goto {:3118}:if r=0 then gosub {:3002}
@@ -169,13 +173,14 @@
 {:3150}
 	an$=str$(cr):sb$="U"+"X":os=sg:a=7:gosub 11:if a then an$=" Unlimited"
 ' 61: update blocks free
-' 3014: NEW: set Blocks or Kbytes
+' 3014: NEW: d$=Blocks or Kbytes
 '	gosub {:3004}:gosub 61:d$="Blocks":if co%>2 then a=int(a*254/1024):d$="Kbytes"
 	gosub {:3004}:gosub 61:gosub {:3014}:if co%>2 then a=int(a*254/1024)
 	if id>0 and id=so%(bn) or id=so% then q=1
 '	&"{f6} - Protocol   : {pound}vl{f6} - Credit Pts :{pound}v7{f6} - {pound}$d Free:"+str$(a)+"{f6}"
 	&"{f6} - Protocol   : {pound}vl{f6} - Credit Pts :{pound}v7{f6} - {pound}$d Free: {pound}!a{f6}"
-' 442: sub.protos FIXME: what is pm$?
+' FIXME: pm$="copier", ml$="++ copier", always loads protocol
+' 442: sub.protos
 '	if pm$<>ml$ then im=2:gosub 442
 	if pm$<>ml$ then:&"3158 pm$="+pm$+", ml$="+ml$+r$:im=2:gosub 442
 	a$=bb$(bn):gosub {:3006}:cm$="UD#"+mid$(str$(bn),2):p$=cm$+": "+a$
@@ -232,7 +237,7 @@
 	b$="starting at ":c$="for 1"
 {:3284}
 	lp=1:&"{cyan}{pound}$a [T]agged, [N]ew, [U]nvalidated, or {pound}$b: (RETURN {pound}$c)"
-	poke 53252,3:p$=">":gosub 6:xn=abs(int(val(an$))):b$=an$
+	poke 53252,3:p$=">":gosub 6:xn=abs(int(val(an$))):b$=an$:&"{f6}"
 {:3288}
 	a=-(b$="U")-2*(b$="T")-4*(b$="N")-8*(b$="R")-16*(b$="O"):return
 {:3290}
@@ -240,7 +245,7 @@
 '	gosub {:3292}:dr=bn+6:a$=f$+","+t$+",r":goto 4
 	gosub {:3292}:gosub {:3004}:a$=f$+","+t$+",r":goto 4
 {:3292}
-' FIX: get filename/filetype from struct. now match with i.convert ud, line 3022
+' FIX: get filename/filetype from struct. now matches i.convert ud, line 3022
 	&,60,1,16,ud%(21,xn),f$:t$=mid$("sp",1+(ud%(29,xn) and 1),1):return
 {:3300}
 	&"{f6}":if rn=0 then:&"{red}No files to scan.{f6}":return
@@ -248,33 +253,69 @@
 	a$="Scan":gosub {:3282}:on sgn(a) goto {:3310}:if an$="" then xn=1
 	if xn<1 or xn>rn then return
 {:3308}
-	for xn=xn to rn:gosub {:3350}:xn=xn+rc*rn:next:return
+' display list of files:
+' poke 970,0: reset usrlinm
+' 3340: display header
+' 3350: display directory entry
+' 3346: display final separator
+	poke 970,0:gosub {:3340}:for xn=xn to rn:gosub {:3350}:xn=xn+rc*rn:next:gosub {:3346}:return
+
 {:3310}
-	&,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
-	if a%=0 then:&"{red}No files found.{f6}":return
-	for i=1 to a%:xn=f%(i):gosub {:3350}:i=i+rc*f%(0):next:return
+' f%() = tagged files?
+	&,60,8,rn,60,a,ud%(0,1),f%(1),1:if a%=0 then:&"{red}No files found.{f6}":return
+' display list of files:
+	f%(0)=a%:gosub {:3340}:for i=1 to a%:xn=f%(i):gosub {:3350}:i=i+rc*f%(0):next:return
+
+{:3340}
+' TODO: display header for file info:
+'      d$
+' ## Blocks Dl'd  Name
+'>nn [bbbb] dddd "ffffffffffffffff,t"
+
+' TODO: 80 column display: offset=rn/2, gosub {:sub.get_dir_entry}
+'----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+'>01 [bbbb] dddd "ffffffffffffffff,t"   >03 [bbbb] dddd "ffffffffffffffff,t"
+'>02 [bbbb] dddd "ffffffffffffffff,t"   >04 [bbbb] dddd "ffffffffffffffff,t"
+' even-numbered entries                  odd-numbered entries
+
+' 3014: Blocks/Kbytes (d$)
+' 3346: separator line
+
+	gosub {:3014}:gosub {:3344}:if ll%=80 then:&"{pound}{back arrow}39":gosub {:3344}
+{:3342}
+	gosub {:3346}:return
+{:3344}
+	lp=.:&"{white} ## {lt. red}{pound}$d {green}Dl'd  {lt. blue}Name":return
+{:3346}
+	&"{f6}{orange}{pound}vj":return
+
 {:3350}
-' About file
-' b%=block size
-	b%=ud%(1,xn):if co%>2 then b%=b%*254/1024
-	gosub {:3292}:c$=" ":if ud%(0,xn)and 2 then c$="{green}>"
-	a%=xn:&"{pound}$c{cyan}{pound}#2{pound}# {pound}%a {lt. blue}[{yellow}{pound}#4{pound}%b{lt. blue}] {f5}{white}{pound}$f,{pound}$t{lt. blue}{f5}{f6}":return
+' display directory entry:
+' d%=downloads, b%=block size
+	d%=ud%(2,xn):b%=ud%(1,xn):if co%>2 then b%=b%*254/1024
+{:3356}
+' 3292: f$=filename/t$=filetype, c$=tag status:
+	gosub {:3292}:c$=" ":if ud%(0,xn) and 2 then c$="{green}>"
+{:3358}
+	a%=xn:&"{pound}$c{cyan}{pound}#2{pound}# {pound}%a {lt. blue}[{yellow}{pound}#4{pound}%b{lt. blue}] {green}{pound}#4{pound}%d {lt. blue}{f5}{white}{pound}$f,{pound}$t{lt. blue}{f5}{f6}":return
+
 {:3360}
-	&"{lt. blue}{clear}{pound}vj":gosub {:3350}
+	&"{clear}{lt. blue}{pound}vj":gosub {:3350}
 ' struct stuff:
-' an$: uploader handle, a%=uploader ID, a$=upload date
-	&,60,1,20,ud%(11,xn),an$:a%=ud%(10,xn):&,15,1:&,60,5,0,ud%(3,xn),a$
+' a$: uploader handle, a%=uploader ID, b$=upload date
+	&,60,1,10,ud%(11,xn),an$:&,15,1:a$=an$:a%=ud%(10,xn):&,60,5,0,ud%(3,xn),b$
 '	&"{f6} {cyan}From {lt. green}#{pound}%a, {white}{pound}v7{f6} {cyan}On   {yellow}{$04}"+a$+"{f6}"
-	lp=1:&"{f6} {cyan}From {pound}v7 ({lt. green}#{pound}%a{cyan}) {cyan}On   {yellow}{$04}"+a$+"{f6}"
+	lp=1:&"{f6} {cyan}From {pound}$a ({lt. green}#{pound}%a{cyan}) {cyan}On   {yellow}{$04}"+b$+"{f6}"
 ' NEW: gosub 3040 to output "s"
 '	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn):s$="":if a%<>1 then s$="s"
 	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn)
 '	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}total download{pound}$s{f6}"
-	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}total download":gosub {:3040}:&"{f6}"
-' SUGGESTION: add bn (board number) to "e.UD.desc" filename
-' SUGGESTION: open "e.UD.desc x" at beginning of "About" session, close when option other than N/P/Return chosen, save open/close file
+	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}Total {pound}$k":gosub {:3040}:&"{f6}"
+' SUGGESTION: open "e.UD {bn}.desc" at beginning of "About" session, close when option other than N/P/Return chosen, saves open/close file operation
+' 3370: get description record #
+' FIXME: illegal quantity:
 '	&"{f6}{cyan}":x=ud%(9,xn):on-(x=0)goto {:3376}:dr=3:a$="e.UD.desc":gosub 4:if e%then{:3376}
-	&"{f6}{cyan}":x=ud%(9,xn):on x+1 goto {:3376}:gosub {:3998}:if e% then {:3376}
+	x=ud%(9,xn):&"{f6}{cyan}desc={pound}!x{f6}":on x+1 goto {:3376}:gosub {:3998}:if e% then {:3376}
 '	x=x+1:gosub 1:&,2,2:&,2,2:&,2,2:close 2
 ' just 1-line description:
 	x=x+1:gosub 1:&,2,2
