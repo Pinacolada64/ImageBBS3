@@ -10,38 +10,57 @@ Configuration information:
 
 Element		Bytes	Type	Purpose
 ud%( 0, 0)	2	Integer rn: # of files in directory
-ud%( 0, 1)	?	?	?
-ud%( 0,xn)	2?	Integer	Bit 2: 1=Tagged file
+ud%( 0, 1)	?	?	i.UD-structs 3262, 3310, 3408, 3508, 3600
+ud%( 0,xn)	2	Integer	0=any computer (i.convert ud, 3028)
+				Bit 2: 1=Tagged file
 
 				c%: # of Tagged files
 				d%: # of Unvalidated files
+
+d.u/d 1,s:
+
+1 | rn     | Number of files in directory (60 max)
+2 |  f%(x) | File size in CBM blocks
+3 | nn$(x) | 4-digit User ID number padded with 0s, plus handle (e.g. 0001SYSOP)
+4 | dt$(x) | Upload date + last download date + filename, type (e.g., 1111111111122222222222textfile,s
+5 | ed$(x) | Description of file
+6 |  c%(x) | Times downloaded
+7 |  d%(x) | Computer type 0-9 (0=any)
+
+Lines 2-7 repeat rn times.
 
 Directory information:
 
 Element	    Elements	Bytes	Type	Purpose
 ud%( 1, 0)	1	2	Integer	SubOp ID
 
+ud%( 0,xn)	1	2	Byte	Bit 1: 0=Unvalidated (i.UD-structs: 3652, 3722)
+					       1=Validated   (i.UD-structs: 3724-3726)
 ud%( 1,xn)	1	2	Integer	Size in blocks
 ud%( 2,xn)	1	2	Integer	# of downloads
-ud%( 3,xn)	3	11	Date	Upload date
+ud%( 3,xn)	3	6	Date	Upload date
 					b%: # of new files
-ud%( 6,xn)	3	11	Date	Last download date
-ud%( 9,xn)	1	11	Integer	<>0: Description record # in "e.UD {bn}.desc"
+ud%( 6,xn)	3	6	Date	Last download date
+ud%( 9,xn)	1	2	Integer	<>0: Description record # in "e.UD {board number}.desc"
 ud%(10,xn)	1	2	Integer	Uploader ID
 ud%(11,xn)	10	20	String	Uploader handle
 ud%(21,xn)	8	16	String	Filename
-ud%(29,xn)	1	2	Integer	File type
-					Bit 1: 0=SEQ, 1=PRG
+ud%(29,xn)	1	2	Byte	File type
+					i.UD xxxx: Bit 1: 0=SEQ, 1=PRG
+Pinacolada will add this:
+ud%(30,xn)	1	2	Integer	Computer type (0=Any, 1-9)
 
 Line	Var	Purpose
+	cf	1=configuration changed
 3090	rn	# of files in U/D directory
+	xn	current file?
 
 Arrays as defined in original 3.0 U/D directory:
 i.UD, 3174
 c%()	block/KB size
 d%()	computer type #
 f%()	uploader id#?
-dt$()	Date uploaded | Date last downloaded (2 11-digit date strings) | filename,t
+dt$()	Date uploaded | Date last downloaded (2 11-digit date strings) | filename,t(ype)
 ed$()	file description
 nn$()	Handle of uploader
 
