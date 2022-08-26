@@ -150,13 +150,13 @@
 {:3100}
 ' *** initialization ***
 ' TODO: do away with all these arrays, except ud%()!
-	&,28,1:dim bb$(31),e%(31),ac%(31),so%(31),ud%(29,61),f%(61)
+	&,28,1:dim bb$(31),e%(31),ac%(31),so%(31),ud%(30,61),f%(61)
 	sy$="U/D"+"":sg$="":ba$="":oc$="":bz=0:an$=mid$(an$,3)
 ' FIXME: user flag 8:
 	q=0:a=8:gosub 11:if a then q=1
 {:3105}
 ' program name, build date/time
-	pr$="i.UD-structs":p1$=pr$:lp=1:&"{f5}"+pr$+"{f5}{f6}Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
+	pr$="i.UD-structs"+"":p1$=pr$+"":lp=1:&"{f5}"+pr$+"{f5}{f6}Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 {:3106}
 	gosub {:3002}:mm=1:gosub {:3990}:on lm goto {:3118}
 	on -(bz=0) goto {:3118}:if r=0 then gosub {:3002}
