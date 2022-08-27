@@ -255,6 +255,7 @@
 {:3308}
 ' display list of files:
 ' poke 970,0: reset usrlinm
+' 3344: display column headings
 ' 3340: display header
 ' 3350: display directory entry
 ' 3346: display final separator
@@ -267,23 +268,24 @@
 	f%(0)=a%:gosub {:3340}:for i=1 to a%:xn=f%(i):gosub {:3350}:i=i+rc*f%(0):next:return
 
 {:3340}
-' TODO: display header for file info:
-'      d$
+' display header for file info:
+'      d$    d%    f$,t$
 ' ## Blocks Dl'd  Name
+' ---+----+----+----+----+----+----+----
 '>nn [bbbb] dddd "ffffffffffffffff,t"
 
 ' TODO: 80 column display: offset=rn/2, gosub {:sub.get_dir_entry}
-'----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+' ---+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
 '>01 [bbbb] dddd "ffffffffffffffff,t"   >03 [bbbb] dddd "ffffffffffffffff,t"
 '>02 [bbbb] dddd "ffffffffffffffff,t"   >04 [bbbb] dddd "ffffffffffffffff,t"
-' even-numbered entries                  odd-numbered entries
+' 1st half of entries                    2nd half of entries
 
 ' 3014: Blocks/Kbytes (d$)
+' 3344: show column headings (40/80 columns)
 ' 3346: separator line
-
 	gosub {:3014}:gosub {:3344}:if ll%=80 then:&"{pound}{back arrow}39":gosub {:3344}
 {:3342}
-	gosub {:3346}:return
+	goto {:3346}
 {:3344}
 	lp=.:&"{white} ## {lt. red}{pound}$d {green}Dl'd  {lt. blue}Name":return
 {:3346}
@@ -297,15 +299,20 @@
 ' 3292: f$=filename/t$=filetype, c$=tag status:
 	gosub {:3292}:c$=" ":if ud%(0,xn) and 2 then c$="{green}>"
 {:3358}
+' TODO: remove {f6} for 80-column displays
+' >## [bbbb] dddd "filename,t"
 	a%=xn:&"{pound}$c{cyan}{pound}#2{pound}# {pound}%a {lt. blue}[{yellow}{pound}#4{pound}%b{lt. blue}] {green}{pound}#4{pound}%d {lt. blue}{f5}{white}{pound}$f,{pound}$t{lt. blue}{f5}{f6}":return
 
 {:3360}
-	&"{clear}{lt. blue}{pound}vj":gosub {:3350}
+' About file
+' 3344: display column headings
+' 3350: display directory entry
+	&"{clear}{lt. blue}":gosub {:3344}:&"{f6}{pound}vj":gosub {:3350}
 ' struct stuff:
 ' a$: uploader handle, a%=uploader ID, b$=upload date
 	&,60,1,10,ud%(11,xn),an$:&,15,1:a$=an$:a%=ud%(10,xn):&,60,5,0,ud%(3,xn),b$
 '	&"{f6} {cyan}From {lt. green}#{pound}%a, {white}{pound}v7{f6} {cyan}On   {yellow}{$04}"+a$+"{f6}"
-	lp=1:&"{f6} {cyan}From {pound}$a ({lt. green}#{pound}%a{cyan}) {cyan}On   {yellow}{$04}"+b$+"{f6}"
+	lp=1:&"{f6} {cyan}From {pound}$a ({lt. green}#{pound}%a{cyan}){f6} On   {yellow}{$04}"+b$+"{f6}"
 ' NEW: gosub 3040 to output "s"
 '	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn):s$="":if a%<>1 then s$="s"
 	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn)
@@ -313,12 +320,15 @@
 	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}Total {pound}$k":gosub {:3040}:&"{f6}"
 ' SUGGESTION: open "e.UD {bn}.desc" at beginning of "About" session, close when option other than N/P/Return chosen, saves open/close file operation
 ' 3370: get description record #
-' FIXME: illegal quantity:
 '	&"{f6}{cyan}":x=ud%(9,xn):on-(x=0)goto {:3376}:dr=3:a$="e.UD.desc":gosub 4:if e%then{:3376}
-	x=ud%(9,xn):&"{f6}{cyan}desc={pound}!x{f6}":on x+1 goto {:3376}:gosub {:3998}:if e% then {:3376}
+	x=ud%(9,xn):on x+1 goto {:3376}:gosub {:3998}:if e% then {:3376}
+' fields are: (1) file size, (2) filename/type, (3) description
+' quick hack: we don't care about the contents of fields 1 or 2, so just toss them with input#2,a$
+' (shorter code, saves 6 bytes)
 '	x=x+1:gosub 1:&,2,2:&,2,2:&,2,2:close 2
+	x=x+1:gosub 1:input#2,a$,a$:&,2,2
 ' just 1-line description:
-	x=x+1:gosub 1:&,2,2
+'	x=x+1:gosub 1:&,2,2
 	lp=1:&" Description:{yellow}{pound}m<2{f6}{pound}$a{pound}m<0":goto {:3378}
 {:3376}
 '	close 2:&" No description available.{f6}"
@@ -342,7 +352,7 @@
 	for i=1 to a%:xn=f%(i):gosub {:3454}:next:im=2:goto 442
 {:3454}
 ' DUPE: 3564 "Reading..." message
-	gosub {:3290}:close 2:&"Reading {f5}{pound}$f,{pound}$t{f5}: {pound}$e{f6:2}":if e%then return
+	gosub {:3290}:close 2:&"Reading {f5}{pound}$f,{pound}$t{f5}: {pound}$e{f6:2}":if e% then return
 ' user flag 7: unlimited credits
 	b%=ud%(1,xn):y%=0:a=7:gosub 11:if a+q+(f2 and 2)=.then on-(cr<b%)goto {:3024}:y%=yy%
 ' filetype: 0=seq
