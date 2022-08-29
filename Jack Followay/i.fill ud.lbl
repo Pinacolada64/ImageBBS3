@@ -1,0 +1,78 @@
+' C64List.exe "i.fill ud.lbl" -d64:"ud test"::"@:I.FILL UD" -crunch -alpha:alt -verbose -ovr
+
+{assign:1	=1	} ' relative pointer
+{assign:4	=4	} ' open file a$
+{assign:5	=5	} ' open file a$
+{assign:300	=300	} ' main prompt
+
+{:3000}
+	&,27,2:dim ud%(30,61),a$(61):gosub {:3002}:&,28,2:goto 300
+{:3002}
+	lp=1:&"{f5}i.fill ud{f5}{f6}Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
+{:3004}
+	ct=.:rem initialize counter 'ct' for computer type
+{:3009}
+	rem put # of files in directory
+{:3010}
+	rn=60:ud%(0,0)=rn:ud%(1,1)=0
+{:3012}
+	for j=1 to rn:&".":ud%(0,j)=0
+{:3013}
+	rem 2: put file size in blocks
+{:3014}
+	fs=100+j:ud%(1,j)=fs
+{:3015}
+	rem 3: put user id, handle of uploader
+{:3016}
+	ud%(10,j)=200+j:&,60,0,20,ud%(11,j),"TEST"+str$(200+j)
+{:3017}
+	rem 4: put ul date, dl date
+{:3018}
+	&,60,4,0,ud%(3,j),d1$:&,60,4,0,ud%(6,j),d1$
+{:3019}
+	rem f$=filename, t$=filetype, alternating seq and prg
+{:3020}
+	f$="TEST"+str$(300+j):t$=mid$("sp",(x and 1)+1,1)
+{:3021}
+	rem put filename (f$) and filetype (t$) in struct (bit 1 set for "prg")
+{:3022}
+'	&,60,0,16,ud%(21,j),c$:&,60,0,2,ud%(29,j),b$
+' set bit 1 if t$="p":
+' b=4:t$="s":b=b or -(t$="p"):?b
+' 4
+	&,60,0,16,ud%(21,j),f$:ud%(29,j)=ud%(29,j) or -(t$="p")
+{:3023}
+	rem 5: put file description. write file size, filename/type, description
+{:3024}
+	a$(j)=str$(fs)+r$+f$+","+t$+r$+"-desc"+str$(400+j):ud%(9,j)=fi:fi=fi+1
+{:3025}
+	rem 6: # of downloads
+{:3026}
+'	&,2,2:ud%(2,j)=-(b$="p")+val(a$)*256
+	ud%(2,j)=500+j
+{:3027}
+	rem 7: put computer type (0=any, or 1-9)
+{:3028}
+' added field for computer type
+' repeat #s 0-9 throughout records:
+	ud%(30,j)=ct:ct=ct+1:if ct=10 then ct=0
+{:3029}
+' if computer type is any, set validated flag (unsure if typo in original code)
+'	&,2,2:ud%(2,j)=val(a$):if ud%(2,j)<1 then ud%(2,j)=0:ud%(0,j)=1
+	if ud%(30,j)<1 then ud%(30,j)=0:ud%(0,j)=1
+{:3030}
+	next:close 2:&".{f6}":dr=4:gosub 4:f$="d.UD"+str$(i)
+{:3031}
+	&"Scratching {f5}{pound}$f{f5}...":print#15,"s"dr$f$:gosub 5:&"{f6}Saving {f5}{pound}$f{f5}..."
+{:3032}
+	&,60,3,0,ud%(0,0),60*(rn+1),dr$+f$,dv%:gosub 5:if e% then:&
+{:3034}
+	dr=3:f$="e.UD"+str$(i)+".desc":a$=f$+",l,"+chr$(110):gosub 4:x=1:gosub 1:print#2,fi
+{:3035}
+	rem write descriptions [ud%(9,j) is record #]
+{:3036}
+	for j=1 to rn:x=ud%(9,j)+1:gosub 1:print#2,a$(j):next:x=1:gosub 1:close 2
+{:3038}
+	return
+{:3040}
+	rem new image software + pinacolada {usedef:__BuildDate} {usedef:__BuildTime}

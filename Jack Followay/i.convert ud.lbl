@@ -1,9 +1,12 @@
 {assign:1	=1	} ' relative pointer
 {assign:4	=4	} ' open file a$
+{assign:5	=5	} ' open file a$
 {assign:300	=300	} ' main prompt
 
 {:3000}
-	&,28,1:dim ud%(30,61),a$(61):gosub {:3002}:&,28,1:goto 300
+	&,27,2:dim ud%(30,61),a$(61):gosub {:3001}:&,28,2:goto 300
+{:3001}
+	lp=1:&"{f5}i.convert ud{f5}{f6}Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 {:3002}
 	dr=3:a$="e.U/D":gosub 4:if e% then close 2:&:return
 {:3004}
@@ -21,7 +24,7 @@
 {:3013}
 	rem 2: get file size in blocks. &,60,14: unknown purpose
 {:3014}
-	&,2,2:fs=val(a$):&,60,14,0,ud%(1,j),fs
+	&,2,2:fs=val(a$) ':&,60,14,0,ud%(1,j),fs
 {:3015}
 	rem 3: get 4-digit user id, handle of uploader
 {:3016}
@@ -35,7 +38,7 @@
 {:3020}
 	a$=mid$(a$,23):t$=right$(a$,1):f$=left$(a$,len(a$)-2)
 {:3021}
-	rem put filename (f$) and filetype (t$) in struct (should be bit 1 set for "prg")
+	rem put filename (f$) and filetype (t$) in struct (bit 1 set for "prg")
 {:3022}
 '	&,60,0,16,ud%(21,j),c$:&,60,0,2,ud%(29,j),b$
 ' set bit 1 if t$="p":
@@ -47,7 +50,7 @@
 {:3024}
 	&,2,2:a$(j)=str$(fs)+r$+c$+","+b$+r$+a$:ud%(9,j)=fi:fi=fi+1
 {:3025}
-	rem 6: times downloaded, but rewrite block size based on filetype?
+	rem 6: # of downloads
 {:3026}
 ' FIXME: illegal quantity here using existing "d.u/d 1":
 '	&,2,2:ud%(2,j)=-(b$="p")+val(a$)*256
@@ -55,14 +58,18 @@
 {:3027}
 	rem 7: get computer type (0=any, or 1-9)
 {:3028}
+' relocated (added?) field for computer type
+' if computer type is any, set validated flag
 '	&,2,2:ud%(2,j)=val(a$):if ud%(2,j)<1 then ud%(2,j)=0:ud%(0,j)=1
 	&,2,2:ud%(30,j)=val(a$):if ud%(30,j)<1 then ud%(30,j)=0:ud%(0,j)=1
 {:3030}
-	next:close 2:&".{f6}":dr=4:gosub f$="d.UD"+str$(i):&"Saving {f5}{pound}$f{f5}..."
+	next:close 2:&".{f6}":dr=4:gosub 4:f$="d.UD"+str$(i)
+{:3031}
+	&"Scratching {f5}{pound}$f{f5}...":print#15,"s"dr$f$:gosub 5:&"{f6}Saving {f5}{pound}$f{f5}..."
 {:3032}
 	&,60,3,0,ud%(0,0),60*(rn+1),dr$+f$,dv%:gosub 5:if e% then:&
 {:3034}
-	dr=3:a$="e.UD"+str$(i)+".desc,l,"+chr$(110):gosub 4:x=1:gosub 1:print#2,fi
+	dr=3:f$="e.UD"+str$(i)+".desc":a$=f$+",l,"+chr$(110):gosub 4:x=1:gosub 1:print#2,fi
 {:3035}
 	rem write descriptions [ud%(9,j) is record #]
 {:3036}

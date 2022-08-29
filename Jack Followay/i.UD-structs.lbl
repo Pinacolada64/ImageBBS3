@@ -202,7 +202,7 @@
 	b$=mid$(an$,2,1):gosub {:3288}:xn=abs(int(val(mid$(an$,2,4))))
 ' 3214
 	if xn<1 or xn>rn then xn=0
-' AS=Assign Subop, MS=Mail Subop, AC=Add Credits, ID=Identify User, VS=View Subop
+' AS=Apply to be Subop, MS=Mail Subop, AC=Add Credits, ID=Identify User, VS=View Subop
 	mm=-(z$="AS")-2*(z$="MS")-3*(z$="AC")-4*(z$="ID")-5*(z$="VS"):if mm then{:3994}
 ' SG=Change SIG
 	if z$="SG" then r=val(mid$(an$,3)):mm=2:goto {:3990}
@@ -269,10 +269,6 @@
 
 {:3340}
 ' display header for file info:
-'      d$    d%    f$,t$
-' ## Blocks Dl'd  Name
-' ---+----+----+----+----+----+----+----
-'>nn [bbbb] dddd "ffffffffffffffff,t"
 
 ' TODO: 80 column display: offset=rn/2, gosub {:sub.get_dir_entry}
 ' ---+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
@@ -300,7 +296,11 @@
 	gosub {:3292}:c$=" ":if ud%(0,xn) and 2 then c$="{green}>"
 {:3358}
 ' TODO: remove {f6} for 80-column displays
-' >## [bbbb] dddd "filename,t"
+'      d$    d%    f$,t$
+' ## Blocks Dl'd  Name
+' ---+----+----+----+----+----+----+----
+'>nn [bbbb] dddd "ffffffffffffffff,t"
+' a%  b%    d$
 	a%=xn:&"{pound}$c{cyan}{pound}#2{pound}# {pound}%a {lt. blue}[{yellow}{pound}#4{pound}%b{lt. blue}] {green}{pound}#4{pound}%d {lt. blue}{f5}{white}{pound}$f,{pound}$t{lt. blue}{f5}{f6}":return
 
 {:3360}
@@ -312,12 +312,13 @@
 ' a$: uploader handle, a%=uploader ID, b$=upload date
 	&,60,1,10,ud%(11,xn),an$:&,15,1:a$=an$:a%=ud%(10,xn):&,60,5,0,ud%(3,xn),b$
 '	&"{f6} {cyan}From {lt. green}#{pound}%a, {white}{pound}v7{f6} {cyan}On   {yellow}{$04}"+a$+"{f6}"
-	lp=1:&"{f6} {cyan}From {pound}$a ({lt. green}#{pound}%a{cyan}){f6} On   {yellow}{$04}"+b$+"{f6}"
+	&"{f6} {cyan}From {pound}$a ({lt. green}#{pound}%a{cyan}){f6} On   {yellow}{$04}"+b$+"{f6}"
 ' NEW: gosub 3040 to output "s"
 '	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn):s$="":if a%<>1 then s$="s"
 	&,60,5,0,ud%(6,xn),a$:a%=ud%(2,xn)
 '	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}total download{pound}$s{f6}"
-	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}Total {pound}$k":gosub {:3040}:&"{f6}"
+' 3040: "s" if a%>1
+	if a% then:&" {cyan}DL'd {yellow}{$04}"+a$+"{f6} {white}{pound}%a {cyan}Total {pound}$k":gosub {:3040}
 ' SUGGESTION: open "e.UD {bn}.desc" at beginning of "About" session, close when option other than N/P/Return chosen, saves open/close file operation
 ' 3370: get description record #
 '	&"{f6}{cyan}":x=ud%(9,xn):on-(x=0)goto {:3376}:dr=3:a$="e.UD.desc":gosub 4:if e%then{:3376}
@@ -423,13 +424,20 @@
 	if xn<1 or xn>rn then return
 {:3710}
 ' build menu options
+' 3360:
+' x%: uploader ID
+' c$: uploader handle
 	gosub {:3360}:aa=0:b$="N,P":x=ud%(10,xn):gosub {:3098}:&,60,1,20,ud%(11,xn),c$
 ' aa=aa or x: set bit flag for available options
-	if(q or(ud%(0,xn)and 1)=0)and a$=c$then b$="M,"+b$:aa=aa or 4
-	if ud%(0,xn)and 1 then gosub {:3768}:if a=0 and q=0 then{:3726}
+' q=subop, filetype=SEQ, a$=c$ (uploader handle)?
+	if (q or (ud%(0,xn) and 1)=0) and a$=c$ then b$="M,"+b$:aa=aa or 4
+' filetype=PRG
+' 3768: get uploader handle (DUPE), returns a=1 if you are the uploader
+	if ud%(0,xn)and 1 then gosub {:3768}:if a=0 and q=0 then {:3726}
 	if q=1 or a=1 then b$="E,"+b$:aa=aa or 2
 	b$="D,"+b$:aa=aa or 1
 	b$=b$+",R":aa=aa or 8
+' check validation status:
 	if q>0 and(ud%(0,xn)and 1)=0 then b$=b$+",U":aa=aa or 16
 	if q>0 and(ud%(0,xn)and 1)=1 then b$=b$+",V":aa=aa or 32
 {:3726}
@@ -438,7 +446,9 @@
 	x=-(a$="D")-2*(a$="E")-3*(a$="M")-4*(a$="R")-5*(a$="U")-6*(a$="V")
 	if x=0 then return
 ' if bit not set, this option is not available
-	if(aa and 2^(x-1))=0 then return
+' TODO: combine lines (will fit in one logical line):
+' if (aa and 2^(x-1))=0 then on x gosub {:3550},{:3738},{:3742},{:3450},{:3740},{:3650}:goto {:3710}
+	if (aa and 2^(x-1))=0 then return
 	on x gosub {:3550},{:3738},{:3742},{:3450},{:3740},{:3650}:goto {:3710}
 {:3738}
 	return
@@ -464,7 +474,7 @@
 	&"{f6}":goto {:3726}
 {:3768}
 ' uploader id: same as your handle?
-	&,60,1,20,ud%(11,xn),a$:a=-(a$=na$ and id=ud%(10,x)):return
+	&,60,1,20,ud%(11,xn),a$:a=-(a$=na$ and id=ud%(10,xn)):return
 {:3800}
 	gosub {:3616}:if a$="{up arrow}"or a$="RES"then{:3818}
 {:3802}

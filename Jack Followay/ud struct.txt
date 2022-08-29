@@ -11,11 +11,7 @@ Configuration information:
 Element		Bytes	Type	Purpose
 ud%( 0, 0)	2	Integer rn: # of files in directory
 ud%( 0, 1)	?	?	i.UD-structs 3262, 3310, 3408, 3508, 3600
-ud%( 0,xn)	2	Integer	0=any computer (i.convert ud, 3028)
-				Bit 2: 1=Tagged file
-
-				c%: # of Tagged files
-				d%: # of Unvalidated files
+ud%( 1, 0)	1	Integer	SubOp ID
 
 d.u/d 1,s:
 
@@ -32,10 +28,13 @@ Lines 2-7 repeat rn times.
 Directory information:
 
 Element	    Elements	Bytes	Type	Purpose
-ud%( 1, 0)	1	2	Integer	SubOp ID
-
 ud%( 0,xn)	1	2	Byte	Bit 1: 0=Unvalidated (i.UD-structs: 3652, 3722)
 					       1=Validated   (i.UD-structs: 3724-3726)
+					Bit 2: 1=Tagged file
+
+					c%: # of Tagged files
+					d%: # of Unvalidated files
+
 ud%( 1,xn)	1	2	Integer	Size in blocks
 ud%( 2,xn)	1	2	Integer	# of downloads
 ud%( 3,xn)	3	6	Date	Upload date
@@ -48,12 +47,12 @@ ud%(21,xn)	8	16	String	Filename
 ud%(29,xn)	1	2	Byte	File type
 					i.UD xxxx: Bit 1: 0=SEQ, 1=PRG
 Pinacolada will add this:
-ud%(30,xn)	1	2	Integer	Computer type (0=Any, 1-9)
+ud%(30,xn)	1	2	Integer	Computer type (0=Any, 1-9) (i.convert ud, 3028)
 
 Line	Var	Purpose
 	cf	1=configuration changed
 3090	rn	# of files in U/D directory
-	xn	current file?
+	xn	current file
 
 Arrays as defined in original 3.0 U/D directory:
 i.UD, 3174
