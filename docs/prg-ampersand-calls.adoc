@@ -799,23 +799,25 @@ kbd:[C=,Ctrl] leaves terminal mode
 
 Clear array #_x_.
 
+[[table-array-numbers]]
+
 .Array Numbers
 [%header]
 [%autowidth]
 |===
-^| Number | Array
-^| 0 | `tt$()`
-^| 1 | `bb$()`
-^| 2 | `dt$()`
-^| 3 | `ed$()`
-^| 4 | `nn$()`
-^| 5 | `a$()`
-^| 6 | `c$()`
-^| 7 | `d$()`
-^| 8 | `e$()`
-^| 9 | `f$()`
-^| 10| `ac%()`
-^| 11| `so%()`
+^| Number | Array | Purpose
+^| 0 | `tt$()` | Text editor: lines entered
+^| 1 | `bb$()` |
+^| 2 | `dt$()` |
+^| 3 | `ed$()` |
+^| 4 | `nn$()` |
+^| 5 | `&#160;a%()` |
+^| 6 | `&#160;c%()` |
+^| 7 | `&#160;d%()` |
+^| 8 | `&#160;e%()` |
+^| 9 | `&#160;f%()` |
+^| 10| `ac%()` | Access levels
+^| 11| `so%()` | Subops
 |===
 
 ////
@@ -860,19 +862,17 @@ Output from 1 to however many elements were ``dim``ensioned for _array_.
 `&,14,_array_,_end_`::
 Output elements of _array_ from 1-_end_.
 
-////
-TODO: array table
-
 ====
-NOTE: See <<array-table>> for the arrays which correspond to _array_.
+NOTE: See <<table-array-numbers>> for the arrays which correspond to _array_.
 ====
-////
 
 ---
 
-### `&,15` Convert `an$`
+### `&,15` Convert `an$` [[convan]]
 
 This group of functions perform various conversions on the string contained in `an$`.
+
+TIP: Related string conversion functions can be found at  <<convert>>.
 
 #### `&,15` Convert Date
 
@@ -1889,7 +1889,16 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ---
 
-### `&,65` convert
+### `&,65` convert [[convert]]
+
+Another group of related string conversion functions, there are sub-functions to convert:
+
+* names (?)
+* disk data
+* special characters to Image-encoded function keys, and
+* check special characters.
+
+TIP: Related string conversion functions can be found at <<convan>>.
 
 ---
 

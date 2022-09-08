@@ -1,5 +1,6 @@
 :toc: left
 :icons: font
+:experimental:
 
 // https://github.com/Pinacolada64/ImageBBS/blob/534f39f7cbe3f8c896725bc1db94fa23416ecacf/v2/docs/%26%20commands.txt
 
@@ -952,63 +953,35 @@ Put results in another specified struct, field and record?
 
 .Parameters
 
-`num`: number of records
+`num`: number of records to scan
 
 `size`: size of record
 
-`op`: #FIXME#: operation? Table 8 lists string arrays found in source ccode
+`op`: operation:
+
+. `0` specifies a regular compare (a string literal)
+
+. `1` specifies a pattern to match.
+Here you can use two wildcard characters (like Commodore DOS):
+
+* kbd:[f2] (in quote mode: kbd:[I]) is equal to kbd:[?], which specifies any character in its place
+* kbd:[f7] (in quote mode: kbd:[H]) is equal to kbd:[*], which specifies any characters from this point to the end of the string
 
 `str`: #FIXME#: string variable/string literal to scan for?
 
 `a1(a,b)`: source struct _a1_, field _a_, record _b_, to scan
 
-`a2(b)`: target 1-dimension array _a2_, element _b_, to put results into
+`a2(b)`: target 1-dimension array _a2_, dummy element _b_, to put results into
 
 `start`: record to start scanning from
+
+.Returns
+
+No info yet.
 
 .Example
 
 None yet.
-
-////
-arrays1:
-		.text "tbdenACDEFAS"
-arrays2:
-		.text "TBTDN"
-		.byte $80, $80, $80, $80, $80
-		.text "CO"
-
-		tT
-		bB
-		dT
-		nN
-		A{$80}
-		C{$80}
-		D{$80}
-		E{$80}
-		F{$80}
-		AC
-		SO
-////
-
-.Arrays Used by `Scan String`
-[%header]
-[%autowidth]
-|===
-| Number | Array | Purpose
-|  1 | `tt$()` | editor text array
-|  2 | `bb$()` |
-|  3 | `dt$()` |
-|  4 | `ed$()` |
-|  5 | `nn$()` |
-|  6 | `a%()`  |
-|  7 | `c%()`  |
-|  8 | `d%()`  |
-|  9 | `e%()`  |
-| 10 | `f%()`  |
-| 11 | `ac%()` | access info
-| 12 | `so%()` | subops
-|===
 
 ---
 
@@ -1028,7 +1001,7 @@ Unknown purpose.
 
 `a$`: a string to search for?
 
-`a%(a,b)`: struct name, record and field to scan
+`a%(a,b)`: `a%()`: struct name, `a`: field and `b`: record to scan
 
 `b$`: ?
 
@@ -1052,7 +1025,7 @@ _number,_: count of lines to read?
 
 _reclen,_: record length?
 
-_scan(),_: struct to put text into?
+_scan(),_: ?
 
 _bits,_: ?
 
