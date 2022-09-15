@@ -1,0 +1,398 @@
+' C64List4_04.exe sdp900705.lbl -d64:"sdp test.d64::SDP220908" -verbose
+
+' BASIC stub
+2022 sys{sym:a080d}
+{asm}
+
+; self-dissolving packer by Ray Kelm (PROFESSOR)
+; TODO: add device/drive prompt to read from/write to (PINACOLADA)
+
+; disassembled with Regenerator 1.6b:
+; https://csdb.dk/release/?id=148862
+
+; label prefixes:
+; a: absolute address
+; b: branch		bne, beq
+; f: field	(bytes)
+; p: pointer	(vector)
+; s: subroutine 	jsr
+; j: jump		jmp
+
+; **** zero-page fields ****
+
+f4f = $4f
+
+; **** zero-page absolute adresses ****
+
+a02	= $02
+a03	= $03
+a04	= $04
+a05	= $05
+a06	= $06
+vartab	= $2d		;
+a002e	= vartab + 1	; $002e
+arytab	= $2f
+a30	= arytab + 1	; $30
+strend	= $31		; end of string storage
+a32	= strend + 1
+status	= $90		; serial i/o status (st)
+aFB	= $FB
+aFC	= $FC
+
+; **** zero-page pointers ****
+
+p03 = $03
+p05 = $05
+p0D = $0D
+p44 = $44
+
+; **** fields ****
+
+buf = $0200	; BASIC Line Editor Input Buffer ($0200-$0258, +88 chars)
+
+; **** absolute adresses ****
+
+a45D2	= $45D2		; FIXME: unused?
+aC220	= $C220		; FIXME: unused?
+
+; **** Kernal routines ****
+
+ROM_SETLFS	= $ffba ; set file parameters
+ROM_SETNAM	= $ffbd ; set file name
+ROM_OPEN	= $ffc0 ; open logical file after setlfs, setnam
+ROM_CLOSE	= $ffc3 ; close logical file
+ROM_CHKIN	= $ffc6 ; open channel for input
+ROM_CHKOUT	= $ffc9
+ROM_CLRCHN	= $ffcc ; restore default devices
+ROM_CHRIN	= $ffcf ; input character
+ROM_CHROUT	= $ffd2 ; output character in .a
+
+a080d:  lda a0844
+	lda #<code_end
+	sta a03
+	lda #>code_end
+	sta a04
+j0818:  jsr s0a56
+	bcs b0823
+	jsr s086c
+	jmp j0818
+
+b0823:  ldy #$00
+	tya
+	sta (p03),y
+	inc a03
+	bne b082e
+	inc a04
+b082e:  lda #$4c
+	sta a080d
+	lda a03
+	sta vartab	; $2d
+	sta arytab	; $2f
+	sta strend	; $31
+	lda a04
+	sta vartab+1	; $2e
+	sta arytab+1	; $30
+	sta strend	; $32
+	rts
+
+a0844:  lda #<code_end
+	sta a03
+	lda #>code_end
+	sta a04
+b084c:  jsr s098e
+	ldy #$00
+	lda (p03),y
+	bne b084c
+	rts
+
+f0856:  byte $0d
+	ascii "Reading..."
+	byte $00
+f0862:  ascii "Too Big!"
+	byte $0d, $00
+
+s086c:	ldy #$00
+b086e:	lda f0856,y
+	beq b0879
+	jsr ROM_CHROUT	; $ffd2
+	iny
+	bne b086e
+b0879:	lda #$52
+	jsr s08f3
+	bne b08ee
+	clc
+	lda a03
+	adc #$13
+	sta a05
+	lda a04
+	adc #$00
+	sta a06
+	lda #$00
+	sta afb
+	sta afc
+	ldx #$02
+	JSR ROM_CHKIN	; $ffc6
+	ldy #$00
+b089a:	jsr ROM_CHRIN	; $ffcf
+	sta (p05),y
+	inc afb
+	bne b08a5
+	inc afc
+b08a5:	inc a05
+	bne b08b1
+	inc a06
+	lda a06
+	cmp #$a0
+	beq b08de
+b08b1:	lda status	; $90
+	beq b089a
+b08b5:	lda filename_buffer,y
+	sta (p03),y
+	iny
+	cpy #$10
+	bcc b08b5
+	lda a0a26
+	sta (p03),y
+	iny
+	lda afb
+	sta (p03),y
+	iny
+	lda afc
+	sta (p03),y
+	lda a05
+	sta a03
+	lda a06
+	sta a04
+	jsr ROM_CLRCHN	; $ffcc
+	jsr s097e
+	clc
+	rts
+
+b08de:	jsr ROM_CLRCHN	; $ffcc
+	; "Too Big!" message
+	ldy #$00
+b08e3:	lda f0862,y
+	beq b08ee
+	jsr ROM_CHROUT	; $ffd2
+	iny
+	bne b08e3
+b08ee:	jsr s097e
+	sec
+	rts
+
+s08f3:	pha
+	lda #$0f
+	jsr ROM_CLOSE	; $ffc3
+	lda #$0f
+	tay
+	ldx a0a15	; current device
+	jsr ROM_SETLFS	; $ffba
+	lda #$00
+	jsr ROM_SETNAM	; $ffbd
+	jsr ROM_OPEN	; $ffc0
+	ldy #$00
+b090c:	lda filename_buffer,y
+	sta buf,y	; $0200
+	jsr ROM_CHROUT	; $ffd2
+	cmp #$00
+	beq b091e
+	iny
+	cpy #$10
+	bcc b090c
+b091e:	lda #$2c
+	sta buf,y	; $0200
+	iny
+	jsr ROM_CHROUT	; $ffd2
+	lda a0a26
+	sta buf,y	; $0200
+	iny
+	jsr ROM_CHROUT	; $ffd2
+	lda #$2c
+	sta buf,y	; $0200
+	iny
+	pla
+	sta buf,y	; $0200
+	iny
+	lda #$0d
+	jsr ROM_CHROUT	; $ffd2
+	tya
+	ldx #<buf	; $00
+	ldy #>buf	; $02
+	jsr ROM_SETNAM	; $ffbd
+	lda #$02
+	tay
+	ldx a0a15	; current device
+	jsr ROM_SETLFS	; $ffba - set file parameters
+	jsr ROM_OPEN	; $ffc0
+	ldx #$0f
+	jsr ROM_CHKIN	; $ffc6
+	jsr ROM_CHRIN	; $ffcf
+	jsr ROM_CHROUT	; $ffd2 - output character
+	sta a02
+	jsr ROM_CHRIN	; $ffcf - input character
+	jsr ROM_CHROUT	; $ffd2 - output character
+	ora a02
+	sta a02
+b096c:	jsr ROM_CHRIN	; $FFCF - input character
+	jsr ROM_CHROUT	; $ffd2 - output character
+	cmp #$0d
+	bne b096c
+	jsr ROM_CLRCHN	; $ffcc - restore default devices
+	lda a02
+	and #$0f
+	rts
+
+	; restore output to screen
+s097e:	lda #$02
+	jmp ROM_CLOSE	; $ffc3 - close a logical file
+
+f0983:	ascii "Writing...", $00
+s098e:	ldy #$00
+b0990:	lda f0983,y
+	beq b099b
+	jsr ROM_CHROUT	; $ffd2 - output character
+	iny
+	bne b0990
+b099b:	ldy #$00
+b099d:	lda (p03),y
+	sta filename_buffer,y
+	iny
+	cpy #$10
+	bcc b099d
+	lda (p03),y
+	sta a0a26
+	iny
+	lda (p03),y
+	sta afb
+	iny
+	lda (p03),y
+	sta afc
+	iny
+	tya
+	clc
+	adc a03
+	sta a03
+	lda a04
+	adc #$00
+	sta a04
+	lda #$57
+	jsr s08f3
+b09c8:	bne b0a06
+	ldx #$02
+	jsr ROM_CHKOUT	; $ffc9 - open channel for output
+	ldy #$00
+j09d1:	lda afc
+	beq b09e4
+b09d5:	lda (p03),y
+	jsr ROM_CHROUT	; $ffd2 - output character
+	iny
+	bne b09d5
+	inc a04
+	dec afc
+	jmp j09d1
+
+b09e4:	lda afb
+	beq b09fe
+b09e8:	lda (p03),y
+	jsr ROM_CHROUT	; $ffd2 - output character
+	iny
+	cpy afb
+	bcc b09e8
+	tya
+	clc
+	adc a03
+	sta a03
+	lda a04
+	adc #$00
+	sta a04
+b09fe:	jsr ROM_CLRCHN	; $ffcc - restore default devices
+	jsr s097e
+	clc
+	rts
+
+b0a06:	clc
+	lda afb
+	adc a03
+	sta a03
+	lda afc
+	adc a04
+	sta a04
+	sec
+	rts
+
+a0a15:	byte $08	; current read/write device
+
+; filename buffer: 16 $00 bytes
+filename_buffer:
+	area 16,$00
+
+	; what the heck???
+; 0a26 50 a0    bvc $09c8
+; 0a28 00       brk
+
+a0a26:
+	byte $50	; bvc
+s0a27:
+	word $a000	; $09c8
+
+b0a29:	jsr rom_chrin	; $ffcf - input character
+	sta buf,y	; $0200
+	cmp #$0d
+	beq b0a36
+	iny
+	bne b0a29
+b0a36:	lda #$00
+	sta buf,y	; $0200
+	cpy #$00
+	rts
+
+f0a3e:	byte $00
+	ascii "Filename: "
+	byte $00
+f0a4a:	byte $0d
+	ascii "Filetype: "
+	byte $00
+
+	; filename prompt
+s0a56:	ldy #$00
+b0a58:	lda f0a3e,y
+	beq b0a63
+	jsr ROM_CHROUT	; $ffd2 - output character
+	iny
+	bne b0a58
+b0a63:	jsr s0a27
+	beq b0a99
+
+	; transfer input string to filename buffer
+	ldy #$00
+b0a6a:  lda buf,y	; $0200
+	sta filename_buffer,y
+	beq b0a77
+	iny
+	cpy #$10
+	bcc b0a6a
+
+b0a77:  cpy #$10
+	bcs b0a81
+	sta filename_buffer,y
+	iny
+	bne b0a77
+
+	; filetype prompt
+b0a81:  ldy #$00
+b0a83:  lda f0a4a,y
+	beq b0a8e
+	jsr ROM_CHROUT	; $ffd2 - output character
+	iny
+	bne b0a83
+b0a8e:  jsr s0a27
+	lda buf		; $0200
+	sta a0a26
+	clc
+	rts
+
+b0a99:  sec
+	rts
+
+code_end:
+	byte $00
