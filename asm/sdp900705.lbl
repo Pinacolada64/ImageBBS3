@@ -1,7 +1,7 @@
-' C64List4_04.exe sdp900705.lbl -d64:"sdp test.d64::SDP220908" -verbose
+' C64List4_04.exe sdp900705.lbl -d64:"sdp test.d64::SDP220915" -verbose
 
 ' BASIC stub
-2022 sys{sym:a080d}
+2022 sys2061
 {asm}
 
 ; self-dissolving packer by Ray Kelm (PROFESSOR)
@@ -20,7 +20,7 @@
 
 ; **** zero-page fields ****
 
-f4f = $4f
+f4f	= $4f
 
 ; **** zero-page absolute adresses ****
 
@@ -29,26 +29,21 @@ a03	= $03
 a04	= $04
 a05	= $05
 a06	= $06
-vartab	= $2d		;
-a002e	= vartab + 1	; $002e
-arytab	= $2f
-a30	= arytab + 1	; $30
+vartab	= $2d		; start of simple variables
+arytab	= $2f		; start of arrays
 strend	= $31		; end of string storage
-a32	= strend + 1
 status	= $90		; serial i/o status (st)
-aFB	= $FB
-aFC	= $FC
+afb	= $fb
+afc	= $fc
 
 ; **** zero-page pointers ****
 
-p03 = $03
-p05 = $05
-p0D = $0D
-p44 = $44
+p03	= $03
+p05	= $05
 
 ; **** fields ****
 
-buf = $0200	; BASIC Line Editor Input Buffer ($0200-$0258, +88 chars)
+buf	= $0200	; BASIC Line Editor Input Buffer ($0200-$0258, +88 chars)
 
 ; **** absolute adresses ****
 
@@ -67,7 +62,7 @@ ROM_CLRCHN	= $ffcc ; restore default devices
 ROM_CHRIN	= $ffcf ; input character
 ROM_CHROUT	= $ffd2 ; output character in .a
 
-a080d:  lda a0844
+a080d:  lda a0844	; what?
 	lda #<code_end
 	sta a03
 	lda #>code_end
@@ -151,7 +146,7 @@ b08b5:	lda filename_buffer,y
 	iny
 	cpy #$10
 	bcc b08b5
-	lda a0a26
+	lda filetype	; $0a26
 	sta (p03),y
 	iny
 	lda afb
@@ -203,7 +198,7 @@ b091e:	lda #$2c
 	sta buf,y	; $0200
 	iny
 	jsr ROM_CHROUT	; $ffd2
-	lda a0a26
+	lda filetype	; $0a26
 	sta buf,y	; $0200
 	iny
 	jsr ROM_CHROUT	; $ffd2
@@ -260,7 +255,7 @@ b099d:	lda (p03),y
 	cpy #$10
 	bcc b099d
 	lda (p03),y
-	sta a0a26
+	sta filetype	; $0a26
 	iny
 	lda (p03),y
 	sta afb
@@ -326,14 +321,10 @@ a0a15:	byte $08	; current read/write device
 filename_buffer:
 	area 16,$00
 
-	; what the heck???
-; 0a26 50 a0    bvc $09c8
-; 0a28 00       brk
-
-a0a26:
-	byte $50	; bvc
+filetype:
+	byte $50	; $0a26
 s0a27:
-	word $a000	; $09c8
+	ldy #$00
 
 b0a29:	jsr rom_chrin	; $ffcf - input character
 	sta buf,y	; $0200
@@ -360,7 +351,7 @@ b0a58:	lda f0a3e,y
 	jsr ROM_CHROUT	; $ffd2 - output character
 	iny
 	bne b0a58
-b0a63:	jsr s0a27
+b0a63:	jsr s0a27	; into the middle of an instruction?
 	beq b0a99
 
 	; transfer input string to filename buffer
@@ -387,12 +378,19 @@ b0a83:  lda f0a4a,y
 	bne b0a83
 b0a8e:  jsr s0a27
 	lda buf		; $0200
-	sta a0a26
+	sta filetype	; $0a26
 	clc
 	rts
 
 b0a99:  sec
 	rts
+
+{undef:use_this}
+{ifdef:use_this}
+init_msg:
+	ascii "{lowercase}Self-Dissolving Packer - Ray Kelm"
+	byte $0d
+{endif}
 
 code_end:
 	byte $00
