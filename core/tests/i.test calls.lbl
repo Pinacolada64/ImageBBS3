@@ -74,7 +74,7 @@
 '  0) &,0  Output a$
 '  1) &,1  Input an$
 ' (etc.)
-	for n=0 to 9:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
+	for n=0 to 9:n%=n:&sf$:gosub {:header_page_1}:next:return
 
 {number:3040}
 {:header_page_2}
@@ -93,7 +93,7 @@
 	&"&,19 Get Version{f6}":return
 {number:3052}
 {:display_page_2}
-	for n=0 to 9:n%=n+10:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
+	for n=0 to 9:n%=n+10:&sf$:gosub {:header_page_2}:next:return
 
 {:header_page_3}
 {number:3060}
@@ -111,7 +111,7 @@
 	&"&,29 usevar"+m$+"{f6}":return
 {number:3072}
 {:display_page_3}
-	for n=0 to 9:n%=n+20:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
+	for n=0 to 9:n%=n+20:&sf$:gosub {:header_page_3}:next:return
 
 {:header_page_4}
 {number:3080}
@@ -129,7 +129,7 @@
 	&"&,39 prtln{f6}":return
 {number:3092}
 {:display_page_4}
-	&"ML Functions:{f6:2}":for n=0 to 9:n%=n+30:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
+	&"ML Functions:{f6:2}":for n=0 to 9:n%=n+30:&sf$:gosub {:header_page_4}:next:return
 
 {:header_page_5}
 {number:3100}
@@ -141,7 +141,7 @@
 	&"&,43 chatchk"+m$+"{f6}":return
 {number:3112}
 {:display_page_5}
-	for n=0 to 3:n%=n+40:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
+	for n=0 to 3:n%=n+40:&sf$:gosub {:header_page_5}:next:return
 
 {:header_page_6}
 {number:3120}
@@ -163,7 +163,7 @@
 {:display_page_6}
 ' n : loop counter, & call number in {:header_page_6}
 ' n%: the displayed menu selection number (51-60)
-	for n=0 to 9:n%=n+50:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
+	for n=0 to 9:n%=n+50:&sf$:gosub {:header_page_6}:next:return
 
 {:header_page_7}
 {number:3140}
@@ -181,7 +181,7 @@
 	&"&,69 Display String on Console{f6}":return
 {number:3152}
 {:display_page_7}
-	for n=0 to 9:n%=n+60:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
+	for n=0 to 9:n%=n+60:&sf$:gosub {:header_page_7}:next:return
 
 ' TODO: page 8
 	&"&,70 Position Terminal Cursor{f6}":return
@@ -604,12 +604,14 @@
 
 {nice:10}
 {:sub.setup}
-	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}:
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
 ' set p=menu page number
 	f$="(fixme)":i$="(investigating)":m$="{pound}{back arrow}26[ML function]":p=1
+' format string: 2-digit int, fill char=space, "n%) "
+	fs$="{pound}#2{pound}# {pound}%n) "
 ' current line number to correctly calculate gosub targets regardless of where code gets moved to:
 	def fn cl(x)=peek(57)+256*peek(58)
 ' line variable
