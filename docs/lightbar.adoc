@@ -317,7 +317,7 @@ This is only meant as a debugging tool, and is normally left disabled.
 
 ====
 
-When enabled, execution can be slowed down with the kbd:[Ctrl] key to read line numbers more easily.
+TIP: When enabled, execution can be slowed down with the kbd:[Ctrl] key to read line numbers more easily.
 
 ====
 
