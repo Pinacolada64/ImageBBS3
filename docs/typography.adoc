@@ -147,6 +147,8 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
 Because I'm such a nerd:
 
+* _e.g._ is short for _exemplī grātiā_, meaning "`for example.`"
+
 * _i.e._ is short for _id est_, meaning "`that is to say,`" or "`in other words.`"
 
-* _e.g._ is short for _exemplī grātiā_, meaning "`for example.`"
+* _per se_ (commonly misspelled as "`per say`") means "`By itself; without consideration of extraneous factors.`"
