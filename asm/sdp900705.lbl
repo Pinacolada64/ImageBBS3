@@ -361,8 +361,8 @@ b0a58:	lda f0a3e,y
 	jsr ROM_CHROUT	; $ffd2 - output character
 	iny
 	bne b0a58
-b0a63:	jsr s0a27
-	beq b0a99
+b0a63:	jsr s0a27	; get input
+	beq b0a99	; length 0?
 
 	; transfer input string to filename buffer
 	ldy #$00
@@ -386,7 +386,7 @@ b0a83:  lda f0a4a,y
 	jsr ROM_CHROUT	; $ffd2 - output character
 	iny
 	bne b0a83
-b0a8e:  jsr s0a27
+b0a8e:  jsr s0a27	; get input
 	lda buf		; $0200
 	sta filetype	; $0a26
 	clc
@@ -405,10 +405,26 @@ device_msg:
 	ascii "Device: "
 	byte $00
 
+device_num:
+	byte $00
+
 drive_msg:
 	ascii "Drive: "
 	byte $00
 
+drive_num:
+	byte $00
+
+; $a96b (linget) may be handy here
+; $ad9e (frmevl) also
+; $b782 get string pointer, convert to numeric type
+; $BCF3/48371:   Convert ASCII String to a Number in FAC
+; http://unusedino.de/ec64/technical/aay/c64/rombcf3.htm
+
+; converting string to value in fac:
+; https://groups.google.com/g/comp.sys.cbm/c/rUPpYD4xucg/m/RzSOo78mL3AJ
+; $b7ad: perform val()
+; $b7b1 also
 {endif}
 
 code_end:
