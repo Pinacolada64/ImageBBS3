@@ -3,7 +3,7 @@
 == Supported Hardware
 
 ====
-A lot of this is from 1.2, although some newer hardware will be talked about.
+TIP: A lot of this is from 1.2, although some newer hardware will be talked about.
 ====
 
 ### Disk Drives
