@@ -23,7 +23,7 @@ Then when printed, the string variable displays random bytes of the new module, 
 
 There's a way to get around this.
 
-_Dynamic strings_ are different: they're are created when two strings get concatenated together.
+_Dynamic strings_ are different: they're created when two strings get concatenated together.
 You've probably looked through Image's code and seen lines like:
 
 .i.SB
