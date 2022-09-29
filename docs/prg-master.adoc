@@ -5,7 +5,12 @@ v0.2, 2022-05-06
 :toc: left
 :toclevels: 4
 :icons: font
+
 :source-highlighter: pygments // enable source code highlighting
+:source-language: basic // set default source language to generic basic
+:pygments-style: manni // choose syntax highlighting stylesheet
+:pygments-css: styles // [styles | css] for html output, embed stylesheet in html file
+:pygments-linenums-mode: inline
 
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
