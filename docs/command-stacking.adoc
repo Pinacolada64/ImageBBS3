@@ -1,0 +1,62 @@
+:experimental:
+## Command Stacking
+
+Many commands entered at major subsystem prompts can be "`stacked`" by using the up arrow key (kbd:[^]) between the commands.
+This has the effect of executing each command between ``^``s, one at a time, and each prompt encountered displays the next command in the stack as if typed by hand.
+
+As an example, if the following command were entered at the main prompt:
+
+ SB9^RN^<^R3^UD^SA
+
+Then the BBS would execute (and display, if possible) each respective subsystem prompt encountered while executing the following commands:
+
+[%header]
+[%autowidth]
+|===
+| Command | Purpose | Display
+
+| `SB9`
+| Take you to sub-board 9
+| `Sub Board #9: RN`
+
+| `RN`
+| Read the new posts there
+| (read posts)
+
+| `<`
+| Move backwards, to sub-board 8
+| `Sub Board #8: R3`
+
+| `R3`
+| Read post #3
+| (text of post)
+
+| `UD`
+| Enter the U/D subsystem
+| `U/D Board #1: SA`
+
+| `SA`
+| Scan for all new uploads
+| (list new files)
+
+|===
+
+Certain places, such as choosing "`quit`" in the "`end of bulletin`" prompt, usually clear stacked commands--if a user realizes they need to do something in the middle of executing the stacked commands, their only recourse is to hold down the spacebar to stop them.
+
+### Command History
+
+New to Image BBS v3.0, you can view the history of commands issued at most major prompts, and execute commands within that history.
+
+This command history is also included in each BBS error log entry (`e.errlog`, viewable with the kbd:[VF] command).
+This sometimes helps trace what the user was doing that led to the error.
+
+#FIXME# do commands in the stack get entered into command history?
+
+### Viewing Command History
+
+`^?` will view up to the last ten commands entered during the user`'s session.
+Each command in the history is numbered `0-9` and the command text is displayed.
+
+### Executing Commands in History
+
+`^` and a number `0-9` (_e.g._, `^3`) will execute that particular command in the history.
