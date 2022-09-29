@@ -1,0 +1,361 @@
+## Variables
+
+// From Image 1.2 Programmer's Reference Guide, with slight rewording edits:
+
+Within Image BBS, there are certain variables which can be considered "`reserved.`" 
+This does not mean that you cannot use them, __per se__, but that they can only be used for specific purposes:
+
+* Some variables may be used any time, but have a specific purpose.
+* Some variables can be used with certain subsystems, but not with others.
+* Some variables may be used anywhere, but change continually.
+
+This is explained in detail in the following paragraphs.
+
+An example of a variable used for a specific purpose is `na$`.
+This variable is used to print the handle of the user online.
+Storing something for a module in this variable would cause an undesirable effect (modifying the user's handle). 
+Basically, these types of variables are used to control system statistics and are best left alone, only to be used to output information.
+
+Some variables are used as interfaces between the BASIC and ML, an example being `pl`.
+Setting `pl` to `0` will cause all user input to be in the form of upper- and lowercase characters.
+When you set `pl` in BASIC, it causes the ML input routines to accept both uppercase and lowercase characters.
+
+The main variables that can be used sometimes are arrays.
+Depending on which subsystem you are in, the arrays may or may not be in use.
+If they are not in use, it is safe to use them.
+The only exceptions to this is `st()`, `dv%()` and `tt$()`. 
+
+* `st()` holds the Board Activity Register stats; changing the values of this array should be reserved for updating the BAR stats.
+
+* `dv%()` is the system device designator.
+Altering this will change the device accessed by the system.
+
+* `tt$()` cannot be used in a module that calls the editor, unless you want to edit existing text in that array.
+All text stored in the editor is put into `tt$()`.
+
+Some variables are intended to continually change.
+These include variables that will print text to the screen and modem, as well as variables that form links between the BASIC and ML portions of the program.
+Examples are `a$` and `an$`:
+
+* When used in conjunction with `&`, the value of `a$` will be printed to the screen and modem.
+
+* All responses entered at a prompt will be stored in `an$`.
+
+These variables have a set purpose, but are intended to change.
+
+### Type
+
+`BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
+
+`User`: this is a user statistic, saved to `u.config`.
+
+### Write
+
+// icon:check[] in the _Read_ column indicates you can get its value.
+
+icon:check[] in the _Write_ column indicates you can assign a value from BASIC.
+
+====
+WARNING: If there isn't a check mark in the _Write_ column, the variable is maintained by the BBS ML or BASIC modules.
+User data corruption or other unwanted side effects may occur if this variable is reassigned.
+====
+
+### Purpose
+
+////
+if a variable is read-only or write-only, don't need *Read* or *write* listed in "purpose" column
+template:
+| `%` | | |
+////
+
+### Integer
+
+////
+template:
+| `%` | | |
+////
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Type | Write | Purpose 
+| `a%`
+|
+|
+|
+
+| `ac%`
+| `BBS`
+| icon:check[]
+| User access level, `0-9`.
+
+*Read:* Get user's access level.
+
+*Write:* Set user's access level.
+
+| `af%`
+|
+|
+|
+
+| `ao%`
+| ``BBS``
+| icon:check[]
+| Old access level ("`Access Old`").
+If `ac%<>ao%`, the user`'s access level has changed during the call.
+
+| `cd%` | icon:check[] | | `User` Last call carrier drop flag.
+| `co%` | icon:check[] | | `User` Computer type: `co$(co%)` is the computer name.
+| `ct%` | icon:check[] | | `User` Calls today.
+
+| `d1%` | icon:check[] | | Currently active device number.
+| `d2%` | icon:check[] | | Currently active drive/LU number. #FIXME: duplicate?#
+| `d3%` | icon:check[] | | Currently active drive/LU number. #FIXME: duplicate?#
+| `da%` | icon:check[] | | `User` Downloads allowed per day
+| `db%` | icon:check[] | | `User` Downloaded blocks
+| `df%` | icon:check[] | | `BBS` Default color for text
+
+| `kp%` | icon:check[] | | `BBS` ASCII value of keypress, after `&#163;g__x__`?
+
+| `ll%` | icon:check[] | icon:check[] | `User` Line length (width of the user's screen in columns)
+
+| `mn%` | icon:check[] | | `BBS` Minute of the day: `1-1440`
+
+| `p1%` | icon:check[] | | `BBS` Prime Time: `0`=disabled, `1`=enabled 
+| `p2%` | icon:check[] | | `BBS` Prime Time: Starting hour
+| `p3%` | icon:check[] | | `BBS` Prime Time: Ending hour
+
+| `tc%` | icon:check[] | | `BBS` total calls
+|====================
+
+### Floating Point
+
+////
+template:
+| `%` // variable
+|     // write
+|     // type
+|     // purpose
+////
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Type | Write | Purpose 
+| `am` | icon:check[] | icon:check[] | `BBS` AutoMaint flag
+
+| `ca` | | | `BBS` Total calls to BBS
+| `cr` | icon:check[] | icon:check[] | `User` Credits
+
+| `el` | icon:check[] | | `BBS` Line number an error has occurred on.
+| `em` | icon:check[] | | `User` Expert mode flag: `0`=disabled, `1`=enabled
+
+| `l1` | | | `BBS` System reservation: 
+| `l2` | | | `BBS` System reservation: 
+| `l3` | | | `BBS` System reservation: 
+| `lp` | icon:check[] | icon:check[] | *Read:* `&,5` (get ML version data)
+`lp` returns the ML major/minor version number, _e.g._, `1.3`. 
+
+*Write:* Disable or enable word-wrap for `&` text output.
+`lp=0`: disable word-wrap, `lp=1`: enable word-wrap
+
+| `nt` | | | `BBS` Network transfer flag: `0`=no transfer occurring, `1`=in NetMaint (NMauto) mode
+
+| `pm` | | | `User` Prompt Mode flag: `0`=disabled, `1`=enabled
+
+| `zz` | | | `BBS` Pseudo-local mode flag: `0`=disabled, `1`=enabled
+|====================
+
+### Strings
+
+`b$`-`z$` are work variables used throughout the BBS by different subsections.
+They are available for use and may be read and written freely.
+
+Some specific information about certain variables is outlined below.
+
+////
+template:
+| `%` | | |
+////
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|===
+| Variable | Type | Write | Purpose 
+| `a$`  | icon:check[] | icon:check[] | *Read:* Output using `&`.
+
+*Write:* Work variable.
+
+| `ag$` | icon:check[] | | Access group information, including 4 control characters and access group name.
+
+| `ak$`
+| icon:check[]
+|
+| A horizontal line 2 characters less than the user`'s screen width.
+(Also MCI variable `&#163;vj`) 
+
+| `an$`
+| BBS/User
+| icon:check[]
+| `&,1` (input string): `an$` returns the user`'s input.
+
+*Write:* `&,15,_x_` (convert `an$` commands): perform various conversions on `an$`.
+
+| `bd$`
+| BBS/User
+| icon:check[]
+| Boot drive partition/LU number.
+Used once during `im` initialization.
+
+| `bn$` | icon:check[] | | BBS name.
+
+| `c1$` | icon:check[] | | Chat mode entry message.
+| `c2$` | icon:check[] | | Chat mode exit message.
+| `c3$` | icon:check[] | | `Returning To The Editor` message.
+| `cc$` | icon:check[] | | 2-character system identifier. (Also MCI variable `£vn`)
+| `cm$` | icon:check[] | | Current Message, displayed in the `Area` window.
+(Sometimes used for debugging information in `e.errlog`.)
+| `co$` | icon:check[] | | User`'s computer type, displayed in 16-character programmable window using `&,9,36`.
+Equivalent to `co$(co%)`.
+
+| `d1$` | | | Current time and date information in 11-digit format.
+(Also MCI variable `£v0`)
+| `d2$` | | | Time and date of last logoff, or Library name at entry. (Also MCI variable `£v8`)
+| `d3$` | | | Handle of last user on the system. (Also MCI variable `£v9`)
+| `d4$` | | | Current ML protocol in memory. (Also MCI variable `£vl`)
+| `d5$` | | | True last call date of user online in 11 digit format. (Also MCI variable `£vk`)
+| `d6$` | | | Logoff time of last user
+| `dd$` | | | System identifier + user ID number
+| `dr$` | | | Currently active drive/LU number + `:`
+
+| `ep$` | icon:check[] | | `BBS` ECS command password
+
+| `ff$` | | | Real first name of user online
+| `fl$` | | | 15-character string which determines the user`'s status flags
+
+| `hx$` | BBS | icon:check[] | `BBS` 16 hexadecimal digits: `0123456789abcdef`
+
+| `i1$` | icon:check[] | | `BBS` Access level + handle of the sysop
+| `i2$` | icon:check[] | | `BBS` Expert flag + e-mail address + first name + " " + last name of sysop
+| `i3$` | icon:check[] | | `BBS` Access group name of sysop
+
+| `jn$` | | | ``dim``__ensioned but unused?__ Sub-board "`joined read`" string from pre-TurboREL 1.2 SB subsystem?
+
+| `ld$` | icon:check[] | icon:check[] | `User` Last call date of user online in 11-digit format.
+Used to determine whether a message is new or not.
+| `ll$` | icon:check[] | | `User` Real last name of user online
+| `lt$` | icon:check[] | | `User` Logon time of user online
+
+| ``mp$`` | icon:check[] | | ``BBS`` More prompt text: ``...More (Y/n)?``
+
+| ``na$`` | icon:check[] | | ``BBS`` Handle of current caller (Also MCI variable ``£v2``)
+| `nl$` | icon:check[] | | Null character [`chr$(0)`]
+| `nm$` | | | Last network sort time/date in 11-digit format
+
+| `p$`  | | icon:check[] | Current prompt text
+| `ph$` | | | E-mail address of current user online. (Also MCI variable `£v4`)
+| `po$` | | | Text for system main level prompt
+// | `pp$` | | | System password (change with `PC` command)
+| `pr$` | | | Name of current module in memory
+| `pw$` | | | Password of current online user
+
+| `qt$` | icon:check[] | | Quotation mark [`chr$(34)`]
+
+| `r$`  | icon:check[] | | Return [`chr$(13)`]
+
+| `rn$` | | | Real name of user online (``ff$+" "+ll$``, also MCI variable `£v3`)
+
+| `sy$` | | | Current subsystem active
+
+| `ti$` | icon:check[] | icon:check[] | C= Time-of-day clock
+
+| `u$`  | icon:check[] | | Reserved for command stacking
+
+| `x$`  | | | System drive/LU designators
+
+| `SPLIT` | | |
+
+| `ag$` | | | Access group name of user currently online. (Also MCI variable `£vm`)
+| `ak$` | | | Prints line across screen [``" " + (`-` * ll% - 2) + r$``]. (Also MCI variable `£vj`)
+
+| `cm$` | | | Current location in `Area` window.
+
+|===
+
+### String Arrays
+
+////
+template:
+| `%` | | |
+////
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|====================
+| Variable | Read | Write | Purpose 
+
+| `bb$()` | | | Image 1.2 array.
+
+| `co$()`
+| icon:check[]
+|
+| Text of computer types
+
+| `tt$()`
+| icon:check[]
+| icon:check[]
+| Read text entered into text editor.
+
+*Write:* This array can be used in modules not using the text editor.
+|====================
+
+### Floating Point Arrays
+
+////
+template:
+| `%` | | |
+////
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|===
+| Variable | Read | Write | Purpose 
+
+| `bf()` | icon:check[] | | Blocks free on system disks.
+
+|===
+
+////
+	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
+	dimb$,b%,bd,bd$,bn$,bu
+	dimc$,c%,c1$,c2$,c3$,ca,cc,cc$,cd%,ch$,cm$,cn,co$,co%,cr,ct,ct%
+	dimd$,d%,d1$,d1%,d2$,d2%,d3%,d3$,d4$,d5$,d6$,da%,db%,dc,dc%,dd$,dr,dr$,dv%
+	dimdf%
+	dime$,e%,el,em,ef$,ep$,ec,ec%
+	dimf$,f%,f1,f2,f3,f4,ff$,fl,fl$,f1$,f2$,f3$,f4$,f5$,f6$,f7$,f8$
+	dimg$,g%
+	dimh$,h%,hx$
+	dimi$,i%,id,im$,im,in$,is
+	dimj$,j%,jn$
+	dimk$,k%,kk,kp%
+	diml$,l%,l1,l1$,l2,l2$,l3,l3$,lc,ld$,le,lf,lk%,ll$,ll%,lm$,lp,lt$,lt%
+	dimm$,m%,mc,mf,ml$,mp$,mt$,mw,mp%,mn%
+	dimn$,n%,na$,nc,nf,nl,nl$,nm,nm$
+	dimo$,o%
+	dimp$,p%,p1%,p2%,p3%,pf,ph$,pl,pm,po$,pp$,pr,pr$,ps,pu$,pw$,p1$,p2$
+	dimq$,q%,qb,qe,qt$
+	dimr$,r%,rc,rn$,rp,rq
+	dims$,s%,sa%,sh,sg
+	dimt$,t%,t1,tc%,tf,tk$,tr%,tt,tt$,tz$
+	dimu$,u%,uc,uh,ul,ur,uf$,uu$
+	dimv$,v%
+	dimw$,w%
+	dimx$,x%
+	dimy$,y%
+	dimz$,z%,zz
+////

@@ -1,0 +1,66 @@
+{step:2}
+{alpha:alt}
+
+{assign:300=300}	' main prompt
+
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
+
+{:3000} ' &,9
+	&"&,9: btmvar{f6}"
+' enumerate variables that can be displayed, from &,9,x table:
+' 0-9:
+	:::v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
+' 10-19:
+	v$=v$+"tt$na$rn$ph$ak$lp pl rc sh mw "
+' 20-29:
+	v$=v$+"nl ul qe rq ac%ef lf w$ p$ tr%"
+' 30-39:
+	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
+' 40-49:
+	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
+{:help}
+' display table row:
+' a% a$   b% b$   c% c$   d% d$   e% e$
+	for rw=0 to 9
+' column indices (must be >=1, mid$() doesn't handle negative values):
+	a%=rw+1:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
+' extract row's variable names:
+	a$=mid$(v$,a%*3-2,3):b$=mid$(v$,b%*3-2,3):c$=mid$(v$,c%*3-2,3)
+	d$=mid$(v$,d%*3-2,3):e$=mid$(v$,e%*3-2,3)
+' decrement indices so they display properly (0-49, not 1-50):
+	a%=a%-1:b%=b%-1:c%=c%-1:d%=d%-1:e%=e%-1
+' display a row:
+	&"{pound}#2{pound}# {pound}%a {pound}$a  "
+	&"{pound}#2{pound}# {pound}%b {pound}$b  "
+	&"{pound}#2{pound}# {pound}%c {pound}$c  "
+	&"{pound}#2{pound}# {pound}%d {pound}$d  "
+	&"{pound}#2{pound}# {pound}%e {pound}$e{f6}"
+	next
+
+{nice:10}
+{:prompt}
+	&"{f6}[0-49, A)ll, Q)uit, {question}=Menu]{f6}":p$="Display variable":&,1:op$=an$
+	on -(op$="A")-2*(op$="Q")-3*(op$="{question}") goto {:all}, {:quit}, {:help}
+	an=int(val(op$)):if an<0 or an>49 then:&"Out of range.{f6}":goto {:prompt}
+	gosub {:sub.display}:goto {:prompt}
+{:all}
+	&"[At {quotation}Key:{quotation} prompt, {quotation}Q{quotation} quits.]{f6}"
+	for an=0 to 49:i%=an:&"[#{pound}#2{pound}# {pound}%i/50] "
+	gosub {:sub.display}:if an$="Q" then:&"Quitting.{f6}":an=50
+	next:goto {:prompt}
+{:sub.display}
+	&"Displaying "+mid$(v$,(an+1)*3-2,3)
+	&,9,an:&" - Key: {pound}g1{f6}":return
+
+{:quit}
+' restore window to computer type string
+	&"Restoring window to computer type."
+' var 36 is co$, computer type:
+	&,9,36:goto 300
+
+	' FIXME: &,9 displays garbage instead of floating-point/integer variables
+	' maybe a regular logon is needed instead of an instant logon, to populate variables?
+	' no, regular logon makes no difference. must be a bug in the ml.
