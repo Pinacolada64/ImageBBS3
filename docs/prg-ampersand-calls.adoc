@@ -134,7 +134,7 @@ and simplify it further with:
 ====
 TIP: Because of a quirk in the BASIC interpreter, you must follow a `then` clause with a colon before using the ampersand.
 
-In other words, the following results in a `?syntax&nbsp;&nbsp;error`:
+In other words, the following results in a `?syntax&#160;&#160;error`:
 
 [source,basic]
 if b then &"hello"
@@ -318,7 +318,7 @@ _BASIC Setup:_
 
 `poke 53252,_line_length_` limits the length of the input to _line_length_ characters, 1-79.
 
-`p$`: text of the prompt shown before `:&nbsp;` and input is accepted.
+`p$`: text of the prompt shown before `:&#160;` and input is accepted.
 
 `w$`: the default response to a prompt.
 When using edit mode, if only kbd:[Return] is typed at a prompt, `an$` is set to a null string (`an$=""`).
@@ -502,7 +502,7 @@ If you have an input file open on LFN \#1, and an output file open on LFN \#2, #
 The LFN value ranges from 1 to 255.
 LFN 15 is usually reserved for the DOS command channel.
 
-The only restriction is that you can't re-`open` a LFN that is already `open`, or you get the error `?file open&nbsp;&nbsp;error`.
+The only restriction is that you can't re-`open` a LFN that is already `open`, or you get the error `?file open&#160;&#160;error`.
 ====
 
 `bytes`: number of bytes to get from file (1-80).
@@ -882,7 +882,7 @@ TIP: Related string conversion functions can be found at  <<convert>>.
 Put current 11-digit date (`d1$`, _e.g._ `60429218427`) into `an$`
 
 . `&,15`:
-Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&nbsp;&nbsp;4:29 P`` and assign that to `an$`
+Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&#160;&#160;4:29 P`` and assign that to `an$`
 
 . `&an$`:
 Output `an$`
@@ -890,7 +890,7 @@ Output `an$`
 ##### Image BBS Date Format [[date-format]]
 
 Image BBS uses an 11-digit string to represent a time and date.
-The format is `w&nbsp;yr&nbsp;mo&nbsp;dt&nbsp;hr&nbsp;mi`.
+The format is `w&#160;yr&#160;mo&#160;dt&#160;hr&#160;mi`.
 
 ====
 NOTE: Extra spaces between the numbers have been added for ease of reading, but are not used in the actual string.
@@ -920,7 +920,7 @@ NOTE: Extra spaces between the numbers have been added for ease of reading, but 
 [cols="<,^,<,<"]
 |===
 | Position | Abbreviation | Purpose | Range
-| 1     | `**&nbsp;w**` | weekday | `1`=Sun...`7`=Sat
+| 1     | `**&#160;w**` | weekday | `1`=Sun...`7`=Sat
 | 2-3   | `**yr**` | year    | `00`...`99` (the year within the century, `20xx`, is displayed using `&,15`)
 | 4-5   | `**mo**` | month   | `01`...`12`
 | 6-7   | `**dt**` | date    | `01`...`31`
@@ -943,15 +943,15 @@ Let's break down how the string is encoded.
 [cols="<,^,<,<"]
 |===
 | Position | Value | Purpose | Meaning
-| 1     | `&nbsp;2` | weekday | `Mon`
+| 1     | `&#160;2` | weekday | `Mon`
 | 2-3   | `21` | year    | `2021`
 | 4-5   | `05` | month   | `May`
 | 6-7   | `17` | date    | `17`
-| 8-9   | `89` | hour    | `&nbsp;9:00 PM` (`9`=hour, plus `80`=PM)
+| 8-9   | `89` | hour    | `&#160;9:00 PM` (`9`=hour, plus `80`=PM)
 | 10-11 | `44` | minute  | `44`
 |===
 
-As the table above shows, this string stands for `Mon May 17, 2021&nbsp;&nbsp;9:44 PM`.
+As the table above shows, this string stands for `Mon May 17, 2021&#160;&#160;9:44 PM`.
 
 ====
 NOTE: You can also output kbd:[Ctrl+d] or `chr$(4)` in an `&` statement to convert an 11-digit date/time string to a long date/time string.
@@ -1091,7 +1091,7 @@ As an example, each of these instructions in a fictitious protocol assembly-lang
 
 `c006: jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
 
-`c009:` _<first byte of first routine>_ 
+`c009:` _<first byte of first routine>_
 ****
 
 TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information and listings of jump tables.
@@ -1292,7 +1292,7 @@ Image 1.3 and above adds multiple levels of save and restore with an additional 
 TIP: The main prompt restores level 1 array pointers and already does a `&,28,1` there.
 
 If you substitute `&,27,1` for `&,27,2` and `&,28,1` for `&,28,2` in the above code, line 300 will redo `&,28,1`.
-This causes a `?redim'd array&nbsp;&nbsp;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
+This causes a `?redim'd array&#160;&#160;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
 ====
 
 ---
@@ -1795,7 +1795,7 @@ _Example:_
 
  &,59,1,14
 
-Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
+Cause error `14`, `?illegal quantity&#160;&#160;error`.
 
 .Error Numbers
 [%header]

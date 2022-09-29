@@ -6,6 +6,9 @@ v0.3, 2022-08-20
 :toclevels: 4
 :icons: font
 
+// PDF generation config
+:pdftheme: default-sans
+
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
 

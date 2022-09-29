@@ -79,7 +79,53 @@ _Returns:_
 
 | `gosub&#160;3`
 | `gosub&#160;1010`
-| Closes, then re-opens command channel (LFN15) on the device/drive requested by setting the variable (dr) explained above.
+| Closes, then re-opens command channel (LFN 15) on the device/drive requested by setting the variable `dr` explained above.
+
+| `gosub&#160;4`
+| `gosub&#160;1011`
+| Opens filename stored in `a$` on device/drive `dr` requested by setting the variable as explained in line 2.
+Will automatically make call to lines 2 and 3.
+Upon exit, this routine falls through to line 5.
+
+| `gosub&#160;5`
+| `gosub&#160;1012`
+| Read error channel of currently active device/drive.
+
+_Returns:_
+
+Upon exit, `a$` contains the error status message, `e%` returns the error number, `e$` the error text, `t%` the track, and `s%` the sector.
+
+| gosub&#160;6
+| gosub&#160;1006
+| Uppercase input routine.
+Waits for user input followed by a carriage return.
+Stacked commands (`uu$`, _e.g._ `SB4\^R3^Q`) are checked for.
+If any are pending, `gosub 310` handles checking for displaying command history (`^?`) or executing a command in the history (`^` and a digit).
+
+_Setup:_ `p$`: Text of prompt.
+
+`poke 53252,_x_`: Number of characters allowed.
+
+_Returns:_
+
+`an$`: the string input by the user.
+
+| gosub&#160;7
+| gosub&#160;1007
+| Wait for a keypress.
+
+Returns: an$, a single uppercase character.
+
+| gosub&#160;9
+| gosub&#160;1360
+| Prints (strictly text) contents of `cm$` to `Area` window of the SysOp screen, unless a network transfer is active (`nt=1`).
+
+| gosub&#160;10
+| gosub&#160;1002
+| Position RELative file record pointer DOS command.
+Same as line 1.
+However, it is suggested that you call this routine from line 1 for some systems`' compatibility.
+
 
 | `gosub&#160;11`
 | `gosub&#160;1004`
@@ -129,43 +175,6 @@ h! 19 ! Time/Day Allowed (second digit)
 
 !===
 
-| gosub&#160;4
-| gosub&#160;1011
-| Opens filename stored in (a$) on device/drive `dr` requested by setting the variable as explained in line 2.
-Will automatically make call to lines 2 and 3.
-Upon exit, this routine falls through to line 5.
-
-| gosub&#160;5
-| gosub&#160;1012
-| Read error channel of currently active device/drive.
-
-_Returns:_ Upon exit, `a$` contains the error status message, `e%` returns the error number, `e$` the error text, `t%` the track, and `s%` the sector.
-
-| gosub&#160;6
-| gosub&#160;1006
-| Uppercase input routine.
-_Setup:_ `p$`: Text of prompt.
-
-`poke 53252,_x_`: Number of characters allowed.
-
-Waits for user input followed by a carriage return.
-Stacked commands (`uu$`) are checked for, and result of input is returned in `an$`.
-
-| gosub&#160;7
-| gosub&#160;1007
-| Wait for a keypress.
-
-Returns: an$, a single uppercase character.
-
-| gosub&#160;9
-| gosub&#160;1360
-| Prints (strictly text) contents of `cm$` to `Area` window of the SysOp screen.
-
-| gosub&#160;10
-| gosub&#160;1002
-| Same as line 1.
-However, it is suggested that you call this routine from line 1 for some systems`' compatibility.
-
 | gosub&#160;12
 | gosub&#160;1914
 | Reset routine.
@@ -195,6 +204,7 @@ Setup: open `e.stats` (`gosub 30`).
 
 [%autowidth]
 [%header]
+[cols="<1,^2,^3,^4,^5"]
 !====================
 ! Description ! Last ! Log ! Current ! Total 
 ! Feedback    !   1  !  12 !   23    !  30
@@ -219,18 +229,19 @@ Note that `e.stats` should be opened first (`gosub 30`), prior to calling this r
 | 
 | Loads a `++` (protocol) file from Plus File drive--if it isn't already loaded--and checks the DOS error status.
 
-
-`goto` line 5, so `e%` (the DOS error status) can be checked to ensure the file loaded.
-
-====
-NOTE: If the file requested is already in memory (`ml$=a$`), then the DOS error status (`e%`) is set to 0 to indicate no error, and this routine exits without actually re-loading the file.'
-====
-
-`dr` is set to `5`, for Plus Files. 
 _Setup:_
 
-`a$`: ML or protocol file (minus `++` prefix)
- 
+`a$`: ML or protocol file (minus the `++&#160;` prefix)
+
+This routine then:
+
+. displays the module name (`a$`) in the `Area` window of the SysOp screen
+. sets `dr=5` and determines the correct device/drive for the Plus Files system disk
+. checks whether the module requested has already been ``load``ed (``ml$=a$``):
+
+* If so, the DOS error status (`e%`) is set to `0` to indicate no error, and it ``return``s instead of re-``load``ing the file.
+* otherwise, loads the module via `&,7`
+. exits via `goto 5`, so the DOS error status can be checked to ensure the file loaded.
 
 _Returns:_
 
@@ -398,10 +409,13 @@ Otherwise `No` is printed and `a=0`.
 
 | gosub&#160;100
 | gosub&#160;1013
+| Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (dr=5), then returns from routine.
+This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.
+The "i." and drive designators are automatically added by the sub-routine.
+If the program (pr$) is already in memory, (e%) is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5 to check the DOS error status.
 
-| Load sub. module in (a$) (minus the sub.) from the plus file drive (dr=5), then returns from routine.  This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.  The "i." and drive designators are automatically added by the sub-routine.  If the program (pr$) is already in memory, (e%) is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5.
-
-The subroutine file is added to a "`module stack`" so that if a `sub.\*` file is called from another sub.\* file, the previously-loaded sub.\* file is reloaded on exit. `is` is the stack depth, and im$(is) is the module name.
+The subroutine filename is added to a "`module stack`" so that if a `sub.\*` file loads another `sub.*` file, the previous `sub.*` file is reloaded on exit.
+`is` is the stack depth, and `im$()` is the module name.
 
 ////
 21: Loads i. module in (a$) (minus the i.).  Same as 20, except device, drive is determined by current value of (dr). (none)
@@ -463,30 +477,18 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 !====================
 ! `lc` ! Menu 
 !  `1` ! Main menu 
-!  `2` ! Editor Menu/Help
+!  `2` ! Message Base Menu (`SB`)
 !  `3` ! Editor Menu/Help
-!  `4` ! Local Mode Menu (zz)
-!  `5` ! File Transfer Menu (UD)
-!  `6` ! E-Mail Menu (EM)
-!  `7` ! General Files Menu (GF)
-!  `8` ! End of Bulletin Menu (SB)
-!  `9` ! Disk Transfer Menu (UD/UX)
+!  `4` ! Local Mode Menu (`zz`)
+!  `5` ! File Transfer Menu (`UD`)
+!  `6` ! E-Mail Menu (`EM`)
+!  `7` ! General Files Menu (`GF`)
+!  `8` ! End of Bulletin Menu (`SB`)
+!  `9` ! Disk Transfer Menu (`UD`/`UX`)
 !====================
 
-	 lc	Menu
-	----------------------------------
-	 1	Main Menu
-	 2	Message Base Menu
-	 3	Editor Menu/Help
-	 4	Local Mode Menu (zz)
-	 5	File Transfer Menu (UD)
-	 6	E-Mail Menu
-	 7	General Files Menu (GF)
-	 8	End of Bulletin Menu (SB)
-	 9	Disk Transfer Menu (UX)
-	----------------------------------
-
-| gosub&#160;280
+| `gosub&#160;280`
+| 
 | This routine is called by the prompt routine at line 200 to check for ECS commands.
 
 | `goto&#160;300`
@@ -494,54 +496,71 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 | Main Prompt Entry routine.
 `i.main` is loaded at line 3000, and executed.
 
-302: Loads `i.lo` file and executes with `mm` set to 0 (init).
+| 302
+| 
+| Loads `i.lo` file and executes with `mm` set to 0 (init).
 Action is dependent on the value of `f1`:
 
-.Title
 [%autowidth]
 [%header]
-["^"]
-|====================
-| `f1` | Action
-|  `0` |  connection established
-|  `1` |  normal logoff
-|  `2` |  fast logoff (`O!` or out of time)
-|  `3` |  normal entry (when loading `i.lo` for "`Wait For Call`" screen)
-|====================
+[cols="^1,<2"]
+!====================
+! `f1` ! Action
+!  `0` ! connection established
+!  `1` ! normal logoff
+!  `2` ! fast logoff (``O\!`` or out of time)
+!  `3` ! normal entry (when loading `i.lo` for "`Wait For Call`" screen)
+!====================
 
-////
-	 f1	Action
-	----------------------------------------
-	 0	Connection Established
-	 1	Normal Logoff
-	 2	Fast Logoff (O! or Out of Time)
-	 3	Normal Entry (when loading 'lo'
-		for Wait for Call Screen.)
-	----------------------------------------
-////
+| 304
+| 
+| Reverts memory marker back to 1 (`&,28,1`), calls line 306 which then issues an `&,27` (save) and exits.
 
-304: Reverts memory marker back to 1 (`&,28,1`), calls line 306 which then issues an &,27 (save) and exits.
-
-306: Image 1.2 Emulation Mode.
+| 306
+| 
+| Image 1.2 Emulation Mode.
 Dimensions variables similar to Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn$(61)`, `a%(61)`, `c%(61)`, `d%(61)`, `e%(31)`, `f%(61)`, `ac%(31)`, `so%(31)`].
 
 "`Emulating`" 1.2 is not the only use--this routine is helpful to save space and quickly ``dim``ension common variables to be used in a program.
 
-310: `?^` routine.
-Prints up to last 10 commands (stored in `hs$(10)`) typed via the prompt routine.
+| `gosub&#160;310`
+| _none_
+| Check for `^?`, the command history.
+If so, `goto 315`.
 
-320: Update access level of user online.
+| `gosub&#160;311`
+| _none_
+| Check for `^` and a digit `0-9`.
+This executes that command history entry.
+
+| `gosub&#160;315`
+| _none_
+| Prints up to the last 10 commands (stored in the history stack, `hs$(10)`) typed via the prompt routine.
+
+| `gosub&#160;320`
+| #FIXME#
+| Update access level of user online.
 (Called by prompt routine at line 200).
 
-330: Randomly outputs a macro from file `e.macros`. (gosub 1996)
+| `gosub&#160;321`
+| _none_
+| If `fl$` is not as long as the record in `e.access`, append the additional flags.
+This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3.0, since these versions have more user flags per account.
 
-goto&#160;999 | goto 1610 | `return` jump-point.
+| `gosub&#160;330`
+| `gosub&#160;1096`
+| Outputs a random macro from file `e.macros`.
+
+| `goto&#160;999`
+| `goto&#160;1603`
+| `return` jump-point.
 
 If an `on-goto` statement needs to exit a subroutine, you can write:
 
 [source, basic]
 ----
-on a goto 999
+1 on a goto 999
+999 return
 ----
-////
+
 |====================

@@ -33,7 +33,7 @@ Performing a struct search operation is much faster than searching through an ar
 
 ### Static Arrays
 
-The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can't change once the struct is defined. 
+The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can't change once the struct is defined.
 // (unless the string is concatenated to or redefined entirely).
 
 ====
@@ -61,6 +61,7 @@ Strings can be stored in either a floating point [like `a()` or `b()`], or integ
 .Representation of a Sample Two-Dimensional Integer Array
 [%autowidth]
 [%header]
+[col="h1,2,3"]
 |===
 | 3+^| Record (0,_x_)
 | **Field (_0_,0)** | `x%(0,0)` | `x%(0,1)` | `x%(0,2)`
@@ -100,11 +101,12 @@ A module will be written to store, edit, and retrieve data to/from this struct.
 Since the integers store in 2 bytes, the total number of bytes needed is 37 (2 + 20 + 15).
 Thirty-seven bytes would require either:
 
-* 19 integer elements (2 bytes per element &times; 19 elements  &equals; 38 bytes)
+// &times; == &#215
+* 19 integer elements (2 bytes per element &#215; 19 elements = 38 bytes)
 
 _or_
 
-* 8 floating point elements (5 bytes per element &times; 8 elements  &equals; 40 bytes).
+* 8 floating point elements (5 bytes per element &#215; 8 elements = 40 bytes).
 
 Now that you have the basic concept of the struct, let’s look in a little more detail.
 Here is a byte-by-byte map of the struct we designed.
@@ -140,18 +142,18 @@ Here is a byte-by-byte map of the struct we designed.
 ^| `u%(0,9)`
 ^| `u%(0,10)`
 
->| Byte&nbsp;Pos
-^| `00&nbsp;01`
-^| `02&nbsp;03`
-^| `04&nbsp;05`
-^| `06&nbsp;07`
-^| `08&nbsp;09`
-^| `10&nbsp;11`
-^| `12&nbsp;13`
-^| `14&nbsp;15`
-^| `16&nbsp;17`
-^| `18&nbsp;19`
-^| `20&nbsp;21`
+>| Byte&#160;Pos
+^| `00&#160;01`
+^| `02&#160;03`
+^| `04&#160;05`
+^| `06&#160;07`
+^| `08&#160;09`
+^| `10&#160;11`
+^| `12&#160;13`
+^| `14&#160;15`
+^| `16&#160;17`
+^| `18&#160;19`
+^| `20&#160;21`
 
 >| Data
 ^| ID#
@@ -186,14 +188,14 @@ Here is a byte-by-byte map of the struct we designed.
 ^| `u%(0,17)`
 2+^| `u%(0,18)`
 
->| Byte&nbsp;Pos
-^| `22&nbsp;23`
-^| `24&nbsp;25`
-^| `26&nbsp;27`
-^| `28&nbsp;29`
-^| `30&nbsp;31`
-^| `32&nbsp;33`
-^| `34&nbsp;35`
+>| Byte&#160;Pos
+^| `22&#160;23`
+^| `24&#160;25`
+^| `26&#160;27`
+^| `28&#160;29`
+^| `30&#160;31`
+^| `32&#160;33`
+^| `34&#160;35`
 ^| `36`
 ^| `37`
 
@@ -260,10 +262,10 @@ Sorry, there's no way around this (that we're aware of).
 .Fields in Records
 [width="100%",options="header",cols="6"]
 |====================
-^| `u%(_field,record_)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4  
-| Record 0 [`u%(0,0)`] 5+^| -- _configuration information_ -- 
-// | Record 1 2+^| a \| b ^| c ^| d ^| e 
-| Record 1 ^| a ^| b ^| c ^| d ^| e 
+^| `u%(_field,record_)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4
+| Record 0 [`u%(0,0)`] 5+^| -- _configuration information_ --
+// | Record 1 2+^| a \| b ^| c ^| d ^| e
+| Record 1 ^| a ^| b ^| c ^| d ^| e
 | Record 2 2+^| f \| g ^| h ^| i ^| j
 | Record 3 2+^| k \| l ^| m ^| n ^| o
 |====================
@@ -532,9 +534,9 @@ The starting record and field numbers to save are specified by the numbers in th
 ****
 The number of bytes should be calculated using the formula:
 
-_bytes per record_ &times; _number of records_
+_bytes per record_ &#215; _number of records_
 
-(There are 38 bytes per record &times; 3 records in the example.)
+(There are 38 bytes per record &#215; 3 records in the example.)
 
 NOTE: Don't forget: records start at `0`!
 ****
@@ -553,7 +555,7 @@ The starting record and field is specified with (as above) `u%(0,0)`.
 
 [start=3]
 . _bytes_: the number of bytes the struct occupies is the number of records multiplied by the bytes per record.
-In our example, 3 records &times; 38 bytes:
+In our example, 3 records &#215; 38 bytes:
 
 `&,60,3,0,u%(0,0),**3*38,**dr$+"u.handles",dv%`
 
@@ -611,22 +613,22 @@ an$="10412208234":&,60,4,0,u%(0,1),an$
 
 // 8 cells
 >| Binary
-^| `%0001&nbsp;%0000`
-^| `%0100&nbsp;%0001`
-^| `%0010&nbsp;%0010`
-^| `%0000&nbsp;%1000`
-^| `%0010&nbsp;%0011`
+^| `%0001&#160;%0000`
+^| `%0100&#160;%0001`
+^| `%0010&#160;%0010`
+^| `%0000&#160;%1000`
+^| `%0010&#160;%0011`
 >| `%0100`
 >| `%xxxx`
 
 >| Decimal
->| `1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0`
->| `4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1`
->| `2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2`
->| `0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;8`
->| `2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3`
->|  `&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;4`
->|  `&nbsp;&nbsp;&nbsp;&nbsp;x`
+>| `1&#160;&#160;&#160;&#160;&#160;&#160;0`
+>| `4&#160;&#160;&#160;&#160;&#160;&#160;1`
+>| `2&#160;&#160;&#160;&#160;&#160;&#160;2`
+>| `0&#160;&#160;&#160;&#160;&#160;&#160;8`
+>| `2&#160;&#160;&#160;&#160;&#160;&#160;3`
+>|  `&#160;&#160;&#160;&#160;&#160;&#160;4`
+>|  `&#160;&#160;&#160;&#160;x`
 |===
 ****
 
@@ -646,7 +648,7 @@ Convert a 6-digit Binary Coded Decimal (BCD) date string (as shown above) to the
 | Parameter | Purpose
 | `&,60,5,0`,... | Get date call. `0` seems to be an ignored but necessary parameter.
 | `struct%(_field, record_)`,... | struct name, field, record...
-| _string$_ | ...string variable to hold the converted 11-digit date and time 
+| _string$_ | ...string variable to hold the converted 11-digit date and time
 |===
 
 .Get Date
@@ -921,15 +923,15 @@ Copy one record from one struct to a record in another struct.
 
 .Syntax
 
-`&,60,10,` _size_, _a1(a, b)_, _a2(a, b)_`
+`&,60,10,` _size_, _a1(a, b)_, _a2(a, b)_
 
 .Parameters
 
 `size`: size of record
 
-`a1(a,b)`: source struct `a1()`, record `b` and field `a`
+`a1%(a,b)`: source struct `a1%()`, record `b` and field `a`
 
-`a2(a,b)`: destination struct `a2()`, record `b` and field `a`
+`a2%(a,b)`: destination struct `a2%()`, record `b` and field `a`
 
 .i/IM.logon
 ====
@@ -949,7 +951,7 @@ Put results in another specified struct, field and record?
 
 .Syntax
 
-`&,60,11,` _num_, _size_, _op_, _str_, _a1(a,b)_, _a2(b)_, _start_
+`&,60,11,` _num_, _size_, _op_, _str_, _a1%(a,b)_, _a2%(b)_, _start_
 
 .Parameters
 
@@ -959,19 +961,19 @@ Put results in another specified struct, field and record?
 
 `op`: operation:
 
-. `0` specifies a regular compare (a string literal)
+* `0` specifies a regular compare (a string literal)
 
-. `1` specifies a pattern to match.
+* `1` specifies a pattern to match.
 Here you can use two wildcard characters (like Commodore DOS):
 
-* kbd:[f2] (in quote mode: kbd:[I]) is equal to kbd:[?], which specifies any character in its place
-* kbd:[f7] (in quote mode: kbd:[H]) is equal to kbd:[*], which specifies any characters from this point to the end of the string
+** kbd:[f2] (in quote mode: kbd:[I]) is equal to kbd:[?], which specifies any character in its place
+** kbd:[f7] (in quote mode: kbd:[H]) is equal to kbd:[*], which specifies any characters from this point to the end of the string
 
 `str`: #FIXME#: string variable/string literal to scan for?
 
-`a1(a,b)`: source struct _a1_, field _a_, record _b_, to scan
+`a1%(a,b)`: source struct _a1%()_, record _b_, field _a_, to scan
 
-`a2(b)`: target 1-dimension array _a2_, dummy element _b_, to put results into
+`a2%(b)`: target 1-dimension array _a2%()_, dummy element _b_, to put results into
 
 `start`: record to start scanning from
 
