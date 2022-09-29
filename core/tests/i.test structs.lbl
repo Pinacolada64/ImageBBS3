@@ -7,10 +7,15 @@
 
 ' encoded f-keys
 ' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
-{quoter:133=comma}	' f1
-{quoter:135=quotation}	' f5
-{quoter:137=question}	' f2
-{quoter:140=up_arrow}	' f8
+{quoter:133=comma	} ' f1
+{quoter:134=colon	} ' f3
+{quoter:135=quotation	} ' f5
+{quoter:136=asterisk	} ' f7
+{quoter:137=question	} ' f2
+{quoter:138=equal	} ' f4
+' don't use this
+' {quoter:139=return	} ' f6
+{quoter:140=up_arrow	} ' f8
 
 {:3000}
 	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
@@ -42,14 +47,13 @@
 	&"&,60,11 Scan for String{f6}":return
 	&"&,60,12 Game Scan{f6}":return
 	&"&,60,13 Text Read{f6}":return
-	&"&,60,14 Unknown{f6:2}":return
 
 {:display_page_6}
 ' when menu pages are displayed, show option number and header text, e.g.:
 '  0) &,0  Output a$
 '  1) &,1  Input an$
 ' (etc.)
-	for n=0 to 14:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
+	for n=0 to 13:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
 	&"(0-14, {quotation}Q{quotation}=Quit, {quotation}{question}{quotation}=List){f6}"
 {:prompt}
 	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
@@ -138,9 +142,73 @@
 {:3600} ' &,60,10: Copy Record
 	gosub {:sub.todo}:return
 
+{step:1}
 {:3650} ' &,60,11: Scan for String
-	gosub {:sub.todo}:return
+' &,60,11, num, size, op, str, a1(a,b), a2(b), start
+'
+'num: number of records
+'size: size of record
+'op: operation:
+'
+' 0 specifies a regular compare (a string literal)
+'
+' 1 specifies a pattern to match.
+' With option 1, you can use two wildcard characters (like Commodore DOS):
+'
+'* {f2}, {question} = ?, which specifies any character in its place
+'* {f7}, {asterisk} = *, which specifies any characters from this point to the end of the string
+'// TODO: Check if "?" or "*" are usable, or only encoded f-keys
+'
+'str: #FIXME#: string variable/string literal to scan for?
+'
+'a1(a,b): source struct a1, field a, record b, to scan
+'
+'a2(b): target 1-dimension array a2, element b, to put results into
+'
+'start: record to start scanning from
+'
+' animal names are in s%(11,x)
+	&,27,2:dim a2%(t)
+{:reset_defaults}
+	nr=t:sr=1:op=1:fs$="okapi"
+{:struct_11_menu}
+	b$=fs$:&"F)ind string......: {f5}{pound}$b{f5}{f6}"
+	a%=nr:&"N)umber of records: {pound}%a{f6}"
+	a%=op:&"O)peration........: {pound}%a (":if op=. then:&"regular"
+	if op=1 then:&"wildcard"
+	a%=sr:&" search){f6}S)tarting record..: {pound}%a{f6:2}"
+	&"G)o{f6}R)eset defaults{f6}"
+	m=1:q=1:gosub {:sub.menu}:if m then:&,28,2:return
+	if a$="R" then:&"Resetting defaults.{f6}":goto {:reset_defaults}
+	a=-(an$="F")-2*(an$-"N")-3*(an$="O")-4*(an$="S")-5*(a$="G")
+	if a>4 then a%=3660+a*5:&,66,1:goto {:struct_11_menu}
 
+{nice:5}
+{:struct_11_find_string}
+' &,1,32: use input with edit mode
+	an$=fs$:w$=an$:p$="Find what":&,1,32:if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
+' NEW: convert regular ? and * to {f2} and {f7} (I think)
+	&,65,2:&an$:fs$=an$:&"(Changed.){f6}":return
+
+{nice:5}
+{:struct_11_num_records}
+
+{nice:5}
+{:struct_11_operation}
+	op=1-op:return
+
+{nice:5}
+{:struct_11_go}
+	&,60,11,nr,t,op,fs$,s%(11,1),a2%(0),sr
+	if a%=. then:&"(No records matching those search parameters found.){f6}":return
+' do GetString on each element of a2%()
+	&"Results ({pound}%a):{f6}":for x=1 to a%:x%=x:&,60,1,t,s%(11,a2%(x)),an$:&"{pound}%x) {f5}{pound}v7{f5}{f6}":next
+	return
+
+{:struct_11_quit}
+	&,28,2:return
+
+{step:2}
 {:3700} ' &,60,12: Game Scan
 	gosub {:sub.todo}:return
 

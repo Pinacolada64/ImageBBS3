@@ -209,6 +209,7 @@
 
 ' FIXME: temporary hook:
 	if an=23 then gosub {:4350}:goto {:prompt}
+	if an=65 then gosub {:sub.convert}:goto {:prompt}
 	if an=67 then gosub {:sub.copyright}:goto {:prompt}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
@@ -433,7 +434,7 @@
 ' 40 print"auto-logoff"
 
 {:4350} ' &,23: xgetin
-	&"FIXME:{f6:2}"
+	&"{pound}$f:{f6:2}"
 
 {:4352}
 	&"(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
@@ -582,6 +583,39 @@
 	gosub {:sub.todo}:return
 
 {:6450} ' &,65: convert
+{:sub.convert}
+' assumptions:
+' define an$
+
+' &,65,0: convnam (check for ' in string, lowercase character afterwards?)
+' - test: an$="O'MALLEY'S BAR" (two apostrophes) -> "O'malley's Bar" (really should be "O'Malley's" but I picked an edge case on purpose)
+' - result: an$="" (?)
+' - &,65,0,"string" returns "?type mismatch error"
+
+' &,65,1: disk data
+' &,65,2: special characters to Image-encoded function keys, and
+' &,65,3: check special characters.
+' print an$
+{:display_header_convert}
+	&"Convert names{f6}":return
+	&"Convert disk data (?){f6}":return
+	lp=1:&"Convert special characters to Image-encoded function keys{f6}":return
+	&"Check string for special characters (?){f6}":return
+{:header_convert_input}
+	lp=1:&"Input search string [currently {f5}"+sf$+"{f5}]{f6}":return
+{:header_convert_reset}
+	&"Reset defaults{f6}":return
+{:display_page_convert}
+	for n=0 to 3:n%=n:&sf$:gosub {:display_header_convert}:next:&"{f6}I) ":gosub {:header_convert_input}:&"R) ":gosub {:header_convert_reset}
+{:convert_reset}
+' sf$="search for". quote and return excluded for display reasons:
+	sf$="{f1}{f3}{f7}{f2}{f4}{f8}"
+
+{:convert_prompt}
+	m=1:l=.:h=3:gosub {:sub.menu}:on -(a$="I")-2*(a$="R") goto {:convert_input},{:convert_reset}
+	a%=6450+20*an:&,66
+
+{:convert_input}
 	gosub {:sub.todo}:return
 
 {:6500} ' &,66: calculated goto

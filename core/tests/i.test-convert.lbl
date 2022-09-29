@@ -1,9 +1,28 @@
 ' C64List4_04.exe i.test-convert.lbl -prg -verbose -ovr
 
-' fs driver saves as test-convert2/
+' C64List4_04.exe i.test-convert.prg -txt:con -keycase -varcase -alpha:alt
+
+' filesystem driver saves as test-convert2/
 
 ' source code: swap2.s, convert
+' breakpoint is $c009 (swapped in from $f809 I think)
+
+' set up breakpoint:
+' 1) run module
+' 2) at "&,65," prompt, Alt-H to enter monitor
+' 3) w exec c009
+' 4) x
+
+' 'z' to step through code one instruction at a time
+' 'watch' to list breakpoints
+
+' toggle on/off breakpoint after done with module:
+' (because different routines get swapped into $c000 range after module ends)
+' enable 1
+' disable 1
+
 {alpha:alt}
+{step:2}
 {assign:96	=96	} ' yes/no prompt
 {assign:300	=300	} ' main prompt
 
@@ -20,19 +39,28 @@
 {quoter:140=up_arrow	} ' f8
 
 {:3000}
-	s1$="{quotation}Well{comma}{quotation} she said{comma} {quotation}the {asterisk} and {question} are used as wildcards.{quotation}{f6}"
-	s2$=qt$+"Well,"+qt$+" she said, "+qt$+"the * and ? are used as wildcards."+qt$+r$
-{:3002}
-	lp=1:&"[0=convnam, 1=convdsk, 2=convimg, 3=chkspcl]{f6}"
-	&"Sub-Function: &,65,{pound}i1":op=int(val(an$))
-	if op<0 or op>3 then:&"Out of range.{f6}":goto {:3002}
+	pr$="i.test convert":&pr$+"{f6}{pound}vj"
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+	s1$=qt$+"Well,"+qt$+" she said, "+qt$+"the * and ? are used as wildcards."+qt$+r$
+	s2$="{quotation}Well{comma}{quotation} she said{comma} {quotation}the {asterisk} and {question} are used as wildcards.{quotation}{f6}"
+' format string: 3 digits, leading spaces
+' tests out a PRG assumption (which works)
+	fs$="{pound}#3{pound}# "
+{:menu}
+	lp=1:&"[Return=Quit, 1=convnam, 2=convdsk, 3=convimg, 4=chkspcl]{f6}"
+	&"Sub-Function: &,65,{pound}i1":if an$="" then:&"Quitting.{f6}":goto 300
+	op=int(val(an$)):if op<1 or op>4 then:&"Out of range.{f6}":goto {:menu}
+	if op=1 then {:test_convnam}
 	lp=1:&"Plaintext: "+s1$
 ' convert plaintext special characters into Image-encoded function keys?
 ' &,15,2 already converts special chars to readable symbols
-' test s3$ against s1$ (encoded), then s2$ (plaintext)
-	an$=s3$:&,65,op:s3$=an$
-	lp=1:&"Converted: "+s3$+"{f6}"
+	an$=s1$:&,65,op:if an$="" then:&"Result: null string{f6}":goto {:menu}
+' s3$ is... the result of &,65,op
+' test s3$ against s1$ (plaintext), then s2$ (f-key encoded)
+	s3$=an$:lp=1:&"Converted: "+s3$+"{f6}"
+{undef:use_this}
 {ifdef:use_this}
+' don't, not yet... if ever
 	ct=.:for x=1 to len(s3$):ct=ct+1
 ' i%: index, ct=counter
 	i%=ct:a=-(ct=1 or ct=11 or ct=21 or ct=31):if a=. then {:skip_header}
@@ -46,39 +74,65 @@
 	if a then:&"FIXME"
 	next
 {endif}
-	lp=1:&"Testing Image-encoded string against &,65,"+str$(op)+":{f6}"
-	x$=s1$:gosub {:sub.test_conversion}
-	lp=1:&"Testing plaintext string against &,65,"+str$(op)+":{f6}"
+	lp=1:o=op:&"Testing encoded f-key string s2$ against s3$ (&,65,{pound}!o):{f6}"
 	x$=s2$:gosub {:sub.test_conversion}
+	lp=1:&"Testing plaintext string s1$ against s3$ (&,65,{pound}!o):{f6}"
+	x$=s1$:gosub {:sub.test_conversion}
 
-	&"Run again?: ":gosub 96:if a then {:3000}
+	&"Run again?: ":gosub 96:if a then {:menu}
 	goto 300
 
-{:sub.test_conversion}
-' format string: 3 digits, leading spaces
-' tests out a PRG assumption
+{:test_convnam}
+	poke 53252,78:an$="O'MALLEY'S BAR":w$=an$:p$="String with ' in it"
+	&"[{quotation}Q{quotation} quits]{f6:2}":&,1,32
+	if an$="Q" then:&"Quitting.{f6}":goto {:menu}
+	if an$="" then an$=w$:&"Return sets an$={quotation}{pound}$w{quotation}{f6}"
+	&"Before: w$={quotation}{pound}$w{quotation}{f6}"
+	lp=1:&"Pause to enable {quotation}watch exec c045{quotation} breakpoint - Key: {pound}g1{f6}"
+	an$="O'MALLEY'S BAR":&,65,0
+	' type mismatch error:
+	' &,65,0,"O'MALLEY'S BAR"
+	lp=1:&"Pause to {quotation}disable 1{quotation} breakpoint - Key: {pound}g1{f6}"
+	&" After: an$={quotation}{pound}v7{quotation}{f6}"
+	goto {:test_convnam}
 
-'  x$ is either of the original strings, encoded or plaintext, per subroutine call
-' s3$ is the string converted with &,65,op
-	f$="{pound}#3{pound}# "
-	for ct=1 to len(x$)
+{:sub.test_conversion}
+'  x$ is either s1$ (plaintext) or s2$ (f-key encoded)
+' s3$ is x$ converted with &,65,op
+	l=len(s3$):&"Space or / aborts.{f6}":for ct=1 to l
 	a%=asc(mid$(x$,ct,1)):b%=asc(mid$(s3$,ct,1)):c%=ct
-	if a%<>b% then:&"{f6}Mismatch, position {pound}%c{f6}"
-	&f$+"{pound}%c: "+f$+"{pound}%a "+f$+"{pound}%b{f6}"
+	if a%<>b% then:&"{f6}Mismatch, position {pound}%c:{f6}"
+	&fs$+"{pound}%c: "+fs$+"{pound}%a "+fs$+"{pound}%b{f6}"
+' check for space hit (rc) or slash hit (sh). if true, abort listing
+' sh and rc must be manually reset after detection, ml does not clear them
+	ct=ct-l*(sh+rc<>.):if sh+rc then:&"(Aborted.){f6}":sh=.:rc=.
 	next
 
 	&"Strings are ":if x$<>s3$ then:&"not "
 	&"equal.{f6}"
 	return
 
-' mismatches:
-' &,65,0	&,65,1
+' Test		Encoded Plaintext
+' &,65,1	fail	pass		Table 1
+' &,65,2	fail	pass		Table 1
+' &,65,3	fail	pass		Table 1
+' &,65,4	fail	pass		Table 1
+
+' Table 1: Mismatches
+' pos.  orig.   translated
 ' 1	135	34
 ' 6	133	44
 ' 7	135	34
 ' 17	133	34
 ' 19	135	34
-' 24
-' 30
-' 54
-' 55
+' 24	136	42
+' 30	137	63
+' 54	135	34
+' 55	139	13
+
+' space or / aborts list:
+'
+' 10 rn=1000:for i=1 to rn
+' 20 get an$:rc=-(an$=" "):sh=-(an$="/")
+' 30 print i;:i=i-rn*(sh+rc<>.):if sh+rc then print"("an$" hit)";
+' 40 print:next
