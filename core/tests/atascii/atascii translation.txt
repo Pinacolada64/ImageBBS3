@@ -1,0 +1,42 @@
+; from intro.s:
+
+; video of an ATASCII BBS:
+; https://www.reddit.com/r/bbs/comments/p2l32k/the_sysop_side_bbsing_atari_message_information/
+
+; tbl1a2c is "ascii -> commodore" translation
+
+; tblatc
+tr1:
+		.byte $00,$00,$02,$00,$04,$00,$00,$00
+		.byte $14,$09,$00,$00,$93,$0d,$0e,$0f
+		.byte 0,$11,0,$13,20,$15,$16,$17,$18,$19,0,27,0,0,0,0
+		.text " !"
+		.byte 34
+		.text "#$%&'()*+,-./"
+		.text "0123456789:;<=>?"
+		.text "@ABCDEFGHIJKLMNOPQRSTUVWXYZ["
+		.byte $5c
+		.text "]^_"
+		.byte 0
+		.text "abcdefghijklmnopqrstuvwxyz"
+		.byte 0,0,0,0,20
+
+; tblcta
+tr2:
+		.byte $00, $01, $02, $03, $04, $05, $06, $07
+		.byte $08, $09, $0a, $0b, $0c, $0d, $00, $0f
+		.byte $10, $11, $12, $13, $08, $15, $16, $17
+		.byte $18, $19, $1a, $1b, $1c, $1d, $1e, $1f
+		.text " !"
+		.byte 34
+		.text "#$%&'()*+,-./"
+		.text "0123456789:;<=>?"
+		.text "@abcdefghijklmnopqrstuvwxyz[\]^_"
+		.text "-ABCDEFGHIJKLMNOPQRSTUVWXYZ*-!**"
+		.byte 0,129,0,0,0,0,0,0,0,0,0,0,0,$d,0,0
+		.byte 0,145,146,12,0,149,150,151,152,153,154,155,156,157,158,159
+		.text " !---!*!-*!****-"
+		.text "****!!!---******"
+		.text "-ABCDEFGHIJKLMNOPQRSTUVWXYZ*!!**"
+		.text " !---!*!-*!****-"
+		.text "****!!!---******"

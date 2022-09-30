@@ -1,0 +1,219 @@
+' C64List4_04.exe "i.test menu.lbl" -crunch -alpha:alt -ovr -prg
+{step:1}
+{alpha:alt}
+' out-of-module line numbers
+{assign:300	=300	}	' main prompt
+
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
+{quoter:133=comma}	' f1
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
+{quoter:140=up_arrow}	' f8
+
+{number:3000}
+{step:2}
+	rem "i.test menu" {usedef:__BuildDate} {usedef:__BuildTime}
+	gosub {:sub.setup}:goto {:menu}
+
+{:sub.input_range}
+{step:1}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) List chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) List"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
+	&"{f6}":return
+
+{nice:5}
+{step:2}
+{:sub.out_of_range}
+	&"Out of range ({pound}!l-{pound}!h).{f6}":return
+{:sub.todo}
+	&"TODO: Finish this!{f6}":return
+
+{step:1}
+{:3020}
+{:header_page_1}
+' when menu option selected, just show header:
+'  &,0  Output a$
+'  &,1  Input an$
+' (etc.)
+	a%=3021+n%:&,66
+	&"&,0  Output a${f6}":return
+	&"&,1  Input an${f6}":return
+	&"&,2  Disk File Input{f6}":return
+	&"&,3  Read File from Disk{f6}":return
+	&"&,4  Get Byte from Modem{f6}":return
+	&"&,5  Get Version{f6}":return
+	&"&,6  Password Input{f6}":return
+	&"&,7  Load File{f6}":return
+	&"&,8  Disk Directory{f6}":return
+	&"&,9  Bottom Variable{f6}":return
+	&"&,10 Terminal Mode{f6}":return
+{number:3032}
+{:display_page_1}
+' when menu pages are displayed, show option number and header text, e.g.:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 10:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_1}:next:return
+
+{number:3040}
+{:header_page_2}
+' 3030+11=3041
+	a%=3030+n%:&,66
+	&"&,11 Clear Array{f6}":return
+	&"&,12 New User{f6}":return
+	&"&,13 arbit{f6}":return
+	&"&,14 Dump Array{f6}":return
+	&"&,15 Convert an${f6}":return
+	&"&,16 sys 49152{f6}":return
+	&"&,17 sys 49155{f6}":return
+	&"&,18 Set Screen Mode{f6}":return
+' TODO: call &,5 routine to save RAM
+	&"&,19 Get Version{f6}":return
+	&"&,20 Read from Interface Table{f6}":return
+{number:3052}
+{:display_page_2}
+	for n=11 to 20:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_2}:next:return
+
+{:header_page_3}
+{number:3060}
+' 3040+21=3061
+	a%=3040+n%:&,66
+	&"&,21 Write to Interface Table{f6}":return
+	&"&,22 Delay x Tenths of a Second{f6}":return
+	&"&,23 Get Character from Modem{f6}":return
+	&"&,24 xchrout1{f6}":return
+	&"&,25 Sound{f6}":return
+	&"&,26 callmod{f6}":return
+	&"&,27 Save Variable Pointers{f6}":return
+	&"&,28 Restore Variable Pointers{f6}":return
+	&"&,29 usevar{f6}":return
+	&"&,30 putvar{f6}":return
+{number:3072}
+{:display_page_3}
+	for n=21 to 30:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_3}:next:return
+
+{:header_page_4}
+{number:3080}
+' 3050+31=3081
+	&"ML Functions:{f6:2}":a%=3050+n%:&,66
+	&"&,31 zero{f6}":return
+	&"&,32 minusone{f6}":return
+	&"&,33 getarr{f6}":return
+	&"&,34 putarr{f6}":return
+	&"&,35 getln{f6}":return
+	&"&,36 putln{f6}":return
+	&"&,37 trapon{f6}":return
+	&"&,38 trapoff{f6}":return
+	&"&,39 prtln{f6}":return
+	&"&,40 forcegc{f6}":return
+{number:3092}
+{:display_page_4}
+	for n=31 to 40:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_4}:next:return
+
+{:header_page_5}
+{number:3100}
+' 3060+41=3101
+	a%=3060+n%:&,66
+	&"&,41 setbaud{f6}":return
+	&"&,42 ECS Commands{f6}":return
+	&"[&,43 - &,50 are ML functions]{f6}":return
+{number:3112}
+{:display_page_5}
+	for n=41 to 43:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_5}:next:return
+
+{:header_page_6}
+{number:3120}
+' 3070+51=3121
+	a%=3070+n%:&,66
+	&"[&,51 is an ML function]{f6}":return
+	&"&,52 Lightbar Interface{f6}":return
+	&"&,53 Logoff{f6}":return
+	&"&,54 Text editor interface{f6}":return
+	&"&,55 output{f6}":return
+	&"&,56 chatmode{f6}":return
+	&"&,57 relread{f6}":return
+	&"&,58 setalarm{f6}":return
+	&"&,59 farerr{f6}":return
+	&"&,60 Structures (run {quotation}i.test structs{quotation}){f6}":return
+{number:3132}
+{:display_page_6}
+	for n=51 to 60:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next:return
+
+{:header_page_7}
+{number:3140}
+' 3080+61=3141
+	a%=3080+n%:&,66
+	&"&,61 poscrsr{f6}":return
+	&"&,62 Set Time{f6}":return
+	&"&,63 inline1{f6}":return
+	&"&,64 convstr{f6}":return
+	&"&,65 convert{f6}":return
+	&"&,66 Calculated goto/gosub{f6}":return
+	&"&,67 copyrite{f6}":return
+	&"&,68 struct (run {quotation}i.test structs{quotation}){f6}":return
+	&"&,69 Display String on Console{f6}":return
+	&"&,70 Position Terminal Cursor{f6}":return
+{number:3152}
+{:display_page_7}
+	for n=61 to 70:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_7}:next:return
+
+{:setup}
+' p=menu page, 1-7
+	p=1:&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+
+' when menu item is selected, displays header text, e.g.:
+' &,10 Terminal Mode
+{:menu}
+' display menu page 'p' commands
+' p=1: 3012, p=2: 3032, p=3: 3052, p=4: 3072, p=5: 3092, p=6: 3112, p=7: 3132
+	a%=3022+p*20:&,66,1:&"{f6}[Px) Page 1-7, Q)uit]{f6}"
+{:prompt}
+' m=0: "main menu" not displayed
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:menu}
+' Px (switch to Page x) hook:
+	if left$(an$,1)<>"P" then {:dispatch}
+	an=val(mid$(an$,2,1)):if an>. or an<8 then p=an:goto {:menu}
+	gosub {:sub.out_of_range}:goto {:prompt}
+{:dispatch}
+' n%=menu option (used in 1st line), display item #...
+	n%=an:&"{pound}#2{pound}# {pound}%n) "
+
+' this is a dirty hack:
+' an=10s digit of 2-digit value (0 if <10): page #
+' n%= 1s digit of 2-digit value: item within the menu header block
+
+' TODO: I know there's a faster method, like d1=(an/10)*10, d2=(an/100)*100 ?
+'  tried switching * and /, no luck
+
+' 10 an=59:an$=mid$(str$(an),2):dh=.:ifan>9thendh=val(left$(an$,1))
+' 20 dl=val(right$(an$,1))
+' 30 printdh;dl:rem 1st/2nd digit
+' run
+'  5  9
+	an$=mid$(str$(an),2):n%=val(right$(an$,1)):an=.:if val(an$)>9 then an=val(left$(an$,1))
+
+' &,66,1 (calcgosub): routines start on 20-line increments
+' an=0/1: 3020, an=2: 3040, an=3: 3060, an=4: 3080...
+	a%=3020+an*20:&"[line] a%={pound}%a, [item] n%={pound}%n{f6}":&,66,1:goto {:prompt}
+
+{:quit}
+' TODO: array pointers will be restored once struct stuff is re-added
+'	&,28,2:
+	goto 300

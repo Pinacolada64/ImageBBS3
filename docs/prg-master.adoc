@@ -1,6 +1,6 @@
 # Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.2, 2022-05-06
+v0.3, 2022-08-20
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
@@ -15,6 +15,9 @@ v0.2, 2022-05-06
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
 
+// PDF generation config
+:pdftheme: default-sans
+
 include::prg-introduction.adoc[]
 
 ### How to Use This Guide
@@ -27,12 +30,7 @@ include::prg-new-features.adoc[]
 
 include::prg-programming-etiquette.adoc[]
 
-### `im` Subroutines
-
-Some routines are simply needed too often by too many modules to justify placing them in every single module.
-Subroutines are a programmer's greatest friend.
-The core `im` file contains many subroutines which you will find basic to your application or module's needs.
-Be sure to read the xref:prg-programming-etiquette.adoc#programming-etiquette[Programming Etiquette] section for help when deciding where to place a new routine you create.
+include::prg-im-subroutines.adoc[]
 
 ### `sub.*` Module Jump Table
 

@@ -1,0 +1,669 @@
+' C64List4_04.exe "i.test calls.lbl" -crunch -alpha:alt -ovr -prg
+' copied from fs driver as "i.test calls.prg"
+{crunch:on}	' BUG: doesn't crunch resulting PRG file, must specify "-crunch" on command line
+{alpha:alt}
+
+' out-of-module line numbers
+{assign:9	=	9	} ' "Area" Current Message
+{assign:92	=	92	} ' ">>> Canceled!"
+{assign:96	=	96	} ' default "[Yes]"
+{assign:300	=	300	} ' main prompt
+{assign:370	=	370	} ' b$ mode: a
+
+' encoded f-keys
+' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
+{quoter:133=comma}	' f1
+{quoter:135=quotation}	' f5
+{quoter:137=question}	' f2
+{quoter:140=up_arrow}	' f8
+
+{number:3000}
+{step:2}
+	rem "i.test calls" {usedef:__BuildDate} {usedef:__BuildTime}
+	gosub {:sub.setup}:goto {:show_page}
+
+{:sub.input_range}
+{step:1}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) List chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) List"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
+	&"{f6}":return
+
+{nice:5}
+{step:2}
+{:sub.out_of_range}
+	&"Out of range [1-{pound}!t].{f6}":return
+{:sub.todo}
+	&"TODO: Finish this!{f6}":return
+
+{step:1}
+{number:3020}
+{:header_page_1}
+' TODO: gonna need multiple pages (select with "p<x>"?), [+] next page, [-] previous page
+' calcgosub example:
+' 3021+0=3021
+	a%=3021+n:&,66
+	&"&,0  Output a${f6}":return
+	&"&,1  Input an${f6}":return
+	&"&,2  Disk File Input{f6}":return
+	&"&,3  Read File from Disk{f6}":return
+	&"&,4  Get Byte from Modem{f6}":return
+	&"&,5  Get Version{f6}":return
+	&"&,6  Password Input{f6}":return
+	&"&,7  Load File{f6}":return
+	&"&,8  Disk Directory{f6}":return
+	&"&,9  Bottom Variable{f6}":return
+{number:3032}
+{:display_page_1}
+' when menu pages are displayed, show option number and header text, e.g.:
+'  0) &,0  Output a$
+'  1) &,1  Input an$
+' (etc.)
+	for n=0 to 9:n%=n:&sf$:gosub {:header_page_1}:next:return
+
+{number:3040}
+{:header_page_2}
+' 3030+11=3041
+	a%=3041+n:&,66
+	&"&,10 Terminal Mode{f6}":return
+	&"&,11 Clear Array{f6}":return
+	&"&,12 New User{f6}":return
+	&"&,13 arbit{f6}":return
+	&"&,14 Dump Array{f6}":return
+	&"&,15 Convert an${f6}":return
+	&"&,16 sys 49152"+m$+"{f6}":return
+	&"&,17 sys 49155"+m$+"{f6}":return
+	&"&,18 Set Screen Mode{f6}":return
+' TODO: call &,5 routine to save RAM
+	&"&,19 Get Version{f6}":return
+{number:3052}
+{:display_page_2}
+	for n=0 to 9:n%=n+10:&sf$:gosub {:header_page_2}:next:return
+
+{:header_page_3}
+{number:3060}
+' 3040+21=3061
+	a%=3061+n:&,66
+	&"&,20 Read from Interface Table{f6}":return
+	&"&,21 Write to Interface Table{f6}":return
+	&"&,22 Delay x Tenths of a Second{f6}":return
+	&"&,23 Get Character from Modem{f6}":return
+	&"&,24 xchrout1"+m$+"{f6}":return
+	&"&,25 Sound{f6}":return
+	&"&,26 callmod{f6}":return
+	&"&,27 Save Variable Pointers{f6}":return
+	&"&,28 Restore Variable Pointers{f6}":return
+	&"&,29 usevar"+m$+"{f6}":return
+{number:3072}
+{:display_page_3}
+	for n=0 to 9:n%=n+20:&sf$:gosub {:header_page_3}:next:return
+
+{:header_page_4}
+{number:3080}
+' 3050+31=3081
+	a%=3081+n:&,66
+	&"&,30 putvar{f6}":return
+	&"&,31 zero{f6}":return
+	&"&,32 minusone{f6}":return
+	&"&,33 getarr{f6}":return
+	&"&,34 putarr{f6}":return
+	&"&,35 getln{f6}":return
+	&"&,36 putln{f6}":return
+	&"&,37 trapon{f6}":return
+	&"&,38 trapoff{f6}":return
+	&"&,39 prtln{f6}":return
+{number:3092}
+{:display_page_4}
+	&"ML Functions:{f6:2}":for n=0 to 9:n%=n+30:&sf$:gosub {:header_page_4}:next:return
+
+{:header_page_5}
+{number:3100}
+' 3060+41=3101
+	a%=3101+n:&,66
+	&"&,40 forcegc{f6}":return
+	&"&,41 setbaud{f6}":return
+	&"&,42 ECS Commands{f6}":return
+	&"&,43 chatchk"+m$+"{f6}":return
+{number:3112}
+{:display_page_5}
+	for n=0 to 3:n%=n+40:&sf$:gosub {:header_page_5}:next:return
+
+{:header_page_6}
+{number:3120}
+' 3070+51=3121 (from {:display_page_6})
+' FIXME: {:header_page_6}  sets n to 1-10 for selected item number calcgoto
+' FIXME: {:display_page_6} sets n to 51-60
+	a%=3121+n:&,66
+	&"&,50 outscn"+m$+"{f6}":return
+	&"&,51 outmod"+m$+"{f6}":return
+	&"&,52 Lightbar Interface{f6}":return
+	&"&,53 Logoff"+m$+"{f6}":return
+	&"&,54 Text Editor Interface{f6}":return
+	&"&,55 output"+m$+"{f6}":return
+	&"&,56 chatmode"+m$+"{f6}":return
+	&"&,57 relread{f6}":return
+	&"&,58 setalarm{f6}":return
+	&"&,59 farerr{f6}":return
+{number:3132}
+{:display_page_6}
+' n : loop counter, & call number in {:header_page_6}
+' n%: the displayed menu selection number (51-60)
+	for n=0 to 9:n%=n+50:&sf$:gosub {:header_page_6}:next:return
+
+{:header_page_7}
+{number:3140}
+' 3080+61=3141
+	a%=3141+n:&,66
+	&"&,60 structs (run {quotation}i.test structs{quotation}){f6}":return
+	&"&,61 poscrsr{f6}":return
+	&"&,62 Set Time{f6}":return
+	&"&,63 inline1"+m$+"{f6}":return
+	&"&,64 convstr"+m$+"{f6}":return
+	&"&,65 convert"+m$+"{f6}":return
+	&"&,66 Calculated goto/gosub{f6}":return
+	&"&,67 copyrite{f6}":return
+	&"&,68 structs (run {quotation}i.test structs{quotation}){f6}":return
+	&"&,69 Display String on Console{f6}":return
+{number:3152}
+{:display_page_7}
+	for n=0 to 9:n%=n+60:&sf$:gosub {:header_page_7}:next:return
+
+' TODO: page 8
+	&"&,70 Position Terminal Cursor{f6}":return
+
+{nice:10}
+' 3150?
+{:show_page}
+' display menu page 'p' commands
+' p=1: 3032, p=2: 3052, p=3: 3072, p=4: 3092, p=5: 3112, p=6: 3132, p=7: 3152
+	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-8, Q)uit]{f6}"
+{:prompt}
+' m=0: "main menu" not displayed
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:show_page}
+' Px (switch to Page x) hook:
+	if left$(an$,1)<>"P" then {:dispatch}
+	an=val(mid$(an$,2,1)):if an>. or an<9 then p=an:goto {:show_page}
+	gosub {:sub.out_of_range}:goto {:prompt}
+{:dispatch}
+' separate input into tens (t) and ones (n) digits:
+' an=option # chosen
+	an$=mid$(str$(an),2):n=val(right$(an$,1)):t=.:if val(an$)>9 then t=val(left$(an$,1))
+' display function name:
+' &,66,1 (calcgosub): routines start on 20-line increments for {display_page_<an>} routines
+	a%=3020+t*20:&"[header line] a%={pound}%a, [item] 10s: an="+str$(an)+", 1s: n={pound}!n{f6}":&,66,1
+
+' FIXME: temporary hook:
+	if an=23 then gosub {:4350}:goto {:prompt}
+	if an=65 then gosub {:sub.convert}:goto {:prompt}
+	if an=67 then gosub {:sub.copyright}:goto {:prompt}
+	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
+' &,66,1: calcgosub: routines start on 50-line increments
+	a%=3200+an*50:&"[& line] a%={pound}%a{f6}":&,66,1:goto {:prompt}
+
+{:3200} ' &,0: output a$
+	gosub {:sub.todo}:return
+
+{:3250} ' &,1,x,y: input an$
+' TODO: implement testing &,1,x,<password_mode> flags
+' TODO: implement bitwise display of &,1 options
+' if (op and 1)=1 then:&"Disable typing graphics characters{f6}"
+' ...etc.
+
+' &,1,x:
+
+' Binary    | Decimal | Purpose (if set)
+' %00000001 | 1       | disable typing graphics characters
+' %00000010 | 2       | "." or "/" on column one exits input
+' %00000100 | 4       | disable prompt (p$)
+' %00001000 | 8       | disable typing £ (the MCI command character)
+' %00010000 | 16      | enable word-wrap
+' %00100000 | 32      | enable edit mode
+' %01000000 | 64      | ignore time remaining
+' %10000000 | 128     | disable typing Delete on column one to exit input
+
+' &,1,x,y:
+
+' Binary    | Decimal | Purpose (if set)
+' %00000001 | 1       | password mask enabled for output [uses mask character in `peek(17138)`]
+' %00000010 | 2       | no output
+
+' returns:
+' location chat ($d006/53254) holds:
+' 0 = normal
+' 1 = delete or dot on column one
+' 2 = chat check hit
+' 3 = carrier/time loss
+
+	gosub {:sub.todo}:return
+
+{:3300} ' &,2: dskin
+	gosub {:sub.todo}:return
+
+{:3350} ' &,3: readfile
+	gosub {:sub.todo}:return
+
+{:3400} ' &,4: frommodem
+	gosub {:sub.todo}:return
+
+{:3450} ' &,5: Get Version
+	&,5
+{:3452}
+' call for &,19 also
+' returns:
+' lp: major/minor (1.3)
+' a%: revision (1)
+' a$: date (e.g., "12/29/91  1:18p")
+	v=lp:&"Image BBS 64 v{pound}!v.{pound}%a: "+a$+"{f6}"
+	return
+
+{:3500} ' &,6: password
+	gosub {:sub.todo}:return
+
+{:3550} ' &,7: loadfile
+	gosub {:sub.todo}:return
+
+{:3600} ' &,8: dskdir
+	gosub {:sub.todo}:return
+
+{:3650} ' &,9: btmvar
+' enumerate variables that can be displayed, from &,9,x table:
+' FIXME: can't display ints or floats properly
+' 0-9:
+	v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
+' 10-19:
+	v$=v$+"tt$na$rn$ph$ak$lp pl rc sh mw "
+' 20-29:
+	v$=v$+"nl ul qe rq ac%ef lf w$ p$ tr%"
+' 30-39:
+	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
+' 40-49:
+	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
+{:amp_9_help}
+' display table row:
+' a% a$   b% b$   c% c$   d% d$   e% e$
+	for rw=0 to 9
+' column indices [must be >=1, mid$() doesn't handle negative values]:
+	a%=rw+1:b%=a%+10:c%=b%+10:d%=c%+10:e%=d%+10
+' extract row's variable names:
+	a$=mid$(v$,a%*3-2,3):b$=mid$(v$,b%*3-2,3):c$=mid$(v$,c%*3-2,3)
+	d$=mid$(v$,d%*3-2,3):e$=mid$(v$,e%*3-2,3)
+' decrement indices so they display properly (0-49, not 1-50):
+	a%=a%-1:b%=b%-1:c%=c%-1:d%=d%-1:e%=e%-1
+' display a row:
+	&"{pound}#2{pound}# {pound}%a {pound}$a  {pound}#2{pound}# {pound}%b {pound}$b  "
+	&"{pound}#2{pound}# {pound}%c {pound}$c  {pound}#2{pound}# {pound}%d {pound}$d  "
+	&"{pound}#2{pound}# {pound}%e {pound}$e{f6}":next
+
+{:amp_9_prompt}
+	&"{f6}[0-49, A)ll, M)ain Menu, {question}=List]{f6}":p$="Display variable":&,1:op$=an$
+	on -(op$="A")-2*(op$="M")-3*(op$="{question}") goto {:amp_9_all}, {:amp_9_quit}, {:amp_9_help}
+	an=int(val(op$)):if an<0 or an>49 then gosub {:sub.out_of_range}:goto {:amp_9_prompt}
+	gosub {:sub.amp_9_display}:goto {:amp_9_prompt}
+{:amp_9_all}
+	&"[At {quotation}Key:{quotation} prompt, {quotation}Q{quotation} quits.]{f6}"
+	for an=0 to 49:i%=an:&"[#{pound}#2{pound}# {pound}%i/49] "
+	gosub {:sub.amp_9_display}:if an$="Q" then:&"Quitting.{f6}":an=50
+	next:goto {:amp_9_prompt}
+{:sub.amp_9_display}
+	&,9,an:&"Displaying "+mid$(v$,(an+1)*3-2,3)+"- Key: {pound}g1{f6}":return
+{:amp_9_quit}
+' restore window to computer type string
+' var 36 is co$, computer type:
+	&"Restoring window to computer type.{f6}":&,9,36:return
+
+{:3700} ' &,10: Terminal Mode
+	&"C= + Ctrl exits terminal mode.{f6}"
+	&,10:return
+
+{:3750} ' &,11: Clear Array
+' TODO: Protect against clearing reserved arrays
+	gosub {:sub.todo}:return
+
+{:3800} ' &,12: New User
+	gosub {:sub.todo}:return
+
+{:3850} ' &,13: arbit
+	if lk%=. then:&"No Lt.Kernal HD configured.{f6}"
+	gosub {:sub.todo}:return
+
+{:3900} ' &,14: Dump Array
+	gosub {:sub.todo}:return
+
+{:3950} ' &,15: convan
+	&"{f6}"
+	&"&,15   Convert Date{f6}"
+	&"&,15,1 Title Case{f6}"
+	&"&,15,2 Decode Function Keys{f6}"
+' they both point to same call
+	&"&,15,3 {pound}$i{f6}"
+	&"&,15,4 (points to &,15,3){f6}"
+	&"&,15,5 newdate {pound}$i{f6}"
+	&"&,15,6 Scan string...{f6}"
+{:amp_15_prompt}
+	l=0:h=6:q=1:m=1:gosub {:sub.input_range}:on q goto {:3950}:if m then return
+	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
+
+{:15_5}' &,15,5:
+' Old: d1$="19011038045"
+'      an$="Sun Nov  3, 2090 12:45 PM PST"
+' New: d1$="9011038045"
+'      an$="??? Oct 38, 2001  4:57 AM PST"
+'
+' Old: d1$="11410288045"
+'      an$="Sun Oct 28, 2014 12:45 PM PST"
+' New: d1$="1410288045"
+'      an$="Sun Feb 88, 2041  4:57 AM PST"
+
+	an$="19011038045":gosub {:sub.test_newdate} ' before: sun nov  3, 2090  8:45 pm
+	an$="11410288045":gosub {:sub.test_newdate} ' before: sun oct 28, 2014  8:45 pm
+	return
+{:sub.test_newdate}
+	&"{f6}Old":gosub {:sub.show_newdate}:&,15,5:&"New"
+{:sub.show_newdate}
+	&": d1$={quotation}{pound}v7{quotation}{f6}{pound}{back arrow}05an$={quotation}{$04}"+an$+"{quotation}{f6}":return
+
+{:15_6}
+' from programmer's reference guide
+	&"&,15,6,x: Scan string{f6:2}"
+	&"Split String Two Ways [from PRG]:{f6:2}"
+	&"Scan Using chr$(value){f6}"
+	&"Scan Using  asc({quotation}char{quotation}){f6:2}"
+	&"Other Examples:{f6:2}"
+	&"Simulate {quotation}instring{quotation} function{f6}"
+	&"Input scan string/split char{f6:2}"
+{:15_6_prompt}
+	l=1:h=4:m=1:q=1:gosub {:sub.input_range}
+	v$="an$={quotation}Hello world{quotation}:&,15,6,":on an gosub {:sub.15_6_scan_string_chr}, {:sub.15_6_scan_string_asc}, {:sub.todo}, {:sub.todo}
+' q="?" entered, m="M"main menu:
+	on -(m=1) -2* (q=1) goto {:15_6}, {:15_6_quit}:goto {:15_6_prompt}
+{:sub.15_6_scan_string_chr}
+' an$="Hello world":&,15,6,32
+	&"{pound}$v32{f6}":an$="Hello world":&,15,6,32:gosub {:sub.15_6_results}:return
+{:sub.15_6_scan_string_asc}
+' an$="Hello world":&,15,6,asc(" ")
+	&"{pound}$vasc({quotation} {quotation}){f6}":an$="Hello world":&,15,6,asc(" "):gosub {:sub.15_6_results}:return
+{:sub.15_6_results}
+' returns a$="Hello", an$="world":
+	&"a$={quotation}{pound}$a{quotation}, an$={quotation}{pound}v7{quotation}{f6:2}":return
+
+{:15_6_quit}
+	&,28,2:return
+
+{:4000} ' &,16: sys49152
+	gosub {:sub.todo}:return
+
+{:4050} ' &,17: sys49155
+	gosub {:sub.todo}:return
+
+{:4100} ' &,18: Screen Mode
+	gosub {:sub.todo}:return
+
+{:4150} ' &,19: Get Version
+' call &,5 display routine
+	goto {:3452}
+
+{:4200} ' &,20: Read From Interface Table
+	gosub {:sub.todo}:return
+
+{:4250} ' &,21: Write to Interface Table
+	gosub {:sub.todo}:return
+
+{:4300} ' &,22: Wait x Tenths of a Second
+	gosub {:sub.todo}:return
+
+' test code from image bbs 2.0:
+' https://github.com/Pinacolada64/ImageBBS/blob/5b564adb919f49e7644c303e7c21e8b75fd192f0/v2/core/jack/i_UD.lbl#L93-L97
+' 10 x=10:print"auto-logoff. press space to abort"
+' 20 printx;:ford=1to500:next:geta$:ifa$<>" " thenonxgoto40:x=x-1:goto20
+' 30 print"aborted":end
+' 40 print"auto-logoff"
+
+{:4350} ' &,23: xgetin
+	&"{pound}$f:{f6:2}"
+
+{:4352}
+	&"(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
+{:23_loop}
+' 92: ">>> Canceled!"
+' NOTE: using &,4 gives inconsistent results, and never the PetSCII value of the typed character
+	i=i-1:&"{f6}{pound}!i":&,22,10:&,4:c=peek(780):&" c={pound}!c, rc="+str$(rc):if c=32 then gosub 92:goto {:23_again}
+	on i goto {:23_loop}:&"Timed out.{f6}"
+{:23_again}
+' 96: "[Yes]"
+	&"Again [Y/n]?: ":gosub 96:on a goto {:4352}:return
+
+{:4400} ' &,24: xchrout1
+	gosub {:sub.todo}:return
+
+{:4450} ' &,25: Sound
+' &,25,<sound>,<repeat>
+' <repeat> = 0: stop playing
+' <repeat> = 1 - 254: # of repetitions
+' <repeat> = 255: infinite
+	gosub {:sub.todo}:return
+
+{:4500} ' &,26: ecschk
+	gosub {:sub.todo}:return
+
+{:4550} ' &,27: array pointer save
+' TODO: protect against &,27,1 (erases working variables for BBS)
+	gosub {:sub.todo}:return
+
+{:4600} ' &,28: array pointer restore
+	gosub {:sub.todo}:return
+
+{:4650} ' &,29: usevar
+	gosub {:sub.todo}:return
+
+{:4700} ' &,30: putvar
+	gosub {:sub.todo}:return
+
+{:4750} ' &,31: zero
+	gosub {:sub.todo}:return
+
+{:4800} ' &,32: minusone
+	gosub {:sub.todo}:return
+
+{:4850} ' &,33: getarr
+	gosub {:sub.todo}:return
+
+{:4900} ' &,34: putarr
+	gosub {:sub.todo}:return
+
+{:4950} ' &,35: getln
+	gosub {:sub.todo}:return
+
+{:5000} ' &,36: putln
+	gosub {:sub.todo}:return
+
+{:5050} ' &,37: trapon
+	gosub {:sub.todo}:return
+
+{:5100} ' &,38: trapoff
+	gosub {:sub.todo}:return
+
+{:5150} ' &,39: prtln
+	gosub {:sub.todo}:return
+
+{:5200} ' &,40: forcegc
+	gosub {:sub.todo}:return
+
+{:5250} ' &,41: setbaud
+	gosub {:sub.todo}:return
+
+{:5300} ' &,42: ecs commands
+	gosub {:sub.todo}:return
+
+{:5350} ' &,43: chatchk
+	gosub {:sub.todo}:return
+
+{:5400} ' &,44: trace
+	gosub {:sub.todo}:return
+
+{:5450} ' &,45: prtvar
+	gosub {:sub.todo}:return
+
+{:5500} ' &,46: prtvar0
+	gosub {:sub.todo}:return
+
+{:5550} ' &,47: carchk
+	gosub {:sub.todo}:return
+
+{:5600} ' &,48: getkbd
+	gosub {:sub.todo}:return
+
+{:5650} ' &,49: getmod
+	gosub {:sub.todo}:return
+
+{:5700} ' &,50: outscn
+	gosub {:sub.todo}:return
+
+{:5750} ' &,51: outmod
+	gosub {:sub.todo}:return
+
+{:5800} ' &,52: lightbar interface
+	gosub {:sub.todo}:return
+
+{:5850} ' &,53: logoff, also see &,53,a
+	gosub {:sub.todo}:return
+
+{:5900} ' &,54: text editor interface
+	gosub {:sub.todo}:return
+
+{:5950} ' &,55: output
+	gosub {:sub.todo}:return
+
+{:6000} ' &,56: chatmode
+	gosub {:sub.todo}:return
+
+{:6050} ' &,57: relread
+	gosub {:sub.todo}:return
+
+{nice:10}
+{:sub.which_record}
+' if er=1, a is out of bounds
+	rem for &,57 (relread)
+	&"[1-{pound}!t]{f6}":p$="Which Record":&,1:a=int(val(an$)):er=-(a<1 or a>t)
+	return
+
+{:6100} ' &,58: setalarm
+	gosub {:sub.todo}:return
+
+{:6150} ' &,59: farerr
+	gosub {:sub.todo}:return
+
+{:6200} ' &,60: structs
+	gosub {:sub.todo}:return
+
+{:6250} ' &,61: poscrsr
+	gosub {:sub.todo}:return
+
+{:6300} ' &,62: set time
+	gosub {:sub.todo}:return
+
+{:6350} ' &,63: inline1
+	gosub {:sub.todo}:return
+
+{:6400} ' &,64: convstr
+	gosub {:sub.todo}:return
+
+{:6450} ' &,65: convert
+{:sub.convert}
+' assumptions:
+' define an$
+
+' &,65,0: convnam (check for ' in string, lowercase character afterwards?)
+' - test: an$="O'MALLEY'S BAR" (two apostrophes) -> "O'malley's Bar" (really should be "O'Malley's" but I picked an edge case on purpose)
+' - result: an$="" (?)
+' - &,65,0,"string" returns "?type mismatch error"
+
+' &,65,1: disk data
+' &,65,2: special characters to Image-encoded function keys, and
+' &,65,3: check special characters.
+' print an$
+{:display_header_convert}
+	&"Convert names{f6}":return
+	&"Convert disk data (?){f6}":return
+	lp=1:&"Convert special characters to Image-encoded function keys{f6}":return
+	&"Check string for special characters (?){f6}":return
+{:header_convert_input}
+	lp=1:&"Input search string [currently {f5}"+sf$+"{f5}]{f6}":return
+{:header_convert_reset}
+	&"Reset defaults{f6}":return
+{:display_page_convert}
+	for n=0 to 3:n%=n:&sf$:gosub {:display_header_convert}:next:&"{f6}I) ":gosub {:header_convert_input}:&"R) ":gosub {:header_convert_reset}
+{:convert_reset}
+' sf$="search for". quote and return excluded for display reasons:
+	sf$="{f1}{f3}{f7}{f2}{f4}{f8}"
+
+{:convert_prompt}
+	m=1:l=.:h=3:gosub {:sub.menu}:on -(a$="I")-2*(a$="R") goto {:convert_input},{:convert_reset}
+	a%=6450+20*an:&,66
+
+{:convert_input}
+	gosub {:sub.todo}:return
+
+{:6500} ' &,66: calculated goto
+	' &,66,1: calculated gosub
+	gosub {:sub.todo}:return
+
+{:6550} ' &,67: copyright
+{:sub.copyright}
+' prints an$ from ml
+	&,67:return
+
+{:6600} ' &,68: struct
+	gosub {:sub.todo}:return
+
+{:6650} ' &,69: display string on console
+	gosub {:sub.todo}:return
+
+{:6700} ' &,70: position terminal cursor
+	gosub {:sub.todo}:return
+
+{nice:10}
+{:sub.setup}
+	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
+' get Trb-L status (db=debug mode):
+' 370 inverts a, so pre-inverting it reports actual status
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+' set p=menu page number
+	f$="(fixme)":i$="(investigating)":m$="{pound}{back arrow}26[ML function]":p=1
+' format string: 2-digit int, fill char=space, "n%) "
+	fs$="{pound}#2{pound}# {pound}%n) "
+' current line number to correctly calculate gosub targets regardless of where code gets moved to:
+	def fn cl(x)=peek(57)+256*peek(58)
+' line variable
+' 3000 pr$
+' 4000 p1$
+' 60000 p2$
+' in e.errlog (im line 4024)
+' since this module spans 3000-4000, define pr$ and p1$ as the same
+	pr$="i."+"test calls":p1$=pr$
+	cm$="Test & Calls":gosub 9
+	return
+
+{nice:10}
+{:sub.load_module}
+' TODO: possibly load sub-modules with more functions
+	rem sub.load_module
+
+{nice:10}
+{:quit}
+	&"Quitting.{f6}":&,40:goto 300
+	rem i.test calls

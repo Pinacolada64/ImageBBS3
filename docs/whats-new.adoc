@@ -14,8 +14,6 @@ With a different philosophy behind the core `im` file, several improvements beca
 
 While 3.0's modules now start with an `i` prefix instead of 1._x_`'s `+` prefix, you can still run modules meant for those older versions of the BBS through an included emulation (or to be more precise, a _redirection_) layer.
 
-#TODO#: I forgot what I was going to put here.
-
 === What's New
 
 Many new features have been added and improvements have been made in existing features for Image BBS 3.0.
@@ -52,9 +50,18 @@ Many new features have been added and improvements have been made in existing fe
 
 ==== User Features
 
-* Text word-wraps to 40 columns for C64 console and caller's terminal line length
-* Optional "`More`" prompt can automatically pause text output
+* Word-wrap for text:
+** 40 columns for C64 console
+** 80 columns for C64 console printer
+** the caller's terminal line length
+
+* Optional "`More`" prompt can automatically pause text output when a screen of text has been received
+
 * Terminal bell sent when nearing idle time limit
+
+* Stacked commands now maintain a command history:
+** View command history with `^?`
+** Execute command history with `^` and a digit `0-9`, _e.g._ `^3` to execute the third most recent command
 
 ===== Text Editor
 
@@ -62,7 +69,9 @@ Many new features have been added and improvements have been made in existing fe
 ** kbd:[.B]anner text: Create large text for fun or emphasis in messages
 ** kbd:[.T]ext Transfer mode: Prevents text from being displayed in the terminal while text is sent from a buffer
 ** kbd:[.U]se Signature (kbd:[PS] edits them): Add "`taglines`" to your posts
+
 * kbd:[/] is an alias for kbd:[.] for those used to that command character from other BBS programs
+
 * New MCI commands:
 ** left/right margin set (``£<``_nn_ and ``£>``_nn_)
 ** floating point variable display (``£!``_n_)
@@ -73,10 +82,12 @@ Many new features have been added and improvements have been made in existing fe
 * More module types
 * New `&` functions
 ** Structures (`&,60` and `&,68`: RAM block manipulation, load, save, search, store/retrieve bytes and strings, and more) can replace using BASIC arrays
+
 ** Sounds
 *** New "`gong`" sound (`&,25,3`)
 *** _repeat_ parameter: `0`=stop repeating, `1-254`=repeat count, `255`=infinite repeat
 * Image 1._x_ emulation layer so their `+.` files can be run (if renumbered to 3000-)
+
 * BASIC keyword extensions
 ** Hexadecimal values can be used in `poke`, `peek`, `sys` and `&` commands. `poke $d004,$0c` is the equivalent of `poke 53252,12`
 ** Binary values can also be used, and can be combined with hexadecimal: `poke $d004,%00001100` is the equivalent of `poke 53252,12`

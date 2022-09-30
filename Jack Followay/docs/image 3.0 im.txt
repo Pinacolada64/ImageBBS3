@@ -1,0 +1,249 @@
+Date   : 8:49PM  3/6/95
+File   : "image" (==> "im")
+Type   : PRG; BASIC
+Purpose: 'Core' Routines File
+Layout :
+
+0: Jumps to Main Prompt at 300 (goto 1812)
+
+1: Position record of currently opened REL file on LFN#2 (twice).  Variable (x) should be set to Record desired prior to calling this routine. (gosub 1001)
+
+2: Sets active system drive according to configured setup.  Active Device will be returned in (dv%); Active Drive + ":" will be in (dr$); (dr) must be set (1-6) to desired drive prior to calling this routine.  Refer to Table 1 for (dr) settings.  (gosub 1009)
+
+ --Table 1-----------------------
+ dr=  System. Drive
+ --------------------------------
+  1   System Files (s.*, n.*)
+  2   E-Mail/NetMail (m.*, nm.*)
+  3   Etcetera Files (e.*)
+  4   Directory Files (d.*)
+  5   Plus Files (+.*, ++*, i.*)
+  6   User Files (u.*)
+ --------------------------------
+
+3: (Closes, then re-)Opens Command Channel (LFN#15) on the device, drive requested by setting the variable (dr) explained above.  (gosub 1010)
+
+4: Opens filename stored in (a$) on device requested by setting the variable (dr) explained above.  Will automatically make call to lines 2 and 3.  Upon exit, this routine falls through to line 5.  (gosub 1011)
+
+5: Read Error Channel of currently active device, drive. Upon exit, (a$) will contain the status message, (e%) returns the error number, (e$) the error text, (t%) the track, and (s%) the sector.  (gosub 1012)
+
+6: Uppercase INPUT routine.  Displays prompt currently stored in (p$), and waits for user input followed by a carriage return.  Number of characters allowed should be poked (MEM:53252) before calling this routine.  Chained commands (uu$) are checked for, and result of INPUT is returned in (an$).  (gosub 1006)
+
+7: "Hot-Key" GET routine.  Waits for a keypress, and result (single uppercase character) is contained in an$.  (gosub 1007)
+
+8: "Hot-Key" Yes/No GET routine.  Waits for Keypress: if "Y", then Prints "Yes", and (a) is set to 1; otherwise "No" is printed and (a) is set to 0.  (gosub 1902)
+
+9: Prints (strictly text) contents of (cm$) to "Area" window of the SysOp Screen.  (gosub 1360)
+
+10: Same as line 1, however, it is suggested that you call this routine by line 1 for some systems compatibility. (gosub 1002)
+
+11: Checks status of user flags.  Variable (a) must be set for the appropriate flag before calling this routine, and will contain the result open exit.  See Table 2 for valid values.  (gosub 1004)
+
+ --Table 2-----------------------------------------------------
+ Flag (a=)  Flag Description     Flag (a=)  Flag Description
+ --------------------------------------------------------------
+     1    Non-Weed Status           11    BAR/Log View Access
+     2    Credit Ratio              12    Sub Maint Access
+     3    Local Maint Access        13    Files Maint Access
+     4    Post/Respond Access       14    MCI Access
+     5    U/D Access                15    Prime Time UD Access
+     6    Max. Editor Lines         16    Max. Idle Time
+     7    Unlimited D/Ls            17    Calls/Day Allowed
+     8    Remote Maint Access       18    Time/Day Allowed(?)
+     9    E-Mail Access             19    Time/Day Allowed(?)
+    10    User List Access          20    D/Ls/Call Allowed
+ --------------------------------------------------------------
+
+12: Reset routine.  Resets all system output to default parameters.  (gosub 1914)
+
+13: Clear the screen and output the SEQ file in (a$) on device, drive (dr) to the SysOp screen and to the modem.  (gosub 1075)
+
+14: Outputs the SEQ file in (a$) on device, drive (dr) to the SysOp screen and to the modem.  (gosub 1076)
+
+16: Update BAR Stat (x).  This routine inputs [st(x)] from the "e.stats" file [record (x)], add the value of (i) to it, then fall through to line 17.  (x) should be set to the desired statistic to be updated (See Table 3).  Note that e.stats should be opened prior to calling this routine.  (gosub 1025)
+
+ --Table 3---------------------------------
+ (Description)  LAST   LOG  CURRENT  TOTAL
+ ------------------------------------------
+  Feedback        1     12     23     30
+  SysOp Mail      2     13     24     31
+  User Mail       3     14     25     32
+  Posts           4     15     26     33
+  Responses       5     16     27     34
+  Uploads         6     17     28     35
+  Downloads       7     18            36
+  New Users       8     19     29
+  Calls           9     20
+  Time Used      10     21
+  Time Idle      11     22
+ ------------------------------------------
+
+17: Print the value of [st(x)] to record (x) of e.stats.  Note that e.stats should be opened, prior to calling this routine, on LFN#2.  (gosub 1026)
+
+20: Load i. module in (a$) (minus the i.) from the plus file drive (dr=5), then returns from routine.  This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.  The "i." and drive designators are automatically added by the sub-routine.  If the file is already in memory (pr$), (e%) is set to 0, and the sub-routine exits, otherwise this routine exits to line 5.  (gosub 1013)
+
+21: Loads i. module in (a$) (minus the i.).  Same as 20, except device, drive is determined by current value of (dr). (none)
+
+23: Loads i. module in (a$) (minus the i.), then starts module.  Same as 20, except after loading, this routine does a goto 3000. (goto 1016)
+
+24: Loads i. "gosub" module in (z$) (minus the i.), runs, then, upon RETURN, re-loads i. module which was already loaded when the routine was called. (goto 1300)
+
+25: Loads i. module in (z$) (minus the i.) and continues to line 3000.  <This line is similar to 1301, however, regardless of error, it goes to line 3000.>
+
+26: Loads i. module in (a$) from device, drive in (dr), sets (f1) to [sgn(e%)], then continues to line 3000.  (goto 1067)
+
+27: Loads i. "mini-module" in (a$) from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded (lm$), then this routine exits without actually re-loading the file.  (none)
+
+28: Loads ++ file in (a$) from plus file drive (dr=5), and exits to via line 5, so (e%) can be checked to ensure file loaded.  Note that if the file is already loaded (ml$), then this routine exits without actually re-loading the file.  (similar to 1736, but requires a filename rather than setting the variable (a).)
+
+30: Opens REL file "e.stats" on etcetera drive on LFN#2.  (gosub 1060)
+
+31: Opens REL file "e.access" on etcetera drive on LFN#2. (none)
+
+32: Opens E-Mail file (m.) for desired user. (tt$) should contain the name of the user's E-Mail file to open, and (a$) should contain an ",r" or ",w" appropriate for reading or writing.  (gosub 1062)
+
+33: Opens REL file "e.data" on etcetera drive on LFN#2.  (gosub 1063)
+
+34: Opens SEQ file "e.log#" [where # is the day code in (am$)] on etcetera drive.  (a$) should be set to "a" to append, or "r" to read, (or "w" if doing maintenance that requires creating the file).  (gosub 1064)
+
+35: Opens REL file "u.config" on user files drive.  (gosub 1065)
+
+40: Loads "sub.editor", and executes at line 60000.  This is the entry point for the system editor.  Set (mm) according to reason for calling:
+
+	mm	Routine
+	-------------------------------------
+	 1	Main Entry Routine (Clear)
+	 2	Alt. Entry (No Clear/Resume)
+	-------------------------------------
+
+41: Loads "sub.handles", and executes at line 60000.  Set (mm) according to reason for calling:
+
+	mm	Routine
+	-------------------------------------
+	 0	Load u.index and put total
+		Number of users in (uh)
+	 1	Load u.index and check for
+		user in (an$).  User ID is
+		returned in (i), unless not
+		found [(i)=0].
+	-------------------------------------
+
+42: Loads "sub.protos", and executes at line 60000.  Set (mm) according to reason for calling:
+
+	mm	Routine
+	-------------------------------------
+	 0	Load s.m.protos into [tt$()].
+		(b%) is set to 1 if in Local
+		mode, and (x) is set to the
+		total number of protos in
+		[tt$()]. (20 Max)
+	 1	Load and display protocol,
+		asks user to select protocol
+		unless in Console Local mode
+		(C.L.M. defaults to Copier),
+		then loads the protocol.
+	 2	Load user's default protocol
+		(found in uh).
+	-------------------------------------
+
+43: Loads "sub.display", and executes at line 60000.  Set (mm) according to reason for calling:
+
+	mm	Routine
+	-------------------------------------
+	 1	Displays screen used while
+		user is online and fills in
+		all the user's information.
+	 2	Wait for Call Screen
+	 3	Displays screen used while
+		user in online, but leaves
+		windows blank.
+	 4	Displays file transfer
+		screen where device,drive
+		=[dv%(bn+6),dr%(bn+6)]
+	 5	Displays file transfer
+		screen where device,drive
+		=[d1%,d2%]
+	-------------------------------------
+
+50: Prints (a$) to the daily log, unless in instant mode (i%=1).  Entering this routine at line 51 ignores (i%).  (gosub 1490)
+
+60: Writes file (CAP-RVS-P) to device, drive in (dr), scratches file, then sets (a) to the [sgn(e%)].  This routine is used to test (particularly on floppy based systems) if there is a free directory entry on the device, drive.  It should be called before the creation of any new file.  (gosub 1085)
+
+61: Reads blocks free on device, drive (dr).  Blocks free is returned in the variable (bf).  This routine should be called and the variable bf checked before creating any file on a device, drive to ensure there is enough space available.  (gosub 1079)
+
+70/71: Load and execute an i.file module beginning at line 3000.  These are the 'main' modules.
+
+72/73: Load and execute an i.'mini-module' file beginning at line 4000.  These are the equivalent of 'MM.' files from v1.2.
+
+74/75: Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  (Replaces 2.0's im. files)
+
+79: Loads i.module from device, drive in (dr), then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
+
+80: Similar to 24, except uses (p1$) as a reference to currently loaded file, rather than (pr$).
+
+81: Same as 28, except peculiar difference in approach of checking against (ml$).
+
+200: System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in (p$), the time, and stack free if in local mode.  The routine will check the command stack (uu$), and will also check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with (mm) set as follows:
+
+	mm	Action
+	-------------------------------------------------------
+	 0	"Init."  Use this as an entry point.
+	 1	Not a Global (ECS) Command.
+	 2	Prep. for a prompt display.  (Setup (p$) and
+		any pre-prompt text, then RETURN)  This Action
+		is called before actually displaying the Time/
+		prompt in (p$).
+	 3	Global (ECS) Command issued.  Clean up & Exit.
+		(This Could be a GOSUB or GOTO ECS Command.
+		The purpose is to quickly perform a clean-up
+		(close files, etc) before proceeding.  In most
+		cases, nothing is done.  Exit should be handled
+		by issuing a RETURN.
+		NOTE: This is also the setting for (mm) that is
+		used if the time limit is exceeded.
+	 4-?	?Internal usage by modules?  Not related to
+		prompt routine.
+	-------------------------------------------------------
+	NOTE:  If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local (lc) menu is shown to the user.
+
+250: Displays local/level (lc) menu.  (See Chart)
+
+	 lc	Menu
+	----------------------------------
+	 1	Main Menu
+	 2	Message Base Menu
+	 3	Editor Menu/Help
+	 4	Local Mode Menu (zz)
+	 5	File Transfer Menu (UD)
+	 6	E-Mail Menu
+	 7	General Files Menu (GF)
+	 8	End of Bulletin Menu (SB)
+	 9	Disk Transfer Menu (UX)
+	----------------------------------
+
+280: This routine is called by the prompt routine at line 200 to check for ECS commands.
+
+300: Main Prompt Entry routine.  "i.main" is loaded at line 3000, and executed.  (goto 1812)
+
+302: Loads "i.lo" file and executes with (mm) set to 0 (init). Action is dependent on the value of (f1):
+
+	 f1	Action
+	----------------------------------------
+	 0	Connection Established
+	 1	Normal Logoff
+	 2	Fast Logoff (O! or Out of Time)
+	 3	Normal Entry (when loading 'lo'
+		for Wait for Call Screen.)
+	----------------------------------------
+
+304: Reverts memory marker back to 1 (&,28,1), calls line 306 which then issues an &,27 (save) and exits.
+
+306: Image 1.2 Emulation Mode.  Dimensions variables similar to Image v1.2 [bb$(31),dt$(61), ed$(61), nn$(61), a%(61), c%(61), d%(61), e%(31), f%(61), ac%(31), so%(31)].  'Emulating' 1.2 is not the only use: this routine is helpful to save space and quickly dimension common variables to be used in a program.
+
+310: "?^" routine.  Prints up to last 10 commands <stored in [hs$(#)]> typed via the prompt routine.
+
+320: Update access level of user online.  (Called by prompt routine at line 200).
+
+330: Randomly outputs a macro from file "e.macros". (gosub 1996)
+
+400: RETURN Jump-point. (goto 1610)
