@@ -32,7 +32,7 @@ Layout :
 
 | `goto&#160;0`
 | `goto&#160;1812`
-| Jump to main prompt at line 300
+| Jump to main prompt at line 300.
 
 | `gosub&#160;1`
 | `gosub&#160;1001`
@@ -240,8 +240,8 @@ This routine then:
 . checks whether the module requested has already been ``load``ed (``ml$=a$``):
 
 * If so, the DOS error status (`e%`) is set to `0` to indicate no error, and it ``return``s instead of re-``load``ing the file.
-* otherwise, loads the module via `&,7`
-. exits via `goto 5`, so the DOS error status can be checked to ensure the file loaded.
+* otherwise, loads the module via `&,7` and ``return``s
+// . exits via `goto 5`, so the DOS error status can be checked to ensure the file loaded.
 
 _Returns:_
 
@@ -493,12 +493,12 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 
 | `goto&#160;300`
 | `goto&#160;1812`
-| Main Prompt Entry routine.
+| Main prompt entry routine.
 `i.main` is loaded at line 3000, and executed.
 
 | 302
 | 
-| Loads `i.lo` file and executes with `mm` set to 0 (init).
+| Loads `i.lo` file and executes with `mm` set to `0` (init).
 Action is dependent on the value of `f1`:
 
 [%autowidth]
@@ -535,7 +535,7 @@ This executes that command history entry.
 
 | `gosub&#160;315`
 | _none_
-| Prints up to the last 10 commands (stored in the history stack, `hs$(10)`) typed via the prompt routine.
+| Prints up to the last 10 commands (stored in the history stack, `hs$(10)`) typed via `^?`.
 
 | `gosub&#160;320`
 | #FIXME#
