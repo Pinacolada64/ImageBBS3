@@ -5,13 +5,13 @@
 This chapter documents `im` routines.
 
 Some routines are simply needed too often by too many modules to justify placing them in every single module.
-Subroutines are a programmer's greatest friend.
+Subroutines are a programmer`'s greatest friend.
 The core `im` file contains many subroutines which you will find basic to your application or module's needs.
 Be sure to read the xref:prg-programming-etiquette.adoc#programming-etiquette[Programming Etiquette] section for help when deciding where to place a new routine you create.
 
 // &#3020; is... interesting. looks like "blob pi"
 ====
-&#8658; Contributions by Jack "`Rascal`" Followay, Jr; Larry "`X-Tec`" Hedman, Jay "`x`" Campey, and Ryan "`Pinacolada`" Sherwood.
+&#8658; Contributions by Jack "`Rascal`" Followay, Jr; Larry "`X-Tec`" Hedman, Jay "` #FIXME# `" Campey, and Ryan "`Pinacolada`" Sherwood.
 ====
 
 ////
@@ -206,7 +206,7 @@ Setup: open `e.stats` (`gosub 30`).
 [%header]
 [cols="<1,^2,^3,^4,^5"]
 !====================
-! Description ! Last ! Log ! Current ! Total 
+! Description ! Last ! Log ! Current ! Total
 ! Feedback    !   1  !  12 !   23    !  30
 ! SysOp Mail  !   2  !  13 !   24    !  31
 ! User Mail   !   3  !  14 !   25    !  32
@@ -226,7 +226,7 @@ Setup: open `e.stats` (`gosub 30`).
 Note that `e.stats` should be opened first (`gosub 30`), prior to calling this routine, on LFN 2.
 
 | gosub&#160;28
-| 
+|
 | Loads a `++` (protocol) file from Plus File drive--if it isn't already loaded--and checks the DOS error status.
 
 _Setup:_
@@ -259,10 +259,10 @@ _Returns:_
 | gosub&#160;1062
 | Opens E-Mail file for desired user.
 
-_Setup:_
+Setup::
 
 `tt$`: user`'s handle of the E-Mail file to open
-(a$) should contain an ",r" or ",w" appropriate for reading or writing.
+`a$` should contain an ",r" or ",w" appropriate for reading or writing.
 
 | gosub&#160;33
 | gosub&#160;1063
@@ -281,10 +281,10 @@ _Setup:_
 | Opens REL file "u.config" on user files drive.
 
 | gosub&#160;40
-| 
+|
 | Loads `sub.editor`, and executes at line 60000.
 This is the entry point for the system editor.
-Set (mm) according to reason for calling:
+Set `mm` according to reason for calling:
 
 	mm	Routine
 	-------------------------------------
@@ -293,29 +293,29 @@ Set (mm) according to reason for calling:
 	-------------------------------------
 
 | gosub&#160;41
-| 
+|
 | Loads `sub.handles`, and executes at line 60000.
 Set `mm` according to reason for calling:
 
 	mm	Routine
 	-------------------------------------
 	 0	Load u.index and put total
-		Number of users in (uh)
+		Number of users in `uh`
 	 1	Load u.index and check for
-		user in (an$).  User ID is
-		returned in (i), unless not
-		found [(i)=0].
+		user in `an$`.  User ID is
+		returned in `i`, unless not
+		found [`i`=0].
 	-------------------------------------
 
 | gosub&#160;42
-| 
+|
 | Loads `sub.protos`, and executes at line 60000.
 _Setup:_ Set `mm` according to reason for calling:
 
 [%autowidth]
 [%header]
 !====================
-! mm ! Purpose 
+! mm ! Purpose
 
 ! 0
 ! Load the file `s.m.protos` into `tt$()`.
@@ -370,15 +370,15 @@ It should be called before the creation of any new file.
 | `gosub&#160;1079`
 | Reads blocks free on device/drive `dr`.
 This routine should be called and the variable bf checked before creating any file on a device, drive to ensure there is enough space available.
-Blocks free are returned in the variable (bf).
+Blocks free are returned in the variable `bf`.
 
 | gosub&#160;70
-| 
+|
 | Load and execute an i. file module beginning at line 3000.
 These are the 'main' modules.
 
 | gosub&#160;72
-| 
+|
 | Load and execute an i/ 'mini-module' file beginning at line 4000.
 These are the equivalent of `+.MM.*` files from v1.2.
 
@@ -387,15 +387,15 @@ These are the equivalent of `+.MM.*` files from v1.2.
 | Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  sub.modem has a subroutine at line 100. (Replaces 2.0`'s `im.` files)
 
 | `gosub&#160;79`
-| 
-| Loads i.module from device, drive in (dr), then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
+|
+| Loads i.module from device, drive in `dr`, then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
 
 | gosub&#160;80
-| 
+|
 | Similar to 24, except uses `p1$` as a reference to currently loaded file, rather than `pr$`.
 
 | gosub&#160;81
-| 
+|
 | Same as 28, except peculiar difference in approach of checking against `ml$`.
 
 | gosub&#160;96
@@ -410,73 +410,73 @@ Otherwise `No` is printed and `a=0`.
 | gosub&#160;100
 | gosub&#160;1013
 | Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (dr=5), then returns from routine.
-This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.
+This routine will also store the filename in `cm$` and output it to the Area window of the SysOp Screen.
 The "i." and drive designators are automatically added by the sub-routine.
-If the program (pr$) is already in memory, (e%) is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5 to check the DOS error status.
+If the program `pr$` is already in memory, `e%` is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5 to check the DOS error status.
 
 The subroutine filename is added to a "`module stack`" so that if a `sub.\*` file loads another `sub.*` file, the previous `sub.*` file is reloaded on exit.
 `is` is the stack depth, and `im$()` is the module name.
 
 ////
-21: Loads i. module in (a$) (minus the i.).  Same as 20, except device, drive is determined by current value of (dr). (none)
+21: Loads i. module in `a$` (minus the i.).  Same as 20, except device, drive is determined by current value of `dr`. (none)
 
-23: Loads i. module in (a$) (minus the i.), then starts module.  Same as 20, except after loading, this routine does a goto 3000. (goto 1016)
+23: Loads i. module in `a$` (minus the i.), then starts module.  Same as 20, except after loading, this routine does a goto 3000. (goto 1016)
 
-24: Loads i. "gosub" module in (z$) (minus the i.), runs, then, upon RETURN, re-loads i. module which was already loaded when the routine was called. (goto 1300)
+24: Loads i. "gosub" module in `z$` (minus the i.), runs, then, upon RETURN, re-loads i. module which was already loaded when the routine was called. (goto 1300)
 
-25: Loads i. module in (z$) (minus the i.) and continues to line 3000.  <This line is similar to 1301, however, regardless of error, it goes to line 3000.>
+25: Loads i. module in `z$` (minus the i.) and continues to line 3000.  <This line is similar to 1301, however, regardless of error, it goes to line 3000.>
 
-26: Loads i. module in (a$) from device, drive in (dr), sets (f1) to [sgn(e%)], then continues to line 3000.  (goto 1067)
+26: Loads i. module in `a$` from device, drive in `dr`, sets `f1` to `sgn(e%)`, then continues to line 3000.  (goto 1067)
 
-27: Loads i. "mini-module" in (a$) from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded (lm$), then this routine exits without actually re-loading the file.  (none)
+27: Loads i. "mini-module" in `a$` from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded `lm$`, then this routine exits without actually re-loading the file.  (none)
 ////
 
 | 200
-| 
-| System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in (p$), the time, and stack free if in local mode.  The routine will check the command stack (uu$), #FIXME#
+|
+| System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in `p$`, the time, and stack free if in local mode.  The routine will check the command stack `uu$`, #FIXME#
 
 | 228
-| 
-| Check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with (mm) set as follows:
+|
+| Check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with `mm` set as follows:
 
 	mm	Action
 	-------------------------------------------------------
 	 0	"Init."  Use this as an entry point.
 	 1	Not a Global (ECS) Command.
-	 2	Prep. for a prompt display.  (Setup (p$) and
+	 2	Prep. for a prompt display.  (Setup `p$` and
 		any pre-prompt text, then RETURN)  This Action
 		is called before actually displaying the Time/
-		prompt in (p$).
+		prompt in `p$`.
 	 3	Global (ECS) Command issued.  Clean up & Exit.
 		(This Could be a GOSUB or GOTO ECS Command.
 		The purpose is to quickly perform a clean-up
 		(close files, etc) before proceeding.  In most
 		cases, nothing is done.  Exit should be handled
 		by issuing a RETURN.
-		NOTE: This is also the setting for (mm) that is
+		NOTE: This is also the setting for `mm` that is
 		used if the time limit is exceeded.
 	 4-? *Internal usage by modules*  Not related to
 		prompt routine.
 	-------------------------------------------------------
-	
-NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local (lc) menu is shown to the user.
+
+NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local `lc` menu is shown to the user.
 
 | goto&#160;234
-| 
+|
 | Set `f1=2` for "Immediate logoff" (O!, O%!), otherwise `f1=1`.
 `cd%` ("`carrier drop`") flag.
 If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo`, the logoff module).
 
 | `goto 250`
 |
-| Displays local/level (lc) menu.  (See Table)
+| Displays local/level `lc` menu.  (See Table)
 
 // .Menu numbers
 [%autowidth]
 [%header]
 !====================
-! `lc` ! Menu 
-!  `1` ! Main menu 
+! `lc` ! Menu
+!  `1` ! Main menu
 !  `2` ! Message Base Menu (`SB`)
 !  `3` ! Editor Menu/Help
 !  `4` ! Local Mode Menu (`zz`)
@@ -488,7 +488,7 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 !====================
 
 | `gosub&#160;280`
-| 
+|
 | This routine is called by the prompt routine at line 200 to check for ECS commands.
 
 | `goto&#160;300`
@@ -497,7 +497,7 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 `i.main` is loaded at line 3000, and executed.
 
 | 302
-| 
+|
 | Loads `i.lo` file and executes with `mm` set to `0` (init).
 Action is dependent on the value of `f1`:
 
@@ -513,11 +513,11 @@ Action is dependent on the value of `f1`:
 !====================
 
 | 304
-| 
+|
 | Reverts memory marker back to 1 (`&,28,1`), calls line 306 which then issues an `&,27` (save) and exits.
 
 | 306
-| 
+|
 | Image 1.2 Emulation Mode.
 Dimensions variables similar to Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn$(61)`, `a%(61)`, `c%(61)`, `d%(61)`, `e%(31)`, `f%(61)`, `ac%(31)`, `so%(31)`].
 
