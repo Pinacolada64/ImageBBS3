@@ -25,20 +25,22 @@
 {:8}
 	&"{f6}8{f6}":return:remove
 {:9}
-' nt=net transfer?
-	on nt goto {:999}:&,69,4,21,left$(" "+cm$+"               ",22),$8c:return
+' nt=net transfer
+	on nt goto {:999}:&,69,4,21,left$(" "+cm$+"{space:21}",22),$8c:return
 {:10}
 	print#15,"p{$02}"chr$(x and 255)chr$(x/256)"{$01}":return
 {:11}
 	a=val(mid$(fl$,a,1)):return
 {:12}
-	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
+' reset output defaults
+'	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
+	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0":goto {:sub.reset_color}
 {:13}
 	&"{clear}"
 {:14}
 	a$=a$+",s,r":gosub {:4}:if e%=. then:&,3,2
 {:15}
-	close 2:return
+	close 2:goto {:sub.reset_color}
 {:16}
 	gosub {:1}:input#2,st(x):st(x)=st(x)+i
 {:17}
@@ -65,7 +67,7 @@
 {:31}
 	dr=3:a$="e.access":goto {:4}
 {:32}
-	dr=2:a$="m."+left$(tt$,13)+",s,"+a$:goto {:4}
+	dr=2:a$="m."+left$(tt$,14)+",s,"+a$:goto {:4}
 {:33}
 	dr=3:a$="e.data":goto {:4}
 {:34}
@@ -73,8 +75,11 @@
 {:35}
 	dr=6:a$="u.config":goto {:4}
 {:36}
+' TODO: routine rewrite? obviously only for SEQ files, though
+' a$=mid$("smediu",dr,1)+"."+b$+",s,"+a$
 	dr=3:a$="e."+b$+",s,"+a$:goto {:4}
 {:37}
+' TODO: subroutine this. "b$+",s,w" ... if e% then b$=",s,a" repeated too many times throughout modules
 	a$="a":gosub {:36}:if e% then a$="w":gosub {:36}
 {:38}
 	print#2,na$r$id;r$d1$r$ac%r$ph$r$rn$r$co$:return
@@ -87,21 +92,24 @@
 {:42}
 	a$="s."+a$:dr=1:goto {:13}
 {:43}
-	dr=3:a$="e.say":gosub {:4}:onsgn(e%)goto {:999}:x=1:gosub {:1}:input#2,x
+	dr=3:a$="e.say":gosub {:4}:on sgn(e%) goto {:999}:x=1:gosub {:1}:input#2,x
 {:44}
 	a=rnd(-ti):x=int(rnd(1)*x)+2:gosub {:1}
 {:45}
 	input#2,b$,c$,d$,f$:gosub {:90}:lp=1:&"{f6}{pound}$q{white} {pound}$b{f6}{pound}$q{cyan} {pound}$c{f6}{pound}$q{yellow} {pound}$d{f6}{pound}$q{orange} {pound}$f{f6}{pound}q0"
 {:46}
-	close2:return
+	close 2:return
+{:47}
+' TODO: ,s,a / ,s,w routine here?
+'	&"{f6}47{f6:2}":goto{:90}
 {:50}
-	ifi%thenreturn
+	if i% then return
 {:51}
-	c$=a$:a$="a":gosub {:34}:ife%=0thenprint#2,c$
+	c$=a$:a$="a":gosub {:34}:if e%=. then print#2,c$
 {:52}
-	close2:a$=c$:an$=c$:a=a%:&,52,13,3:b=a%:a%=a:ifb=0thenreturn
+	close 2:a$=c$:an$=c$:a=a%:&,52,13,3:b=a%:a%=a:if b=. then return
 {:53}
-	open16,4,15:close16:ifstthenreturn
+	open 16,4,15:close 16:if st then return
 {:54}
 	print#4,a$:return
 {:60}
@@ -110,54 +118,54 @@
 	if dr<7 then if bf(dr)>-1 then gosub {:2}:a=bf(dr):bf=a:return
 {:62}
 ' check blocks free (xx bytes):
-	gosub {:3}:on-(dv%<>lk%)goto {:64}:a$=dr$:ifdr$="10:"thena$="a"
-' not sure this would work:
-'	gosub {:3}:on-(dv%<>lk%)goto {:64}:a$=mid$(hx$,val(dr$)+1,1)
+	gosub {:3}:on -(dv%<>lk%) goto {:64}:a$=dr$:if dr$="10:" then a$="a"
+' TODO: not sure this would work (LtK LU Get Blocks Free command):
+'	gosub {:3}:on -(dv%<>lk%) goto {:64}:a$=mid$(hx$,val(dr$)+1,1)
 {:63}
 	a=2:print#15,"lg"left$(a$,1):input#15,e%,a$,a$,a$,a$,a$:goto {:65}
 {:64}
-	a=1:close2:open2,dv%,0,"$"+dr$+"{black}":get#2,a$,a$:&,8,2,1:&,8,2,1:close2
+	a=1:close 2:open 2,dv%,0,"$"+dr$+"{black}":get#2,a$,a$:&,8,2,1:&,8,2,1:close 2
 {:65}
-	a=val(a$)*a:bf=a:fora=1to6:ifdv%(a)=dv%anddr%(a)=val(dr$)thenbf(a)=bf
+	a=val(a$)*a:bf=a:for a=1 to 6:if dv%(a)=dv% and dr%(a)=val(dr$) then bf(a)=bf
 {:66}
 	next:a=bf:return
 {:70}
 	dr=5
 {:71}
-	on-(pr$<>"i."+a$)gosub {:76}:goto {:3000}
+	on -(pr$<>"i."+a$) gosub {:76}:goto {:3000}
 {:72}
 	dr=5
 {:73}
-	on-(p1$<>"i/"+a$)gosub {:77}:goto {:4000}
+	on -(p1$<>"i/"+a$) gosub {:77}:goto {:4000}
 {:74}
-	on-(a$<>"modem")goto {:100}:dr=5:on-(p2$<>"sub."+a$)gosub {:78}:is=is+1:im$(is)=p2$
+	on -(a$<>"modem") goto {:100}:dr=5:on -(p2$<>"sub."+a$) gosub {:78}:is=is+1:im$(is)=p2$
 {:75}
-	gosub60000:is=is-1:on-(is<1)goto {:999}:a$=mid$(im$(is),5):goto {:78}
+	gosub 60000:is=is-1:on -(is<1) goto {:999}:a$=mid$(im$(is),5):goto {:78}
 {:76}
-	a$="i."+a$:pr$=a$+"":p1$="":p2$="":new3000:goto {:79}
+	a$="i."+a$:pr$=a$+"":p1$="":p2$="":new 3000:goto {:79}
 {:77}
-	a$="i/"+a$:p1$=a$+"":p2$="":new4000:goto {:79}
+	a$="i/"+a$:p1$=a$+"":p2$="":new 4000:goto {:79}
 {:78}
-	a$="sub."+a$:p2$=a$+"":new60000
+	a$="sub."+a$:p2$=a$+"":new 60000
 {:79}
 ' 6/23/2021: remove gosub 20, "L:", add error check (goto 5)
-	cm$=a$:gosub {:9}:gosub {:2}:loaddr$+a$,dv%:goto {:5}
+	cm$=a$:gosub {:9}:gosub {:2}:load dr$+a$,dv%:goto {:5}
 {:80}
-	a$=z$:z$=mid$(p1$,3):gosub {:72}:a$=z$:dr=5:on-(lc<>1)goto {:77}:return
+	a$=z$:z$=mid$(p1$,3):gosub {:72}:a$=z$:dr=5:on -(lc<>1) goto {:77}:return
 {:82}
-	fori=1to4:&,11,i:next
+	for i=1 to 4:&,11,i:next
 {:83}
 	&,11,.:return
 {:84}
-	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+	a=int(mn%/60):pt%=-(a>=p2% and a<p3%)*sgn(p1%):return
 {:85}
-	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:ona+1goto {:999}:dr=3:gosub {:61}
+	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:on a+1 goto {:999}:dr=3:gosub {:61}
 {:86}
-	x=2:on-(bf<35)goto {:390}:im=1:goto {:444}
+	x=2:on -(bf<35) goto {:390}:im=1:goto {:444}
 {:90}
 ' TODO: double-check bytes saved
-'	q$="":on-(ll%<42)goto {:999}:forr=1toint((ll%-42)/2):q$=q$+" ":next:return
-	q$="":ifll%>42thenforr=1toint((ll%-42)/2):q$=q$+" ":next
+'	q$="":on -(ll%<42) goto {:999}:for r=1 to int((ll%-42)/2):q$=q$+" ":next:return
+	q$="":if ll%>42 then for r=1 to int((ll%-42)/2):q$=q$+" ":next
 {:91}
 	return
 
@@ -195,12 +203,14 @@
 {:200}
 	on tr%+1 goto {:240}:&,52,17,lf:&,52,20,em:poke 951,ll%:poke 971,mp%:poke 970,.
 {:202}
+' this is shorter than "if a% then gosub 330":
 	&,52,30,3:on a% gosub {:330}
 {:204}
 	s=.:sh=.:gosub {:12}
 {:206}
-	poke970,0:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
+	poke 970,.:&,52,30,3:an$=d1$:&,15:b$=right$(an$,7)
 {:208}
+' TODO: does this "gosub 3000" load something?
 	mm=2:gosub {:3000}:gosub {:9}:&"{f6} {blue}- {white}{pound}$bM{pound}q0":if tr%<100 then a%=tr%:&" {blue}- {white}{pound}%a {cyan}Min Left{pound}q0"
 {:209}
 	if zz then a%=usr(.):&"{f6} {blue}- {cyan}Stack Free: {white}{pound}%a{pound}q0"
@@ -211,7 +221,7 @@
 {:214}
 	on tr%+1 goto {:240}:if an$="" then gosub {:250}:goto {:200}
 {:216}
-	gosub {:220}:if f4 then gosub {:304}:on-(f4=1.1)-2*(f4=1.2)-3*(f4=1.3)goto {:270},{:268},{:234}
+	gosub {:220}:if f4 then gosub {:304}:on -(f4=1.1)-2*(f4=1.2)-3*(f4=1.3) goto {:270},{:268},{:234}
 {:218}
 	on rs goto {:200}:mm=1:goto {:3000}
 {:220}
@@ -221,17 +231,21 @@
 {:224}
 	x=1:rq=.:rs=1
 {:226}
-	f4=.:a%=zz:b%=2^ac%:&,42:ifa%thenef$=b$:ep$=a$:ec=a%:ec%=b%:goto {:260}
+	f4=.:a%=zz:b%=2^ac%:&,42:if a% then ef$=b$:ep$=a$:ec=a%:ec%=b%:goto {:260}
 {:228}
-	on-(a$="O"or(lc=1anda$="Q"))-2*(a$="{f2}")goto {:230},250:rs=0:return
+	on -(a$="O" or (lc=1 and a$="Q"))-2*(a$="{f2}") goto {:230},{:250}:rs=.:return
 {:230}
-	f4=0:ifright$(an$,1)<>"!"then:&"{f6:2}Logoff?: ":gosub {:96}:ifa=0thenreturn
+	f4=.:if right$(an$,1)<>"!" then:&"{f6:2}Logoff?: ":gosub {:96}:if a=. then return
 {:232}
 	f4=1.3:return
 {:234}
 ' f4=1.3
-	f1=1-(right$(an$,1)="!"):cd%=.:on-(mid$(z$,2,1)="%")goto {:302}
+	f1=1-(right$(an$,1)="!"):cd%=.:if mid$(z$,2,1)="%" then {:302}
 {:235}
+' 235 on a+1 goto 302:ld$=lt$:goto 302	' 28 bytes
+
+' 235 if a then ld$=lt$			' 26 bytes
+' 236 goto 302
 '	&"{f6}Update Message/File Scan Date?: ":gosub {:96}:ona+1goto {:302}:ld$=lt$:goto {:302} ' 70 bytes
 	&"{f6}Update Message/File Scan Date?: ":gosub {:96}:if a then ld$=lt$ ' 68 bytes
 	goto {:302}
@@ -250,7 +264,7 @@
 {:263}
 	&"{f6}{white}Password{blue}:{white}":&,6:ifan$<>ep$then:&"{f6}{red}Incorrect Password.{f6}":return
 {:264}
-	f4=0:onecgoto {:265},{:266},{:267},{:268}:return
+	f4=.:on ec goto {:265},{:266},{:267},{:268}:return
 {:265}
 	z$=ef$:f4=1.1:&,28,1:return
 {:266}
@@ -272,17 +286,18 @@
 {:288}
 	return
 {:289}
-' NOTE: don't change these two lines, even though it may be tempting to rewrite.
-' 289/290 are called many times throughout modules
+' NOTE: don't change these two lines, even though it may be tempting to rewrite as
+' 	&"{pound}i0":if an$<>"" then:&,15,2
+'	return
+' 289/290 are called separately many times throughout modules
  	&"{pound}i0":if an$="" then return
-' 	&,15,2:return
 {:290}
-'	&"{pound}i0":ifan$<>""then:&,15,2
 	&,15,2:return
 {:300}
+' FIXME: much of these two lines repeats, combine somehow?
 	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:a$="main":goto {:70}
 {:302}
-	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=0:a$="lo":goto {:70}
+	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:a$="lo":goto {:70}
 {:304}
 	&,28,1:gosub {:306}:&,27:return
 {:306}
@@ -291,12 +306,13 @@
 {:308}
 	dim a%(61),c%(61),d%(61),e%(31),f%(61),ac%(31),so%(31):return
 {:309}
-	cm$="L: 1.3 Emulator":gosub {:9}:dr=5:gosub {:3}:load dr$+"im.emul13",dv%:goto {:304}
+	cm$="1.3 Emulator":gosub {:9}:dr=5:gosub {:3}:load dr$+"im.emul13",dv%:goto {:304}
 {:310}
-' FIXME:
-' 	pu$=an$:if an$="{f8}{f2}" then {:315}
-	pu$=an$:on -(an$="{f8}{f2}") goto {:315}
+' FIXED: ^?, command history
+ 	pu$=an$:if an$="{f8}{f2}" then {:315}
+'	pu$=an$:on -(an$="{f8}{f2}") goto {:315}
 {:311}
+' ^x, execute command #x
 	if left$(an$,1)="{f8}" then an$=hs$(10-val(mid$(an$,2,1))):goto {:314}
 {:312}
 	&,15,6,140:uu$=an$:an$=a$
@@ -307,7 +323,7 @@
 {:315}
 	for ct=1 to 10:a%=10-ct:a$=hs$(ct):&"{f8}{pound}%a: {pound}$a{f6}":next:an$="":uu$="":return
 {:320}
-	gosub {:31}:x=ac%+1:gosub {:1}:&,2,2:ag$=a$:&,2,2:close2
+	gosub {:31}:x=ac%+1:gosub {:1}:&,2,2:ag$=a$:&,2,2:close 2
 {:321}
 	if len(fl$)<len(a$) then fl$=fl$+mid$(a$,len(fl$)+1)
 {:322}
@@ -316,15 +332,16 @@
 	if ac%<>ao% then fl$=a$:ao%=ac%
 {:324}
 ' get flags:
-' 6: lines allowed in editor *10
-' 16:
+' flag  6: lines allowed in editor *10
+' flag 16: max idle time
+' flag 20: downloads allowed
 	a=6:gosub {:11}:le=(a+1)*10:a=16:gosub {:11}:poke 830,a:a=20:gosub {:11}:da%=a
 {:325}
 	return
 {:330}
 	dr=3:a$="e.macros":gosub {:4}
 {:332}
-	if e%=0 then:&,2,2:a=val(a$):&"{f6:2}":x=int(rnd(1)*a)+2:gosub {:1}:&,3,2
+	if e%=. then:&,2,2:a=val(a$):&"{f6:2}":x=int(rnd(1)*a)+2:gosub {:1}:&,3,2
 {:334}
 	close 2:return
 ' NOTE: this long/short ECS command stuff was never implemented as far as I know
@@ -341,9 +358,9 @@
 {:353}
 	gosub {:3}:close 15:a=-(st<>.):return
 {:370}
-' 59 bytes:
+' 58 bytes:
 ' 	a=1-a:an$=mid$("ffn",a*2+1,2):&"{f6}{green}{pound}$b Mode{lt. green}: {white}O{pound}v7{f6}":return
-' 55 bytes:
+' 54 bytes:
 	a=1-a:&"{f6}{green}{pound}$b Mode{lt. green}: {white}O"+mid$("ffn",a*2+1,2)+"{f6}":return
 {:371}
 	a=val(mid$(uf$,b,1)):gosub {:370}:uf$=left$(uf$,b-1)+chr$(a+48)+mid$(uf$,b+1):return
@@ -358,7 +375,7 @@
 {:376}
 	a=pm:b$="Prompt":gosub {:370}:pm=a:return
 {:390}
-	dr=3:a$="e.text":gosub {:4}:gosub {:1}:&,2,2:close2:&"{f6}{pound}$a{f6}":return
+	dr=3:a$="e.text":gosub {:4}:gosub {:1}:&,2,2:close 2:&"{f6}{pound}$a{f6}":return
 {:400}
 	rem **subroutine modules**
 {:427}
@@ -439,19 +456,19 @@
 	im=1:goto {:431}
 {:521}
 	im=2:goto {:431}
-{:522}
-	im=1:goto {:439}
-{:523}
-	im=1:goto {:438}
-{:524}
-	im=13:goto {:445}
 {:525}
+	im=1:goto {:439}
+{:528}
+	im=1:goto {:438}
+{:533}
+	im=13:goto {:445}
+{:534}
 	im=4:goto {:445}
-{:526}
+{:535}
 	im=5:goto {:445}
-
+{:540}
 	im=1:goto {:437}
-
+{:541}
 	im=2:goto {:437}
 {:542}
 ' sub.editor: &,54,0 - Enter editor, clear text in tt$(x)
@@ -459,51 +476,69 @@
 {:543}
 ' sub.editor: &,54,1 - Enter editor, preserve text in tt$(x)
 	im=2:goto {:440}
-
+{:544}
 	im=1:goto {:429}
-
+{:545}
 	im=8:goto {:445}
-
+{:546}
 	im=10:goto {:445}
-
+{:547}
 	im=14:goto {:445}
-
+{:548}
 	im=15:goto {:445}
-
+{:549}
 	im=1:goto {:448}
-
+{:550}
 	im=2:goto {:448}
-
+{:551}
 	im=3:goto {:448}
-
+{:552}
 	im=4:goto {:448}
-
+{:553}
 	im=5:goto {:448}
-
+{:554}
 	im=6:goto {:448}
-
+{:555}
 	im=7:goto {:448}
+{:556}
 	im=8:goto {:448}
+{:557}
 	im=9:goto {:448}
+{:558}
 	im=1:goto {:436}
+{:559}
 	im=2:goto {:429}
+{:560}
 	im=3:goto {:429}
+{:561}
 	im=4:goto {:429}
+{:562}
 	im=5:goto {:429}
+{:563}
 	im=6:goto {:429}
+{:564}
 	im=7:goto {:429}
+{:565}
 	im=2:goto {:449}
+{:566}
 	im=3:goto {:449}
+{:567}
 	im=1:goto {:449}
 {:999}
 	return
+{:2000}
 	poke 22,25:for i=2 to peek(152):close peek(603):next:poke 2031,.
+{:2002}
 	x=peek(780):y=peek(781)+peek(782)*256:&"{f6}[Error#{pound}!x, Line#{pound}!y]{f6}":el=y
+{:2004}
 	&,11:&,28,1:poke 53248,.
+{:2006}
 	dr$=mid$(str$(dr%(5)),2)+":":dv%=dv%(5):loaddr$+"im",dv%,2
+{:2008}
 	gosub {:304}:goto {:4000}
 {:3000}
-	poke 828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}":poke 53280,.:poke 53281,.
+' border/background color done by bootloader
+	poke 828,peek(186):clr:print"{clear}{switchdisable}{white}{lowercase}" ':poke 53280,.:poke 53281,.
 	open 131,2,134,chr$(6):poke 248,203:poke 250,204:poke 56,160:poke 52,160
 	dim a$,a%,ac%,am,ag$,ak$,am$,an$,ao%
 	dim b$,b%,bd,bd$,bn$,bu
@@ -536,14 +571,19 @@
 	c3$="{f6}Returning To The Editor"+"{f6:2}"
 	ak$=" {$c0:38}"+"{f6}" ':lk%=8
 	r$=chr$(13):nl$=chr$(.):qt$=chr$(34)
-	open4,4,7:poke836,1:poke650,128
+	open 4,4,7:poke 836,1:poke 650,128
+' poke 836,1  : ?
+' poke 650,128: enable keyboard repeat
 	poke 56328,.:poke 56579,peek(56579) or 38:poke 56577,peek(56577) or 36
 	dim tt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
 ' NOTE: these unused ECS command arrays take 1574 bytes, "im-cuts" mod removes them
+'	rem dimec%(19,24),es%(3,49),ei%(50)
 '	dim ec%(19,24),es%(3,49),ei%(50)
+{number:3073}
 	restore:for i=1 to 9:read a$:co$(i)=a$+"":next
 ' bd$=boot drive?
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys 49155:&,53
+	&,69,1,1,"im Revision: Aug 15, 2022  3:30 PM",3
 ' not needed anymore, 12/2020 ML fixes Y2K display
 '	poke $16ec,$32:poke $16ed,$30
 	a$="NTSC":if peek(678) then a$="PAL"
@@ -551,7 +591,8 @@
 	close 15:open 15,dv%,15:&,18,.:poke 53248,1:am$="1"+"0001018600"
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub {:3404}:close 2:close 15:open 15,dv%,15
-	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub {:5}:if e% then close 2:gosub {:3250}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto {:3084}
+	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub{:5}
+	if e% then close 2:gosub {:3200}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
 	input#2,dv%(3),dr%(3),po$:close2:restore:ifpo$=""thenpo$="Main: "
 {:3090}
 	reada$:ifa$<>"*"then{:3090}
@@ -563,7 +604,7 @@
 {:3096}
 	dr=5:gosub {:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
 	z3$="Reading System Info...":gosub {:3404}
-	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3096}
+1111	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3096}
 	x=1:gosub {:1}:&,2,2:bs$=a$:close2
 	im=.:gosub {:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
 	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
@@ -587,16 +628,17 @@
 	x=17:gosub {:1}:&,2,2:d3$=a$:x=18:gosub {:1}:&,2,2:pp$=a$
 	x=19:gosub {:1}:&,2,2:z$=a$:x=20:gosub {:1}:input#2,p1%,p2%,p3%
 ' move l2 reservation flag here
+' FIX: move l2 reservation flag here
 '	x=21:gosub {:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3))
 	x=21:gosub {:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3)):if l2 then:&,52,40,1
 	x=35:gosub {:1}:&,2,2:am$=a$:x=36:gosub {:1}:&,2,2:mc=val(a$)
 ' y%=time set method, lk%=lt.kernal hd device #
 	x=37:gosub {:1}:&,2,2:y%=val(a$):x=38:gosub {:1}:&,2,2:lk%=val(a$)
-' default color:
+' default output color:
 	df%=3:x=40:gosub {:1}:&,2,2:a=val(a$):if a>. and a<16 then df%=a
 ' printer secondary address:
 	x=41:gosub {:1}:&,2,2:a=val(a$):if a$<>"" then close 4:open 4,4,a
-' password mask character:
+' password mask characters:
 	x=42:gosub {:1}:&,2,2:a=val(a$):if a then poke 17136,a
 	x=35:gosub {:1}:&,2,2:an$=a$:&,15:d6$=an$+"M":x=45:gosub {:1}:&,2,2:tz$=a$
 	x=47:gosub {:1}:&,2,2:bn$=a$
@@ -604,6 +646,7 @@
 	x=51:gosub {:1}:&,2,2:cc$=a$
 	x=58:gosub {:1}:&,2,2:nc=val(a$)
 	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
+' clock set method:
 	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
 {:3158}
 	poke970,.:poke971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
@@ -624,29 +667,29 @@
 	a=16*int(a/10)+a-int(a/10)*10:return
 {:3186}
 	forq=.to6:bf(q)=-1:next
-	rem
-'	z3$="im Revision: Sep. 29, 2020 9:00 AM":gosub {:3404}
 	z3$="Reading Blocks Free...":gosub {:3404}:forq=1to6:dr=q:gosub {:61}
 ' NOTE: can we do {pound}!a at the end?
-' NOTE: with LtK emulation, blocks free could be 6 digit value, and so str$(a) should stand
-	readb$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
+' NOTE: with LtK emulation, blocks free could be 6 digit value
+' NOTE: MCI integer display outputs 1-5 digits, and so str$(a) should stand
+' TODO: look at changing str$(a) to {pound}!a
+'	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
+	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}10{cyan}"+str$(a)+"{pound}{back arrow}39":next:q=.:return
 {:3200}
 	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
 	&"{pound}{back arrow}10{yellow}({white}2{yellow}) {lt. green}to Convert from Image 1.2{f6}"
-	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6}"
-' TODO: confirm reboot
-' FIXME: Return goes to selecting RS232 interface, overprints this menu
-'	&"{f6:2}":gosub {:3408}:on-(an$="1"oran$="2"oran$="3")goto {:3220}:ifan$="4"thensys64738
-	&"{f6:2}":gosub {:3408}:lm=val(an$):if lm<1 or lm>4 then {:3220}
+	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6:3}"
+	gosub{:3408}:lm=val(an$):on lm goto {:3220},{:3222},{:3224},{:3226}
 	return
 {:3220}
-	iflm=1thenz3$="Configure New Image 3.0 System"
-	iflm=2thenz3$="Convert from Image 1.2"
-	iflm=3thenz3$="Convert from Image 2.0"
-' FIXME: "Are You Sure?: [No]" -> confirm reset
-	iflm=4then:&"{f6}Reset C64: ":gosub {:93}:ona+1goto {:999}:sys64738
-' TODO: there's a subroutine at 3414 for clearing this screen area...
+	z3$="Configure New Image BBS 3.0":goto{:3228}
+{:3222}
+	z3$="Convert from Image BBS 1.2":goto{:3228}
+{:3224}
+	z3$="Convert from Image BBS 2.0":goto{:3228}
+{:3226}
+	z3$="Reset C64":gosub{:3404}:gosub{:93}:on a+1 goto {:999}:sys 64738
+{:3228}
 	gosub {:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
 ' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto {:73}
 '	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
@@ -702,7 +745,7 @@
 ' NOTE: Immutable line number, called from i/su.config
 {:3414}
 	&"{home}{f6:6}":fori=1to17:&"{pound}{back arrow}38 {f6}":next:&"{home}{f6:6}":return
-'	for i=8 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,5:return
+'	for i=8 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
 
 {:3500}
 	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
@@ -710,7 +753,8 @@
 	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
 ' TODO: put this in i.su/config
 {:3510}
-	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for SwiftLink{f6}> {pound}g1"
+' TODO: move this into i/su.config
+	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swiftlink{f6}> {pound}g1"
 	a=val(an$):ifa<0ora>1then{:3510}
 	gosub {:33}:x=32:gosub {:1}:print#2,an$:close2:return
 {crunch:off}
@@ -741,8 +785,8 @@
 	print#2,"Program: "pr$r$"Module: "p1$r$"Sub Module: "p2$
 	print#2,"ML File: "ml$r$"Protocol: "d4$r$
 	fori=1to10:a$=chr$(58-i):ifhs$(i)<>""thenprint#2," {f8}"a$": "hs$(i)
-' 6/23/2021: Trb-R: disable changing border colors
 '	next:print#2,"{^}":close2:poke53280,2
+' 6/23/2021: Trb-R: enable changing border colors on error
 	next:print#2,"{^}":close 2:&,52,$39,3:if a% then poke 53280,2
 	a$="User  : "+na$+r$+"Error :"+d$+r$+"Line  :"+str$(b)+r$+"Time  : {$04}"+d1$+r$
 	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':remgosub51
@@ -750,7 +794,7 @@
 	p2$="":is=.:p1$="":pr$="":ml$="":pr=-1:pf=.
 ' FIXME: 6/23/2021
 ' &,52,4,3 (Console login); &,52,58,3 (Carrier detect)
-'	ifac%<>16then:&,52,4,3:ona%goto {:4050}:if(peek(2033)and1)=.then{:4050}
+'	if ac%<>16 then:&,52,4,3:on a% goto {:4050}:if (peek(2033) and 1)=. then {:4050}
 	if ac%<>16 then:&,52,4,3:a=a%:&,52,58,3:if a+a%=1 then {:4050}
 	f1=2:goto {:302}
 	a$="FATAL ERROR!!":gosub {:51}:sys 64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
@@ -768,7 +812,7 @@
 	gosub {:30}:i=1:x=14:gosub {:16}:x=25:gosub {:16}:x=32:gosub {:16}:close2
 ' TODO: test that this works:
 '	&"{pound}h9{pound}h9{pound}h7ed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub {:96}
-' o=15 + j=10 == 9 + 9 + 7 == 25
+' o=15 + j=10 = 9 + 9 + 7 = 25
 	&"{pound}ho{pound}hjed!{f6:2}{white}{$07}You Have New E-Mail Waiting:{f6:2}{green}Read Now? ":gosub {:96}
 	if a then a$="E"+"M":goto {:70}
 {:4068}
@@ -781,7 +825,7 @@
 	data "OUT OF DATA","ILLEGAL QUANTITY","OVERFLOW"
 	data "OUT OF MEMORY","UNDEF'D STATEMENT","BAD SUBSCRIPT"
 	data "REDIM'D ARRAY","DIVISION BY ZERO","ILLEGAL DIRECT"
-	data" TYPE MISMATCH","STRING TOO LONG","FILE DATA"
+	data "TYPE MISMATCH","STRING TOO LONG","FILE DATA"
 	data "FORMULA TOO COMPLEX","CAN'T CONTINUE","UNDEF'D FUNCTION"
 	data "VERIFY","LOAD","BREAK "
 {:4092}

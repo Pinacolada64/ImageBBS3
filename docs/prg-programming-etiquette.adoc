@@ -7,7 +7,93 @@ Write clean code.
 
 #### Programming Theory
 
+##### Static vs. Dynamic String Variables
+
+There are two types of strings in BASIC: _static_ and __dynamic__.
+
+_Static strings_ look like:
+
+[source, "basic"]
+10 a$="hello":b$="there"
+
+They are given a _string descriptor_ (the address, length and type of string) within the BASIC program itself.
+Normally this isn't a problem.
+However, when you load another module over the top of that string text, the string pointer still points to the same address.
+Then when printed, the string variable displays random bytes of the new module, often BASIC tokens.
+
+There's a way to get around this.
+
+_Dynamic strings_ are different: they're created when two strings get concatenated together.
+You've probably looked through Image's code and seen lines like:
+
+.i.SB
+[source, "basic"]
+3192 ... sy$="Su"+"b" ...
+
+The reason for concatenating two strings together like this is because strings created this way have string descriptors which point higher in memory (they get created from the top of BASIC downwards).
+Each new string defined by concatenation creates a new string, moving the pointer to that string downwards, towards the end of your BASIC program--and your static strings.
+
+====
+This is the whole reason _garbage collection_ exists--as more static strings and dynamic strings get defined, the pointers to the next free byte move toward each other.
+You'll eventually run out of space, triggering a garbage collection as the old definitions of strings get erased to reclaim memory.
+(Image BBS uses a custom garbage collection routine, which is much faster than the one in standard Microsoft BASIC.)
+====
+
+But the long and the short of it is that the string definition caused by, _e.g._: `sy$="S"+"ub"` lives higher in memory and the text shouldn't be overwritten by loading another module, causing strings to output bytes of your program.
+
 #### Module Structure
+
+When developing a module, bugs are certain to happen.
+These bugs are logged to `e.errlog`.
+There are variables shown in the error log which can be handy to show which line or module the program was in when it crashed.
+
+.`e.errlog` Filename Hints
+[%autowidth]
+[%header]
+|====================
+| Filename Prefix | Starting Line | Variable Name | Label
+| `i.*` | 3000 | `pr$` | Program
+| `i/*` | 4000 | `p1$` | Module
+| `sub.*` | 60000 | `p2$` | Sub-Module
+|====================
+
+[NOTE]
+====
+`pr$` is considered the main program name.
+`p1$` is considered a loadable module name (similar to the Little Modem Program _e.g.,_ `+.XX.YY`) sub-modules of Image 1.2.
+====
+
+If your module spans from, say, lines `3000-4000` (or beyond), it would be a good idea to do something like:
+
+[source,basic]
+----
+pr$="i."+"test calls":p1$=pr$
+----
+
+to assign both `pr$` (error lines 3000-) and `p1$` (error lines 4000-) to the same string.
+This avoids leaving garbage strings in `e.errlog` because of the previously-mentioned "`static string`" issue.
+
+If your module is a collection of sub-modules, it is helpful to define in your main program:
+
+[source,basic]
+----
+3000 pr$="i."+"test calls"
+----
+
+And in your sub-module, define:
+
+
+[source,basic]
+----
+4000 p1$=pr$+".structs"
+----
+
+so that `e.errlog` reads:
+
+```
+Module: i.test calls
+Sub Module: i.test calls.structs
+```
 
 ### Conversion and Backward Compatibility
 
@@ -16,7 +102,7 @@ Your first reaction might be to assume that you can no longer use legacy modules
 However, nearly everything written under previous versions of Image can be made to run under v3.0.
 The easiest method for this is to run under "`1.3 emulation.`"
 
-//Larry
+// Larry
 If modules are renumbered to start at line 3000, they can run under Image 3.0.
 
 This mode greatly reduces available memory, but allows a program to make the same calls to `im` that were available under Image 1.2a.

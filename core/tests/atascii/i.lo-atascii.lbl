@@ -1,0 +1,212 @@
+' c64list4.04.exe i.lo-atascii.lbl -prg -alpha:alt -ovr -crunch
+{assign:1	=1	}
+{assign:3	=3	}
+{assign:4	=4	}
+{assign:5	=5	}
+{assign:9	=9	}
+{assign:12	=12	}
+{assign:14	=14	}
+{assign:16	=16	}
+{assign:17	=17	}
+{assign:30	=30	}
+{assign:33	=33	}
+{assign:61	=61	}
+{assign:70	=70	}
+{assign:72	=72	}
+{assign:82	=82	}
+{assign:90	=90	}
+{assign:94	=94	}
+{assign:96	=96	}
+{assign:300	=300	}
+{assign:304	=304	}
+{assign:390	=390	}
+{assign:444	=444	}
+{assign:445	=445	}
+{assign:446	=446	}
+{assign:999	=999	}
+
+{:3000}
+{step:2}
+	k%=.:rs=.:&,52,46,3:am=a%:close2:close5
+	rem
+	onmmgoto,{:3422},{:3420},{:3080},{:3022},{:3040},{:3400},{:3232},{:3116},{:3118},{:3234},{:3114},{:3050},{:3115}
+	onf1goto{:3200},{:3220},{:3230},{:3118}:goto{:3100}
+{:3022}
+	im=3:gosub 446:gosub{:3024}:poke2033,.:return
+{:3024}
+	on-((peek(2033)and128)=128)goto{:3040}:cm$="Clearing Line":gosub 9:im=1:gosub 446:return
+{:3040}
+	b$="modem reset":x=11:gosub{:3080}:ti$="000000":im=1:gosub 446:im=9:goto 446
+{:3050}
+	a$=a$+str$(nl):ifll%=80thena$=a$+" 80"
+{:3051}
+	goto 14
+{:3052}
+	&,52,37,3:on-(a%=.ornl<1)goto 999:a$=a$+"+":return
+{:3080}
+	p=x:gosub 30:i=t1:t1=mn%:i=t1-i:i=i-1440*(i<.):st(x)=i:gosub 17
+	ifithenx=x+11:gosub 16:x=x+16:gosub 16:close2
+	c$="e.idle "+left$(d1$,1)+",s"
+	dr=3:a$=c$+",a":gosub 4:ife%thena$=c$+",w":gosub 4
+	print#2,d1$","mid$("idleused",1-4*(p=10),4)","i","b$:close2
+	z%=.:y%=.:a=st(21)+st(22)+.5:ifa>1thenz%=100*st(21)/a:y%=100-z%
+	an$=left$("U="+mid$(str$(z%),2)+" I="+mid$(str$(y%),2)+"     ",10)
+	&,69,14,22,an$,$81:return
+{:3100}
+	&,28,1:&,52,34,.:poke970,.:poke971,.:poke2042,.:poke53248,1:&"{lt. red}{clear}":gosub 12
+	poke53248,.:b$="connect":x=11:gosub{:3080}:&,52,5,zz:&,25:gosub 33:x=43:gosub 1
+{:3103}
+	&,2,2:an$=mid$(a$,cn-int(cn/len(a$))*len(a$)+1,1):&,15,2:poke17138,asc(an$)
+{:3104}
+	close2:&,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:ifathen:&,52,4,4
+	tr%=4:on-(zz=.)goto{:3114}:qb$="Local Console":nl=1:ll%=40:gosub 90:&,52,16,.:&"{f6}"
+	&,22,5
+	&"{f6} Press RETURN For Normal Login or{f6} Press {f5}I{f5} For Instant Login: {pound}g1"
+	a=-(an$="I"):&mid$("InstantNormal",8-a*7,7)+"{f6}":onagoto{:3234}:goto{:3116}
+{:3114}
+	im=7:gosub 446:lm=1
+{:3115}
+	goto{:3500}
+{:3116}
+	gosub{:3594}:dr=1:a$="s.login":gosub{:3050}:a$="lo."+"login":gosub{:3052}:goto 72
+{:3118}
+	b$="logon":x=10:gosub{:3080}:a$="lo."+"on":gosub 72
+{:3119}
+	a$="lo."+"mail":gosub 72:ifa=.then{:3122}
+{:3120}
+	a$="EM":goto 70
+{:3122}
+	goto 300
+
+{number:3150}
+{:sub.load_atascii}
+' load AtASCII translation table and set some defaults
+	&"atascii mode selected. one moment..."
+	dr=5:gosub 3:a$=dr$+"t.atascii":&,7,10:gosub 5:if e% then:&:return
+' &,52, 16,1: disable ASCII mode (because Backspace is treated as "^H ^H" if ASCII enabled)
+' &,52,	17,0: disable linefeeds
+' &,52,$24,1: disable Full-Color Read (don't output color information)
+' nl=3: AtASCII translation
+	&,52,16,0:&,52,17,0:&,52,$24,1:nl=3:b$="AtASCII":&"{f6}":return
+' TODO: if nl=3, load "t.commodore" after ASCII Re-Detect, or logoff
+' TODO: also EP, P, change computer to/from Atari
+
+{:3200}
+	&"{f6}Leave Feedback? : ":gosub 94:onagosub{:3418}
+	&,52,$22,.:an$=ff$:&,15,1:&"{f6:2} {green}Bye {lt. green}{pound}v7{green}!{f6:2}":dr=1:a$="s.end":gosub{:3050}
+{:3203}
+	on i% or k% goto{:3204}:im=3:gosub 446:ll%=40:gosub 90
+{:3204}
+	ifi%ork%then:&"{f6}{lt. blue}Update User File?:{white} ":gosub 96:im=1:onagosub 445
+{:3220}
+	&,52,$22,.:on-(ac%=16)goto{:3230}:im=3:gosub 446:im=1:gosub 446
+	a$="lo."+"off":gosub 72
+{:3230}
+	lm=1
+{:3232}
+	a$="lo."+"idle":goto 72
+{:3234}
+	a$="lo."+"instant":goto 72
+{:3400}
+	poke53248,1:&"{clear}":cm$="Auto-Maint":gosub 9
+{:3401}
+	a$="lo."+"automaint":gosub 72:b$="automaint":x=11:gosub{:3080}
+{:3402}
+	gosub 304:br=.:a$="e.maintmods,s,r":dr=3:gosub 4:ife%thenclose2:goto{:3416}
+' FIXME: changed 3216 to {:3416}
+	&,2,2:br=val(a$):on -(br<1) goto {:3416}:dim lm$(br),mt$(br)
+	for i=1 to br:&,2,2:lm$(i)=a$:&,2,2:mt$(i)=a$:next:close 2:rk=1
+{:3408}
+	a=val(left$(mt$(rk),3)):z=val(left$(d1$,1)):a=(aand2^z)<>.ora=.
+	a$=mid$(mt$(rk),4,2):b=mid$(d1$,4,2)=a$ora$="00"
+{:3412}
+	a$=mid$(mt$(rk),6,2):c=mid$(d1$,6,2)=a$ora$="00"
+{:3413}
+	ifaandbandcthena$="lo/"+lm$(rk):cm$=a$:gosub 9:gosub 72
+{:3414}
+	rk=rk+1:on-(rk<=br)goto{:3408}
+{:3416}
+	&,28,1:am$=d1$+"":gosub 33:x=35:gosub 1:print#2,am$:close2:mm=.:f1=3:goto{:3000}
+{:3418}
+	dr=3:gosub 61:x=2:on-(bf<35)goto 390:im=1:goto 444
+{:3420}
+	new4000:b$="net send":gosub 304:x=11:gosub{:3080}:a$="NM/auto":nt=1:f1=1:goto 70
+{:3422}
+	new4000:gosub 304:b$="net recv":x=10:gosub{:3080}:a$="NM/auto":nt=1:f1=2:goto 70
+	&,40
+	z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+{:3500}
+	rem"was FirstImage (c)1995 NISSA"
+	onlmgoto{:3536},{:3530}:return
+{:3504}
+	lp=1:&"{f6}Sorry, the system is reserved for network maintenance.{f6}":goto{:3508}
+{:3506}
+	&"{f6:2}SORRY, NO CALLS LESS THAN 1200 BPS{f6}ARE CURRENTLY BEING ACCEPTED.{f6:2}"
+{:3508}
+' lost carrier
+	im=3:gosub 446:tr%=.:mm=.:f1=3:goto{:3000}
+{:3510}
+	print#131,chr$(27)+"[6"+chr$(110):b=.:forx=.to8:&,4:a%=peek(780)and127:&,22,1
+	b=-(a%=27):x=x-(9-x)*(b=1):next:on-(b=.)goto 999:&,52,18,1:&,52,19,1:nl=2
+	a$=r$+chr$(27)+"[1;3;5;7;46m":print#131,a$
+	&" ANSI/Graphics Detected {f6}":return
+{:3520}
+	mm=2:goto{:3000}
+{:3526}
+	mm=9:goto{:3000}
+{:3530}
+' NEW: Enable Frd (Full-Color Read) mode in case AtASCII mode was selected
+'	&,52,16,.:&,52,17,1:&,52,18,.:&,52,19,.:&,52,$24,.:cm$="ASCII Re-Detect":gosub 9
+	&,52,16,.:&,52,17,1:&,52,18,.:&,52,19,.:cm$="ASCII Re-Detect":gosub 9
+	goto{:3546}
+{:3536}
+	poke2033,.:&,52,16,1:&,52,17,1:&"{f6}":&,52,16,.:&"{pound}b1":&,52,16,1:&,22,5
+	cm$="Call Connected":gosub 9:tr%=7:gosub 12
+'	gosub 82:&,40:a$="{f6}CONNECTION CONFIRMED: "+str$(qb)+"{f6}":&"{pound}$a"
+	gosub 82:&,40:&"{f6}CONNECTED AT"+str$(qb)+" BPS{f6}"
+	a%=.:ifqb<1200then:&,52,3,3:ifa%then{:3506}
+{:3546}
+	mp%=.:ll%=80:poke971,mp%:poke970,.:poke951,ll%
+{:3548}
+' 	gosub{:3510}:onbgoto{:3568}:&"{f6}HIT YOUR BACKSPACE/DELETE KEY 1 TIME 1"
+ 	gosub{:3510}:onbgoto{:3568}:&"{f6}HIT YOUR BACKSPACE/DELETE KEY"
+	&,52,16,.:&"{pound}b1: ":&,52,16,1
+{:3552}
+{step:1}
+	&,22,5:&,4:a=peek(780)and127:if(peek(2033)and128)<>128ortr%<1then{:3508}
+	&,52,42,3:ifa%=1thentr%=.
+' adding a=126: AtASCII detect
+	on-(a=13)-2*(a=.)goto{:3548},{:3552}:if a=126 then gosub {:sub.load_atascii}:goto {:3564}
+'	&,52,28,3:if a% then on-(a=1) goto {:3520} ' 26 bytes
+	&,52,28,3:if a%+a=2 then {:3520} ' 22 bytes
+	on -(a<>8 and a<>20 and a<>127) goto {:3548}:nl=-(a=20):&,52,16,1-nl
+'	&,52,47,3:if a% then dr=1:a$="s.detect":mm=13:gosub{:3000}:goto{:3568}
+	b$="ASCII":ifnlthenb$="Commodore Graphics":&"{pound}k7"
+{:3564}
+'	&"{f6:2}{pound}$b {pound}k0{cyan}Mode Detected{yellow}.{pound}q0{f6:2}":on-(tr%<1)goto{:3508}
+	&"{f6:2}{pound}$b {pound}k0{cyan}Mode Detected{yellow}.{pound}q0{f6:2}":if (tr%<1)goto{:3508}
+' moving this line allows graphics message *and* "s.detect {nl}" to display
+	&,52,47,3:if a% then dr=1:a$="s.detect"+str$(nl):gosub 14
+{:3568}
+	tr%=5:on -(nl>.) goto {:3574}:&,52,17,1:&,52,18,.:&,52,19,.
+	&"{f6}{lt. blue}Does Your Terminal Support{cyan}:{f6} {lt. blue}ANSI Color{cyan}?: ":gosub 96:&,52,18,a:b=a
+	&" {lt. blue}IBM Style Graphics{cyan}?: ":gosub 96:&,52,19,a:nl=-2*(a+b=2)
+{:3574}
+	&"{lt. blue}Are You In 80 Columns{cyan}?: ":a=-(nl=1):ona+1gosub 96, 94:ll%=40+(40*a):l9%=ll%
+{:3575}
+	poke951,ll%:j$=ak$
+{:3576}
+' FIXME: what is "on 1-a%"? must be "if a%=. goto"
+	&,52,41,3:ona%goto{:3504}:&,52,40,3:on1-a%goto{:3526}
+	a=.:b$="":ifl2=1thenb$="Temporarily "
+{:3580}
+	&"{f6}{green}The System is {pound}$bReserved{lt. green}.{f6:2}{green}Enter Password{lt. green}: {white}":&,6:ifan$=l2$then{:3586}
+	&"{f6}{green}Sorry{lt. green}, {green}That Password is Not Valid{lt. green}.":a=a+1
+	on-(a<3andtr%>.)goto{:3580}:goto{:3508}
+{:3586}
+	&"{f6}{green}Password Accepted{lt. green}.{f6}":on-(l2<>1)goto{:3526}:l2=.:&,52,40,.
+	gosub 33:x=21:gosub 1:print#2," 0Off":close2:goto{:3526}
+{:3594}
+'	a$="":fora=1toll%-2:a$=a$+"{$c0}":next:ak$=" "+a$+"{f6}":return
+	ak$=" "+left$("{$c0:78}",ll%-2)+"{f6}":return
+	rem "i.lo (c)nissa 201007, 210524 lh-ad-rs"

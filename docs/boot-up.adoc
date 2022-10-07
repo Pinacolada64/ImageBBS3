@@ -21,6 +21,9 @@ include::include\boot-command.adoc[]
 | `S` | Swapping data between RAM and ROM
 |====================
 
+// L is also documented in &,13: arbit (Lt. Kernal port arbitration), miscl.s
+// Port locking?
+
 #TODO#: More of an explanation.
 
 .File transfer indicators

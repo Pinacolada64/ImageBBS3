@@ -28,6 +28,7 @@
 {assign:im.writeTTarray	=39}
 {assign:im.getFreeDirEntry	=60}
 {assign:im.getBlocksFree	=61}
+{assign:im.prepLoadIfile	=70}
 {assign:im.SetIslashDrive	=72}
 {assign:im.loadIslashFile	=73}
 {assign:im.loadSubFile	=74}

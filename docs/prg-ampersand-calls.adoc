@@ -1,8 +1,5 @@
 :experimental: // enable kbd:[] macro
 
-:toclevel: 5
-:toc:
-
 ### `&` Routines
 
 `&` is the command character which is BASIC's interface to 70 machine language routines of Image BBS.
@@ -15,22 +12,26 @@ NOTE: This section is undergoing discovery of what some routines are for and how
 
 In BASIC, the `print` keyword (or its abbreviation, `?`) displays text on the screen, as in:
 
- print"Hello there!"
+[source,basic]
+print"Hello there!"
 
 You can substitute `&` in Image BBS to do the same thing:
 
- &"Hello there!"
+[source,basic]
+&"Hello there!"
 
 But unlike BASIC, after outputting this text, the cursor remains on the same line--there is no automatic carriage return printed.
 
 It's as if a semicolon (`;`) was used after the `print` statement above--this keeps the text all on one line:
 
- print"Hello ";"there!";
+[source,basic]
+print"Hello ";"there!";
 
 vs. printing on two lines:
 
- print"Hello"
- print"there!"
+[source,basic]
+print"Hello"
+print"there!"
 
 To work around this, you can output a _carriage return_, which moves the cursor to the beginning of the next line.
 
@@ -40,7 +41,7 @@ On other terminals or operating systems, a carriage return moves the cursor to t
 
 Sometimes an additional _linefeed_ character is needed, which keeps the cursor in the current column, but moves the cursor down a row.
 
- Hello 
+ Hello
        there!
 
 This stairstep-looking result is what printing looks like with only a linefeed, when the terminal needed both a carriage return and a linefeed.
@@ -50,7 +51,8 @@ However, ``print``ing in Commodore BASIC--and our BBS in this example--doesn't n
 A carriage return is the equivalent of a carriage return plus linefeed.
 ====
 
- &"Hello there!"+chr$(13)
+[source,basic]
+&"Hello there!"+chr$(13)
 
 `chr$()` (read it as "`character string`") is a function that outputs a character supplied in parentheses.
 A carriage return is `chr$(13)`.
@@ -60,7 +62,8 @@ There is also a string variable defined in `im`: `r$=chr$(13)` (short for "`retu
 This is a handy shortcut.
 You can now code:
 
- &"Hello there!"+r$
+[source,basic]
+&"Hello there!"+r$
 
 // TODO: data file tutorial
 
@@ -88,7 +91,7 @@ Image BBS converts these special characters from their encoded form to readable 
 
 The `image seq reader` utility used in BASIC also does this.
 
-A new `&` command, `&,15,2`, does the same thing when passed `an$`, the string to translate.
+TIP: A new `&` command, `&,15,2`, does the same thing when passed `an$`, the string to translate.
 
 As it relates to carriage returns, though, we can see in the following table:
 
@@ -96,14 +99,14 @@ As it relates to carriage returns, though, we can see in the following table:
 [%autowidth]
 [%header]
 |==============
-| Key | Quoted | Character | Key | Quoted | Character 
-| kbd:[f1] ^| kbd:[E] | kbd:[,] comma ^| kbd:[f2] ^| kbd:[I] | kbd:[?] question mark 
+| Key | Quoted | Character | Key | Quoted | Character
+| kbd:[f1] ^| kbd:[E] | kbd:[,] comma ^| kbd:[f2] ^| kbd:[I] | kbd:[?] question mark
 | kbd:[f3] ^| kbd:[F] | kbd:[:] colon ^| kbd:[f4] ^| kbd:[J] | kbd:[=] equal sign
-| kbd:[f5] ^| kbd:[G] | kbd:["] quotation mark ^| kbd:[f6] ^| kbd:[K] | kbd:[Return] `chr$(13)` 
+| kbd:[f5] ^| kbd:[G] | kbd:["] quotation mark ^| kbd:[f6] ^| kbd:[K] | kbd:[Return] `chr$(13)`
 | kbd:[f7] ^| kbd:[H] | kbd:[*] asterisk ^| kbd:[f8] ^| kbd:[L] | kbd:[^] up arrow
 |==============
 
-_Key_ is what you type on the Commodore 64 keyboard. 
+_Key_ is what you type on the Commodore 64 keyboard.
 
 _Quoted_ is what it looks like in "`quote mode.`"
 
@@ -119,7 +122,8 @@ This outputs `Hello there` and a carriage return.
 
 We can take the previous example of:
 
- &"Hello there!"+r$
+[source,basic]
+&"Hello there!"+r$
 
 and simplify it further with:
 
@@ -129,11 +133,16 @@ and simplify it further with:
 
 ====
 TIP: Because of a quirk in the BASIC interpreter, you must follow a `then` clause with a colon before using the ampersand.
-In other words:
 
-`if b then &"hello"` (will not work)
+In other words, the following results in a `?syntax&#160;&#160;error`:
 
-`if b then:&"hello"` (must be used instead)
+[source,basic]
+if b then &"hello"
+
+This must be used instead:
+
+[source,basic]
+if b then:&"hello"
 ====
 
 ### BASIC Editing Modes
@@ -141,7 +150,7 @@ In other words:
 #### Quote Mode
 In the BASIC editor, once the quote mark (kbd:[Shift+2], kbd:["]) is typed, color or cursor controls stop changing the cursor color or moving the cursor.
 Instead, they start displaying reversed characters which stand for the color control, cursor control or symbol you are typing.
-Once the text inside the quotes is ``print``ed, they perform their functions as if typed manually. 
+Once the text inside the quotes is ``print``ed, they perform their functions as if typed manually.
 The kbd:[Inst/Del] key is the only cursor control not affected by "`quote mode.`"
 
 Typing a second kbd:["] exits quote mode, and allows you to use the cursor keys to edit the program line again.
@@ -201,7 +210,7 @@ The use of `£m<__x__` and `£m>__x__` together allows you to make "`block inden
 
 #### MCI Commands
 
-bla
+#TODO#
 
 ====
 
@@ -209,16 +218,18 @@ bla
 
 NOTE: Outputting a string which itself contains MCI commands or MCI string variables will not work as expected, _e.g._:
 
-`c$="Hi":c%=3:z$="£$c £#3£#0£%c":&"£$z"`
+[source,basic]
+c$="Hi":c%=3:z$="£$c £#3£#0£%c":&"£$z"
 
-does not output `z$` (which outputs `c$`, `£#3` sets 3 leading characters, `£#0` sets the fill character to `0`, and displays the value of `c%`).
+does not output `z$` (`£$c` outputs `c$`, `£#3` sets 3 leading characters, `£#0` sets the fill character to `0`, and `£%c` displays the value of `c%`).
 It outputs a literal
 
  £$c £#3£#0£%c
 
 Instead, do this:
 
-`c$="Hi":c%=3:z$="£$c £\#3£# £%c":&z$`
+[source,basic]
+c$="Hi":c%=3:z$="£$c £\#3£# £%c":&z$
 
 This outputs the expected
 
@@ -236,6 +247,9 @@ _Floating point_ values are not integers--the value could be fractional, and the
 
 `&str$(h)`::
 Since `&h` isn't supported to output the value of `h`, it must be converted to a string with the `str$()` function.
+
+TIP: `&str$(h)` is still useful if the number of digits output is greater than 5, the limit of the MCI numeric output routine.
+
 `&str$(h)` worked under Image 1.2; it works here too, but there is a new MCI command in Image 3.0 to output single-letter floating point variables:
 
 `&"£!h"`::
@@ -245,7 +259,8 @@ To output a two-character variable name (_e.g._, `xx`, `c1`), you have some choi
 
 * assign the two-character variable name to a single letter variable name, _e.g._:
 
-`x=xx:&"Blocks free: £!x"`
+[source,basic]
+x=xx:&"Blocks free: £!x"
 
 * output the two-character variable using the `str$()` function:
 
@@ -273,7 +288,7 @@ If it is supplied, there needs to be a `,` and the appropriate parameter substit
 
 .Example
 
-`&,9,#FIXME#`: display `var` in the 16-character programmable window
+`&,9,1`: display `a$` in the 16-character programmable window
 
 // &,_call_[,_optional_[,_parameter_]] -- don't think this ever happens
 
@@ -303,18 +318,18 @@ _BASIC Setup:_
 
 `poke 53252,_line_length_` limits the length of the input to _line_length_ characters, 1-79.
 
-`p$`: text of the prompt shown before `:&nbsp;` and input is accepted.
+`p$`: text of the prompt shown before `:&#160;` and input is accepted.
 
 `w$`: the default response to a prompt.
 When using edit mode, if only kbd:[Return] is typed at a prompt, `an$` is set to a null string (`an$=""`).
 The module can check for this and not update the original string.
 An example is given below.
 
-#TODO# double check this:
+// from &,1 documentation
 
-`pl=0`: convert lowercase input to uppercase.
+`pl=0`: allow both lowercase and uppercase.
 
-`pl=1`: allow both lowercase and uppercase.
+`pl=1`: convert lowercase input to uppercase.
 
 _Parameters:_
 
@@ -333,7 +348,7 @@ Bits may be combined together to perform multiple functions.
 [%autowidth]
 // [%frame=no]
 |=====
-| Bits | Decimal | Purpose (if set)
+| Binary | Decimal | Purpose (if set)
 | `%00000001` | 1 | disable typing graphics characters
 
 | `%00000010` | 2 | kbd:[.] or kbd:[/] on column one exits input
@@ -342,7 +357,7 @@ Bits may be combined together to perform multiple functions.
 
 | `%00001000` | 8 | disable typing kbd:[£] (the MCI command character)
 
-| `%00010000` | 16 | enable word wrap
+| `%00010000` | 16 | enable word-wrap
 
 | `%00100000` | 32 | enable edit mode
 
@@ -350,6 +365,33 @@ Bits may be combined together to perform multiple functions.
 
 | `%10000000` | 128 | disable typing kbd:[Delete] on column one to exit input
 |=====
+
+_Returns:_
+
+[%header]
+[%autowidth]
+|=====
+| Variable | Purpose
+| `an$` | 1 | disable typing graphics characters
+|=====
+
+[%header]
+[%autowidth]
+|=====
+| `peek()` | Purpose
+| `$d006/53254` | 0: normal
+
+1: kbd:[Delete], kbd:[.] or kbd:[/] typed on column 1
+
+
+|=====
+
+//* location (chat) holds:
+//* 0 = normal *
+//* 1 = delete on column one *
+//* or dot on column one *
+//* 2 = chat check hit *
+//* 3 = carrier/time loss *
 
 _Explanations:_
 
@@ -361,19 +403,19 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 
 * kbd:[Return] accepts the default (`w$`)
 * a new string can be typed
-* the current string can be edited using kbd:[Ctrl] key shortcuts)
+* the current string can be edited using kbd:[Ctrl] key shortcuts
 
 `password`: password flags:
 
-NOTE: These haven't been tested, just going by what Ray said
+// NOTE: These haven't been tested, just going by what Ray said
 
 [%header]
 [%autowidth]
 |=====
-| Bits | Decimal | Purpose
+| Binary | Decimal | Purpose
 | `%00000001` | 1| password mask enabled for output
 
-[uses character in `peek(17138)`]
+[uses mask character in `peek(17138)`]
 
 | `%00000010` | 2| no output
 |=====
@@ -386,28 +428,48 @@ _Examples:_
 
 #TODO#: write examples for each option.
 
-[source]
-----
-poke 53252,10:p$="Name":&,1 <1>
-----
+.Example 1:
+[source,basic]
+poke 53252,10:p$="Name":&,1
 
-<1> `poke 53252,10`: Set the input length to 10 characters. `p$="Name"`: Set the prompt to `Name:`. `&,1`: Allow user input, and return string in `an$`.
+`poke 53252,10`: Set the input length to 10 characters.
 
-[source]
-----
-poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$ <1>
+`p$="Name"`: Set the prompt to `Name:`.
 
-Handle: PINACOLADA
-Handle: _
-----
+`&,1`: Allow user input, and return string in `an$`.
 
-<1> `poke 53252,20`: Set the input length to 20 characters. `w$=na$`: Assign the user's handle (`na$`) to `w$` (the prompt's default). `p$="Handle"`: Set the prompt to `Handle:`. `&,1,32`: Setting bit 5 (a value of 32) enables edit mode. The string typed in response to a prompt is returned in `an$`. `if an$<>"" then na$=an$`: Just typing kbd:[Return] (to accept the default, `w$`) sets `an$` to a null string. If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
+.Example 2:
+[source,basic]
+poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$
 
-[source]
-----
-poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$ <1>
-----
-<1> `poke 53252,30`: Set the input length to 30 characters. `p$="New Prompt"`: Set the prompt to `New Prompt:`. `&,1,9`: Setting bits 3 and 0 (a value of 8 + 1) allow MCI and graphics characters to be entered.
+`poke 53252,20`: Set the input length to 20 characters.
+
+`w$=na$`: Assign the user's handle (`na$`) to `w$` (the prompt's default).
+
+`p$="Handle"`: Set the prompt to `Handle:`.
+
+`&,1,32`: Setting bit 5 (a value of 32) enables edit mode.
+This displays the prompt, the original text (`w$`), and re-displays the prompt.
+Editing control keys can be used to change the input.
+Editing mode looks like this:
+
+ Handle: PINACOLADA
+ Handle: _
+
+The string typed in response to a prompt is returned in `an$`.
+
+`if an$<>"" then na$=an$`: Just typing kbd:[Return] (to accept the default, `w$`) sets `an$` to a null string.
+If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
+
+.Example 3:
+[source,basic]
+poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$
+
+`poke 53252,30`: Set the input length to 30 characters.
+
+`p$="New Prompt"`: Set the prompt to `New Prompt:`.
+
+`&,1,9`: Setting bits 3 and 0 (a value of 8 + 1) allow MCI and graphics characters to be entered.
 
 ---
 
@@ -440,7 +502,7 @@ If you have an input file open on LFN \#1, and an output file open on LFN \#2, #
 The LFN value ranges from 1 to 255.
 LFN 15 is usually reserved for the DOS command channel.
 
-The only restriction is that you can't re-`open` a LFN that is already `open`, or you get the error `?file open&nbsp;&nbsp;error`.
+The only restriction is that you can't re-`open` a LFN that is already `open`, or you get the error `?file open&#160;&#160;error`.
 ====
 
 `bytes`: number of bytes to get from file (1-80).
@@ -487,7 +549,7 @@ data <1>
 The data is returned in `a$`.
 `&`: output `a$`.
 
-<4> `&,2,2,**25**`: using logical file #2, get a line of data from the disk--but stop at *25* characters, ignoring a carriage return.
+<4> `&,2,2,**25**`: using logical file #2, get a line of data from the disk--but stop at *25* characters, instead of getting the entire line.
 The data is returned in `a$`.
 `&`: output `a$`.
 
@@ -495,7 +557,7 @@ The data is returned in `a$`.
 `goto 300`: go to main prompt.
 
 .BASIC Pitfall
-[code]
+// [code]
 ====
 Using `input#2,a$` when the disk file contains a string `hello,there` returns only `hello` in `a$`.
 When used with `input#`, `,` is a delimiter which truncates (cuts off) the data after the `,`.
@@ -519,7 +581,7 @@ _Parameters:_
 `lfn`: logical file number
 
 // Range 1-20 from i/GF-other:
-`speed`: speed (`1`-`20` for movie file read. `1`=faster, `20`=slower)
+`,speed`: speed (`1`-`20` for movie file read. `1`=faster, `20`=slower)
 
 ---
 
@@ -553,20 +615,30 @@ _Returns_:
 
 ### `&,6` Password Input
 
-Sets input length to 14, and uses an input mask.
-The mask character is displayed, rather than the real character typed.
+Sets the input length to 14, and displays a definable mask character rather than the actual characters typed.
+The text typed is returned in plain (non-masked) text.
 
 _Parameters:_
 
-`poke 17138,_mask_`: display this character instead of the user's input
+`poke 17138,_mask_`: display _mask_ character instead of the user's input
 
-_Example:_
-
-`&,6`: Allow password entry, displaying the mask character set by the `poke` above.
+You could do `poke 17138,asc("X")` to set the mask character to `X`.
 
 _Returns:_
 
 `an$`: password in plain text
+
+_Example:_
+
+.im
+[source,basic]
+263 &"Password: ":&,6:if an$<>ep$ then:&"Incorrect Password."
+
+`&"Password: "`: Display the prompt ``Password: ``.
+
+`&,6`: Allow password entry, displaying the mask character instead of the text actually typed.
+
+`if an$<>ep$ then:&"Incorrect Password."`: if `an$` (the entered text) is not equal to (`<>`) `ep$` (a password set on an Extended Command Set command), display the message.
 
 ---
 
@@ -582,9 +654,69 @@ _Syntax:_
 
 `&,7,_device_[,_segment_]`
 
-// 13: wedgemem
+====
+.Segments
+Segments are pre-defined addresses that a module will load to, regardless of the file's first two bytes which define its load address.
 
----
+Not all segments are currently defined.
+
+[%autowidth]
+[%header]
+|====================
+^| Segment <| Purpose
+^| 2  | Protocols or blocks of ML
+^| 7  | Print mode table
+^| 8  | Lightbar text
+^| 9  | Alarm table
+^| 10 | ASCII-to-Commodore translation table
+^| 11 | Commodore-to-ASCII translation table
+^| 12 | Print mode table
+
+|====================
+
+////
+    .word 0 //0
+	.word 0 //1
+	.word protostart //2
+	.word 0 //3
+	.word 0 //4
+	.word 0 //5
+	.word 0 //6
+	.word pmodetbl //7
+	.word bartbl //8
+	.word alarmtb //9
+	.word tblatc //10
+	.word tblcta //11
+	.word netalrm //12
+    // 13: wedgemem - no practical purpose
+////
+====
+
+.im:
+[source,basic]
+29 ml$="++ "+a$:a$=dr$+ml$:&,7,dv%,2:goto 5
+
+This line loads an ML protocol (`++` file).
+
+[source,basic]
+ml$="++ "+a$
+
+Assign `ml$` the ``++ `` prefix for error reporting purposes.
+
+[source,basic]
+a$=dr$+ml$
+
+Concatenate `dr$` (the current drive prefix) and `ml$` (discussed above) into `a$`.
+
+[source,basic]
+&,7,dv%,2
+
+Do a module load using device `dv%` into segment 2 (the protocol address, `49152` or `$c000`).
+
+[source,basic]
+goto 5
+
+Check for a DOS error.
 
 ### `&,8` Disk Directory
 
@@ -667,6 +799,36 @@ kbd:[C=,Ctrl] leaves terminal mode
 
 Clear array #_x_.
 
+[[table-array-numbers]]
+
+.Array Numbers
+[%header]
+[%autowidth]
+|===
+^| Number | Array | Purpose
+^| 0 | `tt$()` | Text editor: lines entered
+^| 1 | `bb$()` |
+^| 2 | `dt$()` |
+^| 3 | `ed$()` |
+^| 4 | `nn$()` |
+^| 5 | `&#160;a%()` |
+^| 6 | `&#160;c%()` |
+^| 7 | `&#160;d%()` |
+^| 8 | `&#160;e%()` |
+^| 9 | `&#160;f%()` |
+^| 10| `ac%()` | Access levels
+^| 11| `so%()` | Subops
+|===
+
+////
+arrays1:
+		.text "tbdenACDEFAS"
+arrays2:
+		.text "TBTDN"
+		.byte $80, $80, $80, $80, $80
+		.text "CO"
+////
+
 _Example:_
 
 `&,11`::
@@ -700,17 +862,17 @@ Output from 1 to however many elements were ``dim``ensioned for _array_.
 `&,14,_array_,_end_`::
 Output elements of _array_ from 1-_end_.
 
-// TODO: array table
-
 ====
-NOTE: See <<array-table>> for the arrays which correspond to _array_.
+NOTE: See <<table-array-numbers>> for the arrays which correspond to _array_.
 ====
 
 ---
 
-### `&,15` Convert `an$`
+### `&,15` Convert `an$` [[convan]]
 
 This group of functions perform various conversions on the string contained in `an$`.
+
+TIP: Related string conversion functions can be found at  <<convert>>.
 
 #### `&,15` Convert Date
 
@@ -720,7 +882,7 @@ This group of functions perform various conversions on the string contained in `
 Put current 11-digit date (`d1$`, _e.g._ `60429218427`) into `an$`
 
 . `&,15`:
-Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&nbsp;&nbsp;4:29 P`` and assign that to `an$`
+Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&#160;&#160;4:29 P`` and assign that to `an$`
 
 . `&an$`:
 Output `an$`
@@ -728,7 +890,7 @@ Output `an$`
 ##### Image BBS Date Format [[date-format]]
 
 Image BBS uses an 11-digit string to represent a time and date.
-The format is `w&nbsp;yr&nbsp;mo&nbsp;dt&nbsp;hr&nbsp;mi`.
+The format is `w&#160;yr&#160;mo&#160;dt&#160;hr&#160;mi`.
 
 ====
 NOTE: Extra spaces between the numbers have been added for ease of reading, but are not used in the actual string.
@@ -755,16 +917,17 @@ NOTE: Extra spaces between the numbers have been added for ease of reading, but 
 .Image BBS Date Format
 [%autowidth]
 [%header]
+[cols="<,^,<,<"]
 |===
-| Position | Shortcut | Purpose | Range 
-| 1     | `**&nbsp;w**` | weekday | `1`=Sun...`7`=Sat 
+| Position | Abbreviation | Purpose | Range
+| 1     | `**&#160;w**` | weekday | `1`=Sun...`7`=Sat
 | 2-3   | `**yr**` | year    | `00`...`99` (the year within the century, `20xx`, is displayed using `&,15`)
 | 4-5   | `**mo**` | month   | `01`...`12`
 | 6-7   | `**dt**` | date    | `01`...`31`
 | 8-9   | `**hr**` | hour    | `00`...`11` (12:00 AM, midnight--11:00 AM, 1 hour until noon)
 
 `80`...`92` (12:00 PM, noon--11:00 PM, 1 hour until midnight)
-| 10-11 | `**mi**` | minute  | `00`...`59`
+| 10-11 ^| `**mi**` | minute  | `00`...`59`
 |===
 
 The current time and date is stored in the string `d1$`, which is continually updated by the ML.
@@ -777,17 +940,18 @@ Let's break down how the string is encoded.
 .Image BBS Date Decoding
 [%autowidth]
 [%header]
+[cols="<,^,<,<"]
 |===
-| Position | Value | Purpose | Meaning 
-| 1     | `&nbsp;2` | weekday | `Mon` 
+| Position | Value | Purpose | Meaning
+| 1     | `&#160;2` | weekday | `Mon`
 | 2-3   | `21` | year    | `2021`
 | 4-5   | `05` | month   | `May`
 | 6-7   | `17` | date    | `17`
-| 8-9   | `89` | hour    | `&nbsp;9:00 PM` (`9`=hour, plus `80`=PM)
+| 8-9   | `89` | hour    | `&#160;9:00 PM` (`9`=hour, plus `80`=PM)
 | 10-11 | `44` | minute  | `44`
 |===
 
-As the table above shows, this string stands for `Mon May 17, 2021&nbsp;&nbsp;9:44 PM`.
+As the table above shows, this string stands for `Mon May 17, 2021&#160;&#160;9:44 PM`.
 
 ====
 NOTE: You can also output kbd:[Ctrl+d] or `chr$(4)` in an `&` statement to convert an 11-digit date/time string to a long date/time string.
@@ -796,6 +960,8 @@ Both these statements output the same string as above:
 * `a$="22105178944":&"kbd:[Ctrl+d]"+a$`
 * `a$="22105178944":&chr$(4)+a$`
 
+// Jay Campey:
+Outputting the date and time this way also outputs the user's time zone.
 ====
 
 ---
@@ -840,7 +1006,7 @@ NOTE: This function is currently being researched.
 #### `&,15,6` Scan String
 
 Scan `an$` for the first occurrence of a specified character.
-You can specify the character to scan for in one of two ways: 
+You can specify the character to scan for in one of two ways:
 
 * _x_, the PETSCII value of the character
 * use the `asc("_x_")` function, which returns the ASCII (or PETSCII) value of character _x_
@@ -855,18 +1021,18 @@ If the specified character is found in `an$`, split it into two strings:
 [start=1]
 . `an$="Hello world":&,15,6,**32**`
 
-This splits `"Hello world"` at `**chr$(32)**` (kbd:[Space]), resulting in `an$="Hello"` and `a$="world"`.
+This splits `"Hello world"` at `**chr$(32)**` (kbd:[Space]), resulting in `a$="Hello"` and `an$="world"`.
 
 [start=2]
 . `an$="Hello world":&,15,6,**asc(" ")**`
 
-This splits `"Hello world"` at the **ASCII value of kbd:[Space]** (32), resulting in `an$="Hello"` and `a$="world"`.
+This splits `"Hello world"` at the **ASCII value of kbd:[Space]** (32), resulting in `a$="Hello"` and `an$="world"`.
 
 After the split, the two strings look like this:
 
 [%autowidth]
 |===
-| `an$="Hello"` | `chr$(32)` | `a$="world"` 
+| `a$="Hello"` | `chr$(32)` | `an$="world"`
 |===
 
 ////
@@ -874,7 +1040,7 @@ After the split, the two strings look like this:
 [start=3]
 . `an$="Hello world":&,15,6," "`
 
-This splits `"Hello world"` at the `" "` (space), resulting in `an$="Hello"` and `a$="world"`.
+This splits `"Hello world"` at the `" "` (space), resulting in `a$="Hello"` and `an$="world"`.
 ////
 ****
 
@@ -907,23 +1073,28 @@ _Parameters:_
 
 Following `&,16` with a _sub-function_ number (_e.g._, `&,16,2`) calls a sub-function of the module through a _jump table_.
 
-====
-Jump tables are useful for giving assembly language routines entry points that don't change.
-In other words, if a particular routine changes in size, that would shift all the addresses to jump to around from that point forward.
+.Details: Jump Tables
+****
+A _jump table_ is used to give assembly language routines stable entry point addresses that don't change even if routines pointed to change in size.
+This is done by maintaining a list of addresses to be ``jmp``ed to in 6510 assembly code.
 
-You probably don't want to search for all the BASIC `sys` references to the changed addresses throughout your code.
-Instead, just change the address that the jump table entry points to, and you can keep the BASIC `sys` address that calls the routine the same (stable).
-====
+In other words: when _not_ using a jump table, changing a routine's size shifts subsequent inline routine entry points around by the number of bytes added or subtracted by the modification.
+You probably don't want to search for all the BASIC `sys` addresses referencing the changed entry points throughout your code.
 
-Each of these instructions in a fictitious protocol assembly-language jump table take 3 bytes:
+Instead, just change the address that the jump table entry ``jmp``s to, and you can keep the BASIC ``sys`` address that calls the routine the same (stable).
 
-`jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
+As an example, each of these instructions in a fictitious protocol assembly-language jump table starting at ``$c000`` take 3 bytes:
 
-`jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
+`c000: jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
 
-`jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+`c003: jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
 
-TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information.
+`c006: jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+
+`c009:` _<first byte of first routine>_
+****
+
+TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information and listings of jump tables.
 
 ---
 
@@ -947,7 +1118,7 @@ The 9 lines of the screen mask show:
 
 * the lightbar interface
 * system, caller, protocol or network transfer information depending on the BBS's mode
-* the modem I/O windows, `M=` free memory, and `L=` BASIC line number currently executing 
+* the modem I/O windows, `M=` free memory, and `L=` BASIC line number currently executing
 
 ---
 
@@ -979,7 +1150,7 @@ _Parameters:_
 [%autowidth]
 [%header]
 |====================
-| Index | `peek()` | Hexadecimal | Purpose 
+| Index | `peek()` | Hexadecimal | Purpose
 | 0     | `53252`  | `$d004`     | Input line length
 |====================
 
@@ -1121,7 +1292,7 @@ Image 1.3 and above adds multiple levels of save and restore with an additional 
 TIP: The main prompt restores level 1 array pointers and already does a `&,28,1` there.
 
 If you substitute `&,27,1` for `&,27,2` and `&,28,1` for `&,28,2` in the above code, line 300 will redo `&,28,1`.
-This causes a `?redim'd array&nbsp;&nbsp;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
+This causes a `?redim'd array&#160;&#160;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
 ====
 
 ---
@@ -1148,7 +1319,9 @@ _Prerequisite:_
 
 (Refer to variable table #FIXME#.)
 
-_Returns:_ `$61`: Start of buffer holding the variable contents.
+_Returns:_
+
+`$61`: Start of buffer holding the variable contents.
 
 ---
 
@@ -1163,7 +1336,9 @@ _Prerequisite:_
 
 (Refer to variable table #FIXME#.)
 
-_Returns:_ `$61`: Start of buffer holding the variable contents.
+_Returns:_
+
+`$61`: Start of buffer holding the variable contents.
 
 ---
 
@@ -1388,20 +1563,30 @@ _Parameters:_
 
 `dv%`: device #
 
-_Preparation:_
+_BASIC Setup:_
 
----
- xxxx a$="e.ecs.main":dr=5:gosub 19 <1>
----
+TIP: Line 4016 is the root example, lines 4010 and 4018 are provided for context.
 
-<1> set system drive to the Etcetera disk. `gosub 19`: scratch existing `e.ecs.main` file
+.i.IM/ecs:
 
-_Example:_
+[source,basic]
+----
+4010 tt$(n+1)=chr$(0):&,42,3,n+1:return <1>
 
-.i/IM.ecs
+4016 &"Save To Disk{f6:2}":gosub 4010:gosub 4018:gosub 19:a$=dr$+a$:&,42,5:tz=0:return <2>
 
- 4016 ... a$=dr$+a$:&,42,5:return
+4018 dr=3:a$="e.ecs.main":return <3>
+----
 
+<1> Set end of ECS command list.
+
+<2> `gosub 4010`: see callout 1.
+`gosub 4018`: see callout 3.
+`gosub 19`: scratch existing `e.ecs.main` file.
+`&,42,5`: Save ECS definitions to disk.
+`tz=0`: Clear "`file modified`" flag.
+
+<3> assign `dr=3` (Image drive) to the Etcetera disk, and `a$="e.ecs.main"`, the ECS filename.
 
 ---
 
@@ -1527,11 +1712,39 @@ _Example:_
 
 ---
 
-### `&,54` Text editor interface
+### `&,54` Text Editor Interface
 
-	&,54,0	don't preserve text in tt$() array
-	&,54,1	re-enter main
-	&,54,2	re-enter, not command
+// Larry's work, edited for clarity
+The text editor is called with the `&,54,_mode_` command.
+The editor can be entered in different ways, depending on the value of _mode_.
+
+Line 60100 of `sub.editor` uses `&,54,a`.
+The values of _a_ and the purpose for entering the editor are as follows:
+
+.Text editor calls
+[%autowidth]
+[%header]
+[cols="<,^,<"]
+|====================
+| Line | Variable | Purpose
+| `60086` | `a=0` | Normal entry, empty buffer
+| `60110` | `a=1` | Buffer not cleared
+| `60108` | `a=2` | Extended editor command
+|====================
+
+When `a` is equal to 0, this is the "normal" entry point into the editor with an empty buffer.
+
+When `a` is equal to 1, entry into the editor does not clear the buffer.
+
+When `a` is equal to 2, entry into the editor is the point that would be used in an extended command if the command that was typed was not a recognized command.
+
+How to use the editor in your BASIC programs is described later in "`The Editor.`"
+
+////
+&,54,0	don't preserve text in tt$() array
+&,54,1	re-enter main
+&,54,2	re-enter, not command
+////
 
 ---
 
@@ -1548,7 +1761,13 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ### `&,57` relread
 
-Reads a record from a RELative file.
+Reads records from an open RELative file until the character `^` is encountered.
+
+_Parameters:_
+
+`&,57,_lfn_`
+
+`lfn`: logical file number
 
 ---
 
@@ -1576,7 +1795,7 @@ _Example:_
 
  &,59,1,14
 
-Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
+Cause error `14`, `?illegal quantity&#160;&#160;error`.
 
 .Error Numbers
 [%header]
@@ -1604,9 +1823,9 @@ Cause error `14`, `?illegal quantity&nbsp;&nbsp;error`.
 
 ### `&,60` Structures
 
-Structures (or _structs_) are 
+Structures (or _structs_ for short) allow you to access and manipulate the memory used by arrays at machine language speeds.
 
-See the xref:prg-structures.adoc#structures[Static Arrays (Structures)] chapter for more information.
+See the xref:prg-structures.adoc#structures[Structures] chapter for more information.
 
 ////
 [Ray: &,60 handles X=0,1,2,3,14,15, any other x calls &,68]
@@ -1627,7 +1846,8 @@ NOTE: `0,0` is the top left corner of the screen.
 ====
 
 .im
- 4004 &,38:&,61,.,8:print"&,37:goto300:":end
+[source,basic]
+4004 &,38:&,61,.,8:print"&,37:goto300:":end
 
 `&,61,0,8`: position the cursor at column 0, row 9. `print` recovery information if the BBS crashes.
 
@@ -1643,7 +1863,7 @@ Set BBS clock.
 
 _Parameters:_
 
-`&,62,_hour_,_minute_`
+`&,62,` _hour_, _minute_
 
 `hour`: hour
 
@@ -1652,7 +1872,8 @@ _Parameters:_
 _Example:_
 
 .im:
- 3182 &,62,h,m
+[source,basic]
+3182 &,62,h,m
 
 ---
 
@@ -1668,46 +1889,92 @@ include::includes/prg-ml-function-warning.adoc[]
 
 ---
 
-### `&,65` convert
+### `&,65` convert [[convert]]
+
+Another group of related string conversion functions, there are sub-functions to convert:
+
+* names (?)
+* disk data
+* special characters to Image-encoded function keys, and
+* check special characters.
+
+TIP: Related string conversion functions can be found at <<convan>>.
 
 ---
 
 ### `&,66` Calculated `goto`
 
 `goto` line number held in `a%`.
-If you have 14 4-digit `goto` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
+If you have 13 4-digit `goto` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
 
-_Parameter:_
+_BASIC Setup:_
 
 `a%`: line number to `goto`
 
-_Example:_
+Instead of writing this (which uses 73 bytes):
 
-Instead of writing:
+[NOTE]
+====
+Spaces between line number targets have been added for clarity's sake.
+====
 
-`on a% goto 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300` (79 bytes)
+.Calculated GOTO
+====
+[source,basic]
+on a% goto 3000, 3100, 3200, 3300, 3400, 3500, 3600, 3700, 3800, 3900, 4000, 4100, 4200, 4300
+====
 
-The same thing can be written like so:
 
-`a%=3000+a%*100:&,66` (19 bytes)
 
-Based on the value of `a%` (including `0`), `&,66` will `goto` lines starting at 3300 in increments of 100 (`0`=3300, `1`=3400, `2`=3500, `3`=3600, etc.)
+The same thing can be written like so (which uses 19 bytes):
+
+[source,basic]
+a%=3000+a%*100:&,66
+
+Based on the value of `a%` (including `0`), `&,66` will `goto` lines starting at 3300 in increments of 100 (`0`=3000, `1`=3100, `2`=3200, `3`=3300, etc.)
 
 // [3000 + (3 &times; 100)].
+////
+fora=0to3:?a,3000+a*100:next
+ 0         3000
+ 1         3100
+ 2         3200
+ 3         3300
+////
 
 ---
 
 ### `&,66,1` Calculated `gosub`
 
 `gosub` line number held in `a%`.
-If you have 14 4-digit `gosub` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
+If you have 13 4-digit `gosub` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
 
-.i.test structs:
-`a%=abs(val(an$)):if a%<15 then a%=3100+a%*50:&,66,1`
+_Example:_
+
+Instead of writing this (which uses 73 bytes):
+
+[source,basic]
+on a% gosub 3000,3100,3200,3300,3400,3500,3600,3700,3800,3900,4000,4100,4200,4300
+
+The same thing can be written like so (which uses 38 bytes):
+
+[source,basic]
+a%=abs(val(an$)):if a%<15 then a%=3100+a%*50:&,66,1
+
+////
+fora=0to3:?a,3100+a*50:next
+ 0         3100
+ 1         3150
+ 2         3200
+ 3         3250
+////
 
 Based on the value of `a%` (including `0`), `&,66,1` will `gosub` lines starting at `3100`, in increments of 50 (`0`=3100, `1`=3150, `2`=3200, `3`=3250, etc).
 
-`a%=3:a%=3100+a%*50:&,66,1` would `gosub 3250`.
+[source,basic]
+a%=3:a%=3100+a%*50:&,66,1
+
+would `gosub 3250`.
 
 ---
 
@@ -1717,7 +1984,7 @@ Based on the value of `a%` (including `0`), `&,66,1` will `gosub` lines starting
 
 ### `&,68` struct
 
-// Ray
+// Ray:
 
 Certain sub-functions of `&,60` are re-directed here.
 
@@ -1735,23 +2002,28 @@ _Parameters:_
 
 `row`: `0-24`
 
-`text`: `a$`, `"Hi there!"`, or `"Hi there, "+a$+"!"`
-
-`color`: is `1-15` for un-reversed colors.
-For reversed colors, add `$80` (or 
-
-// not sure MCI commands can be included
-
 ====
 NOTE: Upper left of the screen starts at column 0, row 0.
 ====
 
-_Example_
+`text`: can be a string (`a$`), literal text (`"Hi there!"`), or a combination of both (`"Hi there, "+a$+"!"`)
 
- &,69,4,21,left$(" "+cm$+"{21 spaces}",22),$8c
+// not sure MCI commands can be included
+
+`color`: is `1-15` for un-reversed colors.
+(`0`, black, is excluded--this is the same numbering as MCI colors.)
+
+For reversed colors, add `$80` (or `128` decimal).
+`$8x` is reverse color _x_ (`$81` or `129` is reverse white, `$8f` or `142` is reverse light gray).
+
+_Example:_
+
+.im
+[source,basic]
+13 &,69,4,21,left$(" "+cm$+"{21 spaces}",22),$8c
 
 [start=1]
-. `&,69,4,21` position string at column 5, row 22
+. `&,69,4,21`: position string at column 5, row 22
 
 [start=2]
 . `left$(" "+cm$+"{21 spaces}",22)`: format the string so it`'s left-justified in the 22-character `Area` window
@@ -1763,21 +2035,7 @@ _Example_
 TIP: The module `sub.display` is a good example of using `&,69`.
 ====
 
-_Parameters:_
-
-====
-TIP: Upper left corner of the screen is `0,0`.
-====
-
-`column`: `0-39`
-
-`row`: `0-24`
-
-`color`: ``1-15``, same as the MCI colors (black, `0`, is excluded).
-`$8x` is reverse color _x_ (`$81` is reverse white, `$8f` is reverse light gray).
-
-Question::
-Will this plot stuff to the screen mask area when in full screen mode? I'm pretty sure it does.
+// Will this plot stuff to the screen mask area when in full screen mode? I'm pretty sure it does.
 
 // [[70-position-cursor]] does not work
 
@@ -1796,10 +2054,7 @@ TIP: Upper left corner of the screen is `0,0`.
 `row`: 0-24
 
 .i.IM
- &,70,.,n/2+8.5:&"{white}"
+[source,basic]
+3350 ... &,70,.,n/2+8.5:&"{white}"
 
-.Fancy Title
-****
-.Question for the Ages:
-What is the difference between `&,61 (poscrsr)` and `&,70 (cursposn)`?
-****
+// What is the difference between `&,61 (poscrsr)` and `&,70 (cursposn)`?

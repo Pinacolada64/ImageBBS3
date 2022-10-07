@@ -1,0 +1,113 @@
+# PDF Book Unicode Character Test
+Ryan Sherwood <sym.rsherwood@gmail.com>
+:doctype: book
+:toc:
+
+[preface]
+== Our Preface
+
+I awoke one morning and was confronted by the dark and stormy eyes of the chinchilla.
+She had conquered the mountain of government reports that had eroded into several minor foothills and a creeping alluvial plain of loose papers.
+
+This page should be numbered _i_.
+
+Really, it goes before all the important stuff.
+
+== Chapter 1
+
+It was a dark and stormy night.
+
+((Question)): Since `asciidoctor-pdf` does not like (or I can't figure out how to) use ((HTML)) entity references such as:
+
+ &dagger;
+ 
+_Only_ decimal Unicode references like:
+
+ &#134;
+
+will work if you want to not cause the PDF generator to cry.
+
+====
+NOTE: Do _not_ use ((hexadecimal)) references such as:
+
+ &#x00a0;
+
+[quote,Kryten to Talkie Toaster,British sci-fi comedy "Red Dwarf"]
+____
+If you do, you will be on the receiving end of a very large polo mallet. Hmph.
+____
+====
+
+((Answer)): Read the fine manual!
+
+Reference: https://docs.asciidoctor.org/asciidoc/latest/attributes/character-replacement-reference/
+
+Specifically:
+
+[quote,footnote 3]
+____
+An ((AsciiDoc)) processor allows you to use any of the named character references (aka named entities) defined in HTML (e.g.,
+
+ &#120;
+
+resolves to 
+
+ €
+
+However, using named character references can cause problems when generating non-HTML output such as PDF because the lookup table needed to resolve these names may not be defined. Our recommendation is avoid using named character references&#2014;with the exception of those defined in XML (i.e., lt, gt, amp, quot and apos). Instead, use `numeric character references` (emphasis mine).
+____
+
+====
+.Note:
+I cannot seem to do _inline_ literal blocks.
+Using pass-through notation sort of works: .+.+.. indicates _delimited_ literal blocks.
+Maybe this can be fixed later.
+Or maybe it isn't important enough to fuss with.
+
+In the meantime, the delimited block
+
+ &#120;
+
+for the ((Euro)) symbol will have to do, however unlikely its usage will be, other than as an example.
+====
+
+== Command Line
+
+Generate this output using the following ((command line)) for ((Linux)) or _Windows Subsystem for Linux_ (because it looks _so_ much better with the serif fonts in Linux):
+
+.Command Line:
+`asciidoctor-pdf pdf-book-unicode-test.adoc -o pdf-book-unicode-test.pdf`
+
+.Test Table
+[%header]
+[%autowidth]
+|===
+| Non-breaking&#160;space!footnote:[between "breaking" and "space"] | Header 2
+| dagger: ^&#134;^ | table text
+| section: &#167; | that doesn't
+| British pound sign: &#163; | wrap
+| em dash: a&#151;b | any
+| ((Euro)): &#128;1,99 | or something
+|===
+
+^&#134;^: a dagger. Not a true footnote, though. Just superscript text.
+
+== Indexing Example
+
+====
+.A Very Silly [line-through]#Place# Index Example
+[quote,King Arthur,The Holy Grail]
+The Lady of the Lake, her arm clad in the purest shimmering samite, held aloft Excalibur from the bosom of the water, signifying by divine providence that I, ((Arthur)), was to carry Excalibur(((Sword, Broadsword, Excalibur))). That is why I am your king.
+
+Shut up! Will you shut up?!
+
+Burn her anyway! I'm not a witch.
+
+Look, my liege! We found them.
+
+indexterm2:[Lancelot] was one of the Knights of the Round Table.
+indexterm:[knight, Knight of the Round Table, Lancelot]
+====
+
+[index]
+== Index

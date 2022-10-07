@@ -19,8 +19,10 @@ We hope you find this useful in creating the next generation of Image BBS applic
 Happy programming!
 [.text-right]
 &#8212;Jack Followay, Jr.; Larry Hedman, Al DeRosa, and Ryan Sherwood
-[.text-right]
-&#8212;thanks to jam and X-Tec for editing help
+
+****
+Additional thanks go to jam and X-Tec for editing help, and Jay Campey for pointing out several outright errors in documentation.
+****
 
 ## Introduction
 
