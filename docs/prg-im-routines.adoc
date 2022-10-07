@@ -25,13 +25,14 @@ Layout :
 .`im` routines
 [options="header,autowidth"]
 [cols="1m,2m,3a"]
+[border="none"]
 |====================
-^| v3.0 ^| v1.2, v2.0 <| Purpose
+^| v3.0 ^| v1.2,&#160;v2.0 <| Purpose
 
 // &#160; = non-breaking space
 
-| `goto&#160;0`
-| `goto&#160;1812`
+| goto&#160;0
+| goto&#160;1812
 | Jump to main prompt at line 300.
 
 | `gosub&#160;1`
@@ -41,7 +42,7 @@ Layout :
 There is a 1/10^th^-second delay (`&,22,1`) between positioning commands.
 This is to give a physical disk drive`'s read/write head (or a slower filesystem, such as on a SD card) time to move to the correct spot within the file.
 
-_Setup:_
+Setup: ::
 
 `x`: record number desired
 
@@ -49,7 +50,7 @@ _Setup:_
 | `gosub&#160;1009`
 | Sets active system device/drive according to configured setup.
 
-_Setup:_
+Setup: ::
 
 `dr`: system drive (`1-6`) desired
 
@@ -69,13 +70,11 @@ _Setup:_
 ! 6 ! User Files ! `u.`
 !=======
 
-_Returns:_
+Returns: ::
 
 `dv%`: Active device
 
 `dr%`: Active drive + `:`
-
-// See <<drive-assignments>>.
 
 | `gosub&#160;3`
 | `gosub&#160;1010`
@@ -91,7 +90,7 @@ Upon exit, this routine falls through to line 5.
 | `gosub&#160;1012`
 | Read error channel of currently active device/drive.
 
-_Returns:_
+Returns: ::
 
 Upon exit, `a$` contains the error status message, `e%` returns the error number, `e$` the error text, `t%` the track, and `s%` the sector.
 
@@ -102,11 +101,13 @@ Waits for user input followed by a carriage return.
 Stacked commands (`uu$`, _e.g._ `SB4\^R3^Q`) are checked for.
 If any are pending, `gosub 310` handles checking for displaying command history (`^?`) or executing a command in the history (`^` and a digit).
 
-_Setup:_ `p$`: Text of prompt.
+Setup: ::
+
+`p$`: Text of prompt.
 
 `poke 53252,_x_`: Number of characters allowed.
 
-_Returns:_
+Returns: ::
 
 `an$`: the string input by the user.
 
@@ -114,7 +115,9 @@ _Returns:_
 | gosub&#160;1007
 | Wait for a keypress.
 
-Returns: an$, a single uppercase character.
+Returns: ::
+
+`an$`, a single uppercase character.
 
 | gosub&#160;9
 | gosub&#160;1360
@@ -125,7 +128,6 @@ Returns: an$, a single uppercase character.
 | Position RELative file record pointer DOS command.
 Same as line 1.
 However, it is suggested that you call this routine from line 1 for some systems`' compatibility.
-
 
 | `gosub&#160;11`
 | `gosub&#160;1004`
@@ -198,7 +200,9 @@ This routine:
 . adds the value of `i` to it (which can be negative if you want to subtract from the statistic)
 . falls through to line 17.
 
-Setup: open `e.stats` (`gosub 30`).
+Setup: ::
+
+open `e.stats` (`gosub 30`).
 
 `x`: the desired statistic to be updated:
 
@@ -229,7 +233,7 @@ Note that `e.stats` should be opened first (`gosub 30`), prior to calling this r
 |
 | Loads a `++` (protocol) file from Plus File drive--if it isn't already loaded--and checks the DOS error status.
 
-_Setup:_
+Setup: ::
 
 `a$`: ML or protocol file (minus the `++&#160;` prefix)
 
@@ -241,11 +245,15 @@ This routine then:
 
 * If so, the DOS error status (`e%`) is set to `0` to indicate no error, and it ``return``s instead of re-``load``ing the file.
 * otherwise, loads the module via `&,7` and ``return``s
-// . exits via `goto 5`, so the DOS error status can be checked to ensure the file loaded.
 
-_Returns:_
+////
+standard im does not do this:
+. exits via `goto 5`, so the DOS error status can be checked to ensure the file loaded.
+////
 
-#TODO#
+Returns: ::
+
+#FIXME#
 
 | gosub&#160;30
 | gosub&#160;1060
@@ -259,7 +267,7 @@ _Returns:_
 | gosub&#160;1062
 | Opens E-Mail file for desired user.
 
-Setup::
+Setup: ::
 
 `tt$`: user`'s handle of the E-Mail file to open
 `a$` should contain an ",r" or ",w" appropriate for reading or writing.
@@ -272,7 +280,7 @@ Setup::
 | gosub&#160;1064
 | Opens SEQ file `e.log #` (where `#` is the day code in `am$`) on the Etcetera drive.
 
-_Setup:_
+Setup: ::
 
 `a$`: `a` to append, `r` to read, or `w` if doing maintenance that requires creating the file.
 
@@ -402,7 +410,7 @@ These are the equivalent of `+.MM.*` files from v1.2.
 | gosub&#160;1902
 | Wait for yes/no hotkey.
 
-_Returns:_
+Returns: ::
 
 If `Y`, then Prints `Yes`, and `a=1`.
 Otherwise `No` is printed and `a=0`.
