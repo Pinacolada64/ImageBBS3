@@ -785,8 +785,8 @@
 	print#2,"Program: "pr$r$"Module: "p1$r$"Sub Module: "p2$
 	print#2,"ML File: "ml$r$"Protocol: "d4$r$
 	fori=1to10:a$=chr$(58-i):ifhs$(i)<>""thenprint#2," {f8}"a$": "hs$(i)
-' 6/23/2021: Trb-R: disable changing border colors
 '	next:print#2,"{^}":close2:poke53280,2
+' 6/23/2021: Trb-R: enable changing border colors on error
 	next:print#2,"{^}":close 2:&,52,$39,3:if a% then poke 53280,2
 	a$="User  : "+na$+r$+"Error :"+d$+r$+"Line  :"+str$(b)+r$+"Time  : {$04}"+d1$+r$
 	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':remgosub51
@@ -825,7 +825,7 @@
 	data "OUT OF DATA","ILLEGAL QUANTITY","OVERFLOW"
 	data "OUT OF MEMORY","UNDEF'D STATEMENT","BAD SUBSCRIPT"
 	data "REDIM'D ARRAY","DIVISION BY ZERO","ILLEGAL DIRECT"
-	data" TYPE MISMATCH","STRING TOO LONG","FILE DATA"
+	data "TYPE MISMATCH","STRING TOO LONG","FILE DATA"
 	data "FORMULA TOO COMPLEX","CAN'T CONTINUE","UNDEF'D FUNCTION"
 	data "VERIFY","LOAD","BREAK "
 {:4092}
