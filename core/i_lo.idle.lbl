@@ -122,21 +122,21 @@
 	&,60,2,.,l%(.,.),dr$+"e.last",dv%:gosub 5:if e% then {:4416}
 ' 4409: check Alt status just once, get m$=minutes
 ' &,52,$36,3: check status of Alt-L on lightbar, put result in a%
-	&,52,$36,3:for i=. to 9:m$=" "+right$("  "+str$(l%(7,i)),3)+" Min"
+ 	&,52,$36,3:m$="{pound}# {pound}#4{pound}%m Min ":for i=. to 9:m%=l%(7,i)
 ' 4410: getString: c$=caller, getDate: an$=date wmmddyyhhmm
 	&,60,1,20,l%(8,i),c$:&,60,5,.,l%(1,i),an$:if len(c$)<4 then {:4415}
 ' 4411: format d$="mm/dd" from short date; &,15: get long date, t$="hh:mm P"
-	d$=mid$(an$,4,2)+"/"+mid$(an$,6,2):&,15:t$=right$(an$,7)+"M":if a% then {:4413}
+	d$=mid$(an$,4,2)+"/"+mid$(an$,6,2):&,15:t$=right$(an$,7)+"M"
 ' 4412:
-	&"{f6}{rvrs on}{gray2}{pound}$d @ {pound}$t{pound}$m{pound}{back arrow}25":goto{:4414}
+	if a%=. then:&"{f6}{rvrs on}{gray2}{pound}$d @ {pound}$t"+m$
 {:4413}
-	&"{f6}{lt. blue}{pound}$d {yellow}@ {lt. blue}{pound}$t{white}{pound}$m{pound}{back arrow}25{yellow}"
+	if a% then:&"{f6}{lt. blue}{pound}$d {yellow}@ {lt. blue}{pound}$t{white}"+m$+"{yellow}"
 {:4414}
 	&"{pound}$c{pound}{back arrow}39{rvrs off}"
 {:4415}
 	next
 {:4416}
-	&,28,3:close2:poke53248,.:goto{:4040}
+	&,28,3:close 2:poke 53248,.:goto {:4040}
 
 {:4420}
 	f3=2:poke53248,1:poke2042,.:&"{clear}":im=2:a$="bar":gosub74:poke53248,.:goto{:4040}
@@ -165,4 +165,4 @@
 {:4480}
 	&,52,$34,3:ifa%thenpoke53371,0:&,52,$35,1
 	return
-	rem i/lo.idle (c)nissa 2021-07-16 lh+rs
+	rem i/lo.idle (c)nissa, 2022-10-07 lh+rs
