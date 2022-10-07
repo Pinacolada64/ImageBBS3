@@ -1,8 +1,11 @@
+////
 Date   : 8:49PM  3/6/95
 File   : "image" (==> "im")
 Type   : PRG; BASIC
 Purpose: 'Core' Routines File
 Layout :
+////
+
 
 0: Jumps to Main Prompt at 300 (goto 1812)
 
@@ -78,21 +81,7 @@ Layout :
   Time Idle      11     22
  ------------------------------------------
 
-17: Print the value of [st(x)] to record (x) of e.stats.  Note that e.stats should be opened, prior to calling this routine, on LFN#2.  (gosub 1026)
-
-20: Load i. module in (a$) (minus the i.) from the plus file drive (dr=5), then returns from routine.  This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.  The "i." and drive designators are automatically added by the sub-routine.  If the file is already in memory (pr$), (e%) is set to 0, and the sub-routine exits, otherwise this routine exits to line 5.  (gosub 1013)
-
-21: Loads i. module in (a$) (minus the i.).  Same as 20, except device, drive is determined by current value of (dr). (none)
-
-23: Loads i. module in (a$) (minus the i.), then starts module.  Same as 20, except after loading, this routine does a goto 3000. (goto 1016)
-
-24: Loads i. "gosub" module in (z$) (minus the i.), runs, then, upon RETURN, re-loads i. module which was already loaded when the routine was called. (goto 1300)
-
-25: Loads i. module in (z$) (minus the i.) and continues to line 3000.  <This line is similar to 1301, however, regardless of error, it goes to line 3000.>
-
-26: Loads i. module in (a$) from device, drive in (dr), sets (f1) to [sgn(e%)], then continues to line 3000.  (goto 1067)
-
-27: Loads i. "mini-module" in (a$) from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded (lm$), then this routine exits without actually re-loading the file.  (none)
+17: Print the value of [st(x)] to record (x) of e.stats.  Note that e.stats should be opened (gosub 30), prior to calling this routine, on LFN#2.  (gosub 1026)
 
 28: Loads ++ file in (a$) from plus file drive (dr=5), and exits to via line 5, so (e%) can be checked to ensure file loaded.  Note that if the file is already loaded (ml$), then this routine exits without actually re-loading the file.  (similar to 1736, but requires a filename rather than setting the variable (a).)
 
@@ -171,11 +160,11 @@ Layout :
 
 61: Reads blocks free on device, drive (dr).  Blocks free is returned in the variable (bf).  This routine should be called and the variable bf checked before creating any file on a device, drive to ensure there is enough space available.  (gosub 1079)
 
-70/71: Load and execute an i.file module beginning at line 3000.  These are the 'main' modules.
+70-71: Load and execute an i. file module beginning at line 3000.  These are the 'main' modules.
 
-72/73: Load and execute an i.'mini-module' file beginning at line 4000.  These are the equivalent of 'MM.' files from v1.2.
+72-73: Load and execute an i/ 'mini-module' file beginning at line 4000.  These are the equivalent of 'MM.' files from v1.2.
 
-74/75: Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  (Replaces 2.0's im. files)
+74-75: Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  sub.modem has a subroutine at line 100. (Replaces 2.0's im. files)
 
 79: Loads i.module from device, drive in (dr), then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
 
@@ -183,7 +172,29 @@ Layout :
 
 81: Same as 28, except peculiar difference in approach of checking against (ml$).
 
-200: System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in (p$), the time, and stack free if in local mode.  The routine will check the command stack (uu$), and will also check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with (mm) set as follows:
+100-104: Load sub. module in (a$) (minus the sub.) from the plus file drive (dr=5), then returns from routine.  This routine will also store the filename in (cm$) and output it to the Area window of the SysOp Screen.  The "i." and drive designators are automatically added by the sub-routine.  If the program (pr$) is already in memory, (e%) is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5.
+
+The subroutine file is added to a "module stack" so that if a sub.* file is called from another sub.* file, the previously-loaded sub.* file is reloaded on exit. `is` is the stack depth, and im$(is) is the module name.
+
+(gosub 1013)
+
+---cut---
+21: Loads i. module in (a$) (minus the i.).  Same as 20, except device, drive is determined by current value of (dr). (none)
+
+23: Loads i. module in (a$) (minus the i.), then starts module.  Same as 20, except after loading, this routine does a goto 3000. (goto 1016)
+
+24: Loads i. "gosub" module in (z$) (minus the i.), runs, then, upon RETURN, re-loads i. module which was already loaded when the routine was called. (goto 1300)
+
+25: Loads i. module in (z$) (minus the i.) and continues to line 3000.  <This line is similar to 1301, however, regardless of error, it goes to line 3000.>
+
+26: Loads i. module in (a$) from device, drive in (dr), sets (f1) to [sgn(e%)], then continues to line 3000.  (goto 1067)
+
+27: Loads i. "mini-module" in (a$) from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded (lm$), then this routine exits without actually re-loading the file.  (none)
+---
+
+200: System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in (p$), the time, and stack free if in local mode.  The routine will check the command stack (uu$),
+
+228: Check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with (mm) set as follows:
 
 	mm	Action
 	-------------------------------------------------------
@@ -206,7 +217,11 @@ Layout :
 	-------------------------------------------------------
 	NOTE:  If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local (lc) menu is shown to the user.
 
-250: Displays local/level (lc) menu.  (See Chart)
+234: Set `f1=2` for "Immediate logoff" (O!, O%!), otherwise `f1=1`.
+`cd%`: "`carrier drop`" flag.
+If the 2nd character is a `%` (i.e., `O%` or `O%!`), gosub 302 (load `i.lo`, the logoff module).
+
+250: Displays local/level (lc) menu.  (See Table)
 
 	 lc	Menu
 	----------------------------------
@@ -246,4 +261,9 @@ Layout :
 
 330: Randomly outputs a macro from file "e.macros". (gosub 1996)
 
-400: RETURN Jump-point. (goto 1610)
+999 | goto 1610 | `return` jump-point. 
+If an `on-goto` statement needs to exit a subroutine, you can say:
+
+[code, basic]
+on a goto 999
+
