@@ -14,11 +14,11 @@
 	return
 {:3010}
 	if zz and an$="R" then {:3030}
-	if val(an$) then gosub{:3020}:if a$<>"" then uu$=a$:goto {:3002}
-	rem ifan$="NORM"thenmm=.:goto2006
-	gosub 90:&"{f6}{lt. red}{pound}vj{pound}$q{lt. blue} {rvrs on} Unknown Command. Enter {f5}?{f5} For Help. {f6}{lt. red}{pound}vj":goto{:3002}
+	if val(an$) then gosub {:3020}:if a$<>"" then uu$=a$:goto {:3002}
+	rem if an$="NORM"then mm=.:goto 2006
+	gosub 90:&"{f6}{lt. red}{pound}vj{pound}$q{lt. blue} {rvrs on} Unknown Command. Enter {f5}?{f5} For Help. {f6}{lt. red}{pound}vj":goto {:3002}
 {:3020}
-'	a%=val(an$):a$="{^}":ifa%<1ora%>4thenreturn
+'	a%=val(an$):a$="{^}":if a%<1ora%>4then return
 	a%=val(an$):if a%<1 or a%>4 then return
 	dr=3:a$="e.macs":gosub 4:a$="{^}":if e%=0 then x=id*4-4+a%:gosub 1:&,2,2
 	close 2:return
