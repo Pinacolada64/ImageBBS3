@@ -1,0 +1,24 @@
+{assign:5	=5	}
+{assign:14	=14	}
+
+{step:2}
+{:60000}
+	&,27,7:dimfd%(60),jm%(29,59)
+	x=lc:onimgosub {:60004},{:60006},{:60010}:&,28,7:return
+{:60004}
+	gosub {:60006}:x=1:if lc=1orrcthen return
+{:60006}
+' ryan: save some unnecessary disk access searching for a file that won't be there:
+' s.menu 3: the text editor menu can't be converted to an access-aware menu
+'	b$="e.menu"+str$(x):gosub {:60010}:if e%=.then return
+	if x<>3 then b$="e.menu"+str$(x):gosub {:60010}:if e%=.then return
+	dr=1:a$="s.menu"+str$(x):goto 14
+{:60010}
+	dr=3:gosub 3:a$=dr$+b$
+	&,60,2,.,jm%(.,.),a$,dv%:gosub 5:if e%then return
+' &,60,8: ScanNums
+' &,60,8,records,size,access,struct%(record,field),result%(1),start
+	&,60,8,60,60,2^ac%+zz*32768,jm%(1,.),fd%(1),.:if a%=.then return
+	&"{f6}":fori=1toa%:&,60,1,50,jm%(5,fd%(i)),a$:lp=1:&"{pound}$q"+a$:i=i+a%*rc:next:return
+	copr. 1994 new image 9/27/94
+	rem sub.menus (c)nissa 190424 lh
