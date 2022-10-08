@@ -13,12 +13,16 @@ NOTE: This section is undergoing discovery of what some routines are for and how
 In BASIC, the `print` keyword (or its abbreviation, `?`) displays text on the screen, as in:
 
 [source,basic]
+----
 print"Hello there!"
+----
 
 You can substitute `&` in Image BBS to do the same thing:
 
 [source,basic]
+----
 &"Hello there!"
+----
 
 But unlike BASIC, after outputting this text, the cursor remains on the same line--there is no automatic carriage return printed.
 

@@ -38,7 +38,6 @@ Line output count can be reset with `poke 970,0`.
 | _n/a_
 | Time set flag.
 `0`=Clock has been set, stop flashing bottom status line.
-Non-zero values flash the bottom status line in the same color as the MCI &#163;C__x__ (Color) command.
 
 | `17138`
 | `$42f2`

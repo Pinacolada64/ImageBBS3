@@ -1,6 +1,16 @@
 CHANGELOG.md
 ============
 
+9/30/2022:
+
+* Starting to add `im` routine calls
+* Continuing on with `im` variable usage info
+* Added static vs. dynamic string info, garbage collection explanation
+* Added more module and `e.errlog` filename hints: `pr$`, `p1$`, `p2$`
+* `&,60` (structs): hopefully fix `struct%(record, field)` ordering mistakes
+* PDF generation works, albeit with some table header wrapping issues
+* Lots of little fixes, too numerous to mention -- have a look
+
 8/20/2022:
 
 * `&,15`: outputting date with `Ctrl-d` outputs time zone also -- Jay Campey
