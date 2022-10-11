@@ -1,4 +1,5 @@
 :icons: font
+:experimental:
 
 ### `im` Subroutines
 
@@ -11,7 +12,7 @@ Be sure to read the xref:prg-programming-etiquette.adoc#programming-etiquette[Pr
 
 // &#3020; is... interesting. looks like "blob pi"
 ====
-&#8658; Contributions by Jack "`Rascal`" Followay, Jr; Larry "`X-Tec`" Hedman, Jay "` #FIXME# `" Campey, and Ryan "`Pinacolada`" Sherwood.
+&#8658; Contributions by Jack "`Rascal`" Followay, Jr; Larry "`X-Tec`" Hedman, Jay "`Hoy Brothers`" Campey, and Ryan "`Pinacolada`" Sherwood.
 ====
 
 ////
@@ -26,6 +27,7 @@ Layout :
 [options="header,autowidth"]
 [cols="1m,2m,3a"]
 [border="none"]
+[grid="rows"]
 |====================
 ^| v3.0 ^| v1.2,&#160;v2.0 <| Purpose
 
@@ -35,8 +37,8 @@ Layout :
 | goto&#160;1812
 | Jump to main prompt at line 300.
 
-| `gosub&#160;1`
-| `gosub&#160;1001`
+| gosub&#160;1
+| gosub&#160;1001
 | Position record pointer of the currently opened REL file on LFN 2 (it calls line `10`, the position command, twice).
 
 There is a 1/10^th^-second delay (`&,22,1`) between positioning commands.
@@ -46,13 +48,13 @@ Setup: ::
 
 `x`: record number desired
 
-| `gosub&#160;2`
-| `gosub&#160;1009`
+| gosub&#160;2
+| gosub&#160;1009
 | Sets active system device/drive according to configured setup.
 
 Setup: ::
 
-`dr`: system drive (`1-6`) desired
+`dr`: system drive (`1-6`) desired:
 
 // .Drive Assignments [[drive-assignments]]
 [[drive-assignments]]
@@ -62,7 +64,7 @@ Setup: ::
 !=======
 // FIXME: only if there are multiple monospace items per cell do they have the shaded background.
 ! `dr` ! Purpose ! Prefix
-! 1  ! System files ! `s.`, `n.`
+! 1 ! System files ! `s.`, `n.`
 ! 2 ! E-Mail/NetMail ! `m.`, `nm.`
 ! 3 ! Etcetera Files ! `e.`
 ! 4 ! Directory Files ! `d.`
@@ -71,28 +73,35 @@ Setup: ::
 !=======
 
 Returns: ::
-
 `dv%`: Active device
 
 `dr%`: Active drive + `:`
 
-| `gosub&#160;3`
-| `gosub&#160;1010`
+| gosub&#160;3
+| gosub&#160;1010
 | Closes, then re-opens command channel (LFN 15) on the device/drive requested by setting the variable `dr` explained above.
 
-| `gosub&#160;4`
-| `gosub&#160;1011`
+| gosub&#160;4
+| gosub&#160;1011
 | Opens filename stored in `a$` on device/drive `dr` requested by setting the variable as explained in line 2.
 Will automatically make call to lines 2 and 3.
 Upon exit, this routine falls through to line 5.
 
-| `gosub&#160;5`
-| `gosub&#160;1012`
+| gosub&#160;5
+| gosub&#160;1012
 | Read error channel of currently active device/drive.
 
 Returns: ::
 
-Upon exit, `a$` contains the error status message, `e%` returns the error number, `e$` the error text, `t%` the track, and `s%` the sector.
+* `e%`: error number
+
+* `e$`: error message
+
+* `t%`: the track
+
+* `s%`: the sector
+
+* `a$`: complete error status message (`e%:e$:t%:s%`)
 
 | gosub&#160;6
 | gosub&#160;1006
@@ -116,8 +125,7 @@ Returns: ::
 | Wait for a keypress.
 
 Returns: ::
-
-`an$`, a single uppercase character.
+`an$`: a single uppercase character.
 
 | gosub&#160;9
 | gosub&#160;1360
@@ -126,15 +134,18 @@ Returns: ::
 | gosub&#160;10
 | gosub&#160;1002
 | Position RELative file record pointer DOS command.
-Same as line 1.
+Same as line `1`.
 However, it is suggested that you call this routine from line 1 for some systems`' compatibility.
 
-| `gosub&#160;11`
-| `gosub&#160;1004`
+| gosub&#160;11
+| gosub&#160;1004
 | Each user has a total of 19 flags stored in `fl$`, which decide whether or not they have access to a particular function or area of the system.
 These flags are held in a twenty-digit string.
 Each digit represents a separate flag which can be checked by setting the variable `a` to the flag number 1-20 (with the exception of 19), and issuing a `gosub 11` command.
+
+Returns: ::
 If `a` returns with a value of zero, access is denied, or the flag's value is zero.
+
 The values of each flag are as follows:
 
 // .User Flags
@@ -176,6 +187,8 @@ h! 19 ! Time/Day Allowed (second digit)
 ! 20 ! D/Ls per Call Allowed
 
 !===
+
+&#13;
 
 | gosub&#160;12
 | gosub&#160;1914
@@ -223,6 +236,7 @@ open `e.stats` (`gosub 30`).
 ! Time Used   !  10  !  21 !         !
 ! Time Idle   !  11  !  22 !         !
 !====================
+&#13;
 
 | gosub&#160;17
 | gosub&#160;1026
@@ -270,7 +284,8 @@ Returns: ::
 Setup: ::
 
 `tt$`: user`'s handle of the E-Mail file to open
-`a$` should contain an ",r" or ",w" appropriate for reading or writing.
+
+`a$`: should contain an `,r` or `,w` appropriate for reading or writing.
 
 | gosub&#160;33
 | gosub&#160;1063
@@ -286,7 +301,7 @@ Setup: ::
 
 | gosub&#160;35
 | gosub&#160;1065
-| Opens REL file "u.config" on user files drive.
+| Opens REL file `u.config` on user files drive.
 
 | gosub&#160;40
 |
@@ -294,35 +309,43 @@ Setup: ::
 This is the entry point for the system editor.
 Set `mm` according to reason for calling:
 
-	mm	Routine
-	-------------------------------------
-	 1	Main Entry Routine (Clear tt$() buffer)
-	 2	Alt. Entry (Don't Clear, Resume editing)
-	-------------------------------------
+[%header]
+[%autowidth]
+[cols="1m,2"]
+!===
+! mm ! Routine
+!  1 ! Main entry routine [clear `tt$()` buffer]
+!  2 ! Alternate entry [don`'t clear `tt$()` buffer, resume editing]
+!===
+
+&#13;
 
 | gosub&#160;41
 |
 | Loads `sub.handles`, and executes at line 60000.
 Set `mm` according to reason for calling:
 
-	mm	Routine
-	-------------------------------------
-	 0	Load u.index and put total
-		Number of users in `uh`
-	 1	Load u.index and check for
-		user in `an$`.  User ID is
-		returned in `i`, unless not
-		found [`i`=0].
-	-------------------------------------
+[%header]
+[%autowidth]
+[cols="1m,2"]
+!===
+! mm ! Routine
+!  0 ! Load `u.index` and put total number of users in `uh`
+!  1 ! Load `u.index` and check for user in `an$`.
+User ID is returned in `i`, unless not found (`i=0`).
+!===
+
+&#13;
 
 | gosub&#160;42
 |
 | Loads `sub.protos`, and executes at line 60000.
-_Setup:_ Set `mm` according to reason for calling:
+
+Setup: :: Set `mm` according to reason for calling:
 
 [%autowidth]
 [%header]
-!====================
+!===
 ! mm ! Purpose
 
 ! 0
@@ -336,65 +359,86 @@ _Setup:_
 (20 max)
 
 ! 1
-! Load and display protocol, asks user to select protocol unless in Console Local mode (which defaults to Copier), then loads the protocol.
+! Load and display protocol list.
+Asks user to select protocol (unless in Console Local mode, which defaults to Copier), then loads the protocol.
 
 ! 2
 ! Load user's default protocol (found in `uh` #FIXME#).
-!====================
+!===
+
+&#13;
 
 | gosub&#160;43
 | _none_
-| Loads `sub.display`, and executes at line 60000.
+| Loads `sub.display`, and executes at line `60000`.
 Set `mm` according to reason for calling:
 
-	mm	Routine
-	-------------------------------------
-	 1	Displays screen used while
-		user is online and fills in
-		all the user's information.
-	 2	Wait for Call Screen
-	 3	Displays screen used while
-		user in online, but leaves
-		windows blank.
-	 4	Displays file transfer
-		screen where device/drive
-		=[dv%(bn+6),dr%(bn+6)]
-	 5	Displays file transfer
-		screen where device/drive
-		=[d1%,d2%]
-	-------------------------------------
+[%autowidth]
+[%header]
+!===
+! mm ! Purpose
 
-| `gosub&#160;50`
-| `gosub&#160;1490`
-| Prints `a$` to the daily log, unless in instant mode (`i%=1`).  Entering this routine at line 51 ignores `i%`.
+! 0
+! Load the file `s.m.protos` into `tt$()`.
 
-| `gosub&#160;60`
-| `gosub&#160;1085`
+! 1
+! Displays screen used while user is online and fills in all the user's information.
+
+! 2
+! Wait for Call Screen
+
+! 3
+! Displays screen used while user in online, but doesn`'t fill in user information.
+
+! 4
+! Displays file transfer screen where device= , drive=  ,`dr%(bn+6)`
+
+! 5
+! Displays file transfer screen where device/drive =`d1%`, `d2%`
+!===
+
+&#13;
+
+| gosub&#160;50
+| gosub&#160;1490
+| Prints `a$` to the daily log, unless in instant mode (`i%=1`).
+Entering this routine at line 51 ignores `i%`.
+
+| gosub&#160;60
+| gosub&#160;1085
 | Writes file `capital reverse P` to device, drive in `dr`, scratches file, then sets `a` to `sgn(e%)` (`0` if `e%=0`, `1` if `e%` is non-zero).
 This routine is used to test (particularly on floppy-based systems) if there is a free directory entry on the device/drive.
 It should be called before the creation of any new file.
 
-| `gosub&#160;61`
-| `gosub&#160;1079`
+| gosub&#160;61
+| gosub&#160;1079
 | Reads blocks free on device/drive `dr`.
 This routine should be called and the variable bf checked before creating any file on a device, drive to ensure there is enough space available.
 Blocks free are returned in the variable `bf`.
 
 | gosub&#160;70
 |
-| Load and execute an i. file module beginning at line 3000.
-These are the 'main' modules.
+| Load and execute an `i.` file module beginning at line `3000`.
+These are the "`main`" modules.
 
 | gosub&#160;72
 |
-| Load and execute an i/ 'mini-module' file beginning at line 4000.
+| Load and execute an i/ "`mini-module`" file beginning at line `4000`.
 These are the equivalent of `+.MM.*` files from v1.2.
 
 | gosub&#160;74
-| none
-| Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  sub.modem has a subroutine at line 100. (Replaces 2.0`'s `im.` files)
+| _none_
+| Load and execute a `sub.*` module file beginning at line 60000.
+`sub` modules are subroutines used to supplement the `im` file.
 
-| `gosub&#160;79`
+[NOTE]
+====
+`sub.modem` has a subroutine at line 100.
+====
+
+(Replaces 2.0`'s `im.` files)
+
+| gosub&#160;79
 |
 | Loads i.module from device, drive in `dr`, then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
 
@@ -412,8 +456,9 @@ These are the equivalent of `+.MM.*` files from v1.2.
 
 Returns: ::
 
-If `Y`, then Prints `Yes`, and `a=1`.
-Otherwise `No` is printed and `a=0`.
+If `Y`, then prints `Yes`, and `a=1`.
+
+Otherwise, `No` is printed and `a=0`.
 
 | gosub&#160;100
 | gosub&#160;1013
@@ -441,66 +486,79 @@ The subroutine filename is added to a "`module stack`" so that if a `sub.\*` fil
 
 | 200
 |
-| System prompt routine.  Not to be confused with line 1812 of 1.2's "im" file which is now line 300, this routine is used for all system prompts.  It prints the prompt in `p$`, the time, and stack free if in local mode.  The routine will check the command stack `uu$`, #FIXME#
+| System prompt routine.
+Not to be confused with line `1812` of 1.2's `im` file which is now line 300, this routine is used for all system prompts.
+It prints the prompt in `p$`, the time, and stack free if in local mode.
+The routine will check the command stack `uu$`, #FIXME#
 
 | 228
 |
-| Check for logoff ["O", or "Q" if at Main Prompt (lc=1)] or menu ("?") commands.  On 'exit' this routine will goto line 3000 with `mm` set as follows:
+| Check for logoff (kbd:[O], or kbd:[Q] if at main prompt [`lc=1`]), or menu (kbd:[?]) commands.
 
-	mm	Action
-	-------------------------------------------------------
-	 0	"Init."  Use this as an entry point.
-	 1	Not a Global (ECS) Command.
-	 2	Prep. for a prompt display.  (Setup `p$` and
-		any pre-prompt text, then RETURN)  This Action
-		is called before actually displaying the Time/
-		prompt in `p$`.
-	 3	Global (ECS) Command issued.  Clean up & Exit.
-		(This Could be a GOSUB or GOTO ECS Command.
-		The purpose is to quickly perform a clean-up
-		(close files, etc) before proceeding.  In most
-		cases, nothing is done.  Exit should be handled
-		by issuing a RETURN.
-		NOTE: This is also the setting for `mm` that is
-		used if the time limit is exceeded.
-	 4-? *Internal usage by modules*  Not related to
-		prompt routine.
-	-------------------------------------------------------
+Returns: ::
+On exit, this routine will goto line `3000` when `mm` is set as follows:
 
-NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local `lc` menu is shown to the user.
+[%header]
+[%autowidth]
+!====
+! mm ! Action
+!  0 !"Init."  Use this as an entry point.
+!  1 ! Not a Global (ECS) Command.
+!  2 ! Preparation for a prompt display.  (Set up `p$` and
+  any pre-prompt text, then RETURN)  This action
+  is called before actually displaying the time/prompt in `p$`.
+!  3 ! Global (ECS) Command issued.  Clean up and exit.
+  (This could be a `gosub` or `goto` ECS command.
+  The purpose is to quickly perform a clean-up
+  (close files, etc.) before proceeding.  In most
+  cases, nothing is done.  Exit should be handled
+  by issuing a `return`.
+
+NOTE: This is also the setting for `mm` that is used if the time limit is exceeded.
+
+!  4-? ! *Internal usage by modules.*  Not related to
+  prompt routine.
+!====
+
+&#13;
+
+NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (kbd:[Return]), the local `lc` menu is shown to the user.
 
 | goto&#160;234
 |
-| Set `f1=2` for "Immediate logoff" (O!, O%!), otherwise `f1=1`.
-`cd%` ("`carrier drop`") flag.
-If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo`, the logoff module).
+| . Set `f1=2` for "`Immediate logoff`" (kbd:[O!], kbd:[O%!]), otherwise `f1=1`.
+. Set `cd%` ("`carrier drop`") flag if necessary.
 
-| `goto 250`
+. If the 2^nd^ character is a `%` (__i.e.__, kbd:[O%] or kbd:[O%!]), `gosub 302` (load `i.lo`, the logoff module).
+
+| goto 250
 |
 | Displays local/level `lc` menu.  (See Table)
 
 // .Menu numbers
 [%autowidth]
 [%header]
-!====================
-! `lc` ! Menu
-!  `1` ! Main menu
-!  `2` ! Message Base Menu (`SB`)
-!  `3` ! Editor Menu/Help
-!  `4` ! Local Mode Menu (`zz`)
-!  `5` ! File Transfer Menu (`UD`)
-!  `6` ! E-Mail Menu (`EM`)
-!  `7` ! General Files Menu (`GF`)
-!  `8` ! End of Bulletin Menu (`SB`)
-!  `9` ! Disk Transfer Menu (`UD`/`UX`)
-!====================
+!===
+! `lc` ! Menu ! Type
+!  `1` ! Main menu ! kbd:[?]
+!  `2` ! Message Base Menu ! kbd:[SB]
+!  `3` ! Editor Menu/Help ! kbd:[.?] or kbd:[.H]
+!  `4` ! Local Mode Menu ! kbd:[??]
+!  `5` ! File Transfer Menu ! kbd:[UD]
+!  `6` ! E-Mail Menu ! kbd:[EM]
+!  `7` ! General Files Menu ! kbd:[GF]
+!  `8` ! End of Bulletin Menu ! kbd:[SB]
+!  `9` ! Disk Transfer Menu ! kbd:[UX]
+!===
 
-| `gosub&#160;280`
+&#13;
+
+| gosub&#160;280
 |
 | This routine is called by the prompt routine at line 200 to check for ECS commands.
 
-| `goto&#160;300`
-| `goto&#160;1812`
+| goto&#160;300
+| goto&#160;1812
 | Main prompt entry routine.
 `i.main` is loaded at line 3000, and executed.
 
@@ -516,9 +574,11 @@ Action is dependent on the value of `f1`:
 ! `f1` ! Action
 !  `0` ! connection established
 !  `1` ! normal logoff
-!  `2` ! fast logoff (``O\!`` or out of time)
+!  `2` ! fast logoff (kbd:[O\!], or out of time)
 !  `3` ! normal entry (when loading `i.lo` for "`Wait For Call`" screen)
 !====================
+
+&#13;
 
 | 304
 |
@@ -531,36 +591,36 @@ Dimensions variables similar to Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn
 
 "`Emulating`" 1.2 is not the only use--this routine is helpful to save space and quickly ``dim``ension common variables to be used in a program.
 
-| `gosub&#160;310`
+| gosub&#160;310
 | _none_
 | Check for `^?`, the command history.
 If so, `goto 315`.
 
-| `gosub&#160;311`
+| gosub&#160;311
 | _none_
 | Check for `^` and a digit `0-9`.
 This executes that command history entry.
 
-| `gosub&#160;315`
+| gosub&#160;315
 | _none_
-| Prints up to the last 10 commands (stored in the history stack, `hs$(10)`) typed via `^?`.
+| Prints up to the last 10 commands [stored in the history stack, `hs$(10)`] typed via kbd:[^?].
 
-| `gosub&#160;320`
+| gosub&#160;320
 | #FIXME#
 | Update access level of user online.
 (Called by prompt routine at line 200).
 
-| `gosub&#160;321`
+| gosub&#160;321
 | _none_
 | If `fl$` is not as long as the record in `e.access`, append the additional flags.
-This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3.0, since these versions have more user flags per account.
+This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3.0, since newer versions have more user flags per account.
 
-| `gosub&#160;330`
-| `gosub&#160;1096`
+| gosub&#160;330
+| gosub&#160;1096
 | Outputs a random macro from file `e.macros`.
 
-| `goto&#160;999`
-| `goto&#160;1603`
+| goto&#160;999
+| goto&#160;1603
 | `return` jump-point.
 
 If an `on-goto` statement needs to exit a subroutine, you can write:
