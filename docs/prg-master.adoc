@@ -33,9 +33,7 @@ include::prg-programming-etiquette.adoc[]
 
 include::prg-im-routines.adoc[]
 
-### `sub.*` Module Jump Table
-
-Files with a `sub.` prefix contain routines which are used often, but to save memory and avoid code repetition, are separated from the main `im` module.
+include::prg-sub-routines.adoc[]
 
 include::prg-ampersand-calls.adoc[]
 

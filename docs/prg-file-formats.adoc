@@ -91,3 +91,50 @@ The record size is 31 bytes.
 // end span
 | 58 | `nc` | Credits for new user | 
 |====================
+
+#### s.m.protos
+
+This is a file which describes the file transfer protocols available to a user.
+
+.Sample:
+
+          1
+ 1234567890
+
+ punter00 Punter
+ punter20 Image 1.3 Punter
+ xmodem01 Xmodem/CRC
+ punter10 Relaxed Punter
+ xmodem11 Relaxed Xmodem/CRC
+ copier00 Copier
+
+[%autowidth]
+[%header]
+[cols="1m,2,3"]
+|====================
+| Offset | Purpose | Variable name
+
+| 1-6
+| `++ filename`
+| `pm$`: protocol module?
+
+| 7
+| x
+| `f`: default function?
+
+| 8
+| x
+| `nb`: ?
+
+| 9
+| x
+| _unused_
+
+| 10-
+| Protocol display name | `d4$`
+|====================
+
+#### nm.P.count
+
+// Larry:
+`nm.P.count` stores dates, times and tracking numbers of netsub messages sent out from your board.

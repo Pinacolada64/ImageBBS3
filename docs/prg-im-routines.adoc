@@ -341,7 +341,7 @@ User ID is returned in `i`, unless not found (`i=0`).
 |
 | Loads `sub.protos`, and executes at line 60000.
 
-Setup: :: Set `mm` according to reason for calling:
+Setup: :: Set `im` according to reason for calling:
 
 [%autowidth]
 [%header]
@@ -361,9 +361,6 @@ _Setup:_
 ! 1
 ! Load and display protocol list.
 Asks user to select protocol (unless in Console Local mode, which defaults to Copier), then loads the protocol.
-
-! 2
-! Load user's default protocol (found in `uh` #FIXME#).
 !===
 
 &#13;
@@ -371,12 +368,12 @@ Asks user to select protocol (unless in Console Local mode, which defaults to Co
 | gosub&#160;43
 | _none_
 | Loads `sub.display`, and executes at line `60000`.
-Set `mm` according to reason for calling:
+Set `im` according to reason for calling:
 
 [%autowidth]
 [%header]
 !===
-! mm ! Purpose
+! im ! Purpose
 
 ! 0
 ! Load the file `s.m.protos` into `tt$()`.

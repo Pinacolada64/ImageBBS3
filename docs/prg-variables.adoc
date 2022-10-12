@@ -211,7 +211,7 @@ template:
 [%header]
 [cols=">,^,^,<"]
 |====================
-| Variable | Type | Write | Purpose
+| Variable | Type | Use? | Purpose
 
 | `am`
 | BBS
@@ -221,14 +221,17 @@ template:
 | `bd`
 | BBS
 | icon:check[role=green]
-| BBS boot drive, used only during initialization.
+| BBS boot drive device number, used only during initialization.
 
 | `bf`
 | BBS
 |
 | Temporary blocks free count.
 
-// bu
+| bu
+|
+|
+| 
 
 | `ca`
 | BBS
@@ -276,7 +279,7 @@ template:
 | `l1`
 | BBS
 | icon:times-circle[role=red]
-| BBS reservation:
+| BBS reservation: `0`=none, `1`=one, `2`=all calls
 
 | `l2`
 | BBS
@@ -289,8 +292,17 @@ template:
 | BBS reservation:
 
 // lc
-// le
-// lf
+
+| le
+|
+|
+| Lines in text editor x10
+
+| lf
+| User
+|
+| Linefeed flag.
+
 // lm
 
 | `lp`
@@ -306,9 +318,19 @@ Use: Disable or enable word-wrap for `&` text output.
 // mf
 // mm
 // mw
-// nc
+
+| nc
+| BBS
+| Edit with kbd:[IM]
+| Credits given to new user.
+
 // nf
-// nl
+
+| `nl`
+| User
+|
+| Graphics mode.
+
 // nm
 
 | `nt`
@@ -412,9 +434,9 @@ General-purpose work variable.
 | icon:check[role=green]
 | A horizontal line 2 characters less than the user`'s screen width.
 
-(Also MCI variable `&#163;vj`)
+(Also MCI variable `&#163;vj`.)
 
-| am$
+| `am$`
 |
 |
 |
@@ -432,7 +454,7 @@ General-purpose work variable.
 | BBS
 | icon:check[role=green]
 | Boot drive partition/LU number.
-Used once during `im` initialization.
+Used once in `im` during boot-up, and in `i.su/config`.
 
 | `bn$`
 | BBS
@@ -441,10 +463,10 @@ Used once during `im` initialization.
 
 (Also MCI variable `&#163;v5`.)
 
-| bs$ - used once, line  3100
+| `bs$`
 |
-|
-|
+| icon:check[role=green]
+| used once in `im`, line 3100
 
 | `c1$`
 | BBS
@@ -459,7 +481,7 @@ Used once during `im` initialization.
 | `c3$`
 | BBS
 | icon:times-circle[role=red]
-| `Returning To The Editor` message (hard-coded, `im` line .
+| `Returning To The Editor` message (hard-coded, `im` line `3060`).
 
 | `cc$`
 | BBS
@@ -469,9 +491,9 @@ Used once during `im` initialization.
 (Also MCI variable `£vn`.)
 
 | `ch$`
+| BBS
 |
-|
-| Copy of co$?
+| Copy of `co$` (computer name).
 
 | `cm$`
 | BBS
@@ -489,7 +511,7 @@ Equivalent to `co$(co%)`.
 | `d1$`
 | BBS
 | icon:times-circle[role=red]
-| Current time and date information in 11-digit format.
+| Current time and date information in 11-digit format, updated by BBS ML.
 
 (Also MCI variable `£v0`.)
 
@@ -546,7 +568,7 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | ECS command password.
 
-| `f1$`--`f8$`
+| `f1$`-`f8$`
 | BBS
 |
 | Programmable function key definitions.
@@ -565,17 +587,17 @@ Strings must end in null byte (`nl$`).
 | `hx$`
 | BBS
 | icon:times-circle[role=red]
-| 16 hexadecimal digits: `"0123456789abcdef"`.
+| 16 hexadecimal digits: `0123456789abcdef`.
 
-| im$
+| `im$`
+| BBS
 |
-|
-|
+| Current `sub.*` module.
 
-| in$
+| `in$`
+| BBS
 |
-|
-|
+| Modem initialization string.
 
 | `i1$`
 | BBS
@@ -587,25 +609,24 @@ Strings must end in null byte (`nl$`).
 | icon:check[role=green]
 | ``dim``__ensioned but unused?__ Sub-board "`joined read`" string from pre-TurboREL 1.2 SB subsystem.
 
-| l1$
+// i/lo.misc:
+| `l1$`
 |
 |
 |
 
-| l2$
+| `l2$`
+| BBS
 |
-|
-|
+| System reservation: password.
 
-| l3$
-|
-|
-|
+// `l3$`
+// dimensioned but unused
 
 | `ld$`
 | User
 | icon:times-circle[role=red]
-| Last call date of user online in 11-digit format.
+| Last call date of user in 11-digit format.
 Used to determine whether a message is new or not.
 
 | `ll$`
@@ -613,7 +634,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real last name of user online.
 
-| lm$
+| `lm$`
 |
 |
 |
@@ -643,7 +664,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Handle of current caller.
 
-(Also MCI variable ``£v2``)
+(Also MCI variable `£v2`.)
 
 | `nl$`
 | BBS
@@ -656,26 +677,26 @@ Used to determine whether a message is new or not.
 | Last network sort time/date in 11-digit format.
 
 | `p$`
-| BBS, ML
+| BBS
 | icon:check[role=green]
 | Current prompt text.
 
-| p1$
-|
-|
-|
+| `p1$`
+| BBS
+| icon:times-circle[role=red]
+| `i/*` module name.
 
-| p2$
-|
-|
-|
+| `p2$`
+| BBS
+| icon:times-circle[role=red]
+| `sub.*` module name.
 
 | `ph$`
 | User
 | icon:times-circle[role=red]
 | E-mail address of current user online.
 
-(Also MCI variable `£v4`)
+(Also MCI variable `£v4`.)
 
 | `po$`
 | BBS
@@ -689,10 +710,10 @@ Used to determine whether a message is new or not.
 
 | `pr$`
 | BBS
-| 
-| Name of current ``pr``ogram (module) in memory.
+| icon:times-circle[role=red]
+| Name of current ``pr``ogram (``i.*`` module) in memory.
 
-| pu$
+| `pu$`
 |
 |
 |
@@ -717,9 +738,9 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real name of user online (``ff$+" "+ll$``)
 
-(Also MCI variable `£v3`)
+(Also MCI variable `£v3`.)
 
-| sb$
+| `sb$`
 |
 |
 |
@@ -734,17 +755,11 @@ Used to determine whether a message is new or not.
 | icon:check[role=green]
 | C= Time-of-day clock
 
-| tk$
-|
-|
-|
+// `tk$`
 
-| tt$
-|
-|
-|
+// `tt$`
 
-| tz$
+| `tz$`
 |
 |
 | Time zone
@@ -754,17 +769,17 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Reserved for command stacking.
 
-| uf$
-|
-|
+| `uf$`
+| User
+| icon:times-circle[role=red]
 | User flags.
 
-| uu$
+| `uu$`
 |
 |
-| Command stacking.
+| Command stacking string.
  
-| w$
+| `w$`
 |
 |
 | Word-wrap input.
@@ -774,20 +789,10 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | System drive/LU designators #FIXME#?
  
-| z1$
+| `z1$`, `z2$`, `z3$`
 |
 |
-| only during config
-
-| z2$
-|
-|
-| only during config
-
-| z3$
-|
-|
-| only during config
+| only during boot-up or config
 
 |===
 

@@ -1,0 +1,102 @@
+:experimental:
+
+### `sub.*` Module Jump Table
+
+Files with a `sub.` prefix contain routines which are used often, but to save memory and avoid code repetition, are separated from the main `im` module.
+
+#### `sub.bar`
+
+This handles displaying the BBS`'s Board Activity Register statistics.
+
+#### `sub.comm1`
+
+* View or change last call date
+* View BBS caller activity log
+* Credit exchange: trade calls for time, credits, or vice-versa
+// fourth subroutine is just a do-nothing stub
+
+#### `sub.comm2`
+
+[%header]
+[%autowidth]
+|===
+| `im` | Purpose
+
+| `1`
+| kbd:[MT]: Mini-Terminal
+|===
+
+NOTE: From this point on, the line numbers follow Image 1.2/2.0 `im` specifications, plus `60000` (_e.g._, Image 2.0's `1985` is renumbered to Image 3.0's `61985`).
+
+[%header]
+[%autowidth]
+[cols="1m,2"]
+|===
+| `im` | Purpose
+
+| 2
+| a duplicate of `i.main`
+
+| 3
+| Handle ECS commands
+
+| 4
+| format local or network node user IDs
+
+. if `an$` is a number, it is a user ID on this BBS, and is re-formatted to `<Handle>-<two_letter_ID> + ID#`
+// `cc$` is the two-letter BBS identifier), 
+_e.g._ `Pinacolada-DE1`
+
+* if `an$` starts with `!`, it is a network node identifier, and is re-formatted to `<Handle> @ <Node_ID>`, _e.g._, `Pinacolada @ DRE`
+
+Returns: ::
+
+an$: entire string
+
+n0$: 
+
+n1$: 
+
+n2$: 
+|===
+
+#### sub.display
+
+#### sub.editor
+
+#### sub.feedback
+
+#### sub.handles
+
+#### sub.info
+
+#### sub.local
+
+#### sub.menus
+
+#### sub.misc
+
+#### sub.misc2
+
+#### sub.modem
+
+#### sub.param1
+
+#### sub.param2
+
+#### sub.protos
+
+// `im=`
+
+#### sub.stack
+
+#### sub.stats
+
+#### sub.sysdos
+
+This handles issuing DOS commands.
+
+#### sub.turbo
+
+This handles checking for, and enabling or disabling, the Creative Micro Designs SuperCPU.
+
