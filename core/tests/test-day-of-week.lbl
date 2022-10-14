@@ -1,0 +1,66 @@
+' /test-day-of-we2/
+
+' https://artofmemory.com/blog/how-to-calculate-the-day-of-the-week/
+' (Year Code + Month Code + Century Code + Date Number - Leap Year Code) mod 7
+
+' http://www.basic-converter.org/zeller.bac
+
+' test cases:
+' 3/14/1897: Sunday (Einstein's birthday)
+' 12/7/1941: Sunday (Pearl Harbor Day)
+{step:2}
+{alpha:alt}
+{:60100}
+	def fn md(x)=a-int(a/b)*b:rem modulo function
+	t=15:rem spaces to tab over for "correct" message
+	m%=3:d%=14:y%=1897:yr$=mid$(str$(y%),2,4)
+'	input"month";mo$:m%=val(mo$)
+'	input"day";dy$:d%=val(dy$)
+'	input"year";yr$:y%=val(yr$)
+	if m%<1 or m%>12 or d%<1 or d%>31 or y%<1800 or y%>3000 then {:error}
+	on -(d%>30 and (m%=4 or m%=6 or m%=9 or m%=11)) goto {:error}:if m%<>2 then {:60112}
+' february/leap year calculations
+	on -(d%>29)-2*(d%<29) goto {:error},{:60112}:if y%-(int(y%/4)*4)<>. then {:error}
+{:60112}
+' FIXME: weekday returns wrong day in many situations
+' is it because the code is expecting 19xx years?
+' 11/11/11 returns ??? instead of thu
+' 10/01/22 returns ??? instead of sat
+
+	' modulo arithmetic:
+' 10 input "please enter number then divisor ";a,b
+' 20 print a; "/"; b; "=";int(a/b): print "remainder"; a-int(a/b)*b
+' 30 end
+
+' 10 def fn md(x)=a-int(a/b)*b:rem modulo: a=divisor ('a' in 'a/b'), b=dividend ('b' in 'a/b')?
+' below: test f (function result) = x (expected result), e.g. 13/7=1, remainder 6
+' 20 a=13:b=7:x=6:f=fn md(0):if f=x then print"ok"
+
+' (YY + (YY div 4)) mod 7
+' YY is the last two digits of the year. For the year 1897, it’s 97.
+	yy=val(right$(str$(y%),2)):x=97:print "yy="yy;:if yy=x then print tab(t)"correct";
+' First, divide YY by 4 and discard the remainder: 97 div 4 = 24.
+	print:y1=int(yy/4):x=24:print "y1="y1;:if y1=x then print tab(t)"correct";
+' Then add 24 back into the YY number, which is 97 in this case, resulting in 121.
+	print:yy=yy+y1:x=121:print "yy="yy;:if yy=x then print tab(t)"correct";
+' The next step is: 121 mod 7.
+' yc=year code:
+	print:a=yy:b=7:x=2:yc=fn md(0):print"yc="yc;:if yc=x then print tab(t)"correct";
+' mc=month code:
+	print:mc=val(mid$("033614625035",m%,1)):x=3:print"mc="mc;:if mc=x then print tab(t)"correct";
+' c=century
+' cc=century code for years between 18xx-21xx:
+' 18xx: 2
+' 19xx: 0
+' 20xx: 6
+' 21xx: 4
+'	print:c=val(left$(yr$,2)):if c>17 and c<22 then cc=val(mid$("2064",18-c,1))
+'	print:x=2:print"cc in="cc;:if cc=x then print tab(t)"correct";
+' x=2: expected value is 2
+	print:a=18-val(left$(yr$,2)):b=7:x=2:cc=fn md(0)
+	print"cc mod 7="cc;:if cc=x then print tab(t)"correct";
+	print
+'	print"day:"d%;:if d%<1 or d%>7 then print mid$("satsunmontuewedthufri",d%*3-2,3) '	ld$=mid$(str$(d%),2,1)+right$(c$,2)+left$(c$,4)+right$(ld$,4)
+	end
+{:error}
+	print"illegal date "m%"/"d%"/"y%
