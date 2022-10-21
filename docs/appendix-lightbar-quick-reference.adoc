@@ -3,7 +3,16 @@
 [appendix]
 == Lightbar Quick Reference
 
-#TODO#: Quick summaries of lightbar flags in 3-column tables. Find out how to balance `Left` and `Right` column widths.
+This appendix lists a short description of what each lightbar function is used for.
+
+Each page of the lightbar has all the labels listed in a horizontal row for quick reference.
+Beneath that are three columns with more information:
+
+* The middle column, _Label_, lists the text of the lightbar option, as well as the numbers (in decimal) used to interface with the lightbar using `&,52`.
+* The _Left_ and _Right_ columns of the table explain the lightbar function or options for that label's position.
+If additional  function keys are used with that lightbar option, they are listed, along with what each function key does.
+
+include::includes/lightbar-function-keys.adoc[]
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
@@ -11,52 +20,69 @@
 | `Sys` | `Acs` | `Loc` | `Tsr` | `Cht` | `New` | `Prt` | `U/D`
 |====================
 
-// cols="2a" enables nested tables (for function keys) in that column
+// cols="1a,3a" enables nested tables (for function keys) in that column
 
-[width="100%",options="header", options="autowidth", cols="1,2a,3"]
+[%header]
+[%autowidth]
+[cols="45a,^10,45a"]
+[grid="rows"]
 |====================
-| Option | Left | Right
+| Left | Label | Right
 
-| `Sys`
+// row 1
+
 | *Sysop Available to Chat*
 
 Enable sysop chat availability.
-If kbd:[C] typed at any major prompt, alerts will sound.
+If kbd:[C] is typed at any major prompt, bells will sound.
 Chat reason logged to `e.log _weekday_`.
+
+| `0&#160;Sys&#160;1`
 
 | *Background Page Enable*
 
-Chat page bell plays continually (even while the user is doing other things) until chat page is answered or user logs off.
+Chat page bell plays continually (even while the user is doing other things) until the chat page is answered or the user logs off.
 
-| `Acs`
+// row 2
+
 | *Edit User's Access*
 
-Change user access level, using the following function keys:
+Change user access level (`A=_x_` on the seventh line of the screen mask), using the following function keys:
 
 // Nested table
 [cols="1,2",options="autowidth"]
 !===
 // are there f1 f2 f4 f6 shortcuts too?
-! kbd:[f3] ! increases level, wraps from 9 to 0.
-! kbd:[f5] ! decreases level, wraps from 0 to 9.
+! kbd:[f1] ! sets level to `A=0`.
+! kbd:[f2] ! sets level to `A=9`.
+! kbd:[f3] ! increases level, wraps from `A=9` to `A=0`.
+! kbd:[f5] ! decreases level, wraps from `A=0` to `A=9`.
 ! kbd:[f7] ! exits.
 !===
+
+&#13;
+
+| `2&#160;Acs&#160;3`
 
 | *Block 300 Baud Callers*
 
 Disable 300 baud users from logging in.
 
-| `Loc`
+// row 3
+
 | *Local Mode (No Modem I/O)*
 
 Local ("`console`") mode login. Log in to the BBS from the C64.
+
+| `4&#160;Loc&#160;5`
 
 | *ZZ (Pseudo-Local) Mode*
 
 Enable pseudo-local mode, which allows using maintenance commands.
 Can be toggled remotely with kbd:[ZZ].
 
-| `Tsr`
+// row 4
+
 | *Edit User's Time Left*
 
 Change "`time still remaining`" (time left on user`'s call).
@@ -73,42 +99,58 @@ Change "`time still remaining`" (time left on user`'s call).
 ! kbd:[f7] ! sets selected time limit
 !===
 
+&#13;
+
+| `6&#160;Tsr&#160;7`
+
 | *Prime Time Enabled*
 
-Toggle Prime Time if it is set up.
+Enable Prime Time if it is set up, and limit the caller's time remaining to the number of minutes set in Prime Time settings.
 
-| `Cht`
+// row 5
+
 | *Enter/Exit Chat Mode*
 
 Enter or exit chat mode.
 Configurable messages are shown when entering and exiting chat mode.
 
+| `8&#160;Cht&#160;9`
+
 | *Disable Modem Input*
 
-#TODO# Description.
+Ignore any data coming from the caller.
 
-| `New`
+// row 6
+
 | *Disallow New Users*
 
-Disallow new users at login.
+Prevent kbd:[NEW] users from signing up at login.
+
+| `10&#160;New&#160;11`
 
 | *Enable Screen Blanking*
 
 Enable screen blanking at system idle.
 
-| `Prt`
+// row 7
+
 | *Print Spooling*
 
 Print the text output to the console to a connected printer.
+
+| `12&#160;Prt&#160;13`
 
 | *Print Log Entries*
 
 Print log entries to a connected printer.
 
-| `U/D`
+// row 8
+
 | *Disable U/D Section*
 
 Disable access to the Upload/Download section.
+
+| `14&#160;U/D&#160;15`
 
 | *300 Baud U/D Lockout*
 
@@ -133,14 +175,21 @@ Prevent 300 baud users from using the Upload/Download section, since they could 
 | `Asc` | `Ans` | `Exp` | `Unv` | `Trc` | `Bel` |  `Net` | `Mac`
 |====================
 
-[width="100%",options="header", options="autowidth"]
+[%header]
+[%autowidth]
+[cols="45a,^10,45a"]
+[grid="rows"]
 |====================
-| Option | Left | Right
+| Left | Label | Right
 
-| `Asc`
+// row 1
+
 | *Enable ASCII translation*
 
-Description.
+This translates the Commodore character set into the ASCII character set.
+Most notably, the character codes of upper- and lowercase characters are reversed between the two character sets, but there are other differences too.
+
+| `16&#160;Asc&#160;17`
 
 | *Line Feed After Return*
 
@@ -148,26 +197,33 @@ Description.
 
 *Disabled:* Send CR (carriage return) at line breaks, for Commodore and pre-OSX Macintosh terminals.
 
-| `Ans`
+// row 2
+
 | *ANSI Color Enable*
 
-Description.
+This translates Commodore color codes into ANSI sequences for ANSI terminals. 
+
+| `18&#160;Ans&#160;19`
 
 | *ANSI Graphics Enable*
 
-Description.
+This sends ANSI characters instead of Commodore graphics characters for ANSI terminals.
 
-| `Exp`
+// row 3
+
 | *Expert Mode Enable*
 
 If enabled, _Expert Mode_ may present more advanced options in a menu, skip displaying subsystem entry screens, or other things.
 Users can toggle Expert Mode through kbd:[XP] directly, or kbd:[EP], kbd:[P], kbd:[6].
 
+| `20&#160;Exp&#160;21`
+
 | *Disallow Double Calls*
 
 Prevent users from making two calls back-to-back.
 
-| `Unv`
+// row 4
+
 | *No Immediate U/D Credits*
 
 When a file is uploaded, credits are awarded:
@@ -176,47 +232,66 @@ When a file is uploaded, credits are awarded:
 
 *Disabled:* After the file is successfully uploaded.
 
+| `22&#160;Unv&#160;23`
+
 | *Allow Auto-Logoff*
 
 If enabled, the user is prompted before a file transfer begins whether they want to log off automatically after an upload or download is complete.
 
-| `Trc`
+// row 5
+
 | *On-Screen Trace Enable*
 
 Enable BASIC line execution trace, which appears as `L=xxxxx` between the receive and transmit windows on the screen mask.
 Slow down execution by holding kbd:[Ctrl].
 Normally this is only used for debugging.
 
+| `24&#160;Trc&#160;25`
+
 | *Time: Reset Clock*
 
 Poll CMD RTC every few hours to correct BBS clock drift, if running in emulation.
 
-| `Bel`
+This is handled by an alarm. If you don't want this behavior, disable `At1` (Alarm Trigger 1).
+
+// row 6
+
 | *Local Bells Enable*
 
-Description.
+Bells [`chr$(7`), kbd:[Ctrl+G], or the MCI command `&#163;b__x__`] sent to the user are heard on the console also.
 
+| `26&#160;Bel&#160;27`
+    
 | *Local Beeps Disable*
 
-Description.
+This prevents beep sound effects from being played when a `&,25[,0]` command is encountered.
 
-| `Net`
+// row 7
+
 | *NetMail Enable*
 
-Description.
+This allows NetMail options in the E-Mail subsystem, NetSub options in the sub-boards, and NetMaint to process NetMail and NetSubs.
+
+| `28&#160;Net&#160;29`
 
 | *NetMail Trigger*
 
-Description.
+This indicates that NetMail processing will take place at the next available opportunity.
+This could be the usual 3-4 AM window, or occur because of a NetMail alarm trigger running at a specific time.
 
-| `Mac`
+_(BBS-controlled)_
+
+// row 8
+
 | *Macros On/Off*
 
-Description.
+At the main prompt, random sayings from `e.say` are displayed.
+
+| `30&#160;Mac&#160;31`
 
 | *MCI Disable in Editor*
 
-Description.
+The user won't be able to type the British pound sign (kbd:[&#163;]) to enter MCI commands. 
 
 |====================
 
@@ -237,81 +312,125 @@ Description.
 | `Chk` | `Mor` | `Frd` | `Sub` | `Res` | `Mnt` | `Mnu` | `Xpr`
 |====================
 
-[width="100%",options="header", options="autowidth"]
+[%header]
+[%autowidth]
+[cols="45a,^10,45a"]
+[grid="rows"]
 |====================
-| Option | Left | Right
+| Left | Label | Right
 
-| `Chk`
+// row 1
+
 | *Enable MailCheck at Logon*
 
 Enables kbd:[M]`ail Check` option when user logs in.
 If chosen, this option allows the user to see whether they have e-mail waiting for them; they can then decide if they wish to log on to the BBS or not.
 
+| `32&#160;Chk&#160;33`
+
 | *Excessive Chat Logoff*
 
 If the user requests more unanswered chat pages than `s.chat _x_` (_x_ being the chat attempt number) screens exist, the user is logged off as soon as possible.
 
-| `Mor`
+// row 2
+
 | *`...More (Y/n)?` Prompt On*
 
-Description.
+Enables page pause functionality.
+If there are more lines of text output than the user's screen height, output pauses with this prompt until a key is hit.
+
+| `34&#160;Mor&#160;35`
 
 | *`...More (Y/n)?` Prompt Not Available*
 
-Description.
+This disables the `More` prompt (_e.g._, handy in the Movie File section to avoid viewing interruptions).
 
-| `Frd`
+// row 3
+
 | *Full-Color Read Disable*
 
 // TODO: verify this
 
 Disable outputting color to caller.
 
+| `36&#160;Frd&#160;37`
+
 | _Undefined_
 
-| `Sub`
+// row 4
+
 | *Message Bases Closed (SB)*
 
-Description.
+Prevents users from entering the Sub Boards section.
+
+| `38&#160;Sub&#160;39`
 
 | *Files Section Closed (GF)*
 
-Description.
+Prevents users from entering the General Files section.
 
-| `Res`
-| *System Reserved (Default PW)*
+// row 5
 
-Description.
+| *System Reserved*
 
-| *Network Reserve*
+When a user logs in, they will be notified the BBS is reserved, and a password is required to access it.
+Upon entry of the correct password, the user is granted access to your  BBS.
+If the BBS is only reserved for one call, the reservation settings are cleared.
 
-Description.
+| `40&#160;Res&#160;41`
 
-| `Mnt`
+| *Network Reserved*
+
+Nightly NetMaint is running, and a caller during this time will be notified of this and told to call back later.
+
+// row 6
+
 | _Undefined_
+
+| `42&#160;Mnt&#160;43`
 
 | *Modem Answer Disabled*
 
-Description.
+Don't answer incoming calls.
 
-| `Mnu`
+// row 7
+
 | *Is User in Menu Mode?*
+// Graphic Menu Mode On
 
-Description.
+If Graphic Menus are available, this indicates the user's Graphic Menu mode is enabled.
+Toggle with kbd:[GM].
+
+| `44&#160;Mnu&#160;45`
 
 | *Are Menus Available on BBS?*
+// Graphic Menus Available
 
-Description.
+This indicates Graphic Menus are available to users in Commodore Color/Graphics or ANSI graphics modes.
 
-| `Xpr`
+// row 8
+
 | *Enable Express Logon*
 
 Enables kbd:[X]`press Logon` option when user logs in.
 If chosen, this option skips most login modules, going to main prompt as quickly as possible.
 
+| `46&#160;Xpr&#160;47`
+
 | *Use `s.detect` Files*
 
-Description.
+After the user first connects and hits kbd:[Delete] or kbd:[Backspace] to determine their graphics mode, this option displays a file, `s.detect&#160;__x__`.
+
+[%header]
+[%autowidth]
+!====
+! _x_ ! Meaning
+! 0 ! ASCII
+! 1 ! Commodore C/G
+! 2 ! ANSI
+!====
+
+&#13;
 
 |====================
 
@@ -332,85 +451,116 @@ Description.
 | `Em3` | `Sc2` | `Scp` | `Alt` | `Trb` | `DCD` | `DSR` | `$3e`
 |====================
 
-[width="100%", options="header", options="autowidth"]
+[%header]
+[%autowidth]
+[cols="45a,^10,45a"]
+[grid="rows"]
 |====================
 | Option | Left | Right
 
-| `Em3`
+// row 1
+
 | *Emulate Image 1.x mode*
 
-Run Image 1._x_ `+` files.
+Run Image 1._x_ `+` files, if they've been renumbered to lines `3000-`.
+
+| `48&#160;Em3&#160;49`
 
 | _Undefined_
 
-| `Sc2`
+// row 2
+
 | *Disable 2nd Security Check*
 
-During login, a second login security question is not asked (first/last names, e-mail address)
+During login, a second login security question is not asked (first or last names, e-mail address).
+
+| `50&#160;Sc2&#160;51`
 
 | _Undefined_
 
-| `Scp`
+// row 3
+
 | *SuperCPU Present*
 
 A CMD SuperCPU is connected to the C64.
+
+| `52&#160;Scp&#160;53`
 
 | *Turbo Mode On*
 
 A CMD SuperCPU is operating in 20 mHz mode.
 
-| `Alt`
+// row 4
+
 | *Alt last 10 callers display*
 
-Display idle screen last ten callers in different colors.
+Display the last ten callers on the idle screen in different colors.
+
+| `54&#160;Alt&#160;55`
 
 | _Undefined_
 
-| `Trb`
+// row 5
+
 | *Disable Troubleshooting Mode*
 
-*Enabled:* Don`'t display values of variables in programmable window for troubleshooting purposes
+Don`'t display values of variables in the 16-character programmable window for troubleshooting purposes.
+
+| `56&#160;Trb&#160;57`
 
 | _Undefined_
 
-| `DCD`
+// row 6
+
 | *Invert DCD*
 
-*Enabled:* Hang up when inverted (asserted when high) _Data Carrier Detect_ signal received.
+*Enabled:* Hang up when inverted (asserted when high) Data Carrier Detect (DCD) signal received.
 
 *Disabled:* Hang up when normal (asserted when low) DCD signal received.
 
+| `58&#160;DCD&#160;59`
+
 | *Carrier Present*
 
-_(BBS controlled)_ A modem carrier signal is present (user is online).
+_(BBS controlled)_
 
-Check in BASIC using `&,52,$3b,3:if a% then ...`
+A modem carrier signal is present (a user is online).
 
-| `DSR`
+Check in BASIC using:
+
+`&,52,$3b,3:if a% then ...`
+
+// row 7
+
 | *DCD or DSR Hangup*
 
-*Enabled*: Hang up on no _Data Set Ready_ signal.
+*Enabled*: Hang up on no Data Set Ready (DSR) signal.
 
-*Disabled*: Hang up on no DCD signal
+*Disabled*: Hang up on no DCD signal.
+
+| `60&#160;DSR&#160;61`
 
 | *Enable Rx/Tx Windows*
 
-*Enabled*: Show data being received/transmitted in 10-character windows on the bottom screen mask.
+Show data being received and transmitted in 10-character windows on the bottom screen mask.
 
-| `$3e`
+// row 8
+
 | _Undefined_
+| `62&#160;$3e&#160;63`
 | _Undefined_
 
 |====================
 
 ////
- Emulate Image 1.x mode        48 Em3 49   Undefined
- Disable 2nd Security Check    50 Sc2 51   Undefined
- SuperCPU Present              52 Scp 53   Turbo Mode On
- Alt last 10 callers display   54 Alt 55   Undefined
- Disable Troubleshooting Mode  56 Trb 57   Undefined
+ Emulate Image 1.x mode        48[1.x]49   Undefined
+ Disable 2nd Security Check    50[Sec]51   Undefined
+ SuperCPU Present              52[Trb]53  [20 mHz Mode Enabled]
+ Alt last 10 callers display   54[Idl]55  [Write Activity Log]
+ Disable Troubleshooting Mode  56[Dbg]57  [Border Color on Event]
  Invert DCD                    58 DCD 59   Carrier Present
  DCD or DSR Hangup             60 DSR 61   Enable Rx/Tx Windows
+ Undefined                     62 $3e 63   Undefined
 ////
 
 .Lightbar, page 5
@@ -419,11 +569,161 @@ Check in BASIC using `&,52,$3b,3:if a% then ...`
 | `$40`  |  `$42`  |  `$44`  |  `$46`  |  `$48`  |  `$4a`  |  `$4c`  |  `$4e`
 |====================
 
+Page 5 is undefined and is available for your own use.
+
+[%header]
+// col 1: 45% width, col 2: 10% width, col 3: 45% width = 100% width
+[cols="45a,^10,45a"]
+[grid="rows"]
+|===
+| Left | Label | Right
+
+// row 1
+
+| _Undefined_
+
+| `64&#160;$40&#160;65`
+
+| _Undefined_
+
+// row 2
+
+| _Undefined_
+
+| `66&#160;$42&#160;67`
+
+| _Undefined_
+
+// row 3
+
+| _Undefined_
+
+| `68&#160;$44&#160;69`
+
+| _Undefined_
+
+// row 4
+
+| _Undefined_
+
+| `70&#160;$46&#160;71`
+
+| _Undefined_
+
+// row 5
+
+| _Undefined_
+
+| `72&#160;$48&#160;73`
+
+| _Undefined_
+
+// row 6
+
+| _Undefined_
+
+| `74&#160;$4a&#160;75`
+
+| _Undefined_
+
+// row 7
+
+| _Undefined_
+
+| `76&#160;$4c&#160;77`
+
+| _Undefined_
+
+// row 8
+
+| _Undefined_
+
+| `78&#160;$4e&#160;79`
+
+| _Undefined_
+
+|===
+
 .Lightbar, page 6
 [width="100%",cols="8*^"]
 |====================
 | `$50`  | `$52`  | `$54` | `$56` | `$58` | `$5a` | `$5c` | `$5e`
 |====================
+
+Page 6 is undefined and is available for your own use.
+
+[%header]
+// col 1: 45% width, col 2: 10% width, col 3: 45% width = 100% width
+[cols="45a,^10,45a"]
+[grid="rows"]
+|===
+| Left | Label | Right
+
+// row 1
+
+| _Undefined_
+
+| `80&#160;$50&#160;81`
+
+| _Undefined_
+
+// row 2
+
+| _Undefined_
+
+| `82&#160;$52&#160;83`
+
+| _Undefined_
+
+// row 3
+
+| _Undefined_
+
+| `84&#160;$54&#160;85`
+
+| _Undefined_
+
+// row 4
+
+| _Undefined_
+
+| `86&#160;$56&#160;87`
+
+| _Undefined_
+
+// row 5
+
+| _Undefined_
+
+| `88&#160;$58&#160;89`
+
+| _Undefined_
+
+// row 6
+
+| _Undefined_
+
+| `90&#160;$5a&#160;91`
+
+| _Undefined_
+
+// row 7
+
+| _Undefined_
+
+| `92&#160;$5c&#160;93`
+
+| _Undefined_
+
+// row 8
+
+| _Undefined_
+
+| `94&#160;$5e&#160;95`
+
+| _Undefined_
+
+|===
 
 .Lightbar, page 7
 [width="100%",cols="8*^"]
@@ -431,7 +731,80 @@ Check in BASIC using `&,52,$3b,3:if a% then ...`
 | `$60` | `$62` | `$64` | `$66` | `$68` | `$6a` | `$6c` | `$6e`
 |====================
 
-Pages 5-7 are undefined and are available for your own use.
+Page 7 is undefined and is available for your own use.
+
+[%header]
+// col 1: 45% width, col 2: 10% width, col 3: 45% width = 100% width
+[cols="45a,^10,45a"]
+[grid="rows"]
+|===
+| Left | Label | Right
+
+// row 1
+
+| _Undefined_
+
+| `96&#160;$60&#160;97`
+
+| _Undefined_
+
+// row 2
+
+| _Undefined_
+
+| `98&#160;$62&#160;99`
+
+| _Undefined_
+
+// row 3
+
+| _Undefined_
+
+| `100&#160;$64&#160;101`
+
+| _Undefined_
+
+// row 4
+
+| _Undefined_
+
+| `102&#160;$66&#160;103`
+
+| _Undefined_
+
+// row 5
+
+| _Undefined_
+
+| `104&#160;$68&#160;105`
+
+| _Undefined_
+
+// row 6
+
+| _Undefined_
+
+| `106&#160;$6a&#160;107`
+
+| _Undefined_
+
+// row 7
+
+| _Undefined_
+
+| `108&#160;$6c&#160;109`
+
+| _Undefined_
+
+// row 8
+
+| _Undefined_
+
+| `110&#160;$6e&#160;111`
+
+| _Undefined_
+
+|===
 
 .Lightbar, page 8
 [width="100%",cols="8*^"]
@@ -439,40 +812,48 @@ Pages 5-7 are undefined and are available for your own use.
 | `At1` | `At2` | `At3` | `At4` | `At5` | `At6` | `At7` | `At8`
 |====================
 
-[width="100%",options="header", options="autowidth"]
+Page 8 consists of 16 Alarm Triggers.
+Alarms can modify lightbar checkmarks, and more.
+
+#TODO:# For more information, see the section _IM: Lightbar Alarms_.
+
+[%header]
+// col 1: 45% width, col 2: 10% width, col 3: 45% width = 100% width
+[cols="45a,^10,45a"]
+[grid="rows"]
 |====================
-| Option | Left | Right
+| Left | Label | Right
 
-| `At1`
 | x
-| x
-
-| `At2`
-| x
+| `112&#160;At1&#160;113`
 | x
 
-| `At3`
 | x
-| x
-
-| `At4`
-| x
+| `114&#160;At2&#160;115`
 | x
 
-| `At5`
 | x
-| x
-
-| `At6`
-| x
+| `116&#160;At3&#160;117`
 | x
 
-| `At7`
 | x
+| `118&#160;At4&#160;119`
 | x
 
-| `At8`
 | x
+| `120&#160;At5&#160;121`
+| x
+
+| x
+| `122&#160;At6&#160;123`
+| x
+
+| x
+| `124&#160;At7&#160;125`
+| x
+
+| x
+| `126&#160;At8&#160;127`
 | x
 
 |====================

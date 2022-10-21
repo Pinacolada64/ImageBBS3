@@ -62,17 +62,17 @@ TIP: A `file not found` DOS error is written to the system error log (`e.errlog`
 .Module Types
 [options="header,autowidth"]
 |====================
-| Prefix    |  Starting line | Purpose 
-| `+.`      |  1     | Image 1._x_ plus file
+| Prefix    |  Starting Line | Purpose 
+| `+.`      |  `1`   | Image 1._x_ plus file
 | `++`      | _n/a_  | Image 3.0 ML module (usually protocols which load at `$c000`)
-| `i.`      |  3000  | Image 3.0 module (system command)
-| `i/`      |  4000  | Image 3.0 sub-module
+| `i.`      | `3000` | Image 3.0 module (system command)
+| `i/`      | `4000` | Image 3.0 sub-module
 | `i.XX/YY` |  3000  | Image 3.0 sub-module `YY` of module `XX`
-| `i/lo.`   |  3000  | Idle screen command 
-| `i/lo/`   |  4000  | Nightly AutoMaint module
-| `i/lo-`   |  4500  | Login module  
-| `i/XX.YY` |  4000  | Sub-module `YY` of module `XX`
-| `sub.*`   |  60000 | `im` sub-module; common BBS code called by various modules 
+| `i/lo.`   | `3000` | Idle screen command 
+| `i/lo/`   | `4000` | Nightly AutoMaint module
+| `i/lo-`   | `4500` | Login module  
+| `i/XX.YY` | `4000` | Sub-module `YY` of module `XX`
+| `sub.*`   | `60000`| `im` sub-module; common BBS code called by various modules 
 |====================
 
 ////
@@ -85,7 +85,6 @@ Here is a list of all the BBS module types.
 #FIXME#: ensure this is correct
 
 #FIXME#: I forgot why this needs to be duplicated...
-////
 
 [options="header,autowidth"]
 |====================
@@ -99,3 +98,6 @@ Here is a list of all the BBS module types.
 | `i/XX.YY` | Sub-module YY of command XX | 4000
 | `sub.`    | `im` sub-module | 60000
 |====================
+////
+
+You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer's Reference Guide_.

@@ -1,5 +1,8 @@
 CHANGELOG.md
 ============
+10/21/2022:
+
+* Revamp/finish Sysop Guide lightbar appendix
 
 9/30/2022:
 
@@ -9,7 +12,7 @@ CHANGELOG.md
 * Added more module and `e.errlog` filename hints: `pr$`, `p1$`, `p2$`
 * `&,60` (structs): hopefully fix `struct%(record, field)` ordering mistakes
 * PDF generation works, albeit with some table header wrapping issues
-* Lots of little fixes, too numerous to mention -- have a look
+* Lots of little fixes, too numerous to mention--have a look
 
 8/20/2022:
 
