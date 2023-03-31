@@ -900,14 +900,14 @@ bc9de:
 	jmp jca11
 
 sc9e1:
-	lda #<pca10
+	lda #$10
 	sta a62
-	lda #>pca10
+	lda #$ca
 	sta a63
 	lda #$01
 	sta a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	lda #<buffer
 	sta a62
@@ -918,45 +918,50 @@ sc9e1:
 	sta buffer,y
 	iny
 	sty a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jmp sca3b
 
-jca11 = pca10 + $01
-pca10:
-	jsr e0ead
-	cpy #$85
-	byte $62
-	lda ac00f
-	sta a61
-	ldx #$1e
-	jmp jca2a
+; .C:ca10  20 AD 0E    JSR $0EAD
+; .C:ca13  C0 85       CPY #$85
+; .C:ca15  62          JAM
+; .C:ca16  AD 0F C0    LDA $C00F
+	byte $20	; 20
+jca11:
+	lda ac00e	; ad 0e c0
+	sta a62		; 85 62
+	lda ac00f	; ad 8f c0
+	sta a61		; start of variable buffer
+	ldx #$1e	; a%
+	jmp putvar
 
-sca20:
-	lda #$1d
-	jmp ecd03
+usevar:
+	lda #$1d	; &,29 - usevar
+	jmp usetbl1
 
-	lda #$16
-	jmp ecd03
+	lda #$16	; &,22 - wait x/10ths of a second
+	jmp usetbl1
 
-jca2a:
-	lda #$1e
-	jmp ecd03
+putvar:
+;$ca2a:
+	lda #$1e	; &,30 - putvar
+	jmp usetbl1
 
 sca2f:
-	lda #$34
+	lda #$34	; &,52,3 - Acs-R Block 300 BPS callers?
 	ldy #$03
-	jmp ecd03
+	jmp usetbl1
 
 sca36:
-	lda #$1f
-	jmp ecd03
+; &,16,255?
+	lda #$1f	; &,31 - zero
+	jmp usetbl1
 
 sca3b:
-	lda #$00
-	jsr ecd03
-	ldx #$11
-	jsr sca20
+	lda #$00	; & - output
+	jsr usetbl1
+	ldx #$11	; 17-rq
+	jsr usevar
 	lda a61
 	ora ac00a
 	sta ac00a
