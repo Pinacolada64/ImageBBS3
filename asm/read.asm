@@ -5,35 +5,12 @@ orig $c000
 ;
 ; **** zp absolute adresses ****
 ;
-a61 = $61
+a61 = $61 ; start of variable buffer
 a62 = $62
 a63 = $63
-afb = $fb
-afc = $fc
-;
-; **** zp pointers ****
-;
-pfb = $fb
-;
-; **** absolute adresses ****
-;
-ace28 = $ce28
-ace29 = $ce29
-ace2a = $ce2a
-ace2b = $ce2b
-ace2c = $ce2c
-;
-; **** pointers ****
-;
-p203a = $203a
-p2701 = $2701
-p2703 = $2703
-p5c12 = $5c12
-;
-; **** external jumps ****
-;
-e0ead = $0ead
-ecd03 = $cd03
+usetbl1 = $cd03	; .a: & routine to use
+		; .x: param1?
+		; .y: param2?
 ;
 ; **** user labels ****
 ;
@@ -61,7 +38,7 @@ ac008:
 ac009:
 	byte $00
 ac00a:
-	byte $00
+	byte $00 ; rq (abort) status?
 ac00b:
 	byte $00
 ac00c:
@@ -77,7 +54,7 @@ ac010:
 ac011:
 	byte $00
 
-; [kk]ML Tail:[kk]
+; [K]ML Tail:[KK]
 pc012:
 	ascii $8b, $cd, $cc, " ", $d4, "ail:", $8b
 	ascii $8b
@@ -88,7 +65,7 @@ jc01d:
 	lda #$06
 	sta a62
 	ldx #$1e
-	jmp jca2a
+	jmp putvar
 
 bc02d:
 	stx ac004
@@ -153,8 +130,8 @@ bc043:
 	sta a63
 	lda #$1a
 	sta a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	lda ac008
 	cmp #$01
@@ -201,22 +178,22 @@ jc0fd:
 	pha
 	ldx #$10
 	jsr sca2f
-	ldx #$1e
-	jsr sca20
+	ldx #$1e	; a%
+	jsr usevar
 	lda a62
 	beq bc139
 	lda #$01
 	sta ac010
 	ldx #$12
 	jsr sca2f
-	ldx #$1e
-	jsr sca20
+	ldx #$1e	; a%
+	jsr usevar
 	lda a62
 	beq bc139
 	ldx #$13
 	jsr sca2f
-	ldx #$1e
-	jsr sca20
+	ldx #$1e	; a%
+	jsr usevar
 	lda a62
 	beq bc139
 	lda #$00
@@ -255,8 +232,8 @@ bc16d:
 	sta a63
 	lda #$0b
 	sta a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	pla
 	clc
@@ -283,16 +260,16 @@ bc1a4:
 	sta a62
 	lda ac009
 	sta a61
-	ldx #$1e
-	jsr jca2a
+	ldx #$1e	; a%
+	jsr putvar
 	lda #<pc875
 	sta a62
 	lda #>pc875
 	sta a63
 	lda #$07
 	sta a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 jc1d3:
 	jsr sc87c
@@ -307,8 +284,8 @@ jc1d3:
 	sta a62
 	lda #$ce
 	sta a63
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	lda #$00
 	sta ac007
@@ -401,8 +378,8 @@ bc288:
 	sta a62
 	lda #>buf2
 	sta a63
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	jmp jc1d3
 
@@ -621,10 +598,10 @@ pc578:
 	ascii $d4, "hen", $ce, "ot", $d3, "tep"
 	; ??? and
 	ascii $ab, $ad, $aa, $af, $de, $c1, "nd"
-	; ??? sgn()
-	ascii $cf, "r", $be, $bd, $bc, $d3, "gn", $c9, "n"
+	; ??? sgn int
+	ascii $cf, "r", $be, $bd, $bc, $d3, "gn", $c9, "nt"
 	; abs usr fre
-	ascii "t", $c1, "bs", $d5, "sr", $c6, "re"
+	ascii $c1, "bs", $d5, "sr", $c6, "re"
 	; pos sqr rnd
 	ascii $d0, "os", $d3, "qr", $d2, "nd"
 	; log exp cos sin
@@ -741,7 +718,7 @@ pc82a:
 	ascii $d0, "ointer"
 
 pc85a:
-	ascii $93, "\q0", $8b, $cc, "oad "
+	ascii $93, "{pound}q0", $8b, $cc, "oad "
 	ascii $c1, "ddress: $"
 ac86e:
 	ascii "0"
@@ -752,7 +729,7 @@ ac870:
 ac871:
 	ascii "0", $8b, $8b, $00
 pc875:
-	ascii "\#0\%a "
+	ascii "{pound}#0{pound}%a "
 
 sc87c:
 	jsr rom_getin ;$ffe4 - get a byte from channel
@@ -763,8 +740,8 @@ sc87c:
 	lda #$ff
 	sta ac00a
 bc88c:
-	ldx #$1d
-	jsr sca20
+	ldx #$1d	; tr%
+	jsr usevar
 	lda a62
 	bne bc89a
 	lda #$ff
@@ -834,8 +811,8 @@ jc8bf:
 	sta a63
 	lda #$06
 	sta a61
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 jc92c:
 	lda ac00a
@@ -873,8 +850,8 @@ jc961:
 	sta a62
 	lda #$ce
 	sta a63
-	ldx #$01
-	jsr jca2a
+	ldx #$01	; a$
+	jsr putvar
 	jsr sca3b
 	jsr sc2a3
 	sty ac004
