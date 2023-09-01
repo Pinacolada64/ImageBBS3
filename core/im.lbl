@@ -371,6 +371,8 @@
 {:374}
 	b=3:b$="Graphic Menu":gosub {:371}:&,52,44,a:return
 {:375}
+' a=screen to display in sub.display, save a in 'curdsp' ($12e4, current display)
+' for logic about what to update per screen
 	&,53,a:im=2+a:goto {:443}
 {:376}
 	a=pm:b$="Prompt":gosub {:370}:pm=a:return
