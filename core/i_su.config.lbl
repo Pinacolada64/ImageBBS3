@@ -103,15 +103,15 @@
 	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
 	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
 	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1:return
-	gosub {:4146}:sys49155:goto {:4144}
-	rem:gosub 1063:x=35:gosub 1001:&,2,2:d1$=a$:close2:poke 1010,1:return
+	gosub {:4146}:sys49155 ':goto {:4144}
+'	rem:gosub 1063:x=35:gosub 1001:&,2,2:d1$=a$:close2:poke 1010,1:return
 {:4144}
 	z$="":fora=49159to49169:z$=z$+chr$(peek(a)):next:poke 1010,1:return
 {:4146}
 	dr=5:gosub 3:a$=dr$+"swr.ml":&,7,dv%,2:return
 	gosub {:4146}:sys49152:sys49155:goto {:4144}
 {:4200}
-	rem:close15:open15,dv%,15,"r"+bd$+"d.data=bd.data"
+'	rem:close15:open15,dv%,15,"r"+bd$+"d.data=bd.data"
 	fl=.:z3$="Reading old configuration...":gosub {:3404}:close2:open2,dv%,2,bd$+"d.data,s,r":gosub 5
 	if e%then close2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key to Configure New System:{pound}g1":return
 	fori=1to6:input#2,dv%(i),dr%(i):next
@@ -168,9 +168,10 @@
 	&"{cyan}Is {pound}!b Correct? ":gosub 96:if a=.then {:4282}
 	return
 {:4300}
-	fl=.:z3$="Reading 2.0 configuration...":gosub {:3404}:&"{f6:9}"
-	close2:open2,dv%,2,bd$+"d.data,s,r":gosub 5
-	if e%then close2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key:{pound}g1":return
+'	fl=.:z3$="Reading 2.0 configuration...":gosub {:3404}:&"{f6:9}"
+	fl=.:z3$="Reading 2.0 configuration...":gosub {:3404}:&,70,0,10
+	close 2:open 2,dv%,2,bd$+"d.data,s,r":gosub 5
+	if e% then close 2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key:{pound}g1":return
 	input#2,dv%(3),dr%(3):&,2,2:po$=a$:close2
 	z3$="Writing new 'bd.data' file...":gosub {:3404}
 	open2,dv%,2,bd$+"bd.data,s,w":gosub 5:if e%then close2:gosub {:3192}:goto {:3080}
