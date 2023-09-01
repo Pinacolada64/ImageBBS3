@@ -162,10 +162,6 @@
 {:4274}
 	&"{lt. blue}Which Device has the CMD{f6}RTC Option Installed?{f6:2}":gosub {:4282}
 	y%=b:return
-'	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
-'	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
-'	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
-	data"System","E-Mail","Etcetera","Directory","Plus-File","User"
 {:4282}
 	poke 53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}":&,1,32:b=val(an$)
 	if an$=""then b=val(w$)
@@ -187,11 +183,17 @@
 	z3$="Moving e.data records...":gosub {:3404}
 	gosub 33:x=37:gosub 1:&,2,2:x=21:gosub 1:print#2,a$
 	x=34:gosub 1:&,2,2:x=37:gosub 1:print#2,a$:close2
-	z3$="Removing 2.0 specif ic files...":gosub {:3404}
-	dr=3:a$="e.loginmods":&:gosub 19:gosub 5:&:close2:close15
-	dr=3:a$="e.maintmods":&:gosub 19:gosub 5:&:close2:close15
-	dr=3:a$="e.menu*":&:gosub 19:gosub 5:&:close2:close15
-	dr=4:a$="d.GF*":&:gosub 19:gosub 5:&:close2:close15
-	goto {:4268}
+	z3$="Removing 2.0-specific files...":gosub {:3404}
+	' FIXME: I don't know that I like outright scratching the files
+	'  without some confirmation/abort options first
+	dr=3:a$="e.loginmods":&:gosub 19:gosub 5:& ':close2:close15
+	dr=3:a$="e.maintmods":&:gosub 19:gosub 5:& ':close2:close15
+	dr=3:a$="e.menu*":&:gosub 19:gosub 5:& ':close2:close15
+	dr=4:a$="d.GF*":&:gosub 19:gosub 5:& ':close2:close15
+	close 2:close 15:goto {:4268}
+'	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
+'	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
+'	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
+	data"System","E-Mail","Etcetera","Directory","Plus-File","User"
 	rem copr. 1996 new image 5/5/96-rwp
 	rem:"i/su.config (c)nissa 200614 lh ad"
