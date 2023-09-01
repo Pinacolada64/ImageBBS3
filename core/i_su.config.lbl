@@ -160,7 +160,7 @@
 	if val(an$)=2then {:4274}
 	dv%(8)=0:return
 {:4274}
-	&"{lt. blue}Which Device has the CMD{f6}RTC Option Installed?{f6:2}":gosub {:4282}
+	lp=1:&"{lt. blue}Which Device has the CMD RTC Option Installed?{f6:2}":gosub {:4282}
 	y%=b:return
 {:4282}
 	poke 53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}":&,1,32:b=val(an$)
@@ -176,11 +176,12 @@
 	open2,dv%,2,bd$+"bd.data,s,w":gosub 5:if e%then close2:gosub {:3192}:goto {:3080}
 	if po$=""then po$="Main: "
 	print#2,dv%(3);r$;dr%(3);r$;:print#2,po$;r$;
-	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close2:close15
+' TODO: subroutine this
+	print#2,"3.0 Image v3.0 Copyright 2020 NISSA BBS Software":close2:close15
 	z3$="Getting Image drive assignments...":gosub {:3404}
 	gosub 33:fori=1to6:x=i+51:gosub 1:&,2,2:dv%(i)=val(a$)
 	&,2,2:dr%(i)=val(a$):next:close2
-	z3$="Moving e.data records...":gosub {:3404}
+	z3$="Moving 'e.data' records...":gosub {:3404}
 	gosub 33:x=37:gosub 1:&,2,2:x=21:gosub 1:print#2,a$
 	x=34:gosub 1:&,2,2:x=37:gosub 1:print#2,a$:close2
 	z3$="Removing 2.0-specific files...":gosub {:3404}
@@ -196,4 +197,4 @@
 '	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
 	data"System","E-Mail","Etcetera","Directory","Plus-File","User"
 	rem copr. 1996 new image 5/5/96-rwp
-	rem:"i/su.config (c)nissa 200614 lh ad"
+	rem i/su.config (c)nissa 2020-06-14 lh+ad, 2022-10-11 rs
