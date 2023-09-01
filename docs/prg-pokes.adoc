@@ -1,4 +1,4 @@
-## POKEs and Memory Locations [[pokes]]
+== POKEs and Memory Locations [[pokes]]
 
 ``poke``s control various flags maintained by the Image BBS machine language (ML).
 

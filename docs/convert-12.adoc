@@ -1,7 +1,7 @@
 :experimental:
 :toc:
 
-### Convert a 1.2 System
+=== Convert a 1.2 System
 
 NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work but have not been tested.
 
@@ -33,7 +33,7 @@ Either use `fcopy+` (included on the 3.0 UTILITIES disk), or log onto your 1.2 s
 
 If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 System disk.
 
-### Edit `bd.data`
+=== Edit `bd.data`
 
 Here you'll change your device/drive assignments.
 
@@ -57,11 +57,11 @@ IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0'
 [start=9]
 . Shut down your computer and reboot the BBS.
 
-### Installation
+=== Installation
 
-include::includes\sub_modem-config.adoc[]
+include::includes/sub_modem-config.adoc[]
 
-include::includes\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
 . When prompted, select kbd:[2] `Convert from Image 1.2`.
 . Clock setting

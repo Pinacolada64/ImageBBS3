@@ -1,6 +1,6 @@
 :icons: font
 
-### `im` Subroutines
+=== `im` Subroutines
 
 This chapter documents `im` routines.
 
@@ -396,7 +396,7 @@ These are the equivalent of `+.MM.*` files from v1.2.
 
 | `gosub&#160;79`
 |
-| Loads i.module from device, drive in `dr`, then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
+| Loads i.module from device, drive in `dr`, then RETURNs.  (Lines 70-75 fall through to lines 76-78 then to this line before returning and executing at the appropriate line).
 
 | gosub&#160;80
 |

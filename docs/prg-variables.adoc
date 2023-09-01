@@ -1,6 +1,7 @@
 :icons: font
+:experimental:
 
-## Variables
+== Variables
 
 // From Image 1.2 Programmer's Reference Guide, with slight rewording edits:
 
@@ -45,30 +46,30 @@ Examples are `a$` and `an$`:
 
 These variables have a set purpose, but are intended to change.
 
-### Variable
+=== Variable
 
 This is the variable's name.
 
-### Type
+=== Type
 
 `BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
 
 `User`: this is a user statistic, saved to `u.config`.
 
-### Use?
+=== Use?
 
 icon:check[role=green] indicates you can assign a value to it within your own modules.
 
 icon:times-circle[role=red] indicates the variable is maintained by either the BBS ML or BASIC modules.
-User data corruption or other unwanted side-effects may occur if this variable is reassigned.
+User data corruption or other unwanted side effects may occur if this variable is reassigned.
 
 icon:question[role=blue] means the variable may be used in some circumstances, but not in others.
 
-### Purpose
+=== Purpose
 
 An explanation of what the variable does.
 
-### Integer
+=== Integer
 
 ////
 template:
@@ -197,7 +198,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 
 |====================
 
-### Floating Point
+=== Floating Point
 
 ////
 template:
@@ -372,7 +373,7 @@ Use: Disable or enable word-wrap for `&` text output.
 | Pseudo-local mode flag: `0`=disabled, `1`=enabled
 |====================
 
-### Strings
+=== Strings
 
 `b$`-`z$` are work variables used throughout the BBS by different subsections.
 They are available for use and may be read and written freely.
@@ -791,7 +792,7 @@ Used to determine whether a message is new or not.
 
 |===
 
-### String Arrays
+=== String Arrays
 
 ////
 template:
@@ -837,7 +838,7 @@ GF section remembers which menu level you were at after quitting a module.
 This array can be used in modules not using the text editor.
 |====================
 
-### Floating Point Arrays
+=== Floating Point Arrays
 
 ////
 template:

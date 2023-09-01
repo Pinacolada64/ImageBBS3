@@ -1,13 +1,13 @@
 // label used for inter-document cross-reference
-### Programming Etiquette[[programming-etiquette]]
+=== Programming Etiquette [[programming-etiquette]]
 
 Be nice.
 Write clean code.
 #FIXME#
 
-#### Programming Theory
+==== Programming Theory
 
-##### Static vs. Dynamic String Variables
+===== Static vs. Dynamic String Variables
 
 There are two types of strings in BASIC: _static_ and __dynamic__.
 
@@ -41,7 +41,7 @@ You'll eventually run out of space, triggering a garbage collection as the old d
 
 But the long and the short of it is that the string definition caused by, _e.g._: `sy$="S"+"ub"` lives higher in memory and the text shouldn't be overwritten by loading another module, causing strings to output bytes of your program.
 
-#### Module Structure
+==== Module Structure
 
 When developing a module, bugs are certain to happen.
 These bugs are logged to `e.errlog`.
@@ -90,12 +90,13 @@ And in your sub-module, define:
 
 so that `e.errlog` reads:
 
-```
+[source]
+----
 Module: i.test calls
 Sub Module: i.test calls.structs
-```
+----
 
-### Conversion and Backward Compatibility
+=== Conversion and Backward Compatibility
 
 Image v3.0 is a major change in design and programming style from previous versions.
 Your first reaction might be to assume that you can no longer use legacy modules created under Image v1.2a and below.

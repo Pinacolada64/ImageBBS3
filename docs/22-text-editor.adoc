@@ -309,7 +309,7 @@ Type kbd:[.T] and the editor displays:
  Editor Command:Text Transfer On
 
 Then send your buffer contents.
-Afterwards, you can use the editor normally.
+Afterward, you can use the editor normally.
 There is no need to type kbd:[.T] again to toggle Text Transfer Mode off.
 
 === Shape Your Text
@@ -373,7 +373,7 @@ TIP: Set the right margin with kbd:[.C]olumns first, if you wish.
 |kbd:[U]n-indent |Moves text one column to the left, if possible
 |===
 
-#### Scale
+==== Scale
 
 A related command is kbd:[.#] `Scale`.
 This displays a 40-column scale for manually centering text, among other purposes.
@@ -451,7 +451,9 @@ A filename, device and drive are prompted for.
 kbd:[.!] issues a DOS command.
 
 ====
-TIP: If a "`new`" (starts with `n`) or "`scratch`" (starts with `s`) DOS command is issued, you are prompted to confirm your actions.
+TIP: If a "`new`" DOS command (which can format a disk or partition; it starts with `n`) or "`scratch`" DOS command (which can delete a file or group of files using DOS wildcards; it starts with `s`) is issued, you are prompted to confirm your actions with a "`yes/no`" prompt.
+Selecting kbd:[N]o will not perform the command.
+Selecting kbd:[Y]es performs the command.
 ====
 
 === Get Help

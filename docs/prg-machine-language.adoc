@@ -1,7 +1,7 @@
 :experimental:
 // enable 'kbd:[x]' macro
 
-## Machine Language Entry Points
+== Machine Language Entry Points
 
 Here is a listing of ML modules and their entry points.
 
@@ -9,7 +9,7 @@ Here is a listing of ML modules and their entry points.
 NOTE: This section is currently undergoing research.
 ====
 
-### Protocols [[protocols]]
+=== Protocols [[protocols]]
 
 `&,16,4,_x_`: `getflag`
 
@@ -21,7 +21,7 @@ Its purpose is currently unknown.
 This sets the value of `defflag` from the protocol.
 Its purpose is currently unknown.
 
-#### `++ index`
+==== `++ index`
 
 This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) files.
 
@@ -40,7 +40,7 @@ This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) 
 | `&,16,8`	| `findindex` | `a%`=id | `a%`=0: not found
 |===
 
-#### `++ punter`
+==== `++ punter`
 
 [%header]
 [%autowidth]
@@ -56,7 +56,7 @@ This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) 
 (are these flags whether the protocol supports multi-file transfers?)
 |===
 
-#### `++ reader`
+==== `++ reader`
 
 This module can display PRG files.
 
@@ -67,7 +67,7 @@ This module can display PRG files.
 | `&,16,0,_ll%_` | Detokenize BASIC file, use column width `ll%` | 
 |===
 
-#### Graphic Menu
+==== Graphic Menu
 
 The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
 
@@ -116,14 +116,14 @@ _Parameters:_
 
 `&,16,2,_?_,_menu%(element,byte)_,_item_count?_,_?_,_?_,_menu_height?_,_?_,_?_,_?_`
 
-#FIXME# 
+#FIXME#
 
 _Examples:_
 
  xxxx &,16,2,42,q%(0,0),n,36,1,n,6,6,0:a$=chr$(q%(3,a%) and 255)
 
  xxxx &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.
- 
+
 _Returns:_
 
 `a%`: item number selected

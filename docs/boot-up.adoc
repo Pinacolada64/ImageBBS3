@@ -1,13 +1,16 @@
 :toc: left
 
-## Boot Up
+== Boot Up
 
-include::include\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
-### Startup Files
-### Idle Screen Display
-### Status Line
-#### Status Indicators
+=== Startup Files
+
+=== Idle Screen Display
+
+=== Status Line
+
+==== Status Indicators [[status-indicators]]
 
 .Function Indicators
 [options="autowidth",options="header"]
@@ -24,7 +27,7 @@ include::include\boot-command.adoc[]
 // L is also documented in &,13: arbit (Lt. Kernal port arbitration), miscl.s
 // Port locking?
 
-#TODO#: More of an explanation.
+// TODO: More of an explanation.
 
 .File transfer indicators
 [options="autowidth",options="header"]
@@ -34,4 +37,4 @@ include::include\boot-command.adoc[]
 | `O` | Overrun
 |====================
 
-#TODO#: Move to file transfer section?
+// TODO: Move to file transfer section?

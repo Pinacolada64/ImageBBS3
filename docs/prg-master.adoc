@@ -1,4 +1,4 @@
-# Image BBS 3.0 Programmer`'s Reference Guide
+= Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
 v0.3, 2022-08-20
 :experimental: // enable kbd:[] macro
@@ -14,11 +14,11 @@ v0.3, 2022-08-20
 
 include::prg-introduction.adoc[]
 
-### How to Use This Guide
+=== How to Use This Guide
 
-### How to Get Help
+=== How to Get Help
 
-## Programming Image BBS 3.0
+== Programming Image BBS 3.0
 
 include::prg-new-features.adoc[]
 
