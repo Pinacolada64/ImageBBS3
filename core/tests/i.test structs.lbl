@@ -199,10 +199,17 @@
 
 {nice:5}
 {:struct_11_go}
+' nr=number of records
+'  t=total records
+' op=operation (0=literal string, 1=pattern search)
+' fs$=find string
+' s%(11,1)=field/record in struct to search
+' a2%(0)=array to put search results in (assuming it puts record numbers here)
+' sr=starting record
 	&,60,11,nr,t,op,fs$,s%(11,1),a2%(0),sr
 	if a%=. then:&"(No records matching those search parameters found.){f6}":return
 ' do GetString on each element of a2%()
-	&"Results ({pound}%a):{f6}":for x=1 to a%:x%=x:&,60,1,t,s%(11,a2%(x)),an$:&"{pound}%x) {f5}{pound}v7{f5}{f6}":next
+	&"Results ({pound}%a):{f6}":for x=1 to a%:x%=x:&,60,1,t,s%(11,a2%(x)),an$:&"{pound}%x) {quotation}{pound}v7{quotation}{f6}":next
 	return
 
 {:struct_11_quit}
@@ -259,6 +266,8 @@
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports true status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+
+' FIXME: redim'd array in 3815
 
 {:sub.struct_setup}
 ' struct layout:
