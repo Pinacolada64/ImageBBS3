@@ -189,7 +189,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `pt%`
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Active flag 
+| Prime Time: Active flag
 
 | `tc%`
 | User
@@ -467,7 +467,7 @@ Used once during `im` initialization.
 | icon:times-circle[role=red]
 | 2-character system identifier, sometimes shown with user ID.
 
-(Also MCI variable `£vn`.)
+(Also MCI variable `&#163;vn`.)
 
 | `ch$`
 |
@@ -492,35 +492,35 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | Current time and date information in 11-digit format.
 
-(Also MCI variable `£v0`.)
+(Also MCI variable `&#163;v0`.)
 
 | `d2$`
 | BBS
 | icon:times-circle[role=red]
 | Time and date of last logoff, or Library name at entry.
 
-(Also MCI variable `£v8`.)
+(Also MCI variable `&#163;v8`.)
 
 | `d3$`
 | BBS
 | icon:times-circle[role=red]
 | Handle of last user on the system.
 
-(Also MCI variable `£v9`.)
+(Also MCI variable `&#163;v9`.)
 
 | `d4$`
 | BBS
 | icon:times-circle[role=red]
 | Name of current ML protocol in memory.
 
-(Also MCI variable `£vl`.)
+(Also MCI variable `&#163;vl`.)
 
 | `d5$`
 | BBS
 | icon:times-circle[role=red]
 | True last call date of user online in 11 digit format.
 
-(Also MCI variable `£vk`.)
+(Also MCI variable `&#163;vk`.)
 
 | `d6$`
 | BBS
@@ -644,7 +644,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Handle of current caller.
 
-(Also MCI variable ``£v2``)
+(Also MCI variable ``&#163;v2``)
 
 | `nl$`
 | BBS
@@ -676,11 +676,11 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | E-mail address of current user online.
 
-(Also MCI variable `£v4`)
+(Also MCI variable `&#163;v4`.)
 
 | `po$`
 | BBS
-| 
+|
 | Text for system main level prompt.
 
 | `pp$`
@@ -690,7 +690,7 @@ Used to determine whether a message is new or not.
 
 | `pr$`
 | BBS
-| 
+|
 | Name of current ``pr``ogram (module) in memory.
 
 | pu$
@@ -703,7 +703,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Password of current online user
 
-| `qt$` 
+| `qt$`
 | BBS
 | icon:times-circle[role=red]
 | Quotation mark [`chr$(34)`].
@@ -718,7 +718,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real name of user online (``ff$+" "+ll$``)
 
-(Also MCI variable `£v3`)
+(Also MCI variable `&#163;v3`.)
 
 | sb$
 |
@@ -764,7 +764,7 @@ Used to determine whether a message is new or not.
 |
 |
 | Command stacking.
- 
+
 | w$
 |
 |
@@ -773,8 +773,9 @@ Used to determine whether a message is new or not.
 | `x$`
 | BBS
 | icon:times-circle[role=red]
-| System drive/LU designators #FIXME#?
- 
+| System drive/LU designators
+// #FIXME#?
+
 | z1$
 |
 |
