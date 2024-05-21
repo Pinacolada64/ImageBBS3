@@ -1,4 +1,4 @@
-{'uses:3_0-preface.lbl}
+{'uses:3_0-preface.lbl} ' to include this file, uncomment this line
 
 {undef:use_static_labels}
 {ifdef:use_static_labels}
@@ -46,17 +46,17 @@
 {assign:im.are_you_sure.yes=95}
 {assign:im.yes		=96}
 
-{assign:im.main_prompt=300}
+{assign:im.mainPrompt=300}
 
 ' toggles:
-{assign:im.toggle_mode=370}
-{assign:im.toggle_user_flag=371}
-{assign:im.toggleExpertMode=372}
-{assign:im.toggleMorePrompt=373}
+{assign:im.toggleMode		=370}
+{assign:im.toggleUserFlag	=371}
+{assign:im.toggleExpertMode	=372}
+{assign:im.toggleMorePrompt	=373}
 {assign:im.toggleMenuMode	=374}
 ' 375?
 {assign:im.togglePromptMode	=376}
-{assign:im.open_e_text	=390}
+{assign:im.open_e_text		=390}
 
 {assign:im.subComm1	=428}
 {assign:im.subComm2	=429}
@@ -69,6 +69,7 @@
 {assign:im.subEditor	=440}
 {assign:im.subHandles	=441}
 {assign:im.subProtos	=442}
+{assign:im.subDisplay	=443}
 {assign:im.subMisc	=445}
 {assign:im.subModem	=446}
 {assign:im.subInfo	=447}
