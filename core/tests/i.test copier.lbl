@@ -1,0 +1,92 @@
+{assign:im_open_file=4}
+{assign:im_read_cmd_channel=5}
+{assign:im_loadProtocol=28}
+{assign:im_mainPrompt=300}
+{assign:im_subDisplay=443}
+
+{assign:300=300}
+{assign:443=443}
+
+{alpha:alt}
+{number:3000}
+	rem i.test copier, image 3.0
+{number:3002}
+{step:2}
+	&,18,0:lp=1:&"Test {f5}++ copier{f5} &,16,x params{f6:2}"
+'	f$="copier":a$=f$:gosub {:im_loadProtocol}:if e% then:&:goto {:quit}
+	f$="copier":a$=f$:gosub 28:if e% then:&:goto {:quit}
+	&"{pound}$f loaded.{f6}"
+{:menu}
+	lp=1:&"0=copy, 1=count bytes, 2=copy some, 255=report protocol #{f6}"
+	&"&,16,{pound}i1":if an$="" then:&"Quitting.{f6}":goto {:quit}
+	an=int(val(an$)):op=1-(an=0)-2*(an=1)-3*(an=2)-4*(an=255)
+	if op<1 or op>4 then:&"Invalid selection: 0-2 or 255.{f6}":goto {:menu}
+' a% is line # for calculated gosub:
+	a%=op*100:&,66,1:goto {:menu}
+
+{:quit}
+' restore screen mask
+'	im=1:gosub {:im_subDisplay}
+	im=1:gosub 443
+'	&,18,1:goto {:im_mainPrompt}
+	&,18,1:goto 300
+
+{nice:100}
+' &,16,0: copy file:
+' show sub.display screen mask, and appropriate action message:
+	im=5:x=an+1:gosub 443
+' open files:
+	gosub {:sub.open_files}:if e% then:&
+' display status:
+	if e%=. then:&,16,0
+	return
+
+{nice:100}
+' &,16,1: count bytes in file: nothing returned, prints on screen
+	gosub {:sub.status_line}
+'	&"{pound}%b bytes{f6}"
+	return
+
+{nice:100}
+' &,16,2: copy some, based on the first 3 bytes of the file?
+	gosub {:sub.status_line}
+	return
+'	&"{up:2}Hit a key: {pound}g1"
+
+{nice:100}
+' &,16,255: report protocol number:
+	&"Protocol #{pound}%a{f6}":return
+
+{nice:100}
+{:sub.status_line}
+	&"{clear}":&,69,0,15,"Good: 00000 Bad: 00000 Bytes: 000000",3:return
+
+{nice:100}
+{:sub.open_files}
+	dr=5:gosub 4:open 15,dv%,15:open 3,dv%,3,"++ 2,p,r":gosub 5:if e% then:&:return
+	dr=3:gosub 4:open 15,dv%,15:open 2,dv%,2,"e.++ 2 test,p,w":gosub 5:if e% then:&
+	return
+
+{:3014}
+'	close 3:close 2:&"{up:2}Hit a key: {pound}g1"
+
+' 0 = Sending, inc Good
+' 1 =
+' 2 = Copying, inc Good
+' 3 = no particular result
+
+' 1 for x=1 to 4
+' 2 x$="Send":ifx>1tHx$="Receiv":ifx>2tHx$="Copy":ifx>3tHx$="Scann"
+' 3 printx;x$"ing":next
+'
+'  1 Sending
+'  2 Receiving
+'  3 Copying
+'  4 Scanning
+
+' Run: +.test copier
+
+' 0=copy, 1=count bytes, 2=?,
+' 255=report protocol #
+
+' Good: 00000  Bad: 00000  Bytes: 000179
