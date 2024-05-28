@@ -1,0 +1,36 @@
+{assign:3	=3	} ' open command channel
+{assign:5	=5	} ' get DOS error status
+{assign:93	=93	} ' Are You Sure?: Yes/No prompt, default No
+{assign:350	=350	} ' parse device,drive string, return d1%=device, d2%=drive, a=0: device present, a=1: device not present
+{assign:289	=289	} ' prompt for input, translate encoded f-keys to plain text
+{assign:390	=390	} ' read record from e.text
+
+{step:2}
+{:60000}
+	on im goto {:dos_command},{:directory},{:file_read}:return
+{nice:100}
+{:dos_command}
+	gosub 350:on a goto {:device_not_present}:&"{f6}Disk Command?: ":poke 53252,58
+	gosub 289:z$=an$:if z$="" or z$="@" then gosub 3:gosub 5:&:return
+' guard against n0: (format) or s0: (scratch) DOS commands:
+	b$=left$(z$,1) and 127:if b$="n" or b$="s" then gosub 93:if a=. then return
+	gosub 3:print#15,z$:gosub 5:&:return
+{:device_not_present}
+' display "Device not present" from e.text:
+	x=6:goto 390
+
+{nice:100}
+{:directory}
+' pl=0: uppercase/lowercase input
+	t%=.:b%=.:w$="*":pl=.:p$="Pattern":&,1,32:if an$="" then an$=w$
+	&,15,2:close 1:open 1,dv%,.,"$"+dr$+an$:get#1,a$,a$:&,8,1,1:poke 970,.:&:&"{f6}"
+' TODO: check st instead?
+{:get_directory_2}
+	&,8,1,1:if mid$(a$,7,6)<>"blocks" then b%=b%+val(a$):t%=t%+1:&:&"{f6}":goto {:get_directory_2}
+	close 1:&"{pound}# {pound}#5{pound}%b blocks.{f6}{pound}#5{pound}%t files.{f6}":return
+
+{nice:100}
+{:file_read}
+	&"{f6}File read not done.{f6}":return
+{nice:100}
+	rem sub.sysdos (c)nissa 2019-01-04 lh, 2024-05-27 rs
