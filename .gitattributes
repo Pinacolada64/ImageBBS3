@@ -1,0 +1,7 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Declare files that will always have CRLF line endings on checkout.
+# (this is required for c64list, since it is a Windows tool)
+*.lbl text eol=crlf
+*.asm text eol=crlf

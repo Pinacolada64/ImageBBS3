@@ -1,0 +1,17 @@
+# ignore final revisions of Larry's files:
+Larry Hedman/*
+
+# ignore my experimental stuff:
+Ryan Sherwood/*
+
+# exclude binaries and disk images in all directories:
+**/*.prg
+**/*.d64
+**/*.d81
+
+# exclude Kate's swap files:
+**/*.swp
+
+# exclude HTML or PDF documentation built from AsciiDoctor:
+**/*.html
+**/*.pdf
