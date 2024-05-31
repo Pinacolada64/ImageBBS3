@@ -19,6 +19,13 @@ v0.4, 2022-09-30
 // PDF generation config
 :pdftheme: default-sans
 
+// Enable asciidoctor-lists to display lists of tables and code snippets
+== List of tables
+list-of::table[]
+
+== List of code snippets
+list-of::listing[]
+
 include::prg-introduction.adoc[]
 
 ### How to Use This Guide
