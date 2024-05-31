@@ -32,9 +32,9 @@ If you want to run the "`Today in History`" login module in 3.0, copy all the `t
 ****
 
 [start=9]
-include::sub_modem-config.adoc[]
+include::includes/sub_modem-config.adoc[]
 
-include::includes\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
 . When prompted, type kbd:[3] `Convert a 2.0 system`.
 

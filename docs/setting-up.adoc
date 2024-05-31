@@ -276,13 +276,13 @@ TIP: If you wish to run the "`Today in History`" logon module, copy all the `tod
 
 [start=5]
 
-include::includes\sub_modem-config.adoc[]
+include::includes/sub_modem-config.adoc[]
 
 #### Installation
 
 #TODO#: Intro here
 
-include::includes\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
 [start=4]
 
@@ -595,7 +595,7 @@ Otherwise, select the port number of the Commodore 64 you are configuring.
 
 ##### GGlabs GLink232-LT
 
-include::includes\im-gglabs-modem-config.adoc[]
+include::includes/im-gglabs-modem-config.adoc[]
 
 When finished configuring your modem, select kbd:[X] `Exit Modem Config` and answer `Update Modem Flags?` kbd:[Y]es.
 

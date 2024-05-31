@@ -233,7 +233,7 @@ It outputs a literal
 Instead, do this:
 
 [source,basic]
-c$="Hi":c%=3:z$="£$c £\#3£# £%c":&z$
+c$="Hi":c%=3:z$="£$c £#3£# £%c":&z$
 
 This outputs the expected
 
@@ -500,7 +500,7 @@ The LFN is the first number in an `open` statement, _e.g._ `open **2**,10,2`.
 
 ////
 This and can be a useful debugging tool.
-If you have an input file open on LFN \#1, and an output file open on LFN \#2, #FIXME#
+If you have an input file open on LFN #1, and an output file open on LFN #2, #FIXME#
 ////
 
 The LFN value ranges from 1 to 255.

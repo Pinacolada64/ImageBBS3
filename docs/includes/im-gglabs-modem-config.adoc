@@ -1,5 +1,5 @@
 // IM - GGLabs modem configuration
-// include::include\im-gglabs-config.adoc[]
+// include::include/im-gglabs-config.adoc[]
 
 :experimental:
 

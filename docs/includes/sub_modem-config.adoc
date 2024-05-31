@@ -1,4 +1,4 @@
-// include::includes\sub_modem-config.adoc[]
+// include::includes/sub_modem-config.adoc[]
 . The file `sub.modem` is customized for use with BBS Server using DTR as carrier detect.
 Line `60080` contains `print#131,chr$(27)`. This is the Hayes AT escape character (set to Escape to avoid BBS Server hanging up when it sees ``+++``).
 

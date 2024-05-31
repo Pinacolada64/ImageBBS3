@@ -59,9 +59,9 @@ IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0'
 
 ### Installation
 
-include::includes\sub_modem-config.adoc[]
+include::includes/sub_modem-config.adoc[]
 
-include::includes\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
 . When prompted, select kbd:[2] `Convert from Image 1.2`.
 . Clock setting

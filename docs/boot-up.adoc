@@ -2,7 +2,7 @@
 
 ## Boot Up
 
-include::include\boot-command.adoc[]
+include::includes/boot-command.adoc[]
 
 ### Startup Files
 ### Idle Screen Display
