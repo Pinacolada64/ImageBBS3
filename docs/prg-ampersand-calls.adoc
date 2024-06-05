@@ -348,6 +348,7 @@ NOTE: Not all of these parameters are currently understood.
 Each bit controls a separate function of the input routine.
 Bits may be combined together to perform multiple functions.
 
+.Input Line: Editor Control Bits
 [%header]
 [%autowidth]
 // [%frame=no]
@@ -413,6 +414,7 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 
 // NOTE: These haven't been tested, just going by what Ray said
 
+.Input Line: Password Entry Control Bits
 [%header]
 [%autowidth]
 |=====
@@ -432,7 +434,7 @@ _Examples:_
 
 #TODO#: write examples for each option.
 
-.Example 1:
+.Input Line: Setting Line Length and Prompt
 [source,basic]
 poke 53252,10:p$="Name":&,1
 
@@ -442,7 +444,7 @@ poke 53252,10:p$="Name":&,1
 
 `&,1`: Allow user input, and return string in `an$`.
 
-.Example 2:
+.Input Line: Setting Line Length, Default Text, Prompt and Edit Mode
 [source,basic]
 poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$
 
@@ -1811,7 +1813,7 @@ _Example:_
 
 Cause error `14`, `?illegal quantity&#160;&#160;error`.
 
-.Error Numbers
+.BASIC Error Numbers
 [%header]
 [%autowidth]
 |===

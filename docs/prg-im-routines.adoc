@@ -23,7 +23,7 @@ Purpose: 'Core' Routines File
 Layout :
 ////
 
-.`im` routines
+.im routines
 [options="header,autowidth"]
 [cols="1m,2m,3a"]
 [border="none"]
