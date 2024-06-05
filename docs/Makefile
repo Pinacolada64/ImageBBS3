@@ -1,12 +1,14 @@
 prg:
-	# build programmer's reference guide documentation
-	asciidoctor -r asciidoctor-lists prg-master.adoc -o prg-master.html
-	asciidoctor -r asciidoctor-pdf   prg-master.adoc -o prg-master.pdf
+	# build programmer's reference guide documentation (PDF and HTML),
+	# using asciidoctor-lists extension to generate tables of tables & code snippets
+	asciidoctor     -r asciidoctor-lists prg-master.adoc -o prg-master.html
+	asciidoctor-pdf -r asciidoctor-lists prg-master.adoc -o prg-master.pdf
 
 sysop:
-	# build sysop documentation
-	asciidoctor -r asciidoctor-lists master.adoc -o sysop-master.html
-	asciidoctor -r asciidoctor-pdf   master.adoc -o sysop-master.pdf
+	# build sysop documentation (PDF and HTML),
+	# using asciidoctor-lists extension to generate tables of tables & code snippets
+	asciidoctor     -r asciidoctor-lists master.adoc -o sysop-master.html
+	asciidoctor-pdf -r asciidoctor-lists master.adoc -o sysop-master.pdf
 
 all: prg sysop
 
