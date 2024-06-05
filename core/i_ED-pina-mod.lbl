@@ -44,11 +44,11 @@
 	' tz: edit flag - 0: edits made, prompt to save
 
 ' 12/May/2015 11:24
-' - "reboot required" prompted for and notice printed if # next available user # 
+' - "reboot required" prompted for and notice printed if # next available user #
 '	modified
-' - {:input} - checked for "N" (switch pages) before normalizing input, wasn't 
+' - {:input} - checked for "N" (switch pages) before normalizing input, wasn't
 '	changing pages - c64list oddity, need {$Cx-D0} in quotes
-' - changed back to old code of checking for handle change for deleted or 
+' - changed back to old code of checking for handle change for deleted or
 '	REServed users since {:res_pw} is not called with GOSUB
 
 	rem "i.ED 3.0"
@@ -60,7 +60,7 @@
 	&,27:gosub {:_100}:&,28:goto {:im.main_prompt}
 {nice:5}
 {:sub.change_prompt}
-	&" # to change (1-{pound}!i): {pound}i1"
+	&" # to change (1-{pound}!i): {pound}i1":if an$="" then return
 ' TODO: possible addition, although "0" to quit might not work anymore
 '	gosub {:sub.str_to_int}:on -(a>1 or a<i) goto {:sub.change_prompt}:return
 

@@ -33,14 +33,14 @@
 	a=val(mid$(fl$,a,1)):return
 {:12}
 ' reset output defaults
-'	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
-	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0":goto {:sub.reset_color}
+	poke 53253,.:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
+'	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0":goto {:sub.reset_color}
 {:13}
 	&"{clear}"
 {:14}
 	a$=a$+",s,r":gosub {:4}:if e%=. then:&,3,2
 {:15}
-	close 2:goto {:sub.reset_color}
+	close 2:goto {:12}
 {:16}
 	gosub {:1}:input#2,st(x):st(x)=st(x)+i
 {:17}
@@ -577,43 +577,43 @@
 ' poke 836,1  : ?
 ' poke 650,128: enable keyboard repeat
 	poke 56328,.:poke 56579,peek(56579) or 38:poke 56577,peek(56577) or 36
+' 3070:
 	dim tt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
 ' NOTE: these unused ECS command arrays take 1574 bytes, "im-cuts" mod removes them
-'	rem dimec%(19,24),es%(3,49),ei%(50)
 '	dim ec%(19,24),es%(3,49),ei%(50)
-{number:3073}
+{number:3072}
 	restore:for i=1 to 9:read a$:co$(i)=a$+"":next
 ' bd$=boot drive?
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys 49155:&,53
-	&,69,1,1,"im Revision: Aug 15, 2022  3:30 PM",3
+	d1$="2"+"2405218146":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
 ' not needed anymore, 12/2020 ML fixes Y2K display
 '	poke $16ec,$32:poke $16ed,$30
 	a$="NTSC":if peek(678) then a$="PAL"
 	gosub {:3400}:z3$=a$+" System Detected.":gosub {:3404}
-	close 15:open 15,dv%,15:&,18,.:poke 53248,1:am$="1"+"0001018600"
+	close 15:open 15,dv%,15:&,18,.:poke 53248,1
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub {:3404}:close 2:close 15:open 15,dv%,15
 	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub {:5}
 	if e% then close 2:gosub {:3200}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto {:3084}
 	input#2,dv%(3),dr%(3),po$:close2:restore:if po$=""then po$="Main: "
-{:3090}
-	reada$:if a$<>"*"then {:3090}
-	rem if dv%=lk%then print#15,"l800"
+{:3092}
+	reada$:if a$<>"*"then {:3092}
+	rem if dv%=lk%thenprint#15,"l800"
 	gosub {:33}:fori=1to6:x=i+51:gosub {:1}:&,2,2:dv%(i)=val(a$)
 	&,2,2:dr%(i)=val(a$):next:close2
 ' i.IM/modem does write RS232 interface type to e.data
 	gosub {:33}:x=32:gosub {:1}:&,2,2:a=val(a$):close2
-{:3096}
+{:3102}
 	dr=5:gosub {:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
 	z3$="Reading System Info...":gosub {:3404}
-1111	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3096}
+	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3102}
 	x=1:gosub {:1}:&,2,2:bs$=a$:close2
 	im=.:gosub {:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
 	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
 	dr=3:gosub {:3}:z3$="Loading Preset Definitions...":gosub {:3414}:gosub {:3404}
 	&"{lt. blue}{f6}ECS Defs: ":a$=dr$+"e.ecs.main":&,42,4:gosub {:5}:&"{cyan}Done.{f6}"
 	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub {:5}:&"{cyan}Done.{f6}"
-	&"{lt. blue}LightBar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub {:5}:&"{cyan}Done.{f6}"
+	&"{lt. blue}Lightbar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub {:5}:&"{cyan}Done.{f6}"
 	z3$="Setting Alarm Tables...":gosub {:3404}
 	&"{f6:4}{lt. blue}Alarm Table: ":a$=dr$+"e.alarms":&,7,dv%,9:gosub {:5}:&"{cyan}Done.{f6}"
 	dr=2:gosub {:3}
@@ -648,8 +648,9 @@
 	x=51:gosub {:1}:&,2,2:cc$=a$
 	x=58:gosub {:1}:&,2,2:nc=val(a$)
 	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
-' clock set method:
+' 3160: clock set method <in larry's im>:
 	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
+; FIXME: line # off by two; should be
 {:3158}
 	poke 970,.:poke 971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
 	gosub {:30}:forx=1to38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2

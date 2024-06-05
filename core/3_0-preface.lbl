@@ -1,5 +1,6 @@
-{'uses:3_0-preface.lbl} ' to include this file, uncomment this line
+' to include this file, include "-pref:3_0-preface.lbl" on the command line:
 
+' currently, using labels for line numbers does not work on included files
 {undef:use_static_labels}
 {ifdef:use_static_labels}
 {info:INFO: assigning static labels}
@@ -163,6 +164,7 @@
 {assign:440	=440	} ' im.subEditor
 {assign:441	=441	} ' im.subHandles
 {assign:442	=442	} ' im.subProtos
+{assign:443	=443	} ' im.subProtos
 {assign:445	=445	} ' im.subMisc
 {assign:446	=446	} ' im.subModem
 {assign:447	=447	} ' im.subInfo
@@ -180,3 +182,15 @@
 {assign:60000	=60000	} ' starting line of sub.* modules
 
 {endif}
+
+' encoded f-keys:
+{quoter:133=comma	} ' f1
+{quoter:134=colon	} ' f3
+' can't use "quote", that puts a literal quote mark in the string and breaks things:
+{quoter:135=quotation	} ' f5
+{quoter:136=asterisk	} ' f7
+
+{quoter:137=question	} ' f2
+{quoter:138=equal	} ' f4
+' f6 is excluded since {return} in quotes puts a literal chr$(13) in the string
+{quoter:140=up_arrow	} ' f8

@@ -52,7 +52,7 @@ There are functions to:
 
 _Elements_ are the individual "`boxes`" in the array that data is held in.
 
-Strings can be stored in either a floating point [like `a()` or `b()`], or integer  [like `a%()` or `b%()`] array.
+Strings can be stored in either a floating point array [like `a()` or `b()`], or an integer array [like `a%()` or `b%()`].
 
 * Two bytes of a string's text can be stored per element of an integer array
 
@@ -324,7 +324,7 @@ _struct%(field, record)_: the struct name, field and record you're putting the s
 
 _string$_: the string variable name to assign the struct data to.
 
-.Put String
+.Put String Into Struct
 ====
 [source,basic]
 ----
@@ -352,7 +352,7 @@ _string$_: the string variable name to assign the struct data to.
 
 `&,60,0,20,u%(1,1),**na$**`
 
-#TODO#: test if putting string longer than _length_ into struct is truncated -- it should be.
+#TODO#: test if putting string longer than _length_ into struct is truncated--it should be.
 
 .Returns
 
@@ -372,18 +372,12 @@ This copies data from a struct into a specified string variable.
 
 The parameters _length_, _struct%(field, record)_, and _string$_ are the same as `Put String` above.
 
-.Get String
+.Get String From Struct
 ====
 [source,basic]
 ----
 &,60,1,20,u%(11,2),a$
 ----
-====
-
-[IMPORTANT]
-====
-Feedback wanted: which is better, format 1 or format 2?
-But that's just, like, your opinion, man.
 ====
 
 .User Data, Part 2
@@ -394,7 +388,7 @@ In our earlier example user data struct, to access the third user’s password, 
 
 .Parameters
 
-.Format 1
+// .Format 1
 
 [%autowidth]
 [%header]
@@ -402,12 +396,13 @@ In our earlier example user data struct, to access the third user’s password, 
 | Parameter | Purpose
 | `&,60,1,`... | Get a string...
 | `20,`... | of at most 20 bytes...
-| `u%(11,2),`... | from the array `u%()`, record `2`, field `11`...
+| `u%(11,2),`... | from the array `u%()`, record `2` (remember, the first record starts at `0`), field `11`...
 | `a$` | into the string variable `a$`.
 |===
 
 ---
 
+////
 .Format 2
 `**&,60,1,**20,u%(11,2),a$`
 
@@ -428,7 +423,7 @@ In our earlier example user data struct, to access the third user’s password, 
 
 [start=4]
 . into the string variable `a$`
-
+////
 ====
 
 ---

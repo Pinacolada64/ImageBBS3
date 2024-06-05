@@ -1,4 +1,9 @@
-	onimgoto {:60010},{:60050},{:60120},{:60190},{:60210}
+{:60000}
+{step:2}
+' im=1: user online status display
+' im=2:
+' im=5: file transfer. an$=filename
+	on im goto {:60010},{:60050},{:60120},{:60190},{:60210}
 	return
 {:60010}
 '	an$=co$(co%):co$=an$:&,9:gosub {:60120}:&,69,2,22,right$(str$(ca+1e5),5),$81
@@ -38,7 +43,7 @@
 	&,69,31,19,"         ",$8c:&,69,4,19,"                       ",$8c
 	&,69,31,20,"         ",$8c:&,69,4,20,"                       ",$8c
 	&,69,31,21,"         ",$8c:&,69,4,21,"                       ",$8c
-	&,69,0,22,"C=00000 N=000 I=000 A=0 *Image BBS V3.0*",$81
+	&,69,0,22,"C=00000 N=000 I=000 A=0 *Image BBS v3.0*",$81
 	&,69,0,23,"R           M=00000  L=00000           T",$81
 	&,69,1,23,"          ",3:&,69,29,23,"          ",3
 	gosub {:60300}:return
@@ -69,7 +74,7 @@
 {:60300}
 ' FIXME: this is also in i/lo.on, should be removed from there
 	gosub 84:&,52,7,3:if a% then pt%=1-pt%:if p1%<1 then p1%=30
-	b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):on pt%+1 goto {:60306}
+	b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):if pt%=. then {:60306}
 	for y=1 to 5:&,69,39,y+16,mid$("PRIME",y,1),$87:next:return
 {:60306}
 	for y=1 to 5:&,69,39,y+16,mid$("     ",y,1),$8c:next:return

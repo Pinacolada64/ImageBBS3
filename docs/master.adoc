@@ -1,6 +1,6 @@
 = Image BBS 3.0 Sysop Manual
 Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1
+v0.2, 2024-06-05
 :experimental:
 :toc: left
 :toclevels: 10

@@ -381,11 +381,11 @@
 ' from programmer's reference guide
 	&"&,15,6,x: Scan string{f6:2}"
 	&"Split String Two Ways [from PRG]:{f6:2}"
-	&"Scan Using chr$(value){f6}"
-	&"Scan Using  asc({quotation}char{quotation}){f6:2}"
+	&"1) Scan Using chr$(value){f6}"
+	&"2) Scan Using  asc({quotation}char{quotation}){f6:2}"
 	&"Other Examples:{f6:2}"
-	&"Simulate {quotation}instring{quotation} function{f6}"
-	&"Input scan string/split char{f6:2}"
+	&"3) Simulate {quotation}instring{quotation} function{f6}"
+	&"4) Input scan string/split char{f6:2}"
 {:15_6_prompt}
 	l=1:h=4:m=1:q=1:gosub {:sub.input_range}
 	v$="an$={quotation}Hello world{quotation}:&,15,6,":on an gosub {:sub.15_6_scan_string_chr}, {:sub.15_6_scan_string_asc}, {:sub.todo}, {:sub.todo}
@@ -612,7 +612,7 @@
 	sf$="{f1}{f3}{f7}{f2}{f4}{f8}"
 
 {:convert_prompt}
-	m=1:l=.:h=3:gosub {:sub.menu}:on -(a$="I")-2*(a$="R") goto {:convert_input},{:convert_reset}
+	m=1:l=.:h=3:gosub {:sub.input_range}:on -(a$="I")-2*(a$="R") goto {:convert_input},{:convert_reset}
 	a%=6450+20*an:&,66
 
 {:convert_input}

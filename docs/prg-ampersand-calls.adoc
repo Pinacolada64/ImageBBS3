@@ -384,10 +384,13 @@ _Returns:_
 [%autowidth]
 |=====
 | `peek()` | Purpose
-| `$d006/53254` | 0: normal
+| `$d006` / `53254` | 0: normal exit
 
 1: kbd:[Delete], kbd:[.] or kbd:[/] typed on column 1
 
+2: Left `Cht` check on lightbar was activated by sysop
+
+3: Loss of carrier, or time expired (`tr%<1`)
 
 |=====
 
@@ -747,6 +750,7 @@ _Returns:_
 `flag=1`: `a$`: single line of disk directory information
 
 .Display Entire s. Disk Directory
+[code]
  3000 dr=1:gosub 3:open 2,dv%,0,"$"+dr$+"*":get#2,a$,a$ <1>
  3002 &,8,2,0:close 2:goto 300 // <2>
 
