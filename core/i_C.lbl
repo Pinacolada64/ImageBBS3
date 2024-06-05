@@ -1,0 +1,23 @@
+{:4000}
+' don't think cc will be preserved between runs (saves # of chat requests)
+	on peek(53256) goto {:4008}:cc=.:poke 53256,1:&"{f6}{lt. green}Reason For Chat?{f6:2}Chat: {pound}i1"
+' display an$ in window, 50: log a$ to "e.log <day>" and printer
+'	on -(an$="") goto {:4014}:a$=" Chat: "+an$:d$=an$:gosub[50]:an$=d$:&,9
+	on -(an$="") goto {:4014}:&,9:a$=" Chat: "+an$:gosub 50
+' &,52,1,3: check Background Page Enable
+' make (non-)repeating sound
+' &,52,0,3: check Sysop Available to Chat
+	&,52,1,3:&,25,1,a%*255:&,52,.,3:on a% goto {:4006}:gosub {:4008}:goto 85
+{:4006}
+	&"{f6}Paging Now!{f6}":return
+{:4008}
+' increment chat count, 42: read "s.chat <cc>"
+'	cc=cc+1:dr=1:a$="s.chat"+str$(cc):gosub 14
+	cc=cc+1:a$="chat"+str$(cc):gosub 42
+' &,52,33: check "Excessive Chat Logoff"
+	if e% then:&,52,33,3:if a% then tr%=.
+	return
+{:4014}
+' 92: 'Cancelled!'
+	poke 53256,.:goto 92
+	rem "i/C (c)nissa 190206 lh"

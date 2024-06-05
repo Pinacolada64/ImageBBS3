@@ -1,0 +1,27 @@
+{:60000}
+	gosub{:60035}:ife%=0thenonimgoto{:60010},{:60015}
+{:60005}
+	return
+{:60010}
+	ona%goto{:60005}:gosub{:60055}:goto{:60020}
+{:60015}
+	a=ul+1:ifa%andb%thena=x
+{:60020}
+	ifa=0thenreturn
+	a$=tt$(a):f=val(mid$(a$,7,1)):nb=val(mid$(a$,8,1)):d4$=mid$(a$,10):pr=-1
+	a$=left$(a$,6):pm$=a$:gosub[28]:&,16,4,f:return
+{:60035}
+	&,11:dr=1:a$="s.m.protos,s,r":gosub[4]:x=0:ife%then:&:return
+{:60040}
+	&,2,2:ifa$<>"{^}"andx<20thenx=x+1:tt$(x)=a$:ifst=0then{:60040}
+	close2:&,52,4,3:b%=0:ifzz=1ora%=1thenx=x+1:tt$(x)="copier00 Copier":b%=1
+	return
+{:60055}
+	a=val(mid$(an$,3,3)):ifa>0then{:60070}
+{:60060}
+	&"{f6}Available Protocols:{f6:2}":fori=1tox:a%=i:a$=mid$(tt$(i),10)
+	lp=1:&"{pound}%a) {pound}$a{pound}{back arrow}39 ":next:&"{f6:2}--> {pound}g1":a=val(an$)
+{:60070}
+	ifa>0anda<=xthenlp=1:&mid$(tt$(a),10):ifa<xorb%=0thenul=a-1
+	ifan$="{f2}"thena$="s.protos":dr=1:gosub[13]:goto{:60060}
+	a=-a*(a>0):return

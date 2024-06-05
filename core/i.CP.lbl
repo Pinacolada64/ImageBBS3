@@ -1,0 +1,178 @@
+	&"{clear}{f6}{cyan} *IMAGE Copy-All 3.0*{f6:2} Special Thanks To Jim Butterfield!"
+	&"{f6} Mods by {blue}Wa{lt. blue}nd{cyan}er{white}er{f6}":a$="copier":gosub[28]
+'	&,5:v=1.2
+{:3004}
+' 3118: close all open disk files
+	gosub{:3118}:&"{f6:2} {white}[C]{cyan}opy Files{f6} {white}[D]{cyan}irectory"
+	&"{f6} {white}[M]{cyan}ulti-Scratch{f6} {white}[S]{cyan}end Disk Command{f6} {white}[Q]{cyan}uit{f6:2}"
+	p$="Copy":gosub[6]:on-(an$="C")-(an$="D")*2-(an$="S")*3 goto {:3024},{:3012},3120
+	on-(an$="M")-(an$="Q"oran$="")*2goto{:3140},300:goto{:3004}
+{:3012}
+	f=8:d$="":b%=8:gosub{:3134}:ifb%>6andb%<33thenf=b%
+	f$="0:":gosub{:3136}:a=val(an$):ifa>.thenf$=mid$(str$(a),2)+":"
+	a=f:gosub{:3132}:ifathen{:3116}
+' get/set source pattern
+'	gosub{:3138}:&,15,2:ifan$=""thenan$="*"
+	gosub {:3138}
+	&"{f6}":open2,f,0,"$"+f$+an$:&,8,2:close2
+{:3022}
+	&"{f6}{pound}{back arrow}12{rvrs on} Press A Key: {rvrs off}{pound}g1":goto{:3004}
+{:3024}
+	a9$="":s1=.:c1=.:s8=.:c8=.:d$="Source":b%=8:f=8:gosub{:3134}:ifb%>6andb%<33thenf=b%
+	f$="0:":gosub{:3136}:a=val(an$):ifa>.thenf$=mid$(str$(a),2)+":"
+	d$="Target":b%=8-(f=8):g=b%:gosub{:3134}:ifb%>6andb%<33theng=b%
+	g$="0:":gosub{:3136}:a=val(an$):ifa>.theng$=mid$(str$(a),2)+":"
+	d1%=g:d2%=val(g$):dr=.:gosub[61]:lp=1:&"{f6}Blocks Free: "+str$(a):kk=a
+' TODO: "Target Full!"
+	ifa<3thengosub[92]:goto{:3004}
+' get/set target pattern:
+	gosub{:3138}:&,15,2:ifan$=""thenan$="*"
+	t$=an$:iftr%<1then[200]
+{:3040}
+	t=.
+{:3042}
+	&"{f6}{cyan}Reading Directory...{f6:2} [Y]es [N]o [S]tart [A]bort":tz=2
+	&"{f6} [1] Skip 143 Files
+	&"{f6} [8] Skip Eight Files{f6} [R]emaining Files Same As Last{f6:2}"
+	open1,f,0,"$"+f$+t$:get#1,a$,a$:&,8,1,1:lp=1:&:&"{f6}"
+{:3050}
+	&,8,1,1:s=st:ifmid$(a$,7,1)="b"thenb$=a$:&"{f6}{pound}$b{f6}":goto{:3090}
+	a=val(a$):c$=mid$(a$,8):a$=mid$(a$,26,1)
+	fori=2to17:ifmid$(c$,i,1)=qt$thenc$=left$(c$,i-1)
+	next:tt$=c$+","+a$:b$=a$:ifsthen{:3090}
+	ifs8thenc8=c8+1:ifc8<>8thena%=a:&"{pound}#4{pound}# {pound}%a {f5}{pound}$c{f5},{pound}$b{pound}{back arrow}25Skip":goto{:3050}
+	if s1 thenc1=c1+1:ifc1<>143thena%=a:&"{pound}#4{pound}# {pound}%a {f5}{pound}$c{f5},{pound}$b{pound}{back arrow}25Skip":goto{:3050}
+	s1=.:c1=.:c8=.:s8=.:a%=a:&"{pound}#4{pound}# {pound}%a {f5}{pound}$c{f5},{pound}$b{pound}{back arrow}25"
+	iftz+a>kkthen:&"Too Big!{f6}":goto{:3086}
+	ifb$="r"then:&"(Rel File){f6}":goto{:3086}
+	ifa9$="R"thenx=x9:goto{:3072}
+	&"?: {pound}g1":x=-(an$="Y")-(an$="N")*2-(an$="S")*3-(an$="A")*4-(an$="8")*5:gosub{:3188}
+{:3072}
+	ifx=.thenx=2
+	lp=1:&mid$("Yes  No   StartAbortSkip Skip ",(x-1)*5+1,5):&"{f6}"
+	ifx=1thent=t+1:tz=tz+a%:tt$(t)=tt$:ift>143then:&"Limit Reached!{f6}":x=3:goto{:3090}
+	ifx=3then{:3090}
+	ifx=4thent=.:goto{:3090}
+	ifkk-tz<3then:&"No More Room!{f6}":goto{:3090}
+	ifx=5thens1=1:x9=.
+{:3086}
+	ifx=6thens8=1:x9=.
+	ifs=.then{:3050}
+{:3090}
+	close1:a9$="":ift=.thengosub[92]:goto{:3004}
+' check if devices online:
+	&"{f6}":a=f:gosub{:3132}:on a goto{:3116}:a=g:gosub{:3132}:if a then {:3116}
+{:3094}
+	gosub{:3202}
+{:3096}
+	&"{f6}[C]opy  [A]bort  [R]e-Select{f6}[S]elect More Files{f6}[D]elete Some Files :"
+	&"{pound}g1{pound}v7":on-(an$="C")-(an$="A")*2-(an$="R")*3goto{:3100},3184,3186:goto{:3192}
+{:3100}
+	close15:open15,f,15:open14,g,15
+	fori=1tot:c$=tt$(i):ifc$="[Deleted]"then{:3112}
+	&"{f6}Copying:{f5}{pound}$c{f5}..."
+	open3,f,3,f$+c$+",r":input#15,a$,b$:ifa$<>"00"then:&"{pound}{back arrow}32{pound}$b!":goto{:3112}
+{:3108}
+	open2,g,2,g$+c$+",w":input#14,a$,b$:ifa$<>"00"then:&"{pound}{back arrow}32{pound}$b!":goto{:3114}
+	&,16:input#14,a$,b$:&"{pound}{back arrow}32{pound}$b!"
+{:3112}
+	close2:close3:next:&"{f6:2}Done!":goto{:3004}
+{:3114}
+	on-(a$<>"63")goto{:3112}:close2:&"{f6}[S]kip [R]eplace [A]bort :{pound}g1":goto{:3180}
+{:3116}
+	&"{f6}Error: Device Not Present!{f6}":goto {:3004}
+{:3118}
+	close1:close2:close3:close14:close15:return
+' 3120
+	f=8:d$="":b%=8:gosub {:3134}:if b%>6 and b%<16 then f=b%
+	a=f:gosub {:3132}:if a then {:3116}
+' the whole reason we can't use sub.sysdos is because of print#15,c$?
+' z$ (dos command in sub.sysdos) is used nowhere else in this module
+	&"{f6:2}Disk Command: ":gosub 289:c$=an$:a$=left$(c$,1):if a$="" then {:3004}
+	ifa$="n"ora$="s"thengosub[93]:ifa=.then{:3004}
+	close15:open15,f,15:print#15,c$:gosub[5]
+	close15:&:&"{f6} (Hit A Key) {pound}g1":goto{:3004}
+{:3132}
+	close15:open15,a,15:poke781,15:sys65481:sys65484:close15:a=st:return
+{:3134}
+	poke 53252,2:&"{f6}{cyan}{pound}$d Device {white}({pound}%b): {pound}i1":b%=val(an$):poke 53252,38:return
+{:3136}
+	poke 53252,4:&"{cyan}{pound}$d Drive  {white}(0): {pound}i1":poke 53252,38:return
+{:3138}
+' select pattern, prompt for, un-translate
+'	&"{f6}{cyan} Pattern{white}(*): {pound}i0":return
+	an$="*":&"{f6}{cyan} Pattern {white}(*): ":goto 289
+{:3140}
+	gosub 349:gosub 350:on tr%+1 goto 300:f%=.:l=.:gosub 3:close 15:if st then {:3004}
+'	&"{lt. blue}{f6}Pattern: ":gosub{:3220}:b$="*"
+	gosub {:3138}
+'	fori=1tolen(an$):ifmid$(an$,i,1)="*"thenb$=""
+'	next:an$=an$+b$
+{:3148}
+	close 1:open1,dv%,0,"$"+dr$+an$:get#1,a$,a$
+	&"{f6}{yellow} [Y]es [N]o [S]tart [A]bort{pound}q0{f6}{pound}vj"
+	&,8,1,1:lp=1:&a$+"{f6}"
+{:3154}
+	&,8,1,1:s=st:ifmid$(a$,7,1)="b"thenb$=a$:&"{f6}{pound}$b{f6}":goto{:3168}
+	b%=val(a$):f$=mid$(a$,8):t$=mid$(a$,26,1):g$=t$
+	&,8,1,1:s=st:if mid$(a$,7,1)="b"then b$=a$:&"{f6}{pound}$b{f6}":goto {:3090}
+' b%: blocks, an$=filename" for ending " search, b$=filetype
+'	a=val(a$):c$=mid$(a$,8):a$=mid$(a$,26,1)
+	b%=val(a$):an$=mid$(a$,8):b$=mid$(a$,26,1)
+'	for i=2 to 17:if mid$(c$,i,1)=qt$then c$=left$(c$,i-1)
+'	next:tt$=c$+","+a$:b$=a$:if s then{:3090}
+' split an$ into a$ and an$ on quote mark:
+	&,15,6,34 ':&"an$={pound}v7, a$={pound}$a{f6}"
+' c$=filename, tt$="filename,type"
+	c$=a$:tt$=a$+","+b$:if s then{:3090}
+
+'old:	for i=2 to 17:if mid$(f$,i,1)=qt$ then f$=left$(f$,i-1)
+'old:	next:&" {pound}#4{pound}# {pound}%b: {f5}{pound}$f,{pound}$g{f5} {pound}{back arrow}30?: {pound}g1":a$=an$
+
+	x=-(a$="Y")-2*(a$="S")-3*(a$="A"):lp=1:&mid$("No   Yes  StartAbort",x*5+1,5)
+	&"{f6}":onx+1goto{:3170},{:3166},{:3168},{:3168}
+{:3166}
+	f%=f%+1:a%(f%)=b%:tt$(f%)=f$:a%(f%)=b%:l=l+b%:goto{:3170}
+{:3168}
+	s=1:ifx=3thenf%=.:gosub[92]
+{:3170}
+	on-(s=.andf%<100)goto{:3154}:close1:on-(f%=.)goto{:3004}
+	for i=1 to f%:b$=tt$(i):b%=i:&"{lt. blue}{f6}{pound}#2{pound}# {pound}%b-{pound}$b":next
+	&"{f6:2}Correct?: ":gosub[96]:on a+1 goto {:3004}:for i=1 to f%:b$=tt$(i)
+	&"{f6}Scratching {f5}{pound}$b{f5}...":print# 15,"s"+dr$+b$:gosub[5]:&
+	next:&"{f6}":goto{:3022}
+{:3180}
+	on-(an$="S")-(an$="A")*2goto{:3112},3182:goto{:3214}
+	i=t:goto{:3112}
+	&"{f6}Copying Aborted.":goto{:3004}
+	gosub{:3118}:goto{:3040}
+{:3188}
+	a9$=an$:ifan$<>"R"thenx9=x:return
+	x=x9:return
+{:3192}
+	ifan$="S"then{:3208}
+	ifan$<>"D"then{:3100}
+	&"{f6}Delete Which Number: {pound}i1"
+	zq=val(an$):ifzq<1orzq>tthen{:3096}
+	tt$(zq)="[Deleted]":goto{:3094}
+{:3202}
+' show queue
+'	fori=1tot:&"{f6}"+str$(i)+":"+tt$(i)
+	fori=1tot:&"{f6}{pound}!i:"+tt$(i)
+	ifi/20=int(i/20)then:&"{f6}Press a key: {pound}g1{pound}hn"
+	next:return
+{:3208}
+' 3138: select "*" pattern, prompt, untranslate
+'	gosub {:3138}:&,15,2:if an$="" then an$="*"
+	gosub {:3138}:t$=an$:if tr%<1 then 200
+	goto {:3042}
+{:3214}
+	print#14,"s"g$c$:goto{:3108}
+{:3220}
+' TODO: gosub 289 in 'im' instead
+	&"{pound}i0":ifan$<>""then:&,15,2
+	return:rem pinacolada
+' TODO: "press any key" subroutine
+
+	copr.1995 new image 01/05/95
+	rem:"i.CP (c)nissa 200409 lh"
