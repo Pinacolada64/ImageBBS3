@@ -28,17 +28,109 @@ This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) 
 [%header]
 [%autowidth]
 |===
-| Function  | Label       | Parameter(s) | Returns
-| `&,16,0`	| `find`      | `an$`=user name | ?
-| `&,16,1`	| `loadindex` | `a$`=filename | ?
-| `&,16,2`	| `saveindex` | `a$`=filename | ?
-| `&,16,3`	| `makeindex` | `a$`=filename, `b%`=? | ?
-| `&,16,4`	| `instindex` | `a%`=id| ?
-| `&,16,5`	| `deltindex` | `a%`=id| ?
-| `&,16,6`	| `nextindex` | ? | ?
-| `&,16,7`	| `setcrskip` | ? | ?
-| `&,16,8`	| `findindex` | `a%`=id | `a%`=0: not found
+| Function  | Description | Entry | Exit
+| `&,16[,0]`
+| `find`--use a binary search to find `an$` in index
+
+| LFN #2 for the REL file channel must be `open`
+
+LFN #15 for the command channel must be `open`
+
+`an$`=user name
+
+| If `an$` is found: `a%`=value found, `b%`=the position found in
+
+ If `an$` is not found: `a%`=`0`, `b%`=the position to insert to (probably the last record)
+
+| `&,16,1`
+| `loadindex`--load an index file into the index buffer
+| `a$`="__drive__:__filename__", `dv%`=device #
+| `a%`=number of entries in index
+
+| `&,16,2`
+| `saveindex`--save an index to disk
+| `a$`="__drive__:__filename__", `dv%`=device #
+| _n/a_
+
+| `&,16,3`
+| `makeindex`--clear the index buffer
+| _n/a_
+| _n/a_
+
+| `&,16,4`
+| `instindex`--insert a value into the index buffer
+| `a%`=value, `b%`=position
+| _n/a_
+
+| `&,16,5`
+| `deltindex`--delete a value from the index buffer
+| `b%`=position
+| _n/a_
+
+| `&,16,6`
+| `nextindex`--return the next value from the index buffer
+| `b%`=current position
+| `a%`=value at new position, `b%`=new position
+
+| `&,16,7`
+| `setcrskip`--set the # of carriage returns (CRs) to skip when reading data.
+
+This allows fields other than the first one to be indexed.
+| `a%`=number of CRs to skip
+| _n/a_
+
+| `&,16,8`
+| `findindex`--find the first occurrence of the value given
+| `a%`=value to find
+| `b%`=0: not found, otherwise position found at
 |===
+
+////
+;++ 4.docs ++ 4 (indexer) functions:
+
+FIND      &,16
+ Uses a binary search to find the string AN$ in the REL file.
+   Entry: AN$=sting to find
+          File 2 must be open to the REL file
+          File 15 must be open to the command channel
+   Exit:  if found then A%=value found, B%=position found
+          if not found then A%=0, B%=position to insert
+
+LOADINDX  &,16,1
+ Load an index into the index buffer.
+   Entry: A$=drive#+filename, DV%=device
+   Exit:  A%=# of entries in index
+
+SAVEINDX  &,16,2
+ Save an index to disk.
+   Entry: A$=drive#+filename, DV%=device
+
+MAKEINDX  &,16,3
+ This will clear the index buffer.
+
+INSTINDX  &,16,4
+ This will insert a value into the index buffer.
+   Entry: A%=value, B%=position
+
+DELTINDX  &,16,5
+ This will delete a value from the index buffer.
+   Entry: B%=position
+
+NEXTINDX  &,16,6
+ This will return the next value from the index buffer.
+   Entry: B%=current position
+   Exit:  A%=value at new position, B%=new position
+
+SETCRSKP  &,16,7
+ This will set the # of Carriage Returns to skip when reading data. This
+ allows fields other than the first one to be indexed.
+   Entry: A%=# of CRs
+
+FINDINDX  &,16,8
+ This will find the first occurance of the value given.
+   Entry: A%=value to find
+   Exit:  B%=position found at, or 0 if not found.
+////
 
 #### `++ punter`
 
