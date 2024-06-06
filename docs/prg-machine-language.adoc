@@ -174,11 +174,11 @@ Add menu item
 
 _Parameters:_
 
-`&,16,0,_?_,_menu%(element,byte)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
+`&,16,0,_?_,_menu%(field, record)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
 
 `?`: `42`: draw two-column menu
 
-`menu%(_element,byte_)`: struct to put menu text in
+`menu%(_field,record_)`: struct to put menu text in
 
 `hotkey(s)`: One (kbd:[B]) or two (kbd:[/B]) keys to type to select this menu item
 
@@ -214,9 +214,9 @@ Unknown.
 
 _Parameters:_
 
-`&,16,2,_?_,_menu%(element,byte)_,_item_count?_,_?_,_?_,_menu_height?_,_?_,_?_,_?_`
+ &,16,2, _?_, _menu%(field,record)_, _item_count?_, _?_, _?_, _menu_height?_, _?_, _?_, _?_
 
-#FIXME# 
+// #FIXME#
 
 _Examples:_
 
