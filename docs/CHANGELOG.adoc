@@ -1,10 +1,18 @@
-CHANGELOG.md
-============
-10/21/2022:
+CHANGELOG
+=========
+
+2024-06-05:
+
+* Use asciidoctor-lists extension to add listing of tables and code snippets
+* Clarify wording about garbage collection
+* Update `++ index` entry/exit information
+* Add `++ post` protocol query function, `&,16,255`
+
+2022-10-21:
 
 * Revamp/finish Sysop Guide lightbar appendix
 
-9/30/2022:
+2022-09-30:
 
 * Starting to add `im` routine calls
 * Continuing on with `im` variable usage info
@@ -14,12 +22,12 @@ CHANGELOG.md
 * PDF generation works, albeit with some table header wrapping issues
 * Lots of little fixes, too numerous to mention--have a look
 
-8/20/2022:
+2022-08-20:
 
 * `&,15`: outputting date with `Ctrl-d` outputs time zone also -- Jay Campey
 * add information on suggested `e.errlog` module name hints
 
-5/6/2022:
+2022-05-06:
 
 * syntax highlighting of BASIC source code
 * `&,1` (input): improve documentation
