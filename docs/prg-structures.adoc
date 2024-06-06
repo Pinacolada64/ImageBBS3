@@ -580,7 +580,7 @@ _string$_: the 11-digit date string (either a literal string or string variable?
 .Returns
 `?illegal quantity&#160;&#160;error` if the date string is not 11 digits
 
-.Put Date
+.Put Date Into Struct
 ====
 [source,basic]
 an$="10412208234":&,60,4,0,u%(3,0),an$
@@ -646,7 +646,7 @@ Convert a 6-digit Binary Coded Decimal (BCD) date string (as shown above) to the
 | _string$_ | ...string variable to hold the converted 11-digit date and time
 |===
 
-.Get Date
+.Get Date From Struct
 ====
 [source,basic]
 &,60,5,0,u%(0,1),an$:&,15:&an$
@@ -675,7 +675,7 @@ If the condition is true, perform an operation on another field in the struct.
 .Syntax
 `&,60,6,` _num_, _command_, _a%(a,b)_, _b%(a,b)_, _size_, _bits_, _test_
 
-.Example: i.GF
+.i.GF: Scan Struct
 [source,basic]
 ----
 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
@@ -697,7 +697,7 @@ If the condition is true, perform an operation on another field in the struct.
 
 |===
 
-.i.MM.load
+.i.MM.load: Scan Struct
 ====
 [source,basic]
 4106 &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
@@ -762,7 +762,7 @@ _Add If Result_:: Add this record (field?) to the #FIXME# only if _object_ meets
 _test_: the object to test for
 (apparently can be either a variable or a number, maybe the byte number?)
 
-.`i.UD` from Image 2.0
+.+.UD from Image 2.0
 ====
 NOTE: This is still being researched.
 
@@ -770,7 +770,7 @@ The following code scans the U/D directory for entries which have an upload date
 
 //    &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
-.i.UD:
+.i.UD: Scan For Older Upload Date than ld$
 [source,basic]
 3950 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
 
@@ -814,7 +814,7 @@ _a$(a,b)_: String array to sort
 
 _start_: Element to start sorting at?
 
-.i/lo/tt maint
+.i/lo/tt maint: Sort Struct
 ====
 [source,basic]
 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next:p=n-10
@@ -847,7 +847,7 @@ The list of non-zero values are returned in the specified array.
 
 `start`: record to start scanning at
 
-.i/MM.load
+.i/MM.load: Scan Numbers
 ====
 [source,basic]
 4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
@@ -865,7 +865,7 @@ NOTE: More research needed.
 `8192+16384` exceeds the expected access levels of 0-9 (values 1-1023).
 ====
 
-.Example 2: i.UD
+.i.UD: Scan Numbers
 [source,basic]
 3310 &,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
 
@@ -928,7 +928,7 @@ Copy one record from one struct to a record in another struct.
 
 `a2%(a,b)`: destination struct `a2%()`, record `b` and field `a`
 
-.i/IM.logon
+.i/IM.logon: Copy Record
 ====
 [source,basic]
 ----

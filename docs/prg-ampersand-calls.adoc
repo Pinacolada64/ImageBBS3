@@ -131,6 +131,7 @@ We can take the previous example of:
 
 and simplify it further with:
 
+[source]
 `&"Hello there!kbd:[f6]"`
 
 // TODO: `&"bla","bla"` # test this
@@ -470,7 +471,7 @@ The string typed in response to a prompt is returned in `an$`.
 `if an$<>"" then na$=an$`: Just typing kbd:[Return] (to accept the default, `w$`) sets `an$` to a null string.
 If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
 
-.Example 3:
+.Input Line: Setting Line Length, Default Text, Prompt and Allowing MCI & Graphics Characters
 [source,basic]
 poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$
 
@@ -639,7 +640,7 @@ _Returns:_
 
 _Example:_
 
-.im
+.im: Password Mask
 [source,basic]
 263 &"Password: ":&,6:if an$<>ep$ then:&"Incorrect Password."
 
@@ -701,7 +702,7 @@ Not all segments are currently defined.
 ////
 ====
 
-.im:
+.im: Load Protocol File, Method 1
 [source,basic]
 29 ml$="++ "+a$:a$=dr$+ml$:&,7,dv%,2:goto 5
 
@@ -1220,6 +1221,7 @@ _Parameters:_
 
 === `&,23` Get Character from Modem
 
+.Get Character from Modem
 [source]
 ----
 3000 &,23:c=peek(780):if c<>32 then 3000 <1>
@@ -1292,6 +1294,7 @@ Image 1.3 and above adds multiple levels of save and restore with an additional 
 // Reflections: 2.0 Facts vs. Fiction
 ====
 
+.Save and Restore Variable Pointers
 [source]
 ----
 3000 &,27,2 <1>
@@ -1586,8 +1589,7 @@ _BASIC Setup:_
 
 TIP: Line 4016 is the root example, lines 4010 and 4018 are provided for context.
 
-.i.IM/ecs:
-
+.i.IM/ecs: Save ECS Definitions to Disk
 [source,basic]
 ----
 4010 tt$(n+1)=chr$(0):&,42,3,n+1:return <1>
@@ -1865,7 +1867,7 @@ _Parameters:_
 NOTE: `0,0` is the top left corner of the screen.
 ====
 
-.im
+.im: Position Terminal Cursor
 [source,basic]
 4004 &,38:&,61,.,8:print"&,37:goto300:":end
 
@@ -1891,7 +1893,7 @@ _Parameters:_
 
 _Example:_
 
-.im:
+.im: Set Time with &,62
 [source,basic]
 3182 &,62,h,m
 
@@ -2040,7 +2042,7 @@ For reversed colors, add `$80` (or `128` decimal).
 
 _Example:_
 
-.im
+.im: Display String on Console
 [source,basic]
 13 &,69,4,21,left$(" "+cm$+"{21 spaces}",22),$8c
 
@@ -2075,7 +2077,7 @@ TIP: Upper left corner of the screen is `0,0`.
 
 `row`: 0-24
 
-.i.IM
+.i.IM: Position Terminal Cursor
 [source,basic]
 3350 ... &,70,.,n/2+8.5:&"{white}"
 
