@@ -67,7 +67,7 @@ There are variables shown in the error log which can be handy to show which line
 [NOTE]
 ====
 `pr$` is considered the main program name.
-`p1$` is considered a sub-module name (similar to the Little Modem Program modules, _e.g.,_ filenames such as `+.XX.YY` of Image 1.2).
+`p1$` is considered a sub-module name (similar to the Little Modem Program sub-modules, _e.g.,_ filenames such as `+.XX.YY` of Image 1.2).
 ====
 
 If your module spans from, say, lines `3000-4000` (or beyond), it would be a good idea to do something like:

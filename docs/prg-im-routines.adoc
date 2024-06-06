@@ -289,15 +289,15 @@ Setup: ::
 
 | gosub&#160;33
 | gosub&#160;1063
-| Opens REL file `e.data` on Etcetera drive on LFN 2.
+| Opens REL file `e.data` on the Etcetera drive on LFN 2.
 
 | gosub&#160;34
 | gosub&#160;1064
-| Opens SEQ file `e.log #` (where `#` is the day code in `am$`) on the Etcetera drive.
+| Opens SEQ file `e.log \#` (where `#` is the weekday number in `am$`) on the Etcetera drive.
 
 Setup: ::
 
-`a$`: `a` to append, `r` to read, or `w` if doing maintenance that requires creating the file.
+`a$`: `a` to append to an existing file, `r` to read, or `w` to write (create) the file.
 
 | gosub&#160;35
 | gosub&#160;1065
