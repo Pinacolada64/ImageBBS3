@@ -63,7 +63,7 @@
 '	&"{up:2}Hit a key: {pound}g1"
 
 {nice:100}
-' &,16,255: report protocol number:
+' &,16,255: report protocol number (seen in i.SB for '++ post'):
 	&"Protocol #{pound}%a{f6}":return
 
 ' {nice:100}

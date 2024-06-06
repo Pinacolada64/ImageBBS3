@@ -132,6 +132,12 @@ FINDINDX  &,16,8
    Exit:  B%=position found at, or 0 if not found.
 ////
 
+#### `++ post`
+
+The `++ post` protocol supports querying which protocol is loaded in memory via `&,16,255`.
+This returns the protocol number in `a%`.
+This is useful to prevent unnecessary ``load``ing if the protocol is already in memory.
+
 #### `++ punter`
 
 [%header]
