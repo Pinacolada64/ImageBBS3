@@ -82,8 +82,18 @@
 	&,69,00,21,"Area",$8f:&,69,04,21,"                       ",$8c
 	&,69,27,21,"User",$8f:&,69,31,21,"         ",$8c
 {else}
-' l=line, a%=calculated gosub target
-	l=17:a%=60350
+' TODO: if calcgosub allowed floating point (0 < a < 63999), could do some coolness:
+' l=line, a=calculated gosub target
+'	l=17:a=60350
+'	&,69,00,17,"User",$8f:&,66,1:&,69,27,17,"ID #",$8f:&,66,1
+'	[...]
+'{:60350}
+' draw blank spaces on line l:
+'	a=60352:&,69,04,l,"                       ",$8c:return
+'{:60352}
+'	a=60350:&,69,31,l,"         ",$8c:l=l+1:return
+
+	l=17
 	&,69,00,17,"User",$8f:gosub {:60350}:&,69,27,17,"ID #",$8f:gosub {:60352}
 	&,69,00,18,"Last",$8f:gosub {:60350}:&,69,27,18,"Call",$8f:gosub {:60352}
 	&,69,00,19,"Name",$8f:gosub {:60350}:&,69,27,19,"Prms",$8f:gosub {:60352}
