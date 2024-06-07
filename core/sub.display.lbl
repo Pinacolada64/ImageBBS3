@@ -1,81 +1,164 @@
+{undef:use_old_method}
+{assign:84=84}
 {:60000}
 {step:2}
-' im=1: user online status display
-' im=2:
-' im=5: file transfer. an$=filename
-	on im goto {:60010},{:60050},{:60120},{:60190},{:60210}
+' im=1: Display user online mask, fill in all the user’s information.
+' im=2: Display waiting for call mask, don't display status information
+' im=3: Display user online mask, don't fill in user's information
+' im=4: display file transfer mask. device=dv%(bn+6), drive=dr%(bn+6)
+' im=5: display file transfer mask. device=d1%, drive=d2%, an$=filename
+	on im gosub {:sub.user_online_info}, {:sub.wait_for_call_blank}, {:sub.user_online_blank}, {:sub.file_xfer_1}, {:sub.file_xfer_2}
 	return
-{:60010}
+
+{nice:100} ' 60100
+{:sub.user_online_info}
+' computer type
 '	an$=co$(co%):co$=an$:&,9:gosub {:60120}:&,69,2,22,right$(str$(ca+1e5),5),$81
-	co$=co$(co%):&,9,36:gosub {:60120}:&,69,2,22,right$(str$(ca+1e5),5),$81
-	&,69,10,22,right$(str$(cn+1e5),3),$81
-	an$=na$:&,15,1:&,69,5,17,an$,$8c:an$=rn$:&,15,1:&,69,5,19,an$,$8c
-'	ch$=co$:an$=co$:&,9:an$=d5$:&,15:&,69,5,18,an$,$8c:&,69,5,20,left$(ph$,22),$8c
-	ch$=co$:an$=d5$:&,15:&,69,5,18,an$,$8c:&,69,5,20,left$(ph$,22),$8c
-	&,69,32,17,dd$,$8c:&,69,31,18,str$(ct%)+"/"+mid$(str$(tc%),2),$8c
-	&,69,22,22,mid$(hx$,ac%+1,1),$81
+	gosub {:sub.user_online_blank}:co$=co$(co%):&,9,36
+' handle, bbs id#:
+	an$=na$:&,15,1:&,69,5,17,an$,$8c:&,69,32,17,dd$,$8c
+' last call:
+	an$=d5$:&,15:&,69,5,18,an$,$8c
+' calls today/total calls:
+	&,69,31,18,str$(ct%)+"/"+mid$(str$(tc%),2),$8c
+' real name:
+	an$=rn$:&,15,1:&,69,5,19,an$,$8c
+' screen dimensions:
 	&,69,31,19,str$(ll%)+"x"+mid$(str$(mp%),2),$8c
-	&,69,31,20,str$(qb),$8c
-	&,69,31,21,str$(uh)+"/"+mid$(str$(ur),2),$8c:return
-{:60050}
-	&,69,0,17,"Last",$8f:&,69,4,17,"                       ",$8c
-	&,69,0,18,"Off ",$8f:&,69,4,18,"                       ",$8c
-	&,69,0,19,"Log ",$8f:&,69,4,19,"                       ",$8c
-	&,69,0,20,"RPW ",$8f:&,69,4,20,"                       ",$8c
-	&,69,0,21,"Area",$8f:&,69,4,21,"                       ",$8c
+' current baud rate or "Console" if console login:
+	a$=str$(qb):if k% then a$="Console"
+' e-mail address, baud rate:
+	&,69,5,20,left$(ph$,22),$8c:&,69,31,20,a$,$8c
+' next free user account/total users?
+	&,69,31,21,str$(uh)+"/"+mid$(str$(ur),2),$8c
+' total calls to bbs, calls today:
+	&,69,2,22,right$(str$(ca+1e5),5),$81:&,69,10,22,right$(str$(cn+1e5),3),$81
+' access level:
+	&,69,22,22,mid$(hx$,ac%+1,1),$81:return
+
+{nice:100} ' 60200
+{:sub.wait_for_call_blank}
+{ifdef:use_old_method}
+	&,69,00,17,"Last",$8f:&,69,04,17,"                       ",$8c
 	&,69,27,17,"Net ",$8f:&,69,31,17,"         ",$8c
+	&,69,00,18,"Off ",$8f:&,69,04,18,"                       ",$8c
 	&,69,27,18,"Sys ",$8f:&,69,31,18,"         ",$8c
+	&,69,00,19,"Log ",$8f:&,69,04,19,"                       ",$8c
 	&,69,27,19,"Resv",$8f:&,69,31,19,"         ",$8c
+	&,69,00,20,"RPW ",$8f:&,69,04,20,"                       ",$8c
 	&,69,27,20,"Baud",$8f:&,69,31,20,"         ",$8c
+	&,69,00,21,"Area",$8f:&,69,04,21,"                       ",$8c
 	&,69,27,21,"User",$8f:&,69,31,21,"         ",$8c
-	&,69,0,22,"C=00000 N=000           *Image BBS V3.0*",$81
-	&,69,0,23,"R           M=00000  L=00000           T",$81
-	&,69,1,23,"          ",3:&,69,29,23,"          ",3
-	gosub {:60300}:return
-{:60120}
-	&,69,0,17,"User",$8f:&,69,27,17,"ID #",$8f
-	&,69,0,18,"Last",$8f:&,69,27,18,"Call",$8f
-	&,69,0,19,"Name",$8f:&,69,27,19,"Prms",$8f
-	&,69,0,20,"Mail",$8f:&,69,27,20,"Baud",$8f
-	&,69,0,21,"Area",$8f:&,69,27,21,"User",$8f
-	&,69,31,17,"         ",$8c:&,69,4,17,"                       ",$8c
-	&,69,31,18,"         ",$8c:&,69,4,18,"                       ",$8c
-	&,69,31,19,"         ",$8c:&,69,4,19,"                       ",$8c
-	&,69,31,20,"         ",$8c:&,69,4,20,"                       ",$8c
-	&,69,31,21,"         ",$8c:&,69,4,21,"                       ",$8c
-	&,69,0,22,"C=00000 N=000 I=000 A=0 *Image BBS v3.0*",$81
-	&,69,0,23,"R           M=00000  L=00000           T",$81
-	&,69,1,23,"          ",3:&,69,29,23,"          ",3
-	gosub {:60300}:return
-{:60190}
-	gosub {:60230}
+{else:}
+' goal here is to get rid of all these repeated space strings
+' l self-increments at the end of the subroutne
+
+' l=screen line
+	l=17
+	&,69,00,17,"Last",$8f:gosub {:60350}:&,69,27,17,"Net ",$8f:gosub {:60352}
+	&,69,00,18,"Off ",$8f:gosub {:60350}:&,69,27,18,"Sys ",$8f:gosub {:60352}
+	&,69,00,19,"Log ",$8f:gosub {:60350}:&,69,27,19,"Resv",$8f:gosub {:60352}
+	&,69,00,20,"RPW ",$8f:gosub {:60350}:&,69,27,20,"Baud",$8f:gosub {:60352}
+	&,69,00,21,"Area",$8f:gosub {:60350}:&,69,27,21,"User",$8f:gosub {:60352}
+{endif}
+
+	&,69,00,22,"C=00000 N=000           *Image BBS v3.0*",$81
+	goto {:mask_bottom}
+'	&,69,0,23,"R           M=00000  L=00000           T",$81
+'	&,69,1,23,"          ",3:&,69,29,23,"          ",3
+'	gosub {:60300}:return
+
+{nice:100} ' 60300
+{:sub.user_online_blank}
+{ifdef:use_old_method}
+	&,69,00,17,"User",$8f:&,69,04,17,"                       ",$8c
+	&,69,27,17,"ID #",$8f:&,69,31,17,"         ",$8c
+	&,69,00,18,"Last",$8f:&,69,04,18,"                       ",$8c
+	&,69,27,18,"Call",$8f:&,69,31,18,"         ",$8c
+	&,69,00,19,"Name",$8f:&,69,04,19,"                       ",$8c
+	&,69,27,19,"Prms",$8f:&,69,31,19,"         ",$8c
+	&,69,00,20,"Mail",$8f:&,69,04,20,"                       ",$8c
+	&,69,27,20,"Baud",$8f:&,69,31,20,"         ",$8c
+	&,69,00,21,"Area",$8f:&,69,04,21,"                       ",$8c
+	&,69,27,21,"User",$8f:&,69,31,21,"         ",$8c
+{else}
+' l=line, a%=calculated gosub target
+	l=17:a%=60350
+	&,69,00,17,"User",$8f:gosub {:60350}:&,69,27,17,"ID #",$8f:gosub {:60352}
+	&,69,00,18,"Last",$8f:gosub {:60350}:&,69,27,18,"Call",$8f:gosub {:60352}
+	&,69,00,19,"Name",$8f:gosub {:60350}:&,69,27,19,"Prms",$8f:gosub {:60352}
+	&,69,00,20,"Mail",$8f:gosub {:60350}:&,69,27,20,"Baud",$8f:gosub {:60352}
+	&,69,00,21,"Area",$8f:gosub {:60350}:&,69,27,21,"User",$8f:gosub {:60352}
+{endif}
+	&,69,00,22,"C=00000 N=000 I=000 A=0 *Image BBS v3.0*",$81
+{:mask_bottom}
+	&,69,00,23,"R           M=00000  L=00000           T",$81
+	&,69,01,23,"          ",3:&,69,29,23,"          ",3
+	gosub {:sub.prime_time}:return
+
+{:60350}
+' draw blank spaces on line l:
+	&,69,04,l,"                       ",$8c:return
+{:60352}
+	&,69,31,l,"         ",$8c:l=l+1:return
+
+{nice:100} ' 60400
+{:sub.file_xfer_1}
+	gosub {:sub.file_mask}
 	&,69,12,18,str$(dv%(bn+6)),$8c
 	&,69,12,19,str$(dr%(bn+6)),$8c
 	return
-{:60210}
-	gosub {:60230}
+
+{nice:100} ' 60500
+{:sub.file_xfer_2}
+	gosub {:sub.file_mask}
 	&,69,12,18,str$(d1%),$8c
 	&,69,12,19,str$(d2%),$8c
 	return
-{:60230}
+
+{nice:10}
+{:sub.file_mask}
 	a=peek(53248):poke 53248,1:&"{clear}{down:15}":poke 53248,a
 	&,69,0,14," Transfer Time: 00:00:00                ",1
 	&,69,0,15," Good: 00000  Bad: 00000  Bytes: 000000 ",1
+{ifdef:use_old_method}
 	&,69,0,17,"            ",$8f:&,69,12,17,"                            ",$8c
 	&,69,0,18," Device     ",$8f:&,69,12,18,"                            ",$8c
 	&,69,0,19," Drive      ",$8f:&,69,12,19,"                            ",$8c
 	&,69,0,20," Protocol   ",$8f:&,69,12,20,"                            ",$8c
 	&,69,0,21,"            ",$8f:&,69,12,21,"                            ",$8c
+{else}
+' although &,66,1 can't be used on line numbers > 32768, it's still a valuable
+' trick to set a%=<line number of a label> in other circumstances
+'	l=17:a%={:file_xfer_3}
+'	&,69,0,17,"            ",$8f:&,66,1
+	l=17
+	&,69,0,17,"            ",$8f:gosub {:file_xfer_3}
+	&,69,0,18," Device     ",$8f:gosub {:file_xfer_3}
+	&,69,0,19," Drive      ",$8f:gosub {:file_xfer_3}
+	&,69,0,20," Protocol   ",$8f:gosub {:file_xfer_3}
+	&,69,0,21,"            ",$8f:gosub {:file_xfer_3}
+{endif}
 	x$="Send":if x>1then x$="Receiv":if x>2then x$="Copy":if x>3then x$="Scann"
 	&,69,1,17,x$+"ing",$8f
 	&,69,13,17,"{f5}"+an$+"{f5}",$8c
 	&,69,13,20,d4$,$8c
 	return
-{:60300}
+
+{ifndef:use_old_method}
+{:file_xfer_3}
+	&,69,12,l,"                            ",$8c:l=l+1:return
+{endif}
+
+{nice:100}
+{:sub.prime_time}
 ' FIXME: this is also in i/lo.on, should be removed from there
 	gosub 84:&,52,7,3:if a% then pt%=1-pt%:if p1%<1 then p1%=30
-	b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):if pt%=. then {:60306}
-	for y=1 to 5:&,69,39,y+16,mid$("PRIME",y,1),$87:next:return
-{:60306}
-	for y=1 to 5:&,69,39,y+16,mid$("     ",y,1),$8c:next:return
-	rem "sub.display (c)nissa 200519 lh, 2022-08-05 pinacolada"
+	b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.)
+	a$="PRIME":c=$87:if pt%=. then a$="     ":c=$8c
+'	for y=1 to 5:&,69,39,y+16,mid$("PRIME",y,1),$87:next:return
+'{:60306}
+'	for y=1 to 5:&,69,39,y+16,mid$("     ",y,1),$8c:next:return
+	for y=1 to 5:&,69,39,y+16,mid$(a$,y,1),c:next:return
+
+	rem sub.display (c)nissa 2020-05-19 lh, 2024-06-06 pinacolada
