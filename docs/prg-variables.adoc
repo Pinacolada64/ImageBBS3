@@ -25,7 +25,9 @@ When you set `pl` in BASIC, it causes the ML input routines to accept both upper
 The main variables that can be used sometimes are arrays.
 Depending on which subsystem you are in, the arrays may or may not be in use.
 If they are not in use, it is safe to use them.
-The only exceptions to this is `st()`, `dv%()` and `tt$()`.
+The only exceptions to this are `bf()`, `st()`, `dv%()` and `tt$()`.
+
+* `bf()` holds the blocks free count for the system disks.
 
 * `st()` holds the Board Activity Register stats; changing the values of this array should be reserved for updating the BAR stats.
 
@@ -117,7 +119,8 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `co%`
 | User
 | icon:check[role=green]
-| Computer type: `co$(co%)` is the computer name.
+| Index into the computer type string array [`co$()`].
+`co$(co%)` is the computer name.
 
 | `ct%`
 | User
@@ -809,7 +812,7 @@ template:
 |====================
 | Variable | Type | Use? | Purpose
 
-| `co$(9)`
+| `co$(1-9)`
 | BBS
 | icon:check[role=green]
 | Text of computer types.
