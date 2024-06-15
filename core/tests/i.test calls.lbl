@@ -440,8 +440,9 @@
 
 ' test code from image bbs 2.0:
 ' https://github.com/Pinacolada64/ImageBBS/blob/5b564adb919f49e7644c303e7c21e8b75fd192f0/v2/core/jack/i_UD.lbl#L93-L97
-' 10 x=10:print"auto-logoff. press space to abort"
-' 20 printx;:ford=1to500:next:geta$:ifa$<>" " thenonxgoto40:x=x-1:goto20
+
+' 10 x=11:print"auto-logoff. press space to abort"
+' 20 x=x-1:printx;:ford=1to1000:next:geta$:ifa$<>" "thenon-(x>1)goto20:goto40
 ' 30 print"aborted":end
 ' 40 print"auto-logoff"
 
@@ -451,10 +452,11 @@
 {:4352}
 	&"(Simulated) Auto-Logoff in ten seconds.{f6:2}Press Space to abort:{f6}":i=11
 {:23_loop}
-' 92: ">>> Canceled!"
 ' NOTE: using &,4 gives inconsistent results, and never the PetSCII value of the typed character
-	i=i-1:&"{f6}{pound}!i":&,22,10:&,4:c=peek(780):&" c={pound}!c, rc="+str$(rc):if c=32 then gosub 92:goto {:23_again}
-	on i goto {:23_loop}:&"Timed out.{f6}"
+	i=i-1:&"{f6}{pound}!i":&,22,10:&,4:c=peek(780):&" c={pound}!c, rc="+str$(rc)
+	if c<>32 then on -(i>1) goto {:23_loop}:&"Timed out.{f6}":goto {:23_again}
+' 92: ">>> Canceled!"
+	gosub 92
 {:23_again}
 ' 96: "[Yes]"
 	&"Again [Y/n]?: ":gosub 96:on a goto {:4352}:return
