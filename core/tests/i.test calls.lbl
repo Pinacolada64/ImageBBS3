@@ -653,7 +653,7 @@
 {nice:10}
 {:sub.setup}
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
-' get Trb-L status (db=debug mode):
+' get Trb-L status (db=debug mode, 1=*unset*):
 ' 370 inverts a, so pre-inverting it reports actual status
 	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
 ' set p=menu page number
