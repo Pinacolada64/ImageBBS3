@@ -17,6 +17,18 @@
 {quoter:137=question}	' f2
 {quoter:140=up_arrow}	' f8
 
+' TODO: add $ and % parsing limitations tests as in the documentation to validate the examples:
+' l=peek(53252):&"Saving current line length of {pound}!l."
+' ...
+' &"poke $d004,peek($d004) and %1100"
+' poke $d004,peek($d004) and %1100
+' &"c=%1100:poke $d004,peek($d004) and c"
+' c=%1100:poke $d004,peek($d004) and c
+' ...
+' (do some &,1 stuff...)
+' ...
+' &"Restoring line length to {pound}!l.":poke 53252,l
+
 {number:3000}
 {step:2}
 	rem "i.test calls" {usedef:__BuildDate} {usedef:__BuildTime}
