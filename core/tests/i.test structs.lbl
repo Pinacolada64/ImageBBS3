@@ -71,13 +71,17 @@
 
 {:3100} ' &,60,0: PutString
 	gosub {:sub.todo}:return
+
 {:3150} ' &,60,1: GetString
 ' TODO: GetString: max length l animal name s%(11,x)
 	gosub {:sub.todo}:return
+
 {:3200} ' &,60,2: Load Structure from Disk
 	gosub {:sub.todo}:return
+
 {:3250} ' &,60,3: Save Structure to Disk
 	gosub {:sub.todo}:return
+
 {:3300} ' &,60,4: Put Date
 ' 3302:
 ' choose the record to put the date in:
@@ -94,7 +98,8 @@
 ' TODO: demonstrate that dates only take 3 elements, 6 bytes
 ' &,60,5,0, struct%(field, record), string$
 ' FIXME: illegal quantity here, somewhere
-	&,60,5,0,s%(2,a),b$:&,60,5,0,s%(5,a),c$
+	&,60,5,0,s%(2,a),b$
+	&,60,5,0,s%(5,a),c$
 ' e.g.:
 ' ----+----+----+----+----+----+----+----+
 ' Random (Raw): 12345678901
@@ -339,5 +344,34 @@
 	data "penguin","quetzalcoatl","rhino","snake","tiger"
 	data "unicorn","vole","walrus","xerus","yak","zebra"
 	data "alpaca","boar","cassowary","deer"
+
+{nice:50}
+' TODO: renumber this whole module to 4000- and call these routines via 3000-
+{:sub.menu}
+{step:1}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) List chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}!l-{pound}!h":if q then:&", {question}) List"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}
+	&"{f6}":return
+
+{nice:50}
+{:sub.out_of_range}
+	&"Out of range [1-{pound}!t].{f6}":return
+
 {nice:100}
 	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
