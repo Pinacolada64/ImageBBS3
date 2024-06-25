@@ -117,10 +117,23 @@ Partition 0 means "`current partition.`"
 If you have multiple devices connected, there may either be a switch somewhere on the device to change the device number, or--in the case of CMD and Rear Admiral drives--a "`Swap`" button to change the device number in software.
 
 _Directory space_ refers to the number of directory entries possible on the drive. The limit depends on the type of disk drive.
+////
 A 1581 drive allows 296 directory entries, while an SFD 1001 allows 224, etc.
 Check your drive manual to see what the limitation is.
+////
 
-#TODO# 1541 limit? LtK limit? Other limits?
+.Directory Space and Total Blocks Per Device
+[%header]
+[%autowidth]
+|===
+^| Device ^| Directory Space ^| Total Blocks
+<| SFD-1001    >| 224 >|      ?
+<| CBM 1541    >|  ?  >|    664
+<| CBM 1571    >|  ?  >|  1,368
+<| CBM 1581    >| 296 >|  3,160
+<| CMD FD-2000 >|  ?  >|  6,336
+<| CMD FD-4000 >|  ?  >| 12,736
+|===
 
 _Drive space_ refers to blocks used, while _blocks free_ refers to blocks unused on the drive.
 
