@@ -70,11 +70,22 @@
 	return
 
 {:3100} ' &,60,0: PutString
-	gosub {:sub.todo}:return
+' &,60,0, length, struct%(field, record), string$
+	gosub {:sub.which_record}:if q or an$="" then return
+	p$="Enter String":pl=.:&,1:if an$<>"" then:&,60,0,l,s%(11,a),an$:gosub {:sub.show_string}
+	goto {:3100}
 
 {:3150} ' &,60,1: GetString
-' TODO: GetString: max length l animal name s%(11,x)
-	gosub {:sub.todo}:return
+' max length l, animal name s%(11,a)
+' &,60,1, length, struct%(field, record), string$
+	&"Get String{f6}":gosub {:sub.which_record}:if q or an$="" then return
+'	&,60,1,l,s%(11,a),an$:&"{pound}!a) {pound}v7{f6}"
+	gosub {:sub.show_string}
+	goto {:3150}
+
+{nice:10}
+{:sub.show_string}
+	&,60,1,l,s%(11,a),an$:&"{pound}!a) {pound}v7{f6}":return
 
 {:3200} ' &,60,2: Load Structure from Disk
 	gosub {:sub.todo}:return
