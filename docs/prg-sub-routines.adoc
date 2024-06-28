@@ -1,21 +1,21 @@
 :experimental:
 
-### `sub.*` Module Jump Table
+=== `sub.*` Module Jump Table
 
 Files with a `sub.` prefix contain routines which are used often, but to save memory and avoid code repetition, are separated from the main `im` module.
 
-#### `sub.bar`
+==== `sub.bar`
 
 This handles displaying the BBS`'s Board Activity Register statistics.
 
-#### `sub.comm1`
+==== `sub.comm1`
 
 * View or change last call date
 * View BBS caller activity log
 * Credit exchange: trade calls for time, credits, or vice-versa
 // fourth subroutine is just a do-nothing stub
 
-#### `sub.comm2`
+==== `sub.comm2`
 
 [%header]
 [%autowidth]
@@ -60,43 +60,43 @@ n1$:
 n2$: 
 |===
 
-#### sub.display
+==== sub.display
 
-#### sub.editor
+==== sub.editor
 
-#### sub.feedback
+==== sub.feedback
 
-#### sub.handles
+==== sub.handles
 
-#### sub.info
+==== sub.info
 
-#### sub.local
+==== sub.local
 
-#### sub.menus
+==== sub.menus
 
-#### sub.misc
+==== sub.misc
 
-#### sub.misc2
+==== sub.misc2
 
-#### sub.modem
+==== sub.modem
 
-#### sub.param1
+==== sub.param1
 
-#### sub.param2
+==== sub.param2
 
-#### sub.protos
+==== sub.protos
 
 // `im=`
 
-#### sub.stack
+==== sub.stack
 
-#### sub.stats
+==== sub.stats
 
-#### sub.sysdos
+==== sub.sysdos
 
 This handles issuing DOS commands.
 
-#### sub.turbo
+==== sub.turbo
 
 This handles checking for, and enabling or disabling, the Creative Micro Designs SuperCPU.
 

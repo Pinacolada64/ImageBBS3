@@ -1,7 +1,7 @@
 :experimental:
 // enable 'kbd:[x]' macro
 
-## Machine Language Entry Points
+== Machine Language Entry Points
 
 Here is a listing of ML modules and their entry points.
 
@@ -9,7 +9,7 @@ Here is a listing of ML modules and their entry points.
 NOTE: This section is currently undergoing research.
 ====
 
-### Protocols [[protocols]]
+=== Protocols [[protocols]]
 
 `&,16,4,_x_`: `getflag`
 
@@ -21,7 +21,7 @@ Its purpose is currently unknown.
 This sets the value of `defflag` from the protocol.
 Its purpose is currently unknown.
 
-#### `++ index`
+==== `++ index`
 
 This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) files.
 
@@ -132,13 +132,13 @@ FINDINDX  &,16,8
    Exit:  B%=position found at, or 0 if not found.
 ////
 
-#### `++ post`
+==== `++ post`
 
 The `++ post` protocol supports querying which protocol is loaded in memory via `&,16,255`.
 This returns the protocol number in `a%`.
 This is useful to prevent unnecessary ``load``ing if the protocol is already in memory.
 
-#### `++ punter`
+==== `++ punter`
 
 [%header]
 [%autowidth]
@@ -154,7 +154,7 @@ This is useful to prevent unnecessary ``load``ing if the protocol is already in 
 (are these flags whether the protocol supports multi-file transfers?)
 |===
 
-#### `++ reader`
+==== `++ reader`
 
 This module can display PRG files.
 
@@ -165,7 +165,7 @@ This module can display PRG files.
 | `&,16,0,_ll%_` | Detokenize BASIC file, use column width `ll%` | 
 |===
 
-#### Graphic Menu
+==== Graphic Menu
 
 The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
 
@@ -200,7 +200,7 @@ _Returns:_
 
 `a%`: which item was selected
 
----
+'''
 
 `&,16,1`: Add string
 
@@ -208,7 +208,7 @@ _Parameters:_
 
 Unknown.
 
----
+'''
 
 `&,16,2`: Use menu
 
@@ -228,7 +228,7 @@ _Returns:_
 
 `a%`: item number selected
 
----
+'''
 
 `&,16,3`: ?
 

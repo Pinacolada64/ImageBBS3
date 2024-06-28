@@ -1,5 +1,5 @@
 [preface]
-## Preface
+== Preface
 
 To understand the history of Image BBS v3.0 you have to go back to 1991. Ray Kelm and John Moore started work on Image v2.0 and the C128 version. After a couple of years, John passed away and Ray lost interest in the C64 version of the software. Fred Dart who was supplying technical phone support got Ray to send him what he had up to that point. Fred recruited myself, Jack Followay, and Larry Gartin to help at least get the software to the marketplace. We hit the ground running and before long I had the EM section done, VF section done, and NF section done. Jack Followay was working on the im and other items. Larry Gartin was beta testing what we had going on. Fred was testing and fixing what he thought needed to be fixed. In the spring of 1996, I experienced a hard drive failure and left the programming team. At that point Fred Dart brought on Bob Sisco and Bob, Fred, Jack and Larry continued work. At some point over the next few years 2.0 was worked on but never released. When Fred passed away all work pretty much ceased.
 
@@ -10,7 +10,7 @@ Thank you for downloading Image BBS v3.0 © NISSA BBS Software.
 [.text-right]
 &#8212;Al DeRosa
 
-### Special Thanks
+=== Special Thanks
 
 Special thanks go out to:
 
@@ -31,7 +31,7 @@ The next few guys I am going to mention are what have made Image BBS what it was
 Ray Kelm::
 For coming out of retirement to fix the issues with the ML and creating a full source code to be able to be mod and rebuild anytime anyone wants. Ray has been amazing me with his programming skills for 30 years and he never ceases to amaze me. Thank You Ray!!
 
-### In Memoriam
+=== In Memoriam
 
 Last but not least the men who we have lost over the years for without whom Image BBS would never be where it is today!
 

@@ -1,12 +1,12 @@
-### New Features
+=== New Features
 
 `_variable_=usr(0)` function reads the stack pointer to display how much free space is on the processor stack.
 
-#### BASIC Keyword Extensions
+==== BASIC Keyword Extensions
 
 A few BASIC keywords have had additional parameters added to them.
 
-##### `load` Relocate Flag
+===== `load` Relocate Flag
 
 // load"filename",device,relocate_flag 
 
@@ -70,7 +70,7 @@ It also is a shorter syntax for loading a protocol, saving memory in the BASIC p
 
 ====
 
-##### `new` Line Range
+===== `new` Line Range
 
 // Larry:
 ``new _line_number_`` prepares to ``load`` a new module by erasing lines from `line_number` to the end of the program.
@@ -79,13 +79,13 @@ _Example:_
 
 `new 3000` erases lines 3000 to the end of all loaded modules.
 
-##### Hexadecimal Values
+===== Hexadecimal Values
 
 Hexadecimal values (base 16) are prefaced with `$`.
 They can be used in `poke`, `peek`, `sys` and `&` commands.
 `poke $d004,$0c` is the equivalent of `poke 53252,12`.
 
-##### Binary Values
+===== Binary Values
 
 Binary values (base 2) are prefaced with `%` and up to 8 bits can be specified.
 Leading ``0``s do not have to be specified.

@@ -1,11 +1,11 @@
 :experimental:
 :icon: font
 
-## The Lightbar
+== The Lightbar
 
 Image BBS`'s familiar lightbar has been expanded, as compared to previous versions, in both scope and utility. The first two pages remain virtually unchanged from Image 1.2, but the addition of six new lightbar pages adds the ability to monitor and change new features which have been added to this new version.
 
-### Lightbar Defaults
+=== Lightbar Defaults
 
 During boot-up, lightbar check mark defaults are read. This allows you to configure your BBS more easily than in previous versions of Image BBS. Maybe you want to disable the `...More? (Y/n)` prompt, or debug some code with the on-screen trace function, at startup.
 
@@ -15,11 +15,11 @@ The command path is kbd:[IM], kbd:[H] `Lightbar/Alarms`, kbd:[A] `LightBar Defs`
 
 include::includes/lightbar-function-keys.adoc[]
 
-### Lightbar Functions
+=== Lightbar Functions
 
 NOTE: The decimal/hexadecimal values of each lightbar position (used for <<lightbar-interface>>) are included in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_.
 
-#### Page 1
+==== Page 1
 
 .Lightbar, page 1
 [width="100%",cols="8*^"]
@@ -79,7 +79,7 @@ When the sysop is available for chat and the user has entered a reason for chat,
 [.text-right]
 `Cht` Left: _Enter/Exit Chat Mode_
 
----
+'''
 
 `Acs` left: _Edit User`'s Access_
 
@@ -102,7 +102,7 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 
  SORRY, NO CALLS LESS THAN 1200 BPS ARE CURRENTLY BEING ACCEPTED.
 
----
+'''
 
 `Loc` left: _Local Mode (No Modem I/O)_
 
@@ -127,7 +127,7 @@ Once a user is online, you can grant them pseudo-local mode access in order to p
 [.text-right]
 `Loc` left: _Local Mode (No Modem I/O)_
 
----
+'''
 
 `Tsr` left: _Edit User`'s Time Left_
 
@@ -148,16 +148,16 @@ Adjust time remaining for the user online. The time remaining is shown in the bo
 
 Toggle Prime Time (limiting all callers to a certain time limit during peak usage hours) for every user.
 
-    * If it`'s currently Prime Time, ignore it at logon
+* If it`'s currently Prime Time, ignore it at logon
     * If not, enable Prime Time
 
 If no Prime Time is designated for your BBS, this has no effect.
 
----
+'''
 
 `Cht` left: _Enter/Exit Chat Mode_
 
-Enters chat mode when a user is online. It first displays the customizable "`entering chat`" message. By default it is:
+Enters chat mode when a user is online. It first displays the customizable "`entering chat`" message. By default, it is:
 
 ```
  * Entering Chat Mode *
@@ -165,7 +165,7 @@ Enters chat mode when a user is online. It first displays the customizable "`ent
 
 then allows the sysop and user to type anything they wish back and forth to each other for the duration of the chat.
 
-Pressing kbd:[f7] again ends chat mode, displaying the customizable "`exiting chat`" message. By default it is:
+Pressing kbd:[f7] again ends chat mode, displaying the customizable "`exiting chat`" message. By default, it is:
 
 ```
 * Exiting Chat Mode *
@@ -185,7 +185,7 @@ The command path to edit the chat messages is kbd:[IM], kbd:[I] `Misc Features`,
 
 `Cht` right: _Disable Modem Input_
 
----
+'''
 
 `New` left: _Disallow New Users_
 
@@ -197,7 +197,7 @@ They are told that the BBS is not accepting new users at this time.
 At the BBS console`'s idle screen, if no keys are hit or no incoming calls are detected, after a certain time period the screen will go blank to prevent screen burn-in.
 The screen remains off until a key is hit or  an incoming call is detected.
 
----
+'''
 
 `Prt` left: _Print Spooling_
 
@@ -207,7 +207,7 @@ Sends all text output to the printer and the screen.
 
 Prints all log entries to the printer as well as the disk log.
 
----
+'''
 
 `U/D` left: _Disable U/D Section_
 
@@ -219,7 +219,7 @@ They are told the area is closed temporarily.
 300 baud users cannot access the UD/UX area.
 They are told that they do not have access to that area at this time.
 
-#### Page 2
+==== Page 2
 
 .Lightbar, page 2
 [width="100%",cols="8*^"]
@@ -243,7 +243,7 @@ TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] 
 
 // TODO Add `Toggle Linefeeds` option to `i/lo.login`
 
----
+'''
 
 `Ans` left: _ANSI Color Enable_
 
@@ -257,7 +257,7 @@ These are a standardized way to set character colors, plus "`screen management`"
 
 The cursor controls can be used with the new _Graphic Menu_ system, if it`'s enabled.
 
----
+'''
 
 `Exp` left: _Expert Mode Enable_
 
@@ -269,7 +269,7 @@ Disables users from calling twice in a row. If a user tries, they are told:
 
  Sorry, no back-to-back calls allowed. Try Again Later!
 
----
+'''
 
 `Unv` left: _No Immediate U/D Credits_
 
@@ -281,7 +281,7 @@ Disables users from calling twice in a row. If a user tries, they are told:
 
 Enables asking the user whether they wish to log off after a file transfer is complete.
 
----
+'''
 
 `Trc` left: _On-Screen Trace Enable_
 
@@ -299,7 +299,7 @@ TIP: When enabled, execution can be slowed down with the kbd:[Ctrl] key to read 
 Enables the BBS to periodically update its clock from a Creative Micro Designs real-time clock.
 This can be useful when the BBS runs in VICE and emulation speed slows down due to CPU speed or operating system load issues.
 
----
+'''
 
 `Bel` left: _Local Bells Enable_
 
@@ -309,7 +309,7 @@ Enables playing the bell sound from the console.
 
 Disables playing the beep sound from the console.
 
----
+'''
 
 // 28
 
@@ -321,7 +321,7 @@ If enabled, users have access to NetMail commands, can send NetMail
 
 _(BBS controlled)_ If enabled, an alarm has occurred to perform NetMail processing.
 
----
+'''
 
 `Mac` left: _Macros On/Off_
 
@@ -338,7 +338,7 @@ The command path to edit the macros is kbd:[IM], kbd:[N] `Base Editors`, kbd:[G]
 
 Disables the use of the Message Command Interpreter in the BBS text editor.
 
-#### Page 3
+==== Page 3
 
 .Lightbar, page 3
 [width="100%",cols="8*^"]
@@ -361,7 +361,7 @@ If the user requests more unanswered chat pages than there are `s.chat _x_` scre
 [.text-right]
 `Cht` left: _Enter/Exit Chat Mode_
 
----
+'''
 
 `Mor` left: _More Prompt On_
 
@@ -380,7 +380,7 @@ Most keys (kbd:[Home] or kbd:[Ctrl+Q] being fairly standard) resume output.
 
 While text output is paused, `P` displays in the bottom status line, between the current time and time remaining.
 
----
+'''
 
 `Frd` left: _Full-Color Read Disable_
 
@@ -392,7 +392,7 @@ NOTE: This lightbar position is a homage to Fred Dart, Image BBS support guru an
 
 `Frd` right: _Undefined_
 
----
+'''
 
 `Sub` left: _Message Bases Closed (SB)_
 
@@ -402,7 +402,7 @@ When enabled, users cannot access the sub-boards.
 
 When enabled, users cannot access the General Files section.
 
----
+'''
 
 `Res` left: _System Reserved (Default PW)_
 
@@ -415,7 +415,7 @@ You can set the reservation for kbd:[N]one (which clears the reservation), kbd:[
 This is usually set during the Network Maintenance period.
 If a call connects during this time, they are told to call back when network transfers are done.
 
----
+'''
 
 `Mnt` left: _Zero_ `tr%` _at_ `Hit Backspace`
 
@@ -430,7 +430,7 @@ If the sysop is around and sees it happen, they can zero `tr%` to reset the time
 
 When enabled, the BBS will not answer an incoming call.
 
----
+'''
 
 `Mnu` left: _Is User in Menu Mode?_
 
@@ -440,7 +440,7 @@ _(BBS controlled)_ The Graphic Menu system uses this flag to check whether the u
 
 If enabled, Graphic Menus are available to users.
 
----
+'''
 
 `Xpr` left: _Enable Express Logon_
 
@@ -450,7 +450,7 @@ If enabled, when the user first connects to the BBS, they have the option kbd:[X
 
 If enabled, the user will see a file called `s.detect` at login instead of a specific message about their graphics mode.
 
-#### Page 4
+==== Page 4
 
 .Lightbar, page 4
 [width="100%",cols="8*^"]
@@ -467,7 +467,7 @@ For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mod
 
 `Em3` right: _Undefined_
 
----
+'''
 
 `Sc2` left: _Disable 2nd Security Check_
 
@@ -475,7 +475,7 @@ If enabled, the user is only prompted for their account password, not their firs
 
 `Sc2` right: _Undefined_
 
----
+'''
 
 `Scp` left: _SuperCPU Present_
 
@@ -485,7 +485,7 @@ If enabled, the CMD SuperCPU is connected to the system.
 
 If enabled, the CMD SuperCPU is operating in 20 mHz mode.
 
----
+'''
 
 `Alt` left: _Alt last 10 callers display_
 
@@ -493,7 +493,7 @@ If enabled, this displays the idle screen last ten callers list in different col
 
 `Alt` right: _Undefined_
 
----
+'''
 
 `Trb` left: _Disable Troubleshooting Mode_
 
@@ -501,7 +501,7 @@ If enabled, the programmable window will not display variable values for debuggi
 
 `Trb` right: _Undefined_
 
----
+'''
 
 `DCD` left: _Invert DCD Signal_
 
@@ -523,7 +523,7 @@ This can be checked for in BASIC using `&,52,$3c,3:if a% then ...`.
 
 ====
 
----
+'''
 
 `DSR` left: _DCD/DSR select_
 
@@ -539,13 +539,13 @@ If enabled, show data being received/transmitted in receive/transmit windows.
 
 TIP: At higher bits per second rates, the data is not shown to achieve maximum throughput.
 
----
+'''
 
 `$3e` left: _Undefined_
 
 `$3e` right: _Undefined_
 
-#### Pages 5-7
+==== Pages 5-7
 
 .Lightbar, page 5
 [width="100%",cols="8*^"]
@@ -567,7 +567,7 @@ TIP: At higher bits per second rates, the data is not shown to achieve maximum t
 
 Pages 5-7 are undefined and are available for your own use.
 
-#### Page 8
+==== Page 8
 
 .Lightbar, page 8
 [width="100%",cols="8*^"]
@@ -579,49 +579,49 @@ Pages 5-7 are undefined and are available for your own use.
 
 `At1` right: _Default Alarm 1 Trigger_
 
----
+'''
 
 `At2` left: _Default Alarm 2 Enable_
 
 `At2` right: _Default Alarm 2 Trigger_
 
----
+'''
 
 `At3` left: _Default Alarm 3 Enable_
 
 `At3` right: _Default Alarm 3 Trigger_
 
----
+'''
 
 `At4` left: _Default Alarm 4 Enable_
 
 `At4` right: _Default Alarm 4 Trigger_
 
----
+'''
 
 `At5` left: _Default Alarm 5 Enable_
 
 `At5` right: _Default Alarm 5 Trigger_
 
----
+'''
 
 `At6` left: _Default Alarm 6 Enable_
 
 `At6` right: _Default Alarm 6 Trigger_
 
----
+'''
 
 `At7` left: _Default Alarm 7 Enable_
 
 `At7` right: _Default Alarm 7 Trigger_
 
----
+'''
 
 `At8` left: _Default Alarm 8 Enable_
 
 `At8` right: _Default Alarm 8 Trigger_
 
-### Alarm Triggers
+=== Alarm Triggers
 
 _Alarm Triggers_ are used to modify other checkmarks on the lightbar.
 Using them, you can enable or disable BBS features at specific times of the day or night.
@@ -643,11 +643,11 @@ If you do not need this feature, disable this alarm.
 The command path is kbd:[IM], kbd:[H] `Lightbar/Alarm`, kbd:[B] `Alarms`.
 ====
 
-### NetMail Alarms
+=== NetMail Alarms
 
 _NetMail Alarms_ define up to 24 times of the day or night that NetMaint takes place.
 
-### Lightbar Interface: `&,52` [[lightbar-interface]]
+=== Lightbar Interface: `&,52` [[lightbar-interface]]
 
 `&,52,_position_,_mode_`
 

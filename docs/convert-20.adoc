@@ -1,7 +1,7 @@
 :experimental:
 :toc:
 
-## Convert a 2.0 System
+== Convert a 2.0 System
 
 NOTE: This is the recommended way of converting 2.0 to 3.0.
 Other ways may work but have not been tested.

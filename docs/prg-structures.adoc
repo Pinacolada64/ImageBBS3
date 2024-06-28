@@ -4,7 +4,12 @@
 
 // https://github.com/Pinacolada64/ImageBBS/blob/534f39f7cbe3f8c896725bc1db94fa23416ecacf/v2/docs/%26%20commands.txt
 
-## Structures [[structures]]
+== Structures [[structures]]
+
+////
+[source, basic]
+10 rem hello **is this bold?** it is not
+////
 
 ====
 NOTE: 8/1/2022: Documentation under heavy development and discovery.
@@ -31,9 +36,7 @@ You can now hold all this information within a _single_ struct array, performing
 
 You can store multiple types of data in a single struct--each category is stored in a separate "`column`" called a _field_--and perform operations on the data using `&,60` or `&,68`, and various sub-commands.
 
-Performing a struct search operation is much faster than searching through an array in BASIC with a `for...next` loop.
-
-### Static Arrays
+=== Static Arrays
 
 The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can`'t change once the struct is defined.
 // (unless the string is concatenated to or redefined entirely).
@@ -126,7 +129,7 @@ Here is a byte-by-byte map of the struct we designed.
 
 // Representation of user data struct
 
-."`User Data`" Struct Data Storage
+."`User Data`" Struct Data Storage [[user-data-storage]]
 [cols="12"]
 [%autowidth]
 |===
@@ -217,16 +220,13 @@ Here is a byte-by-byte map of the struct we designed.
 ^| _unused_
 |===
 
-
 TIP: Because the unused byte 37 is _not_ on an even element boundary (the previous element is an odd number of bytes), it cannot be used.
 
 Since the ID# is an integer anyway, it would be best to use an integer array.
 The definition would look like this:
 
 [source,basic]
-----
 dim u%(18)
-----
 
 TIP: Remember that arrays start at element 0!
 There are 19 bytes in this struct, 0-18.
@@ -237,13 +237,11 @@ To do so, you would need a 2-dimensional array.
 This would change the `dim` statement to:
 
 [source,basic]
-----
 dim u%(18,x-1)
-----
 
 ====
 
-### Some New Terminology
+=== Some New Terminology
 
 // Ryan added this next bit, and changed previous PRG 3.0 terminology, e.g., s%(2,n) ("element,byte") to "field,record"
 
@@ -260,25 +258,23 @@ NOTE: _Record_ and _field_ are specified in what most people and programs would 
 Sorry, there`'s no way around this (that we`'re aware of).
 ====
 
-#TODO#: a visualization of fields in a record.
-
 .Fields in Records
 [width="100%",options="header",cols="6"]
-|====================
+|====
 ^| `u%(_field,record_)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4
 | Record 0 [`u%(0,0)`] 5+^| -- _configuration information_ --
 // | Record 1 2+^| a \| b ^| c ^| d ^| e
 | Record 1 ^| a ^| b ^| c ^| d ^| e
 | Record 2 2+^| f \| g ^| h ^| i ^| j
 | Record 3 2+^| k \| l ^| m ^| n ^| o
-|====================
+|====
 
 ====
 TIP: Record `0`, field `0` [_e.g._, `u%(0,0)`] is often used to hold the number of records in the struct.
 Record `0` may hold additional information in other fields during the lifetime of the struct.
 ====
 
-### Using Structs
+=== Using Structs
 
 Now down to the important part: how to use all of this!
 The struct system is called with either `&,60,_sub-function_,...` or `&,68,_sub-function_,...`.
@@ -286,7 +282,7 @@ The struct system is called with either `&,60,_sub-function_,...` or `&,68,_sub-
 There are currently 14 sub-functions supported by the struct routines.
 They are documented below.
 
-### Numeric Values and Structs
+=== Numeric Values and Structs
 
 The array used with structs is either an integer or floating point type.
 To put numeric values into--or get numeric values from--a struct requires no special struct calls.
@@ -310,9 +306,9 @@ You may use code similar to the following examples:
 TIP: Integer arrays can store values from `-32768` to `32767`.
 ====
 
----
+'''
 
-### `&,60,0` Put String
+=== `&,60,0` Put String [[put-string]]
 
 Copies a specified string variable (up to a specified length) into a field of a record of a struct.
 
@@ -328,12 +324,8 @@ _struct%(field, record)_: the struct name, field and record you`'re putting the 
 _string$_: the string variable name to assign the struct data to.
 
 .Put String Into Struct
-====
 [source,basic]
-----
 &,60,0,20,u%(1,1),na$
-----
-====
 
 [start=1]
 . Put a string:
@@ -361,9 +353,9 @@ _string$_: the string variable name to assign the struct data to.
 
 `?type mismatch&#160;&#160;error`: if the parameter _string$_ is not a string variable #FIXME#
 
----
+'''
 
-### `&,60,1` Get String
+=== `&,60,1` Get String
 
 This copies data from a struct into a specified string variable.
 
@@ -373,25 +365,20 @@ This copies data from a struct into a specified string variable.
 
 .Parameters
 
-The parameters _length_, _struct%(field, record)_, and _string$_ are the same as `Put String` above.
+The parameters _length_, _struct%(field, record)_, and _string$_ are the same as those used by <<put-string>>.
 
 .Get String From Struct
-====
 [source,basic]
-----
 &,60,1,20,u%(11,2),a$
-----
-====
 
 .User Data, Part 2
 ====
 In our earlier example user data struct, to access the third user’s password, you would do this:
 
- &,60,1,20,u%(11,2),a$
+[source]
+&,60,1,20,u%(11,3),a$
 
-.Parameters
-
-// .Format 1
+TIP: Remember, the first record starts at `0`, but generally this holds configuration information.
 
 [%autowidth]
 [%header]
@@ -403,35 +390,11 @@ In our earlier example user data struct, to access the third user’s password, 
 | `a$` | into the string variable `a$`.
 |===
 
----
-
-////
-.Format 2
-`**&,60,1,**20,u%(11,2),a$`
-
-[start=1]
-. Get a string...
-
-`&,60,1,**20,**u%(11,2),a$`
-
-[start=2]
-. of at most 20 bytes...
-
-`&,60,1,20,**u%(11,2),**a$`
-
-[start=3]
-. from the array `u%()`, record `2`, field `11`...
-
-`&,60,1,20,u%(11,2),**a$**`
-
-[start=4]
-. into the string variable `a$`
-////
 ====
 
----
+'''
 
-### `&,60,2` Load Struct from Disk
+=== `&,60,2` Load Struct from Disk [[load-struct]]
 
 Loads the specified struct on disk into an array.
 
@@ -441,17 +404,18 @@ Loads the specified struct on disk into an array.
 
 .Parameters
 
-``&,60,2,0,``: Required parameters.
+``&,60,2,0,``: Required parameters to perform the call.
 
-_struct%(field, record)_,: #FIXME#
+_struct%(field, record)_,: The struct name `struct%()` to hold the ``load``ed data, plus the `record` and `field` to start ``load``ing to.
 
-_filename$_,: #FIXME#
+_filename$_,: the filename (either a string literal or string variable) to ``load``.
 
-_device_: #FIXME#
+_device_: the device number to ``load`` the struct data from.
 
 .Setup
 Assign the variable `dr` to the Image drive number desired, and `gosub 3`.
 This returns _device_ (`dv%`).
+This also returns the drive prefix, `dr$`.
 
 ====
 TIP: For our example, we`'ll set `dr=6`, since `u.` files are stored on Image drive 6.
@@ -460,17 +424,11 @@ TIP: For our example, we`'ll set `dr=6`, since `u.` files are stored on Image dr
 [source,basic]
 dr=6:gosub 3
 
-This also returns the drive prefix, `dr$`.
-
 .Load Struct from Disk
-====
 [source,basic]
-----
 &,60,2,0,u%(0,0),dr$+"u.handles",dv%
-----
-====
 
-.Parameters
+.&,60,2 Parameters
 
 [start=1]
 . Load a struct:
@@ -484,11 +442,12 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 [start=2]
 . Use the `u%()` array (load to record `0`, field `0`):
 
-`&,60,2,0,**u%(0,0)**,dr$+"u.handles",dv%`
+[source]
+&,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 ====
 NOTE: You do not have to load the file at the start of the array.
-The starting record and field are specified in the array notation.
+The starting record and field are specified in the array notation: `struct%(_field_,_record_)`.
 This example loads the file `u.handles` into the `u%()` array, starting at the beginning of the array `(0,0)`.
 It could load starting at `(0,5)`--record `5`, field `0`--or anywhere else you want, as long as it is within the bounds of the struct`'s ``dim``ensions.
 ====
@@ -496,16 +455,17 @@ It could load starting at `(0,5)`--record `5`, field `0`--or anywhere else you w
 [start=3]
 . Use the drive prefix `dr$`, plus the fictitious `"u.handles"` filename:
 
-`&,60,2,0,u%(0,0),**dr$+"u.handles"**,dv%`
+[source]
+&,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 [start=4]
 . `dv%` is the device number to load the struct from:
 
 `&,60,2,0,u%(0,0),dr$+"u.handles",**dv%**`
 
----
+'''
 
-### `&,60,3` Save a Struct to Disk
+=== `&,60,3` Save a Struct to Disk
 
 This saves a struct to a specified disk file.
 
@@ -514,7 +474,7 @@ This saves a struct to a specified disk file.
 ``&,60,3,0,`` _struct%(field, record)_, _filename$_, _device_
 
 .Setup
-#TODO# use `include::` from `&,60,2` setup
+// TODO: use `include::` from `&,60,2` setup
 
 .Parameters
 
@@ -567,9 +527,9 @@ In our example, 3 records &#215; 38 bytes:
 [start=5]
 . device `dv%`, set by `gosub 3` before the struct save call
 
----
+'''
 
-### `&,60,4` Put Date
+=== `&,60,4` Put Date
 
 Put an 11-digit date string into a struct (converted from 6 bytes as stored in  Binary Coded Decimal).
 
@@ -589,7 +549,6 @@ _string$_: the 11-digit date string (either a literal string or string variable?
 ====
 [source,basic]
 an$="10412208234":&,60,4,0,u%(3,0),an$
-====
 
 #TODO#: Explain example.
 
@@ -770,6 +729,7 @@ _test_: the object to test for
 .+.UD from Image 2.0
 ====
 NOTE: This is still being researched.
+====
 
 The following code scans the U/D directory for entries which have an upload date older than `ld$`, setting bits `$4f` on `ud%(3,1)` (if the entry matches?):
 
@@ -802,9 +762,9 @@ Can apparently be a string name, or number of an array?
 
 `b%(a,b)`: the array containing the comparisons matching `test`.
 
----
+'''
 
-### `&,60,7` Sort Struct
+=== `&,60,7` Sort Struct
 
 Sort a string array (only two-dimensional?).
 Does not work with numeric arrays.
@@ -823,11 +783,10 @@ _start_: Element to start sorting at?
 ====
 [source,basic]
 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next:p=n-10
-====
 
----
+'''
 
-### `&,60,8` Scan Numbers
+=== `&,60,8` Scan Numbers
 
 Scan through a specified field in a struct for non-zero values.
 `a%` returns how many non-zero values there are.
@@ -889,9 +848,9 @@ NOTE: More research needed.
 
 `a%(a)`: one-dimensional array of results, from `a%(1--a)`
 
----
+'''
 
-### `&,60,9` Scan Sum
+=== `&,60,9` Scan Sum
 
 .Syntax
 
@@ -915,9 +874,9 @@ None yet.
 
 `a%`: #FIXME#: total of values in struct?
 
----
+'''
 
-### `&,60,10` Copy Record [[copy-record]]
+=== `&,60,10` Copy Record [[copy-record]]
 
 Copy one record from one struct to a record in another struct.
 
@@ -985,9 +944,9 @@ No info yet.
 
 None yet.
 
----
+'''
 
-### `&,60,12` Game Scan
+=== `&,60,12` Game Scan
 
 Unknown purpose.
 
@@ -1011,9 +970,9 @@ Unknown purpose.
 
 None yet.
 
----
+'''
 
-### `&,60,13` Text Read
+=== `&,60,13` Text Read
 
 Not sure yet. Read a file into a struct?
 

@@ -1,7 +1,7 @@
 :icons: font
 :experimental:
 
-### `im` Subroutines
+=== `im` Subroutines
 
 This chapter documents `im` routines.
 
@@ -79,7 +79,9 @@ Returns: ::
 
 | gosub&#160;3
 | gosub&#160;1010
-| Closes, then re-opens command channel (LFN 15) on the device/drive requested by setting the variable `dr` explained above.
+| Closes, then re-opens command channel (LFN #15) on the device/drive requested by setting the variable `dr` explained in line `2`.
+
+This routine exits via `return`.
 
 | gosub&#160;4
 | gosub&#160;1011
@@ -591,7 +593,7 @@ Dimensions variables similar to Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn
 | gosub&#160;310
 | _none_
 | Check for `^?`, the command history.
-If so, `goto 315`.
+If so, `goto 315` <<line-315>>.
 
 | gosub&#160;311
 | _none_

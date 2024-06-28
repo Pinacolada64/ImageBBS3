@@ -1,8 +1,8 @@
-## File Formats
+== File Formats
 
 :icons: font
 
-### Introduction
+=== Introduction
 
 ====
 .Option Lists
@@ -15,7 +15,7 @@ means that of the three options presented, option 1 _or_ option 2 _or_ option 3 
 
 // NOTE: argh icon:exclamation[] icon:download[]
 
-#### `e.data`
+==== `e.data`
 
 `e.data` is a RELative file containing BBS configuration information, as well as BBS statistics.
 
@@ -92,7 +92,7 @@ The record size is 31 bytes.
 | 58 | `nc` | Credits for new user | 
 |====================
 
-#### s.m.protos
+==== s.m.protos
 
 This is a file which describes the file transfer protocols available to a user.
 
@@ -134,7 +134,7 @@ This is a file which describes the file transfer protocols available to a user.
 | Protocol display name | `d4$`
 |====================
 
-#### nm.P.count
+==== nm.P.count
 
 // Larry:
 `nm.P.count` stores dates, times and tracking numbers of netsub messages sent out from your board.

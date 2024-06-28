@@ -1,5 +1,5 @@
 :experimental:
-### Lightbar Function Keys
+=== Lightbar Function Keys
 
 The function keys kbd:[f1]-kbd:[f8] are used to switch pages, move the "`lit`" portion of the lightbar, and enable/disable individual lightbar positions, shown in the table below:
 

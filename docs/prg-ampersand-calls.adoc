@@ -75,7 +75,9 @@ TIP: Using the `r$` variable is actually an easy way to write data containing ca
 
 But there`'s something even handier available.
 
-==== Encoded Function Keys
+// TODO: write this example
+
+==== Encoded Function Keys [[encoded-function-keys]]
 
 Some special characters are difficult (or impossible) to type in BASIC.
 Or, they might cause problems while reading disk files.
@@ -798,7 +800,7 @@ _Examples:_
 
 `&,9,4`: output `d1$` to status window
 
----
+'''
 
 '''
 
@@ -987,7 +989,7 @@ Changes an all uppercase string to mixed case.
 
 `an$="THE CHIEF":&,15,1:&an$` -> `The Chief`
 
----
+'''
 
 '''
 
@@ -998,7 +1000,7 @@ Decodes quoted function key characters into readable equivalents.
 `i.t`::
 `an$="hostkbd:[f3]port":&,15,2:&"£v7kbd:[f6]"` -> `host:port`
 
----
+'''
 
 '''
 
@@ -1022,7 +1024,7 @@ NOTE: This function is currently being researched.
 
 '''
 
-==== `&,15,6` Scan String
+==== `&,15,6` Scan String [[scan-string]]
 
 Scan `an$` for the first occurrence of a specified character.
 You can specify the character to scan for in one of two ways:
@@ -1731,7 +1733,7 @@ _Example:_
 
  3074 &,53
 
----
+'''
 
 '''
 
@@ -1924,7 +1926,7 @@ TIP: Related string conversion functions can be found at <<convan>>.
 
 '''
 
-=== `&,66` Calculated `goto`
+=== `&,66` Calculated `goto` [[calcgoto]]
 
 `goto` line number held in `a%`.
 If you have 13 4-digit `goto` targets on a line, this can save a fair amount of RAM (and BASIC interpretation time).
@@ -2007,7 +2009,7 @@ Therefore, calculated ``gosub``s cannot be used in a `sub.*` module to call line
 
 === `&,67` copyrite
 
----
+'''
 
 '''
 
@@ -2019,7 +2021,7 @@ Certain sub-functions of `&,60` are re-directed here.
 
 '''
 
-=== `&,69` Display String on Console
+=== `&,69` Display String on Console [[display-string-on-console]]
 
 NOTE: This function will not draw PETSCII graphics characters properly.
 

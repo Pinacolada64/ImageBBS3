@@ -1,4 +1,4 @@
-# PDF Book Unicode Character Test
+= PDF Book Unicode Character Test
 Ryan Sherwood <sym.rsherwood@gmail.com>
 :doctype: book
 :toc:

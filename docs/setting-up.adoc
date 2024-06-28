@@ -1,49 +1,49 @@
 :experimental:
 
-## Setting Up
+== Setting Up
 
-### Image Drive Numbers
+=== Image Drive Numbers
 
 (((Image drive))) Image drive numbers are
 
-### Boot Disk
+=== Boot Disk
 
-### Upgrade From Previous Versions
+=== Upgrade From Previous Versions
 
-#### Upgrade From 1.2
+==== Upgrade From 1.2
 
-#### Upgrade From 2.0
+==== Upgrade From 2.0
 
-### New Setup of 3.0
+=== New Setup of 3.0
 
-#### Sysop Information
+==== Sysop Information
 
 Handle, First/Last Names, Email Address, Password
 
-#### Clock Set Method
+==== Clock Set Method
 
 * Manual
 * CMD RTC
 * Lt. Kernal
 
-#### Device/Drive Settings
+==== Device/Drive Settings
 
-#### BBS Information
+==== BBS Information
 
 BBS Name, Main Prompt, Chat Messages, NEW Credits
 
-#### RS232 Interface Type
+==== RS232 Interface Type
 
-### Shared Image BBS 3.0 Setup
+=== Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
 #TODO#: Verify the steps are in fact word-for-word duplicates.
 
-### Introducing the `IM` Configuration Editor
+=== Introducing the `IM` Configuration Editor
 
 #TODO#: Cross-reference more in-depth `IM` chapter.
 
-#### GGlabs GLink232-LT
+==== GGlabs GLink232-LT
 
 SwiftLink clone
 
@@ -51,18 +51,18 @@ SwiftLink clone
 Give URL of GGlabs order page.
 This needs work to be fully converted to ASCIIdoctor still.
 
-### Final Notes
+=== Final Notes
 
 ****
 end
 ****
 
-## Set Up Image BBS 3.0
+== Set Up Image BBS 3.0
 
 Setting up your BBS should be very simple, as long as you follow the instructions.
 We suggest you read this chapter carefully and then set up your system step by step, keeping the manual handy for reference.
 
-### Supported Hardware
+=== Supported Hardware
 
 Image BBS v3.0 was tested on the following hardware:
 
@@ -76,12 +76,12 @@ Image BBS v3.0 was tested on the following hardware:
 
 Although we have not tested this software on a great deal of other hardware, it should run with no issues on just about any hardware.
 
-### Get Started
+=== Get Started
 
 Now that you are ready to set up your Image BBS, we recommend that the first thing you do is back up the file(s) you received the BBS software in, then keep them in a safe place.
 Copying the files out of the original disk images we recommend you use `fcopy+` for all the PRG and SEQ files, and `copy-all.64l` written by Jim Butterfield for the REL files.
 
-### Designate Drives
+=== Designate Drives
 
 The Commodore 64 is designed to use up to eight devices on the serial bus.
 However, we recommend not using more than six due to current limitations of the serial bus.
@@ -137,7 +137,7 @@ Check your drive manual to see what the limitation is.
 
 _Drive space_ refers to blocks used, while _blocks free_ refers to blocks unused on the drive.
 
-#### Image Drive Numbers
+==== Image Drive Numbers
 
 (((Image drive))) (((system disk))) The terms _Image drive_ or _system disk_ refer to six categories of files used by Image BBS for system functions.
 They are referred to by the numbers 1-6, since standard Commodore device numbers less than 8 are not typically used.
@@ -201,7 +201,7 @@ Directory files have a prefix of `d.`.
 The Program Disk contains module files--BASIC or ML programs--that load in when needed to execute functions.
 They are the main "`operating system`" of the BBS.
 
-These files have several prefixes (`i`, `sub.` and `++`), explained in more detail in the <<modules.adoc#Module Types,Module Types>>  section of this manual.
+These files have several prefixes (`i`, `sub.` and `++`), explained in more detail in the <<modules.adoc#_module_types,Module Types>>  section of this manual.
 
 They do not change, unless modified offline.
 
@@ -222,7 +222,7 @@ There are three directory entries, a little over one block per user total.
 NOTE: Device and drive numbers other than the six Image drives can be assigned to individual sub-boards in the `SB` section, U/D or U/X libraries in the `UD` or `UX` sections, and items in the `GF` section (games, text files, movie files, etc.).
 As an example, you can assign a movie file entry in the `GF` section to device 11, drive 6 instead of Image drive 1 (the `s.` disk) if you had more storage space available there, or wanted to put your movie files on a separate partition.
 
-### Configuration Options
+=== Configuration Options
 
 Image 3.0 has three methods of installation:
 
@@ -241,7 +241,7 @@ Please refer to the installation instructions for the method you intend to use.
 
 NOTE: There are <<Shared Image BBS 3.0 Setup>> steps to take no matter if you are upgrading from a previous version or a new install.
 
-#### Configure a New BBS
+==== Configure a New BBS
 
 . Configure your hard drive and/or other system hardware for your Image drive assignments.
 
@@ -257,7 +257,7 @@ You`'ll probably want two additional drives or partitions for message boards and
 [start=2]
 . Convert the three .d81 and two .d64 files to floppy disk or use some other method of getting the files onto your Image drives.
 
-##### Copy Files
+===== Copy Files
 
 Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 
@@ -291,7 +291,7 @@ TIP: If you wish to run the "`Today in History`" logon module, copy all the `tod
 
 include::includes/sub_modem-config.adoc[]
 
-#### Installation
+==== Installation
 
 #TODO#: Intro here
 
@@ -360,11 +360,11 @@ You are then prompted for the RS232 interface type you have connected to the C64
 
 Hit a key, and you are taken to the System Idle screen.
 
-### Set the Clock
+=== Set the Clock
 
 If the time has been set using a real-time clock, Image performs AutoMaintenance.
 
-#### Manual Set
+==== Manual Set
 
 If not already set by a real-time clock, the status line on the bottom row of the screen continues to flash until the time is set.
 Hit kbd:[1] to set the time.
@@ -439,7 +439,7 @@ After AutoMaintenance is finished, the BBS returns to the System Idle screen.
 
 kbd:[N]o restarts the clock setting questions.
 
-### Console Login
+=== Console Login
 
 A _console login_ is when you`'re sitting in front of the C64 at the Idle Screen.
 Here`'s how to do that.
@@ -461,7 +461,7 @@ In either case:
 
 This starts a console login.
 
-### Instant Login
+=== Instant Login
 
 _Instant Login_ is used to bypass many of the activities and questions asked as a user logs on to the BBS.
 It`'s useful if a sysop wants to quickly log in, do some maintenance, then log off.
@@ -495,7 +495,7 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 [start=2]
 . When prompted, type your sysop password.
 
-### Online Configuration
+=== Online Configuration
 
 The BBS greets you with a welcome message and prompts you to select your time zone.
 
@@ -530,7 +530,7 @@ IMPORTANT:  Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] commands.
 Logging off by hitting kbd:[f7] (unchecking left `Loc`) bypasses the module which updates the last 10 callers and causes errors in the time used during the call.
 ====
 
-#### Shared Image BBS 3.0 Setup
+==== Shared Image BBS 3.0 Setup
 
 These steps are followed if you`'re upgrading from a previous version or setting up a new Image BBS.
 They help set up features specific to Image 3.0.
@@ -539,7 +539,7 @@ They help set up features specific to Image 3.0.
 . At the Main Prompt, type kbd:[IM].
 You are taken to the Image BBS Configuration Editor.
 
-##### Introducing `IM`
+===== Introducing `IM`
 
 `IM` is a cursor-driven "`graphical`" menu system which allows a sysop to configure virtually any aspect of their BBS while still online.
 To navigate it, you can either:
@@ -555,7 +555,7 @@ You configure a number of options throughout the next section.
 
 TIP: Shared Image BBS 3.0 Setup
 
-#### Access Groups
+==== Access Groups
 
 Select kbd:[E] `Access Groups`.
 The BBS loads the access group editor, then access group information.
@@ -587,7 +587,7 @@ Otherwise:
 .. Edit any other parameters you wish to.
 .. When finished, select kbd:[N] `Quit` to go back to the Configuration Editor.
 
-#### Modem Configuration
+==== Modem Configuration
 
 . Select kbd:[J] `Modem Config`.
 
@@ -606,7 +606,7 @@ Otherwise, select the port number of the Commodore 64 you are configuring.
 .. Answer `Continue?:` kbd:[Y]es
 .. Answer `Are You Sure?:` kbd:[Y]es
 
-##### GGlabs GLink232-LT
+===== GGlabs GLink232-LT
 
 include::includes/im-gglabs-modem-config.adoc[]
 
@@ -614,7 +614,7 @@ When finished configuring your modem, select kbd:[X] `Exit Modem Config` and ans
 
 The remaining configuration options are custom settings for your BBS, not discussed as part of the installation process.
 
-## Introducing RELedit
+== Introducing RELedit
 
 RELedit is the program that helps you define various parameters of message bases and file transfer areas.
 Using it, you can assign:
@@ -768,7 +768,7 @@ TIP: You might want to move this record to the end of the file, since the first 
 .. Edit record 1, replacing the data in it with a number equal to 1 less than the number of macros in `e.i.macros`.
 .. You can then use kbd:[DC] to scratch `e.i.macros`, since it is not needed anymore.
 
-### Final Notes [[final-notes]]
+=== Final Notes
 
 From here, explore and become familiar with the new features.
 

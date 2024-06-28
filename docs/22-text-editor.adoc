@@ -373,7 +373,7 @@ TIP: Set the right margin with kbd:[.C]olumns first, if you wish.
 |kbd:[U]n-indent |Moves text one column to the left, if possible
 |===
 
-#### Scale
+==== Scale
 
 A related command is kbd:[.#] `Scale`.
 This displays a 40-column scale for manually centering text, among other purposes.

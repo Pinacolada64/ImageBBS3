@@ -1,10 +1,10 @@
 :experimental:
-## Running Modules
+== Running Modules
 
 Like Image 1._x_ (1._x_ stands for 1.0--1.3) BBS before it, Image 3.0 can run modules from the main prompt by typing kbd:[R].
 However, there are more types of modules available in this version of Image.
 
-### Image 1._x_ Emulation Mode [[emulation-mode]]
+=== Image 1._x_ Emulation Mode [[emulation-mode]]
 
 When kbd:[R] is typed from the main prompt, Image checks to see whether you are 
 in Image 1._x_ emulation mode (when the left side of `Em3` on the 
@@ -13,7 +13,7 @@ If this is enabled, an "`emulation layer`" loads, which uses Image 1._x_`'s `im`
 
 If Image 1._x_ emulation mode is disabled, you can load Image 3.0 `i` modules. There are several types of these, with differing filename prefixes and starting line numbers. The following section discusses the additional prompts specifying options for which module type to run.
 
-### Command Classes
+=== Command Classes
 
 First, you are prompted for the _command class_. A number, 3-5, is required here. The command class specifies which module type will be loaded, and which line number it starts executing at.
 
@@ -26,7 +26,9 @@ First, you are prompted for the _command class_. A number, 3-5, is required here
 | 5     | `sub.` | `60000` 
 |====================
 
-### Device,Drive Prompt
+// TODO: Class 6
+
+=== Device,Drive Prompt
 
 Next, you are prompted for the device and drive to run the module from.
 
@@ -38,7 +40,7 @@ Depending on the Image 1._x_ emulation status, system disk 5 is either your `i` 
 
 TIP: In Xetec`'s Lt. Kernal hard drive DOS terminology, the drive number refers to the _Logical Unit_ or LU; in Creative Micro Designs`' (CMD`'s) DOS, it is the _partition_).
 
-### Value of Variable
+=== Value of Variable
 
 Each type of module uses a different variable within the BASIC code to control which subroutine in the module executes. You are prompted for the value of the variable here.
 
@@ -57,7 +59,8 @@ If there is no DOS error, the module should execute.
 
 TIP: A `file not found` DOS error is written to the system error log (`e.errlog`, viewable with kbd:[VF]) as a `load error`.
 
-### Module Types
+[#_module_types]
+=== Module Types
 
 .Module Types
 [options="header,autowidth"]

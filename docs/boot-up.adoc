@@ -1,13 +1,14 @@
 :toc: left
 
-## Boot Up
+== Boot Up
 
 include::includes/boot-command.adoc[]
 
-### Startup Files
-### Idle Screen Display
-### Status Line
-#### Status Indicators
+=== Startup Files
+
+=== Idle Screen Display
+=== Status Line
+==== Status Indicators
 
 .Function Indicators
 [options="autowidth",options="header"]

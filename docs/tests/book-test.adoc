@@ -14,15 +14,15 @@ Test Edition
 You have to go back to 1991...
 
 [preface]
-### Special Thanks
+=== Special Thanks
 
 [preface]
-### In Memoriam
+=== In Memoriam
 
 ((Al DeRosa)) wrote these.
 
 [preface]
-### Acknowledgments
+=== Acknowledgments
 
 I`'d like to thank the Academy...
 
@@ -37,33 +37,33 @@ print"hello, world"
 [quote, Douglas Adams, The Hitchiker`'s Guide to the Galaxy]
 In the beginning, the Universe was created. This has made countless people very unhappy, and was widely regarded as a bad move.
 
-### The Sysadmin Problem
+=== The Sysadmin Problem
 
 Get stuff out of my head and onto paper in case I am ever hit by a bus.
 
 == Product Information
 
-### Why a New Version?
+=== Why a New Version?
 
-### What`'s New
+=== What`'s New
 
-#### Sysop Features
+==== Sysop Features
 
-#### User Features
+==== User Features
 
-#### Programming Features
+==== Programming Features
 
-### Support Channels
+=== Support Channels
 
-#### NISSA BBSes
+==== NISSA BBSes
 
 List them, addresses. Mention cbbsoutpost.
 
-#### Social Media
+==== Social Media
 
 Facebook, Brent's forum, Google Hangouts?
 
-#### imagebbs.org
+==== imagebbs.org
 
 // Jay Theriot runs this
 
@@ -72,7 +72,7 @@ Having https://www.github.io available for this preview helps immensely in the m
 
 Ryan is writing these.
 
-### License, No Warranty
+=== License, No Warranty
 
 MIT license? https://mit-license.org/
 Only trouble is "`for profit`" phrasing.
@@ -82,9 +82,9 @@ include::03-supported-hardware.adoc[]
 
 == Modem/Telnet Bridge Setup
 
-### Telnet BBSes and Bridge Software
+=== Telnet BBSes and Bridge Software
 
-#### `tcpser 1.1rc1`
+==== `tcpser 1.1rc1`
 
 (((RS232 bridge, tcpser 1.1rc1)))
 
@@ -100,7 +100,7 @@ ____
 
 #TODO#: mention jbrain GitHub repo since FozzTexx and geneb fixes are in 1.1rc1
 
-#### `tcpser4j`
+==== `tcpser4j`
 
 (((RS232 bridge, tcpser4j))) ((tcpser4j)) is
 
@@ -110,13 +110,13 @@ Advantages:
 * Play sound on connect
 * Run multiple virtual modems in a single instance
 
-### BBS Server
+=== BBS Server
 
 (((RS232 bridge, BBS Server)))
 
 BBS Server is a graphical program that does many of the same things as tcpser.
 
-### Virtual Serial Port Emulator
+=== Virtual Serial Port Emulator
 
 (((RS232 bridge, VSPE))) is a commercial program. (Al)
 
@@ -124,29 +124,29 @@ BBS Server is a graphical program that does many of the same things as tcpser.
 
 == Set Up Image BBS 3.0
 
-### Designate Drives
+=== Designate Drives
 
-### Copy Files
+=== Copy Files
 
 (((im)))
 
 IMPORTANT: Copy `im` to Program disk for error recovery.
 
-### Boot Disk
+=== Boot Disk
 
-### Upgrade From Previous Versions
+=== Upgrade From Previous Versions
 
-#### Upgrade From 1.x
+==== Upgrade From 1.x
 
-##### Modify `bd.data`
+===== Modify `bd.data`
 
 ((bd.data)) is a configuration file.
 
-#### Upgrade From 2.0
+==== Upgrade From 2.0
 
-### New Setup of 3.0
+=== New Setup of 3.0
 
-#### Sysop Information
+==== Sysop Information
 
 (((configuration, new BBS)))
 
@@ -154,7 +154,7 @@ IMPORTANT: Copy `im` to Program disk for error recovery.
 
 Handle, First/Last Names, Email Address, Password
 
-#### Clock Set Method
+==== Clock Set Method
 
 (((BBS clock, setting, manual)))
 
@@ -164,15 +164,15 @@ Handle, First/Last Names, Email Address, Password
 
 Manual, CMD RTC, Lt. Kernal
 
-#### Device/Drive Settings
+==== Device/Drive Settings
 
-#### BBS Information
+==== BBS Information
 
 (((configuration, BBS parameters)))
 
 BBS Name, Main Prompt, Chat Messages, NEW Credits
 
-#### RS232 Interface Type
+==== RS232 Interface Type
 
 (((RS232 interfaces, types, user port)))
 
@@ -180,19 +180,19 @@ BBS Name, Main Prompt, Chat Messages, NEW Credits
 
 Two types, user port and expansion (cartridge) port.
 
-### Shared Image BBS 3.0 Setup
+=== Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
 #TODO#: Verify the steps are in fact word-for-word duplicates.
 
-### Introducing the `IM` Configuration Editor
+=== Introducing the `IM` Configuration Editor
 
 // concealed index entry
 (((configuration editor, IM)))
 
 #TODO#: Cross-reference more in-depth `IM` chapter.
 
-#### GGlabs GLink232-LT
+==== GGlabs GLink232-LT
 
 (((RS232 interfaces, GGlabs GLink232-LT)))
 
@@ -202,37 +202,37 @@ SwiftLink clone
 Give URL of GGlabs order page.
 This needs work to be fully converted to ASCIIdoctor still.
 
-### Final Notes
+=== Final Notes
 
 == Boot Up
 
-### Startup Files
+=== Startup Files
 
-### The Screen Mask
+=== The Screen Mask
 
-### The Status Line
+=== The Status Line
 
-#### Status Indicators
+==== Status Indicators
 
-### Set the Time
+=== Set the Time
 
-#### Automatically From Real-Time Clocks
+==== Automatically From Real-Time Clocks
 
 CMD HD, CMD FD 2000/4000, Lt.Kernal Clock
 
-#### Manually From Console
+==== Manually From Console
 
-### The Idle Screen
+=== The Idle Screen
 
 Waiting for a call...
 
 (((idle screen, explanation)))
 
-#### Idle Screen Command Keys
+==== Idle Screen Command Keys
 
 (((idle screen, command keys)))
 
-##### Activity/Idle Logs
+===== Activity/Idle Logs
 
 (((idle screen, activity/idle log)))
 
@@ -240,11 +240,11 @@ Waiting for a call...
 
 #TODO# More stuff here later.
 
-#### Idle Screen Additional Keys
+==== Idle Screen Additional Keys
 
 (((idle screen, command keys, adding functions)))
 
-### The Lightbar
+=== The Lightbar
 
 (((lightbar, explanation)))
 (((lightbar label, Sys)))
@@ -291,27 +291,27 @@ Waiting for a call...
 (((lightbar label, At7)))
 (((lightbar label, At8)))
 
-### Lightbar Defaults
+=== Lightbar Defaults
 
 (((lightbar, defaults)))
 
-### Lightbar Function Keys
+=== Lightbar Function Keys
 
 (((lightbar, function keys)))
 
-### Lightbar Functions
+=== Lightbar Functions
 
 (((lightbar, functions)))
 
-#### Alarm Triggers
+==== Alarm Triggers
 
 (((lightbar, alarm trigger)))
 
-#### NetMail Triggers
+==== NetMail Triggers
 
 (((lightbar, NetMail trigger)))
 
-### Lightbar Interface: `&,52`
+=== Lightbar Interface: `&,52`
 
 (((lightbar, programming interface)))
 
@@ -319,95 +319,95 @@ This probably should be in the Programmer`'s Reference Guide.
 
 == Log On
 
-### Console Logon
+=== Console Logon
 
 (((log on, console)))
 
-### Remote Logon
+=== Remote Logon
 
 (((log on, remote)))
 
-### Graphics Modes
+=== Graphics Modes
 
 (((log on, graphics modes)))
 
-### Logon Options
+=== Logon Options
 
 (((log on, options)))
 
-#### Instant Logon
+==== Instant Logon
 
 (((log on, options, instant logon)))
 
-#### Logoff
+==== Logoff
 
 (((log on, options, log off)))
 
-#### Mail Check
+==== Mail Check
 
 (((log on, options, mail check)))
 
-#### Redetect Graphics Mode
+==== Redetect Graphics Mode
 
 (((log on, options, redetect graphics mode)))
 
 // #### #TODO# Toggle Linefeeds
 
-### BBS Reservations
+=== BBS Reservations
 
-#### Network Reservation
+==== Network Reservation
 
-#### System Reservation
+==== System Reservation
 
-### `NEW` Users
+=== `NEW` Users
 
 (((users, NEW)))
 
-### `RES` Users
+=== `RES` Users
 
 (((users, RES)))
 
-### `VISITOR` Account
+=== `VISITOR` Account
 
 (((users, VISITOR)))
 
 This is checked for.
 
-### Security Questions
+=== Security Questions
 
 (((log on, security question)))
 
-#### Disable Second Security Question
+==== Disable Second Security Question
 
 (((log on, security question, disabling second)))
 
-### Login Modules
+=== Login Modules
 
 (((log on, modules)))
 
-### The Screen Mask After Logon
+=== The Screen Mask After Logon
 
 (((log on, screen mask)))
 
-### What Now?
+=== What Now?
 
 Learn about WF, RELedit, etc.
 
 == Run Module
 
-### Image 1._x_ Emulation Mode
+=== Image 1._x_ Emulation Mode
 
-### Command Classes
+=== Command Classes
 
-### Device,Drive Prompt
+=== Device,Drive Prompt
 
-### Value of Variable
+=== Value of Variable
 
-### Module Types
+=== Module Types
 
-#### Edit System Info Files
+==== Edit System Info Files
 
-#### RELedit: Edit Sub-Boards/Libraries
+==== RELedit: Edit Sub-Boards/Libraries
 
 IMPORTANT: Make these the first 2 chapters.
 Maintenance and configuration are really important sysop tasks.
@@ -418,164 +418,164 @@ They will be transferred to both the #TODO# _Command Reference Appendix_ and rel
 
 == Main Prompt Maintenance Commands
 
-### `CP`    Online file copier
+=== `CP`    Online file copier
 
-### `CP3`   Enhanced file copier
+=== `CP3`   Enhanced file copier
 
-### `DE`    Direct download editor (works with `DX`)
+=== `DE`    Direct download editor (works with `DX`)
 
-### `ECS`   Extended Command Set Editor
+=== `ECS`   Extended Command Set Editor
 
-### `ED`    User Account Editor
+=== `ED`    User Account Editor
 
-### `IM`    Image Configuration Editor
+=== `IM`    Image Configuration Editor
 
-### `MENU`  Access-Aware Menu Editor
+=== `MENU`  Access-Aware Menu Editor
 
 Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way,  the user only sees commands they have access to).
 The access levels have to be set for each command.
 
-### `MU`    Message Move Utility
+=== `MU`    Message Move Utility
 
-### `NW`    Edit/Kill/View/Weed Netwall
+=== `NW`    Edit/Kill/View/Weed Netwall
 
-### `R`     Run i* or +.* File
+=== `R`     Run i* or +.* File
 
-### `RELRD` RELative File Reader
+=== `RELRD` RELative File Reader
 
-### `RF`    Read PRG/SEQ/REL Files
+=== `RF`    Read PRG/SEQ/REL Files
 
 Written by X-TEC
 
-### `RP`    Read Program File
+=== `RP`    Read Program File
 
-### `RS`    Reserve an Account
+=== `RS`    Reserve an Account
 
-### `SF`    Sysops File Editor
+=== `SF`    Sysops File Editor
 
 Works with `i/lo-question`, the sysop questionaire login module.
 
-### `UU`    User View (Graphic Menu)
+=== `UU`    User View (Graphic Menu)
 
-### `VL`    Variable List
+=== `VL`    Variable List
 
 == All Level Maintenance Commands
 
-### `BFx,y` Blocks Free
+=== `BFx,y` Blocks Free
 
-### `CA`    Add Credits To User
+=== `CA`    Add Credits To User
 
-### `DCx,y` Disk Command
+=== `DCx,y` Disk Command
 
-### `DRx,y` Disk Directory
+=== `DRx,y` Disk Directory
 
-### `FG`    Force Garbage Collect
+=== `FG`    Force Garbage Collect
 
-### `ME`    Change ID to Another User
+=== `ME`    Change ID to Another User
 
-### `MM`    Memory Management
+=== `MM`    Memory Management
 
-### `RDx,y` Read SEQ File
+=== `RDx,y` Read SEQ File
 
-### `RS` Reserve an Account
+=== `RS` Reserve an Account
 
-### `VF` View Feedback + Logs
+=== `VF` View Feedback + Logs
 
-### `WF` Write/Edit File
+=== `WF` Write/Edit File
 
 #FIXME: Missing from menu#
 
-### `ZZ` Toggle Pseudo-Local Mode
+=== `ZZ` Toggle Pseudo-Local Mode
 
-### AutoWeed
+=== AutoWeed
 
 Remove users who haven`'t called in a specified time limit.
 
-### Nightly AutoMaint
+=== Nightly AutoMaint
 
-### Hourly NetMaint
+=== Hourly NetMaint
 
 == Main Level Commands
 
-### `CM` Credit Mall
+=== `CM` Credit Mall
 
-### `DX` Direct Download
+=== `DX` Direct Download
 
-### `JA` Jerk Award
+=== `JA` Jerk Award
 
-### `UB` User Biographies
+=== `UB` User Biographies
 
 == Account Configuration
 
-### `AT` C/G-ASCII-ANSI Mode Translation
+=== `AT` C/G-ASCII-ANSI Mode Translation
 
-### `EP` Edit Parameters
+=== `EP` Edit Parameters
 
-#### `I` Account Information
+==== `I` Account Information
 
-#### `P` Terminal Parameters
+==== `P` Terminal Parameters
 
-### `LD` Last Call Date
+=== `LD` Last Call Date
 
-### `MN` Toggle Cursor Menu Mode
+=== `MN` Toggle Cursor Menu Mode
 
-### `MP` Toggle "...More (Y/n)?" Prompt
+=== `MP` Toggle "...More (Y/n)?" Prompt
 
-### `MX` Make/Edit Personal Macros
+=== `MX` Make/Edit Personal Macros
 
-### `PM` Toggle Prompt Mode
+=== `PM` Toggle Prompt Mode
 
-### `PS` Personal Signatures
+=== `PS` Personal Signatures
 
-### `PW` Change Your Password
+=== `PW` Change Your Password
 
-### `TZ` Select a Time Zone
+=== `TZ` Select a Time Zone
 
-### `XP` Toggle Expert Mode
+=== `XP` Toggle Expert Mode
 
 == All Level Commands
 
-### `?`	Help Menus
+=== `?`	Help Menus
 
-### `BA` Board Activity Register
+=== `BA` Board Activity Register
 
-### `C`	Chat Request/Chat Mode
+=== `C`	Chat Request/Chat Mode
 
-### `CF` System Configuration
+=== `CF` System Configuration
 
-### `F`	Feedback
+=== `F`	Feedback
 
-### `LG` Activity Log
+=== `LG` Activity Log
 
-### `LN` List NetNodes/Show Maps
+=== `LN` List NetNodes/Show Maps
 
-### `NU` New User Message
+=== `NU` New User Message
 
-### Log Off
+=== Log Off
 
-#### `O` Regular Logoff
+==== `O` Regular Logoff
 
-#### `O!` Instant Logoff
+==== `O!` Instant Logoff
 
-#### `O%` Save Last Call Date
+==== `O%` Save Last Call Date
 
-#### `O%!` Instant + Save Last Call Date
+==== `O%!` Instant + Save Last Call Date
 
-### `QM` Quick Mail
+=== `QM` Quick Mail
 
-### `ST` Status
+=== `ST` Status
 
-### `SY` Read a Saying
+=== `SY` Read a Saying
 
-### `T` Time and Date
+=== `T` Time and Date
 
-### `TT` Top Ten Users
+=== `TT` Top Ten Users
 
-### Command Stacking
+=== Command Stacking
 
 `^` between commands executes multiple commands in one string.
 
-### Command Queue
+=== Command Queue
 
 `^?` displays the last ten commands you`'ve entered.
 
@@ -583,389 +583,389 @@ Remove users who haven`'t called in a specified time limit.
 
 `^^` executes previous command again.
 
-### Enter/Change Subsystems
+=== Enter/Change Subsystems
 
 If while the user is in one subsystem and types another subsystem command, kbd:[Q] reloads previous subsystem.
 
 == `SB` Sub-Boards
 
-### Message Base System
+=== Message Base System
 
-### Special Interest Groups (SIGs)
+=== Special Interest Groups (SIGs)
 
-### Move to Another Sub-Board
+=== Move to Another Sub-Board
 
-### `L`  `Lx` List Sub-Boards
+=== `L`  `Lx` List Sub-Boards
 
-### `Sx` `SA` `SN` Scan Bulletins
+=== `Sx` `SA` `SN` Scan Bulletins
 
-#### Bulletin Status Indicators
+==== Bulletin Status Indicators
 
-##### ``--- \*NEW* \*NRB*``
+===== ``--- \*NEW* \*NRB*``
 
-### `A`  `Ax` About Bulletins
+=== `A`  `Ax` About Bulletins
 
-### `R`  `RA` `RN` Read Bulletins
+=== `R`  `RA` `RN` Read Bulletins
 
-#### End-of-Bulletin Menu
+==== End-of-Bulletin Menu
 
-##### `Return` Read Next Message
+===== `Return` Read Next Message
 
-##### `R`  Respond Publicly to Thread
+===== `R`  Respond Publicly to Thread
 
-##### `P`  Respond Privately to Original Poster
+===== `P`  Respond Privately to Original Poster
 
-##### `Px` Respond Privately to Responder #x
+===== `Px` Respond Privately to Responder #x
 
-##### `O`  Read Entire Thread Over
+===== `O`  Read Entire Thread Over
 
-##### `x`  Read from Response #x
+===== `x`  Read from Response #x
 
-##### `Q`  Quit RA or SA
+===== `Q`  Quit RA or SA
 
-##### `N`  New Response Rescan
+===== `N`  New Response Rescan
 
-#### Sysop Commands
+==== Sysop Commands
 
-##### `K`  Kill This Bulletin
+===== `K`  Kill This Bulletin
 
-##### `F`  Freeze or Unfreeze Bulletin
+===== `F`  Freeze or Unfreeze Bulletin
 
-### New Messages
+=== New Messages
 
-### `P` Post New Bulletins
+=== `P` Post New Bulletins
 
-#### `^` Frozen Bulletins
+==== `^` Frozen Bulletins
 
-### `Kx` Kill Threads
+=== `Kx` Kill Threads
 
-### `Ex` Edit Bulletins
+=== `Ex` Edit Bulletins
 
-#### Subop Commands
+==== Subop Commands
 
-##### `KO` / `KA` Kill Old/Kill All Messages
+===== `KO` / `KA` Kill Old/Kill All Messages
 
-### Anonymous/Password/Non-Anonymous Boards
+=== Anonymous/Password/Non-Anonymous Boards
 
 == Upload/Download Subsystem
 
-### Move to Another Library
+=== Move to Another Library
 
-### `PR`    Upload/Download Protocol
+=== `PR`    Upload/Download Protocol
 
-### `U`     Single File Upload
+=== `U`     Single File Upload
 
-### `UM`    Upload Multiple files
+=== `UM`    Upload Multiple files
 
-### `D`     Single File Download
+=== `D`     Single File Download
 
-### `DM`    Download Multiple Files
+=== `DM`    Download Multiple Files
 
-### `L  Lx` List Files
+=== `L  Lx` List Files
 
-### `Kx Ex` Kill Directory Entry/Scratch File
+=== `Kx Ex` Kill Directory Entry/Scratch File
 
-### `Ex`    Edit File Details
+=== `Ex`    Edit File Details
 
-### `Rx`    Read SEQuential/PRoGgram Files
+=== `Rx`    Read SEQuential/PRoGgram Files
 
-### `Vx`	Validate Files
+=== `Vx`	Validate Files
 
-### Copy/Move Files
+=== Copy/Move Files
 
-### Subops
+=== Subops
 
-### `UX`  Full Disk eXchange Libraries
+=== `UX`  Full Disk eXchange Libraries
 
-#### Free UD/UX library
+==== Free UD/UX library
 
 == Electronic Mail Subsystem
 
-### `#`, `Return` Read E-mail
+=== `#`, `Return` Read E-mail
 
-### `D` Delete e-mail
+=== `D` Delete e-mail
 
-### `FR` Personal file storage
+=== `FR` Personal file storage
 
-### `L` List e-mail
+=== `L` List e-mail
 
-### `R` `Rx` Respond to a Message
+=== `R` `Rx` Respond to a Message
 
-### `S` Send Private E-mail
+=== `S` Send Private E-mail
 
-### `V` Verify User`'s E-mail
+=== `V` Verify User`'s E-mail
 
-### `VE` Verify/Edit E-mail
+=== `VE` Verify/Edit E-mail
 
-### NetMail Commands
+=== NetMail Commands
 
-#### `LN` List Active Nodes
+==== `LN` List Active Nodes
 
-#### `NA` List All Nodes
+==== `NA` List All Nodes
 
-#### `NIx` Node _x_ Information
+==== `NIx` Node _x_ Information
 
-#### `NM` Network Node Map
+==== `NM` Network Node Map
 
-#### `NS` Send NetMail
+==== `NS` Send NetMail
 
-### Sysop Commands
+=== Sysop Commands
 
-#### `FM` Write/Erase Forced E-mail
+==== `FM` Write/Erase Forced E-mail
 
-#### `SL` Read NetMail Sysop Log
+==== `SL` Read NetMail Sysop Log
 
-#### `VL` Read NetMail Transfer Log
+==== `VL` Read NetMail Transfer Log
 
 == News Subsystem
 
-### `A` Add a news file
+=== `A` Add a news file
 
-### `R`, `Return` Read next news item
+=== `R`, `Return` Read next news item
 
-### `K`, `Kx` Kill news files
+=== `K`, `Kx` Kill news files
 
-### `E`, `Ex` Edit news files
+=== `E`, `Ex` Edit news files
 
-### `L`, `Lx` List news files
+=== `L`, `Lx` List news files
 
 == `GF` General Files Libraries
 
-### Movie File Library
+=== Movie File Library
 
-### Modules Library
+=== Modules Library
 
-### RLE File Library
+=== RLE File Library
 
-### Text File Library
+=== Text File Library
 
-### `d.name` Make Subdirectory
+=== `d.name` Make Subdirectory
 
-### `A` Add a File
+=== `A` Add a File
 
-### `#` Enter a Subdirectory or run a file
+=== `#` Enter a Subdirectory or run a file
 
-### `K` `Kx` Kill a Subdirectory or File
+=== `K` `Kx` Kill a Subdirectory or File
 
-### `E` `Ex` Edit a Subdirectory or File
+=== `E` `Ex` Edit a Subdirectory or File
 
-### `L` `Lx` List Files
+=== `L` `Lx` List Files
 
 == BBS Database Subsystem
 
-### `A` Add a BBS
+=== `A` Add a BBS
 
-### `D` Display BBS notes
+=== `D` Display BBS notes
 
-### `E` Edit BBS flags
+=== `E` Edit BBS flags
 
-### `L` List BBSes
+=== `L` List BBSes
 
-### `R` Remove a BBS
+=== `R` Remove a BBS
 
 == `VB` Voting Booth Subsystem
 
-### `A` Add a Topic
+=== `A` Add a Topic
 
-### `K` Kill a Topic
+=== `K` Kill a Topic
 
-### `_#_` Vote/View Results
+=== `_#_` Vote/View Results
 
-### `L` List Topics
+=== `L` List Topics
 
 == `UL` User List Subsystem
 
-### `Q` Quick Listing
+=== `Q` Quick Listing
 
-### `R` Regular Listing
+=== `R` Regular Listing
 
 == Image Text Editor
 
-### Enter Text
+=== Enter Text
 
-### Editing Control Keys
+=== Editing Control Keys
 
-### Dot Commands
+=== Dot Commands
 
-#### New Dot Command Prefix
+==== New Dot Command Prefix
 
  /
 
-#### Line Ranges
+==== Line Ranges
 
-### `.A` Exit the editor
+=== `.A` Exit the editor
 
-### `.R` / `.M` Read what you have typed
+=== `.R` / `.M` Read what you have typed
 
-### `.L` List lines
+=== `.L` List lines
 
-### `.Q` Query buffer
+=== `.Q` Query buffer
 
-### Manipulating Text
+=== Manipulating Text
 
-#### `.B` Banner Text
+==== `.B` Banner Text
 
-#### `.C` Column width
+==== `.C` Column width
 
-#### `.D` Delete line _(range)_
+==== `.D` Delete line _(range)_
 
-#### `.E` Edit line _(range)_
+==== `.E` Edit line _(range)_
 
-#### `.Y` Move line _(range)_
+==== `.Y` Move line _(range)_
 
-#### `.Z` Copy line _(range)_
+==== `.Z` Copy line _(range)_
 
-### Editor Modes
+=== Editor Modes
 
-#### `.I` Line Insert Mode
+==== `.I` Line Insert Mode
 
-#### `.O` Line Numbering Mode
+==== `.O` Line Numbering Mode
 
-#### `.T` Text Transfer Mode
+==== `.T` Text Transfer Mode
 
-### `.J` Justify text
+=== `.J` Justify text
 
-#### ``C``enter
+==== ``C``enter
 
-#### ``E``xpand
+==== ``E``xpand
 
-#### ``I``ndent
+==== ``I``ndent
 
-#### ``P``acked
+==== ``P``acked
 
-#### ``L``eft
+==== ``L``eft
 
-#### ``R``ight
+==== ``R``ight
 
-#### ``U``n-Indent
+==== ``U``n-Indent
 
-### `.N` Starting Over
+=== `.N` Starting Over
 
-### `.F` Search for Text
+=== `.F` Search for Text
 
-### `.K` Replace Text
+=== `.K` Replace Text
 
-### WF Editor Commands
+=== WF Editor Commands
 
-#### Disk Access
+==== Disk Access
 
-##### `.G` / `.P` Get/Put File
+===== `.G` / `.P` Get/Put File
 
 IMPORTANT: Mention ``.P``ut instead of ``.S``ave required when ``.G``etting a file
 
-##### `.S` Save Text
+===== `.S` Save Text
 
-##### `.&` Read Text File
+===== `.&` Read Text File
 
-##### `.!` DOS Command
+===== `.!` DOS Command
 
-##### `.?` / `.H` Getting Help
+===== `.?` / `.H` Getting Help
 
-### Message Command Interpreter (MCI)
+=== Message Command Interpreter (MCI)
 
 == Online Terminals
 
-### Image Term
+=== Image Term
 
-#### Terminal Menus
+==== Terminal Menus
 
-##### The Phone Book
+===== The Phone Book
 
-##### File Operations
+===== File Operations
 
-### `MT` Mini Terminal
-
-[appendix]
-## Command Summary
+=== `MT` Mini Terminal
 
 [appendix]
-## Lightbar Summary
+== Command Summary
 
 [appendix]
-## Troubleshooting, Q&A
+== Lightbar Summary
 
 [appendix]
-## Offline Utilities
+== Troubleshooting, Q&A
 
-### `chksum`
+[appendix]
+== Offline Utilities
 
-### `copy-all.64l`
+=== `chksum`
+
+=== `copy-all.64l`
 
 #TODO# not included
 
-### `edata edit 3.0`
+=== `edata edit 3.0`
 
-### `fcopy+`
+=== `fcopy+`
 
-### `image reader`
+=== `image seq reader`
 
-### `image modmaker`
+=== `image modmaker`
 
-### `mcopy`
+=== `mcopy`
 
-### `renumber.49152`
+=== `renumber.49152`
 
 #TODO#: EXEC file on Lt.Kernal to renumber modules?
 
-### `sdp900705`
+=== `sdp900705`
 
-### `sdp900705.doc`
+=== `sdp900705.doc`
 
-### `set cmd hd clock`
-
-[appendix]
-## Miscellaneous BBS Modules
-
-### `i.alpha/ind`
+=== `set cmd hd clock`
 
 [appendix]
-## Credit Pool
+== Miscellaneous BBS Modules
 
-### Setup
-
-### AutoMaint Module
+=== `i.alpha/ind`
 
 [appendix]
-## Image BBS Networking
+== Credit Pool
 
-### Planning a Network
+=== Setup
 
-### Joining an Existing Network
+=== AutoMaint Module
 
-### Network Utilities
+[appendix]
+== Image BBS Networking
 
-#### `i.NM/util`
+=== Planning a Network
+
+=== Joining an Existing Network
+
+=== Network Utilities
+
+==== `i.NM/util`
 
 [appendix]
 == VICE Settings
 
 VICE is short for _Versatile Commodore Emulator_.
 
-### RS232 Options
+=== RS232 Options
 
-### Serial I/O Options
+=== Serial I/O Options
 
-#### JiffyDOS ROMs
+==== JiffyDOS ROMs
 
 #TODO# Mention http://www.go4retro.com is a licensed distributor of physical JiffyDOS and emulator ROM images.
 
-#### FD4000 ROMs
+==== FD4000 ROMs
 
 #TODO# Incorporate Jay Campey`'s Facebook post on how to set this up.
 
-### CMD HD Emulation
+=== CMD HD Emulation
 
-### Lt.Kernal Emulation
+=== Lt.Kernal Emulation
 
-#### Lt. Kernal Host Adapter Cartridge File
+==== Lt. Kernal Host Adapter Cartridge File
 
-### SuperCPU Emulation
+=== SuperCPU Emulation
 
-### RAMLink Emulation
+=== RAMLink Emulation
 
-### Python Command-Line Setup Script
+=== Python Command-Line Setup Script
 
 Written by the one, the only, jam.
 
 [index]
-## Index
+== Index

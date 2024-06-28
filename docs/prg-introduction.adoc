@@ -1,4 +1,4 @@
-## Preface
+== Preface
 
 ====
 NOTE: Preliminary start on documentation. Feedback welcome!
@@ -24,7 +24,7 @@ Happy programming!
 Additional thanks go to jam and X-Tec for editing help, and Jay Campey for pointing out several outright errors in documentation.
 ****
 
-## Introduction
+== Introduction
 
 Welcome to the first official New Image BBS Programmer’s Reference Guide.
 While there was an unofficial guide released for Image v1.2, we hoped to give SysOps something they could trust when questions arose about v3.0.
