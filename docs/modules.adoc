@@ -36,7 +36,7 @@ Depending on the Image 1._x_ emulation status, system disk 5 is either your `i` 
 - You can also type the device number, a comma, and the drive number to run a module from a specific device and drive. Devices 8-29 and drives 0-254 are supported.
 // 0-254 verified from 1.2 docs
 
-TIP: In Xetec's Lt.Kernal hard drive DOS terminology, the drive number refers to the _Logical Unit_ or LU; in Creative Micro Designs`' (CMD`'s) DOS, it is the _partition_).
+TIP: In Xetec`'s Lt. Kernal hard drive DOS terminology, the drive number refers to the _Logical Unit_ or LU; in Creative Micro Designs`' (CMD`'s) DOS, it is the _partition_).
 
 ### Value of Variable
 
@@ -100,4 +100,4 @@ Here is a list of all the BBS module types.
 |====================
 ////
 
-You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer's Reference Guide_.
+You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer`'s Reference Guide_.

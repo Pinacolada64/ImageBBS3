@@ -2,7 +2,7 @@
 
 === `&` Routines
 
-`&` is the command character which is BASIC's interface to 70 machine language routines of Image BBS.
+`&` is the command character which is BASIC`'s interface to 70 machine language routines of Image BBS.
 
 ====
 NOTE: This section is undergoing discovery of what some routines are for and how they are used.
@@ -26,7 +26,7 @@ You can substitute `&` in Image BBS to do the same thing:
 
 But unlike BASIC, after outputting this text, the cursor remains on the same line--there is no automatic carriage return printed.
 
-It's as if a semicolon (`;`) was used after the `print` statement above--this keeps the text all on one line:
+It`'s as if a semicolon (`;`) was used after the `print` statement above--this keeps the text all on one line:
 
 [source,basic]
 print"Hello ";"there!";
@@ -51,7 +51,7 @@ Sometimes an additional _linefeed_ character is needed, which keeps the cursor i
 This stairstep-looking result is what printing looks like with only a linefeed, when the terminal needed both a carriage return and a linefeed.
 Probably not the desired result.
 
-However, ``print``ing in Commodore BASIC--and our BBS in this example--doesn't need a linefeed.
+However, ``print``ing in Commodore BASIC--and our BBS in this example--doesn`'t need a linefeed.
 A carriage return is the equivalent of a carriage return plus linefeed.
 ====
 
@@ -71,15 +71,15 @@ You can now code:
 
 // TODO: data file tutorial
 
-TIP: Using the `r$` variable is actually an easy way to write data containing carriage returns to a SEQ file, as you'll see later.
+TIP: Using the `r$` variable is actually an easy way to write data containing carriage returns to a SEQ file, as you`'ll see later.
 
-But there's something even handier available.
+But there`'s something even handier available.
 
 ==== Encoded Function Keys
 
 Some special characters are difficult (or impossible) to type in BASIC.
 Or, they might cause problems while reading disk files.
-Therefore, they have been encoded using the reverse video letters seen while typing function keys when in Commodore's "`quote mode.`"
+Therefore, they have been encoded using the reverse video letters seen while typing function keys when in Commodore`'s "`quote mode.`"
 
 This eliminates a few difficulties:
 
@@ -208,10 +208,10 @@ This command causes every carriage return issued by Image BBS to be followed by 
 The values for _x_ are `0` (to disable word-wrap), or `1-9`, and `j-o` (10-15).
 
 * `£m>__x__` (set right margin).
-This command causes the system to word wrap as if the user's screen width was _x_ characters less than it really is.
+This command causes the system to word wrap as if the user`'s screen width was _x_ characters less than it really is.
 It indents the text from the right side.
 
-The use of `£m<__x__` and `£m>__x__` together allows you to make "`block indents`" of text that appear correct regardless of the user's screen width.
+The use of `£m<__x__` and `£m>__x__` together allows you to make "`block indents`" of text that appear correct regardless of the user`'s screen width.
 
 ==== MCI Commands
 
@@ -251,7 +251,7 @@ This outputs the expected
 _Floating point_ values are not integers--the value could be fractional, and the decimal point could be in any position, hence the term "`floating point.`"
 
 `&str$(h)`::
-Since `&h` isn't supported to output the value of `h`, it must be converted to a string with the `str$()` function.
+Since `&h` isn`'t supported to output the value of `h`, it must be converted to a string with the `str$()` function.
 
 TIP: `&str$(h)` is still useful if the number of digits output is greater than 5, the limit of the MCI numeric output routine.
 
@@ -454,7 +454,7 @@ poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$
 
 `poke 53252,20`: Set the input length to 20 characters.
 
-`w$=na$`: Assign the user's handle (`na$`) to `w$` (the prompt's default).
+`w$=na$`: Assign the user`'s handle (`na$`) to `w$` (the prompt`'s default).
 
 `p$="Handle"`: Set the prompt to `Handle:`.
 
@@ -1997,6 +1997,11 @@ Based on the value of `a%` (including `0`), `&,66,1` will `gosub` lines starting
 a%=3:a%=3100+a%*50:&,66,1
 
 would `gosub 3250`.
+
+[NOTE]
+Within Image BBS`'s line numbering scheme, you are limited to calling lines `1-32767`.
+Therefore, calculated ``gosub``s cannot be used in a `sub.*` module to call lines from `60000-`.
+// TODO: change &,66,1 to accept a floating point parameter
 
 '''
 

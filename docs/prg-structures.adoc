@@ -19,6 +19,8 @@ Programmed properly, structs save RAM compared to having multiple string and num
 * the block size
 * times downloaded
 * upload date and last download date
+* uploader`'s handle
+* which computer it`'s for
 
 You can now hold all this information within a _single_ struct array, performing:
 
@@ -33,7 +35,7 @@ Performing a struct search operation is much faster than searching through an ar
 
 ### Static Arrays
 
-The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can't change once the struct is defined.
+The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can`'t change once the struct is defined.
 // (unless the string is concatenated to or redefined entirely).
 
 ====
@@ -54,7 +56,7 @@ _Elements_ are the individual "`boxes`" in the array that data is held in.
 
 Strings can be stored in either a floating point array [like `a()` or `b()`], or an integer array [like `a%()` or `b%()`].
 
-* Two bytes of a string's text can be stored per element of an integer array
+* Two bytes of a string`'s text can be stored per element of an integer array
 
 * Five bytes of a floating point array, or 4 bytes... #FIXME#
 
@@ -71,7 +73,7 @@ Strings can be stored in either a floating point array [like `a()` or `b()`], or
 
 ////
 TODO: later
-Let's write a BASIC program to fill and display the elements of an integer array, and then we'll show how to refer to the elements:
+Let`'s write a BASIC program to fill and display the elements of an integer array, and then we`'ll show how to refer to the elements:
 
 .Sample Array
 #TODO#: x%(field,record)
@@ -248,13 +250,14 @@ dim u%(18,x-1)
 To refer to data in a struct, and hopefully reduce confusion about "`elements`" and "`bytes,`" the following terminology will be used:
 
 * The first number in the array notation is the _field number_ (like a field within a record of a RELative file).
-It's reccommended to be an even number since integers occupy at least two bytes.
+It`'s recommended that the field number be an even number, since integers occupy at least two bytes.
+
 * The second number is the _record number_.
 When the size of the struct is ``dim``ensioned, you use this value to address individual records within the struct.
 
 ====
 NOTE: _Record_ and _field_ are specified in what most people and programs would consider reverse order (in a database, a record is composed of fields of information).
-Sorry, there's no way around this (that we're aware of).
+Sorry, there`'s no way around this (that we`'re aware of).
 ====
 
 #TODO#: a visualization of fields in a record.
@@ -320,7 +323,7 @@ Copies a specified string variable (up to a specified length) into a field of a 
 
 _length_: the maximum string length to put into the record.
 
-_struct%(field, record)_: the struct name, field and record you're putting the string into.
+_struct%(field, record)_: the struct name, field and record you`'re putting the string into.
 
 _string$_: the string variable name to assign the struct data to.
 
@@ -450,7 +453,9 @@ _device_: #FIXME#
 Assign the variable `dr` to the Image drive number desired, and `gosub 3`.
 This returns _device_ (`dv%`).
 
-(For our example, we'll set `dr=6`, since `u.` files live on Image drive 6.)
+====
+TIP: For our example, we`'ll set `dr=6`, since `u.` files are stored on Image drive 6.
+====
 
 [source,basic]
 dr=6:gosub 3
@@ -485,7 +490,7 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 NOTE: You do not have to load the file at the start of the array.
 The starting record and field are specified in the array notation.
 This example loads the file `u.handles` into the `u%()` array, starting at the beginning of the array `(0,0)`.
-It could load starting at `(0,5)` -- record `5`, field `0` -- or anywhere else you want, as long as it is within the bounds of the struct's ``dim``ensions.
+It could load starting at `(0,5)`--record `5`, field `0`--or anywhere else you want, as long as it is within the bounds of the struct`'s ``dim``ensions.
 ====
 
 [start=3]
@@ -533,7 +538,7 @@ _bytes per record_ &#215; _number of records_
 
 (There are 38 bytes per record &#215; 3 records in the example.)
 
-NOTE: Don't forget: records start at `0`!
+NOTE: Don`'t forget: records start at `0`, which is struct configuration information.
 ****
 
 The starting record and field is specified with (as above) `u%(0,0)`.
@@ -875,7 +880,7 @@ NOTE: More research needed.
 . `rn`: Scan through `rn` records
 . `60`: the struct is 60 bytes per record
 . `a`: filter by access level `a`
-. `ud%(0,1)`: look in the `ud%(field=_0_, record=1)` (field _0_="don't care?")
+. `x1%(0,1)`: look in the `x1%(field=_0_, record=1)` (field _0_="don`'t care?")
 . `f%(_x_)`: put non-zero results in the `f%()` array
 . `1`: Start at record 1.
 
@@ -896,7 +901,7 @@ NOTE: More research needed.
 
 `size`: size of record, in bytes
 
-`struct%(field, record)`: (field="`don't care`"? #FIXME#), record to scan
+`struct%(field, record)`: (field="`don`'t care`"? #FIXME#), record to scan
 
 ====
 NOTE: This function call documentation is incomplete.

@@ -24,7 +24,7 @@ You have to go back to 1991...
 [preface]
 ### Acknowledgments
 
-I'd like to thank the Academy...
+I`'d like to thank the Academy...
 
 == Introduction
 
@@ -34,7 +34,7 @@ print"hello, world"
 
 == In the Beginning
 
-[quote, Douglas Adams, The Hitchiker's Guide to the Galaxy]
+[quote, Douglas Adams, The Hitchiker`'s Guide to the Galaxy]
 In the beginning, the Universe was created. This has made countless people very unhappy, and was widely regarded as a bad move.
 
 ### The Sysadmin Problem

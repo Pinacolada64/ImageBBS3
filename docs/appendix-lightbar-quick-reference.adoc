@@ -9,7 +9,7 @@ Each page of the lightbar has all the labels listed in a horizontal row for quic
 Beneath that are three columns with more information:
 
 * The middle column, _Label_, lists the text of the lightbar option, as well as the numbers (in decimal) used to interface with the lightbar using `&,52`.
-* The _Left_ and _Right_ columns of the table explain the lightbar function or options for that label's position.
+* The _Left_ and _Right_ columns of the table explain the lightbar function or options for that label`'s position.
 If additional  function keys are used with that lightbar option, they are listed, along with what each function key does.
 
 include::includes/lightbar-function-keys.adoc[]
@@ -45,7 +45,7 @@ Chat page bell plays continually (even while the user is doing other things) unt
 
 // row 2
 
-| *Edit User's Access*
+| *Edit User`'s Access*
 
 Change user access level (`A=_x_` on the seventh line of the screen mask), using the following function keys:
 
@@ -83,7 +83,7 @@ Can be toggled remotely with kbd:[ZZ].
 
 // row 4
 
-| *Edit User's Time Left*
+| *Edit User`'s Time Left*
 
 Change "`time still remaining`" (time left on user`'s call).
 
@@ -105,7 +105,7 @@ Change "`time still remaining`" (time left on user`'s call).
 
 | *Prime Time Enabled*
 
-Enable Prime Time if it is set up, and limit the caller's time remaining to the number of minutes set in Prime Time settings.
+Enable Prime Time if it is set up, and limit the caller`'s time remaining to the number of minutes set in Prime Time settings.
 
 // row 5
 

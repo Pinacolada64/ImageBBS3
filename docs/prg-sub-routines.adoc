@@ -26,7 +26,7 @@ This handles displaying the BBS`'s Board Activity Register statistics.
 | kbd:[MT]: Mini-Terminal
 |===
 
-NOTE: From this point on, the line numbers follow Image 1.2/2.0 `im` specifications, plus `60000` (_e.g._, Image 2.0's `1985` is renumbered to Image 3.0's `61985`).
+NOTE: From this point on, the line numbers follow Image 1.2/2.0 `im` specifications, plus `60000` (_e.g._, Image 2.0`'s `1985` is renumbered to Image 3.0`'s `61985`).
 
 [%header]
 [%autowidth]

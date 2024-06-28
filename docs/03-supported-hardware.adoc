@@ -120,15 +120,15 @@ It reads the date and time from the host operating system.
 icon:check[role=green] (((real-time clock, DS12C887))) This feature is emulated within VICE.
 
 ====
-TIP: The DS12C887 emulation has a number of addresses it can be set to in order to read the operating system's date and time  while in BASIC.
+TIP: The DS12C887 emulation has a number of addresses it can be set to in order to read the operating system`'s date and time  while in BASIC.
 While running the BBS, addresses `$d500` or `$d600` should be used.
 Other addresses conflict with either:
 
 // TODO: check LtK and DS12C887 interoperability!
 
-* the BBS's existing ML
-* a SwiftLink-232/Turbo232 cartridge's default memory addressing at `$de00`
-* _possibly_ the Lt. Kernal's host adapter; tests need to be done. (If this works, it will be a good way to set the clock on boot.)
+* the BBS`'s existing ML
+* a SwiftLink-232/Turbo232 cartridge`'s default memory addressing at `$de00`
+* _possibly_ the Lt. Kernal`'s host adapter; tests need to be done. (If this works, it will be a good way to set the clock on boot.)
 ====
 
 icon:times-circle[role=red] While test code has been written to read the RTC and set the BBS clock, it is not yet officially integrated into Image BBS.
@@ -188,7 +188,7 @@ icon:check[role=green] This hardware is emulated within VICE.
 
 (((RS232 interface, GGlabs GLink232-LT)))
 
-A clone of the Turbo232 interface, it can be ordered from https://gglabs.us/node/2057[GGLabs' store].
+A clone of the Turbo232 interface, it can be ordered from https://gglabs.us/node/2057[GGLabs`' store].
 
 icon:times-circle[role=red] This hardware is not emulated within VICE.
 

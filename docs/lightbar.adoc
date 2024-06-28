@@ -47,7 +47,7 @@ If there are multiple unanswered chat requests pending, a counter increments.
 
 If there is no file for that attempt number, the _Excessive Chat Attempt_ lightbar flag is checked.
 
-* If that is set, the user's time remaining is set to zero, and they are logged off at the earliest available opportunity.
+* If that is set, the user`'s time remaining is set to zero, and they are logged off at the earliest available opportunity.
 
 * Otherwise, the user is told `Paging Now!`, then returned to the prompt where they initiated the chat request.
 
@@ -81,7 +81,7 @@ When the sysop is available for chat and the user has entered a reason for chat,
 
 ---
 
-`Acs` left: _Edit User's Access_
+`Acs` left: _Edit User`'s Access_
 
 Change the access group of the user who is online. This changes a portion of the bottom screen mask, `A=_x_` (_A_ being short for _access_, and _x_ being the user`'s access group).
 
@@ -119,7 +119,7 @@ This is a true local login, with Sysop access enabled--as compared to a "`pseudo
 
 `Loc` right: _ZZ (Pseudo-Local) Mode_
 
-Once a user is online, you can grant them pseudo-local mode access in order to perform maintenance tasks if they don't have the *Local Maint* access flag set.
+Once a user is online, you can grant them pseudo-local mode access in order to perform maintenance tasks if they don`'t have the *Local Maint* access flag set.
 
 [.text-right]
 [underline]#Related Checkmark:#
@@ -129,7 +129,7 @@ Once a user is online, you can grant them pseudo-local mode access in order to p
 
 ---
 
-`Tsr` left: _Edit User's Time Left_
+`Tsr` left: _Edit User`'s Time Left_
 
 Adjust time remaining for the user online. The time remaining is shown in the bottom right hand corner of the screen, and is always visible.
 
@@ -148,7 +148,7 @@ Adjust time remaining for the user online. The time remaining is shown in the bo
 
 Toggle Prime Time (limiting all callers to a certain time limit during peak usage hours) for every user.
 
-    * If it's currently Prime Time, ignore it at logon
+    * If it`'s currently Prime Time, ignore it at logon
     * If not, enable Prime Time
 
 If no Prime Time is designated for your BBS, this has no effect.
@@ -253,7 +253,7 @@ Enables ANSI escape sequences to output color instead of Commodore color charact
 
 Enables ANSI graphics characters, many of which have similarities with the Commodore character set, and other special symbols for the user.
 
-These are a standardized way to set character colors, plus "`screen management`" things like scrolling, windowing, clearing to end-of-line, and more (which really aren't utilized on this Commodore 64 BBS).
+These are a standardized way to set character colors, plus "`screen management`" things like scrolling, windowing, clearing to end-of-line, and more (which really aren`'t utilized on this Commodore 64 BBS).
 
 The cursor controls can be used with the new _Graphic Menu_ system, if it`'s enabled.
 
@@ -460,7 +460,7 @@ If enabled, the user will see a file called `s.detect` at login instead of a spe
 
 `Em3` left: _Emulate Image 1.x mode_
 
-When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version's `im` calls to Image 3.0`'s `im` calls.
+When enabled, you can run Image 1._x_ `+` files, using a _redirection layer_ to point that version`'s `im` calls to Image 3.0`'s `im` calls.
 
 TIP: The main prompt kbd:[R]un command checks this lightbar flag and prompts for the appropriate module type.
 For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mode>>.
@@ -654,7 +654,7 @@ _NetMail Alarms_ define up to 24 times of the day or night that NetMaint takes p
 `position` ranges from 0-127 decimal (`$00`-`$7f` hexadecimal--for example, `&,52,$30,0` is allowed).
 
 `mode` is 0-4 as used by BASIC.
-Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Image BBS 3.0 Programmer's Reference Guide_.
+Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Image BBS 3.0 Programmer`'s Reference Guide_.
 
 [options="autowidth"]
 |====================

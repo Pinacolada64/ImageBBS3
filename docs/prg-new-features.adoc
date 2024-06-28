@@ -13,7 +13,7 @@ A few BASIC keywords have had additional parameters added to them.
 Regular Commodore DOS uses the `,1` in `load"filename",8,1` to mean "`load this file to the load address stored in the file.`"
 
 In Image BBS, the _relocate_flag_ has an expanded purpose--specifying the _segment_ of memory to load a particular file to.
-A segment is the address which a file will load into, ignoring the file's existing load address contained in the first two bytes of the file.
+A segment is the address which a file will load into, ignoring the file`'s existing load address contained in the first two bytes of the file.
 
 // TODO: make this table into an include - the other copy is in &,7
 NOTE: Currently, some segments are undefined.

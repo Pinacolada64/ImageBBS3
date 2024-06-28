@@ -18,7 +18,7 @@ Variable names made of two words are tied together with an underscore (`_`).
 
 This method differentiates _first_name_ as being separate from two variables named _first_ and _name_.
 
-The highlighted words #FIXME# and #TODO# represent things in the documentation which aren't complete yet, but are intended to be finished as soon as possible.
+The highlighted words #FIXME# and #TODO# represent things in the documentation which aren`'t complete yet, but are intended to be finished as soon as possible.
 
 Letters enclosed in rounded, shaded squares represent keys on the Commodore 64 keyboard.
 They generally are either options, or should be pressed, during a series of instructions in the manual.
@@ -85,7 +85,7 @@ x
 ====
 TIP: **Tip**
 
-This can be advanced information, or letting you know something helpful which isn't immediately obvious from what is presented on screen.
+This can be advanced information, or letting you know something helpful which isn`'t immediately obvious from what is presented on screen.
 
 .Example
 When in the Image Term phonebook, some options such as kbd:[D]ial or kbd:[E]dit allow typing either:
@@ -139,13 +139,13 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
 . kbd:[IM]: type these characters at a prompt.
 . kbd:[D] `Logon Editor`: A graphic menu option is selected by either:
-* typing kbd:[D] to select `Logon Editor` (it's a _hotkey_, so hitting kbd:[Return] to select it is not necessary)
+* typing kbd:[D] to select `Logon Editor` (it`'s a _hotkey_, so hitting kbd:[Return] to select it is not necessary)
 * using the cursor keys to move to `Logon Editor`, and kbd:[Return] to select it
 . You would follow the same procedure for the second menu option, kbd:[D] `Quicklist`.
 
 ==== Latin Junk
 
-Because I'm such a nerd:
+Because I`'m such a nerd:
 
 * _e.g._ is short for _exemplī grātiā_, meaning "`for example.`"
 

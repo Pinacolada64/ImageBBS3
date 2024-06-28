@@ -15,7 +15,7 @@ This is explained in detail in the following paragraphs.
 
 An example of a variable used for a specific purpose is `na$`.
 This variable is used to print the handle of the user online.
-Storing something for a module in this variable would cause an undesirable effect (modifying the user's handle).
+Storing something for a module in this variable would cause an undesirable effect (modifying the user`'s handle).
 Basically, these types of variables are used to control system statistics and are best left alone, only to be used to output information.
 
 Some variables are used as interfaces between the BASIC and ML, an example being `pl`.
@@ -49,7 +49,7 @@ These variables have a set purpose, but are intended to change.
 
 ### Variable
 
-This is the variable's name.
+This is the variable`'s name.
 
 ### Type
 
@@ -96,9 +96,9 @@ template:
 | icon:check[role=green]
 | User access level, `0-9`.
 
-*Read:* Get user's access level.
+*Read:* Get user`'s access level.
 
-*Write:* Set user's access level.
+*Write:* Set user`'s access level.
 
 | `af%`
 |
@@ -166,7 +166,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `ll%`
 | User
 | icon:check[role=green]
-| Line length (width of the user's screen in columns)
+| Line length (width of the user`'s screen in columns).
 
 | `mn%`
 | BBS

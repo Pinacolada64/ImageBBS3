@@ -7,7 +7,7 @@ This chapter documents `im` routines.
 
 Some routines are simply needed too often by too many modules to justify placing them in every single module.
 Subroutines are a programmer`'s greatest friend.
-The core `im` file contains many subroutines which you will find basic to your application or module's needs.
+The core `im` file contains many subroutines which you will find fundamental to writing your application or module.
 Be sure to read the xref:prg-programming-etiquette.adoc#programming-etiquette[Programming Etiquette] section for help when deciding where to place a new routine you create.
 
 // &#3020; is... interesting. looks like "blob pi"
