@@ -51,7 +51,7 @@ Facebook, Brent`'s forum, Google Hangouts?
 
 // Jay Theriot runs this
 
-Online documentation hosted there, someday. 
+Online documentation hosted there, someday.
 Having https://www.github.io available for this preview helps immensely in the meantime.
 
 Ryan is writing these.
@@ -287,7 +287,7 @@ They will be transferred to both the #TODO# _Command Reference Appendix_ and rel
 === `IM`    Image Configuration
 === `MENU`  Menu Editor
 
-Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way,  the user only sees commands they have access to).
+Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way, the user only sees commands they have access to).
 The access levels have to be set for each command.
 
 === `MU`    Message Move Utility

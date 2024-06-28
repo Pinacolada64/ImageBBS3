@@ -444,7 +444,8 @@ If enabled, Graphic Menus are available to users.
 
 `Xpr` left: _Enable Express Logon_
 
-If enabled, when the user first connects to the BBS, they have the option kbd:[X]_press Login_ available so they can skip login modules and get to the main prompt quickly.
+If enabled, when the user first connects to the BBS, they have the option kbd:[X]_press Login_ available.
+If they choose Express Login, they can skip login modules and get to the main prompt quickly.
 
 `Xpr` right: _Use `s.detect` Files_
 

@@ -309,7 +309,7 @@ Type kbd:[.T] and the editor displays:
  Editor Command:Text Transfer On
 
 Then send your buffer contents.
-Afterwards, you can use the editor normally.
+Afterward, you can use the editor normally.
 There is no need to type kbd:[.T] again to toggle Text Transfer Mode off.
 
 === Shape Your Text

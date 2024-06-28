@@ -400,8 +400,7 @@ Set `im` according to reason for calling:
 
 | gosub&#160;50
 | gosub&#160;1490
-| Prints `a$` to the daily log, unless in instant mode (`i%=1`).
-Entering this routine at line 51 ignores `i%`.
+| Writes `a$` to the daily log regardless of instant mode (`i%=1`).
 
 | gosub&#160;60
 | gosub&#160;1085
@@ -439,7 +438,7 @@ These are the equivalent of `+.MM.*` files from v1.2.
 
 | gosub&#160;79
 |
-| Loads i.module from device, drive in `dr`, then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
+| Loads `i.` module from device/drive in `dr`, then RETURNs.  (Lines 70-75 fall through to lines 76-78 then to this line before returning and executing at the appropriate line).
 
 | gosub&#160;80
 |
@@ -461,7 +460,7 @@ Otherwise, `No` is printed and `a=0`.
 
 | gosub&#160;100
 | gosub&#160;1013
-| Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (dr=5), then returns from routine.
+| Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (dr=5), then ``return``s from routine.
 This routine will also store the filename in `cm$` and output it to the Area window of the SysOp Screen.
 The "i." and drive designators are automatically added by the sub-routine.
 If the program `pr$` is already in memory, `e%` is set to 0 to signify no DOS error has occurred, and the sub-routine exits, otherwise this routine exits to line 5 to check the DOS error status.

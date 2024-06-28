@@ -490,7 +490,7 @@ The starting record and field numbers to save are specified by the numbers in th
 &,60,3,0,u%(0,0),38*3,dr$+"u.handles",dv%
 ====
 
-.Calculating Struct Size to Save
+.Calculating the Size of the Struct to Save
 ****
 The number of bytes should be calculated using the formula:
 

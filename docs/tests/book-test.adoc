@@ -453,7 +453,7 @@ Written by X-TEC
 
 === `SF`    Sysops File Editor
 
-Works with `i/lo-question`, the sysop questionaire login module.
+Works with `i/lo-question`, the sysop questionnaire login module.
 
 === `UU`    User View (Graphic Menu)
 

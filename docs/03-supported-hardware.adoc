@@ -89,7 +89,7 @@ It has many functions:
 * Kernal replacement
 * SwiftLink emulation on the II+
 
-It is available for purchase from the https://ultimate64.com/[1541 Ultimate web site].
+It is available for purchase from the https://ultimate64.com/[1541 Ultimate website].
 
 icon:times-circle[role=red] This hardware is not emulated within VICE.
 

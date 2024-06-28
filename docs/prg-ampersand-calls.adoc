@@ -349,7 +349,7 @@ NOTE: Not all of these parameters are currently understood.
 `editor`: editor flags:
 
 Each bit controls a separate function of the input routine.
-Bits may be combined together to perform multiple functions.
+Bits may be combined to perform multiple functions.
 
 .Input Line: Editor Control Bits
 [%header]
@@ -1658,7 +1658,7 @@ _Returns:_
 
 // this worked converting Lightcycles for Todd Gibson
 Check console keyboard for a keypress.
-This can also be also used from BASIC.
+This can also be used from BASIC.
 
 _Returns:_
 
@@ -2023,7 +2023,9 @@ Certain sub-functions of `&,60` are re-directed here.
 
 === `&,69` Display String on Console [[display-string-on-console]]
 
-NOTE: This function will not draw PETSCII graphics characters properly.
+====
+NOTE: This function will not draw PetSCII graphics characters properly.
+====
 
 _Parameters:_
 

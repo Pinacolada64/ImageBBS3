@@ -239,7 +239,7 @@ Option kbd:[4] is there in case you change your mind--it does a C64 cold start.
 Each method is explained separately.
 Please refer to the installation instructions for the method you intend to use.
 
-NOTE: There are <<Shared Image BBS 3.0 Setup>> steps to take no matter if you are upgrading from a previous version or a new install.
+NOTE: There are xref:_shared_image_bbs_3_0_setup steps to take no matter if you are upgrading from a previous version or a new installation.
 
 ==== Configure a New BBS
 
@@ -434,7 +434,7 @@ and you are prompted:
 
 kbd:[Y]es logs the time and date to `e.data` and sets the system clock.
 
-If a date different than the last saved timestamp was entered, Image BBS performs AutoMaintenance (nightly tasks such as rotating system logs--more tasks can be added later as desired).
+If a date different from the last saved timestamp was entered, Image BBS performs AutoMaintenance (nightly tasks such as rotating system logs--more tasks can be added later as desired).
 After AutoMaintenance is finished, the BBS returns to the System Idle screen.
 
 kbd:[N]o restarts the clock setting questions.
