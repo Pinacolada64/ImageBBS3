@@ -22,10 +22,10 @@ NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in 
 . Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your Etcetera Disk, replacing the existing files.
 . Remove all the Image 2.0 `s.*` files from your System Disk.
 
-CAUTION: What if you've written custom board entry files or login screens?
+CAUTION: What if you`'ve written custom board entry files or login screens?
 
 [start=8]
-. Copy all the `s.*` files from IMAGE 3.0 D2 to your System Disk.
+. Copy all the `s.*` files from `IMAGE 3.0 D2` to your System Disk.
 
 ****
 If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your Etcetera Disk.
@@ -40,8 +40,10 @@ include::includes/boot-command.adoc[]
 
 . Image 3.0 will perform all the necessary tasks of converting your 2.0 to 3.0 and will end up at the idle screen.
 
-NOTE: Since the 3.0 modem configuration is different from 2.0, Image BBS won't communicate with your virtual modem yet.
+====
+NOTE: Since the 3.0 modem configuration is different from 2.0, Image BBS won`'t communicate with your virtual modem yet.
 You can fix this in a later step.
+====
 
 [start=6]
 . Log on to your BBS from the console.
