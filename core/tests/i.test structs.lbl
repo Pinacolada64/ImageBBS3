@@ -2,6 +2,7 @@
 ' copied from fs driver as "i.test structs2/"
 {alpha:alt}
 {step:2}
+{assign:92	=92		} ' >>>Canceled!
 {assign:300	=300	} ' main prompt
 {assign:370	=370	} ' b$ mode: a
 
@@ -19,7 +20,7 @@
 
 {:3000}
 	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
-	gosub {:sub.setup}:gosub {:sub.struct_setup}:goto {:display_page_6}
+	gosub {:sub.setup}:goto {:display_page_6}
 
 {:sub.todo}
 	&"TODO: Finish this.{f6}":return
@@ -31,8 +32,8 @@
 {step:1}
 {number:3010}
 {:header_page_6}
-' l=line number of routine, a%=calc goto line (l+61=3141), n%=menu option chosen
-	l=3011:a%=l+n%:&,66
+' ln=line number of routine, a%=calc goto line (l+61=3141), n%=menu option chosen
+	ln=3011:a%=ln+n%:&,66
 	&"&,60,0  Put String{f6}":return
 	&"&,60,1  Get String{f6}":return
 	&"&,60,2  Load {pound}$s from Disk{f6}":return
@@ -53,9 +54,10 @@
 '  0) &,0  Output a$
 '  1) &,1  Input an$
 ' (etc.)
-	for n=0 to 13:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
-	&"(0-14, {quotation}Q{quotation}=Quit, {quotation}{question}{quotation}=List){f6}"
+	poke 970,.:for n=0 to 13:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
+	&"[0-13, Q)uit, {question} List]{f6}"
 {:prompt}
+' TODO: add "Px" for page selection
 	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
 ' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
@@ -70,14 +72,29 @@
 	return
 
 {:3100} ' &,60,0: PutString
-	gosub {:sub.todo}:return
+' &,60,0, length, struct%(field, record), string$
+	gosub {:sub.which_record}:if q or an$="" then return
+	p$="Enter String":pl=.:&,1:if an$<>"" then:&,60,0,l,s%(11,a),an$:gosub {:sub.show_string}
+	goto {:3100}
+
 {:3150} ' &,60,1: GetString
-' TODO: GetString: max length l animal name s%(11,x)
-	gosub {:sub.todo}:return
+' max length l, animal name s%(11,a)
+' &,60,1, length, struct%(field, record), string$
+	&"Get String{f6}":gosub {:sub.which_record}:if q or an$="" then return
+'	&,60,1,l,s%(11,a),an$:&"{pound}!a) {pound}v7{f6}"
+	gosub {:sub.show_string}
+	goto {:3150}
+
+{nice:10}
+{:sub.show_string}
+	&,60,1,l,s%(11,a),an$:&"{pound}!a) {pound}v7{f6}":return
+
 {:3200} ' &,60,2: Load Structure from Disk
 	gosub {:sub.todo}:return
+
 {:3250} ' &,60,3: Save Structure to Disk
 	gosub {:sub.todo}:return
+
 {:3300} ' &,60,4: Put Date
 ' 3302:
 ' choose the record to put the date in:
@@ -89,12 +106,12 @@
 {:3350} ' &,60,5: Get Date
 ' demonstrate that dates only take 3 elements/6 bytes (stored in BCD format)
 ' struct is filled with dates from sub.struct_setup
-	gosub {:sub.which_record}:if q then return
-' put random date into b$ and today's date into c$
-' TODO: demonstrate that dates only take 3 elements, 6 bytes
+	gosub {:sub.which_record}:if q or an$="" then return
+' get random date into b$ and today's date into c$
+' demonstrate that dates only take 3 elements/6 bytes because of BCD storage
 ' &,60,5,0, struct%(field, record), string$
-' FIXME: illegal quantity here, somewhere
-	&,60,5,0,s%(2,a),b$:&,60,5,0,s%(5,a),c$
+	&,60,5,0,s%(2,a),b$
+	&,60,5,0,s%(5,a),c$
 ' e.g.:
 ' ----+----+----+----+----+----+----+----+
 ' Random (Raw): 12345678901
@@ -102,7 +119,7 @@
 '  Today (Raw): 12345678901
 '       (Long): Tue Jul 12, 2022  2:36 PM
 {:3356}
-	an$=b$:&"Random":gosub {:3358}:an$=c$:&" Today"
+	an$=b$:&"Random":gosub {:3358}:an$=c$:&" Today":gosub {:3358}:goto {:3350}
 {:3358}
 	&" (Raw): {pound}v7{f6}":&,15:&"{pound}{back arrow}06(Long): {pound}v7M{f6}"
 	return
@@ -113,7 +130,7 @@
 {:3450} ' &,60,7: Sort Array
 ' TODO: call {:sub.sort_animals} somewhere
 ' TODO: check what happens after a sorted array is sorted again
-	&"Unsorted:{f6}":gosub {:sub.display_animals}
+	poke 970,.:lp=1:&"Current an$() array state (possibly unsorted):{f6}":gosub {:sub.display_animals}
 ' only example of this being used is:
 ' i/lo/tt maint:
 ' 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next
@@ -122,22 +139,41 @@
 ' is Sort Struct only *meant* to sort 2d string arrays?
 '	&"Sorted:{f6}":&,60,7,0,s%(8,1),1
 
-	&"Sorted:{f6}":&,60,7,0,a$(1,1),t
+' &,60,7, sort$(a,b), start
+	poke 970,.:for i=1 to t:&,60,7,0,an$(1,i),30-i:&"Iteration {pound}!i/30{f6}":gosub {:sub.display_animals}:if sh or rc then gosub 92:i=t
+	next:&"Final sorted array:{f6}"
 {:sub.display_animals}
 ' display string array:
-	for x=1 to t:n%=x:&"{pound}#2{pound}%n) "+a$(1,x)+"{f6}"
-	if x=24 then:&"Paused:{pound}g1{pound}h7"
+	poke 970,.:for x=1 to t:n%=x:&f$+"{pound}%n) "+an$(1,x)+"{f6}"
+'	if x=24 then:&"Paused:{pound}g1{pound}h7"
 	next:return
 
 {:3500} ' &,60,8: Scan Numbers
-	gosub {:sub.todo}:return
+' &,60,8, record_count, record_size, access, struct%(field, record), result%(1), start
+
+' 3310 &,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
+
+' 4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
+'  8192 = $2000 = %00100000 00000000
+' 16384 = $4000 = %01000000 00000000
+
+	&,60,8,s%(0,0),2,1023,s%(8,1),f%(1),1:&"Total: {pound}%a{f6}"
+	poke 970,.:if a% then for n=1 to a%:&f$+"{pound}!n: "+str$(f%(n))+"{f6}"
+	return
 
 {:3550} ' &,60,9: Scan Sum
-	&"# of records to scan (1-{pound}!t): {pound}i1":an=int(val(an$)):if an<1 or an>t then return
-	&"Summing:{f6}BASIC loop addition:{f6}"
-	x=.:for n=1 to an:y=s%(8,n):&"{pound}!y ":x=x+y:next:&"Total: {pound}!x{f6}"
+' &,60,9, record_count, record_size, struct%(field, record)
+	&"# of records to sum together (1-{pound}!t): {pound}i1":if an$="" then return
+	an=int(val(an$)):if an<1 or an>t then return
+	poke 970,0:&"Summing:{f6}BASIC loop addition:{f6}"
+	x=.:for n=1 to an:y=s%(8,n):&"{pound}#2{pound}!n: {pound}!y{f6}":x=x+y:next:&"Total: {pound}!x{f6}"
+	poke 970,.:&"ScanSum:{f6}"
+' FIXME: illegal quantity error
 ' &,60,9, number, record_size (?), struct%(field, record)
-	n%=9:gosub {:header_page_6}:&,60,9,an,11+l,s%(8,1):&"Total: {pound}%a{f6}":return
+	n%=9:gosub {:header_page_6}:&,60,9,an,2,s%(8,1):&"ScanSum Total: {pound}%a{f6}"
+	if x<>a% then:&"Does not match.{f6}"
+	if x=a% then:&"Matches.{f6}"
+	goto {:3550}
 
 {:3600} ' &,60,10: Copy Record
 	gosub {:sub.todo}:return
@@ -168,54 +204,76 @@
 'start: record to start scanning from
 '
 ' animal names are in s%(11,x)
-	&,27,2:dim a2%(t)
+'	&,27,3:dim a2%(t)
 {:reset_defaults}
-	nr=t:sr=1:op=1:fs$="okapi"
+	sr=1:nr=t:op=.:fs$="okapi"
 {:struct_11_menu}
-	b$=fs$:&"F)ind string......: {f5}{pound}$b{f5}{f6}"
-	a%=nr:&"N)umber of records: {pound}%a{f6}"
-	a%=op:&"O)peration........: {pound}%a (":if op=. then:&"regular"
+	b$=fs$:&"F)ind string......: {quotation}{pound}$b{quotation}{f6}"
+	a%=op:&"O)peration........: {pound}%a (":if op=. then:&"literal"
 	if op=1 then:&"wildcard"
-	a%=sr:&" search){f6}S)tarting record..: {pound}%a{f6:2}"
-	&"G)o{f6}R)eset defaults{f6}"
-	m=1:q=1:gosub {:sub.menu}:if m then:&,28,2:return
-	if a$="R" then:&"Resetting defaults.{f6}":goto {:reset_defaults}
-	a=-(an$="F")-2*(an$-"N")-3*(an$="O")-4*(an$="S")-5*(a$="G")
-	if a>4 then a%=3660+a*5:&,66,1:goto {:struct_11_menu}
+	a%=sr:&" search){f6}S)tarting record..: {pound}%a{f6}"
+	a%=nr:&"N)umber of records: {pound}%a{f6:2}"
+	&"G)o{f6}R)eset defaults{f6:2}[F, O, S, N, R, G, ?) Menu, M)ain Menu]{f6}"
+	pl=1:p$="Option":&,1:if an$="" or an$="M" then return
+	if an$="{question}" then {:struct_11_menu}
+	if an$="R" then:&"Resetting defaults.{f6}":goto {:reset_defaults}
+	a=-(an$="F")-2*(an$="N")-3*(an$="O")-4*(an$="S")-5*(an$="G")
+	if a then a%=3660+a*5:&,66,1
+	goto {:struct_11_menu}
 
 {nice:5}
 {:struct_11_find_string}
-' &,1,32: use input with edit mode
-	an$=fs$:w$=an$:p$="Find what":&,1,32:if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
-' NEW: convert regular ? and * to {f2} and {f7} (I think)
-	&,65,2:&an$:fs$=an$:&"(Changed.){f6}":return
+' pl=0: uppercase/lowercase; &,1,32: use input with edit mode
+	if op=1 then lp=1:&"(You may use {question} or {asterisk} in the search string.)"
+	an$=fs$:w$=an$:pl=.:p$="Find what":&,1,32
+{:struct_11_unchanged}
+	if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
+' NEW: &,65,2: convert regular ? and * to {f2} and {f7} (I think)
+' NOTE: using &,15,2 does not return results after G)o
+	&,65,2:fs$=an$:&"(Changed to {quotation}{pound}v7{quotation}.){f6}":return
 
 {nice:5}
 {:struct_11_num_records}
+	p$="Number of records to scan [1-{pound}!t}]":w$=str$(t):&,1,32:if an$="" or an$=w$ then {:struct_11_unchanged}
+	an=int(val(an$)):if an<1 or an>t then:&"Out of range.{f6}":goto {:struct_11_num_records}
+	nr=an:return
 
 {nice:5}
 {:struct_11_operation}
 	op=1-op:return
 
 {nice:5}
-{:struct_11_go}
-	&,60,11,nr,t,op,fs$,s%(11,1),a2%(0),sr
-	if a%=. then:&"(No records matching those search parameters found.){f6}":return
-' do GetString on each element of a2%()
-	&"Results ({pound}%a):{f6}":for x=1 to a%:x%=x:&,60,1,t,s%(11,a2%(x)),an$:&"{pound}%x) {f5}{pound}v7{f5}{f6}":next
+{:struct_11_starting_record}
+	p$="Starting Record":&p$+": ":gosub {:sub.which_record}:if q=. then sr=a:&p$+"{pound}!a{f6}"
 	return
 
+{nice:5}
+{:struct_11_go}
+' nr=number of records
+'  t=total records
+' op=operation (0=literal string, 1=pattern search)
+' fs$=find string
+' s%(11,1)=field/record in struct to search
+' f%(1)=array and starting element to put search results in (assuming it puts record numbers here)
+' sr=starting record
+	if db then:&"&,60,11,"+str$(nr)+",{pound}!t,"+str$(op)+",{quotation}"+fs$+"{quotation},s%(11,1),f%(0),"+str$(sr)+"{f6}"
+	&,60,11,nr,t,op,fs$,s%(11,1),f%(1),sr
+	if a%=. then lp=1:&"(No records matching those search parameters found.){f6}":return
+' do GetString on each element of f%()
+	poke 970,.:&"Results ({pound}%a):{f6}"
+' r%=element in result array
+	for x=1 to a%:x%=x:r%=f%(x):&,60,1,l,s%(11,r%),an$:&f$+"{pound}%x) {pound}%r {quotation}{pound}v7{quotation}{f6}":if rc or sh then x=a%:gosub 92
+	next:return
+
 {:struct_11_quit}
-	&,28,2:return
+'	&,28,2:return
+	return
 
 {step:2}
 {:3700} ' &,60,12: Game Scan
 	gosub {:sub.todo}:return
 
 {:3750} ' &,60,13: Text Read
-	gosub {:sub.todo}:return
-
-{:3800} ' &,60,14: Unknown
 	gosub {:sub.todo}:return
 
 {:quit}
@@ -225,9 +283,10 @@
 ' not calendar-accurate (i.e., Sept. 19th may not fall on a Tuesday of the given year, but too lazy to code it properly)
 ' we just want some random dates to sort and do comparisons on and stuff
 ' 10 d1$="32105118447"
-' random day of week, "1"..."7":
+' cycle through days of week, "1"..."7":
 '	dt$=mid$(hx$,int(rnd(1)*7)+2,1)
-	dt$=chr$(49+rnd(.)*7)
+	dw=dw+1:if dw=8 then dw=1
+	dt$=chr$(48+dw)
 ' d%: random year from 2000...(current_year):
 ' 20 y=int(rnd(1)*val(mid$(d1$,2,2))):?2000+y
 	d%=rnd(1)*val(mid$(d1$,2,2)):w=2:gosub {:sub.pad_number}
@@ -241,94 +300,140 @@
 ' random minute 00...59
 	d%=rnd(1)*59:w=2:gosub {:sub.pad_number}
 ' ----+----+----+----+----+----+----+----+
-' dt$="xxxxxxxxxxx", len=11
-' Wed May 12, 2021  2:20:17 PM
-' FIXME: it's dropping the weekday
+' Dec 20, 2004  2:34 P
+'	an$="10412208234":&,15:&an$+"{f6}"
+' Mon May 17, 2021  9:44 PM PST
+'	an$="22105178944":&chr$(4)+an$+"{f6}"
+
+' FIXME: &,15 is dropping the weekday
 '	if db then l=len(dt$):an$=dt$:&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
-	if db then an$=dt$:l=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}!l{f6}{pound}v7M{f6}"
+	if db then an$=dt$+"":l%=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}%l{f6}{pound}v7M{f6}"
 	return
 {:sub.pad_number}
 ' add to dt$ the digit 'd%'. w=1: 'd', w=2: '0d'
 	dt$=dt$+right$("0"+mid$(str$(d%),2),w):return
 
+{nice:100}
 {:sub.setup}
-' s$=string variable, saves a few bytes
-' l=starting line # for menu items
+' ln=starting line # for menu items
 	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
-	s$="Structure":l=3011
+	pr$="i.test struct"+"s"
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports true status
-	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0"
+	&,52,$38,3:db=a%:a=1-a%:b$="Debug":gosub 370:&"{pound}q0{f6}"
+' DATA pointer does need to be RESTOREd (to not read error strings in "im", I guess)
+	&,27,3:restore:read t:&"{pound}!t animals.{f6}"
+' TODO: expand to power of 2 (32)
+	if db then:&"Longest animal name:"
+' tt$(): sorted array of animals
+' l=length of longest animal name (to create proper size struct, assuming 2 chars fits in 1 element)
+	l=.:for n=1 to t:read a$:tt$(n)=a$:x=len(a$):if x>l then l=x:if db then:&" {pound}!l"
+	next:t%=t+1:dim an$(1,t%)::if db then:&"{f6}dim an$(1,{pound}%t),"
+' 11 elements of storage, plus +.5 rounds up to next whole number
+	l%=l/2+11.5:dim s%(l%,t%):if db then:&"s%({pound}%l,{pound}%t){f6}"
+' s$=string variable, saves a few bytes; f$=format string for integer variables
+	s$="Structure":f$="{pound}#2{pound}# "
 
-{:sub.struct_setup}
+' struct setup:
+
 ' struct layout:
 ' ex.: ud%(21,xn) 21=byte,xn=file #
 ' s%(byte,element) -or- s%(column,row)
 ' -or- s%(field,record)
-' s%(1,n)    | s%(2,n) | s%(5,n) | s%(8,n) | s%(11,n) and a$(1,n)
-' int        | date1   | date2   | int     | string
-' 1...n      | random  | d1$     | random  | animal name
-' &,60,6     | &,60,?  |         | &,60,8? | &,60,0       &,60,7
-' ScanStruct |         |         | ScanNum | GetString    SortArray
+' Element:  s%(1,n)    | s%(2,n) | s%(5,n) | s%(8,n) | s%(11,n) and an$(1,n)
+' Type:     int        | date1   | date2   | int     | string
+' Size:     2 bytes    | 3 bytes | 3 bytes | 2 bytes | l (longest name)
+' Range:    1...n      | random  | d1$     | random  | animal name
+' Function: &,60,6     | &,60,5  | &,60,4  | &,60,8? | &,60,0       &,60,7
+' Label:    ScanStruct | GetDate | PutDate | ScanNum | GetString    SortArray
 	if db then:&"Populating struct...{f6}"
 ' tt$() is sorted animal names from DATA statements
 ' t=total # of records in struct
 ' [using 1...t+1 instead of 0...t because some config info will be in s%(x,0)]
-' a$(1,x) is animal names array (for &,60,7 sorting purposes)
+' an$(1,x) is animal names array (for &,60,7 sorting purposes)
 ' x=current animal name length
-' l=length of longest animal name (to create proper size struct)
-' DATA pointer does need to be RESTOREd (to not read error strings in "im", I guess)
-' TODO: expand to power of 2 (32)
-	&,27,2:t=30:l=.:dim a$(1,t+1)
-	restore:if db then:&"Longest animal name:"
-	for n=1 to t:read a$:tt$(n)=a$:x=len(a$):if x>l then l=x:if db then:&" {pound}!l"
 ' s%( 0,0): t, # of animals
 ' s%(11,0): l, max length of animal names
-	next:gosub {:sub.debug_done}
-	dim s%(11+l,t+1):s%(0,0)=t:s%(11,0)=l
-' generate a set of non-repeating random numbers from 1-t:
-' 1forx=1to30:x$=x$+chr$(x):next
-' 2dim s%(30)
-' 3forx=30to1step-1:n=int(rnd(1)*x)+1
-' 4s%(x)=asc(mid$(x$,n,1)):x$=left$(x$,n-1)+mid$(x$,n+1)
-' 5?s%(x);:next
-' run
-'  6  2  26  17  28  18  25  29  7  30  21
-'   11  22  20  27  10  9  19  24  14  16
-'  3  12  5  1  8  15  13  23  4
+'	gosub {:sub.debug_done}
+	s%(0,0)=t:s%(11,0)=l
+' generate a set of unique random numbers from 1-t:
 ' ----+----+----+----+----+----+----+----+
-' Generating 30 non-repeating random numbers...
-{:sub.scramble_animals}
-	x$=""
-	if db then lp=1:&"Generating {pound}!t non-repeating random numbers..."
-	for x=1 to t:x$=x$+chr$(x):next
-	if db then:&"Scrambled list:{f6}"
-	for x=t to 1 step -1:n%=(rnd(1)*x)+1
-' trim string: remove already-picked number:
+' Generating 30 unique random numbers...
+{nice:50}
+{:sub.randomize_animals}
+	if db then lp=1:&"Generating {pound}!t unique random numbers..."
+' RL and RH are the low and high limits of the selection pool range.
+' RR is the random range; pick numbers from RL to RH
+' SR is the selection range - the number of random values to fetch.
+	rl=1:rh=t:sr=t:rr=rh-rl
+' The array so%() contains the sorted numbers in order from 1-rr.
+' The array ra%() contains the random results.
+	&,27,2:dim ra%(sr-1) ' ,so%(rr) ' already dimensioned [so%(31)]
+	poke 970,.:if db then:&"Sorted list:{f6}"
+' 1) Create a pool of values.
+	for i=0 to rr:so%(i)=i+rl:if db then t%=so%(i):&f$+"{pound}%t  "
+	next:if db then:&"{f6:2}"
+
+	if db then:&"Randomized list:{f6}"
+	for i=0 to sr-1:v%=rnd(0)*(rh-i)
+	ra%(i)=so%(v%):so%(v%)=so%(rh-i-1):if db then v%=ra%(i):&f$+"{pound}%v  "
 ' s%(8,n) = random number for &,60,9: ScanStruct
-	s%(1,x)=n%:s%(8,x)=n%:x$=left$(x$,n%-1)+mid$(x$,n%+1)
-' &,60,0: PutString: max length l animal name a$(1,n%) in s%(11,x):
-' s%(8,x): random integer
-	&,60,0,l,s%(11,x),tt$(n%):if db then a%=s%(8,n%):lp=1:&"{pound}#2{pound}# {pound}%a "
-' a$(1,x): scrambled list of animals to be sorted with &,60,7:
-	a$(1,n%)=tt$(n%):if db then:&a$(1,n%)+"{f6}"
+	s%(1,i+1)=so%(i):s%(8,i+1)=v%
+
+' &,60,0: PutString: max length l animal name tt$(1,i+1) in s%(11,i+1):
+' s%(8,i+1): random integer
+	&,60,0,l,s%(11,i+1),tt$(i+1):if db then a%=s%(8,i+1)
+'	an$(1,i+1): randomized list of animals to be sorted with &,60,7:
+'	an$(1,i+1)=tt$(n):if db then:&an$(1,i+1)+"{f6}"
 	next:gosub {:sub.debug_done}
 
+{nice:50}
 ' make some random dates
-	if db then lp=1:&"Generating {pound}!t random dates..."
+	poke 970,.:if db then lp=1:&"Generating {pound}!t random dates..."
 	for n=1 to t
 ' &,60,4: PutDate
 	gosub {:sub.make_random_date}:&,60,4,0,s%(2,n),dt$:&,60,4,0,s%(5,n),d1$
-	if n/11=int(n/11) then if db then:&"Paused:{pound}g1{pound}h7"
+'	if n/11=int(n/11) then if db then:&"Paused:{pound}g1{pound}h7"
 	next:gosub {:sub.debug_done}:return
 
+{nice:10}
 ' animals to mix up and sort with &,60,7:
 ' https://a-z-animals.com/animals/
+	data 30
 	data "anaconda","beaver","cat","dog","emu"
 	data "fox","goat","hippo","ibex","jackal"
 	data "king cobra","llama","mustang","narwhal","okapi"
 	data "penguin","quetzalcoatl","rhino","snake","tiger"
 	data "unicorn","vole","walrus","xerus","yak","zebra"
 	data "alpaca","boar","cassowary","deer"
+
+{nice:50}
+' TODO: renumber this whole module to 4000- and call these routines via 3000-
+{:sub.menu}
+{step:2}
+' on entry:
+' m=1: print M)ain Menu option
+' q=1: print ?) Help
+' l%, h%: low - high values in range of menu options (e.g., l%=0, h%=70: 0-70)
+
+' on exit:
+' m=1: M)ain menu chosen
+' q=1: ?) List chosen
+' an: value of option chosen
+' er=1: an is not within the range of l-h
+' er=0: it is within the range
+	&"[{pound}%l-{pound}%h":if q then:&", {question}) List"
+	if m then:&", M)ain Menu"
+' q: quick way of checking for menu/help...
+	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+' ...or main menu input: 'if [q|m] then <whatever>'
+	if m then m=-(an$="M")
+	er=-(an<l% or an>h%):if q+m=. then if er then gosub {:sub.out_of_range}
+	&"{f6}":return
+
+{nice:50}
+{:sub.out_of_range}
+	&"Out of range [1-{pound}!t].{f6}":return
+
 {nice:100}
 	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
