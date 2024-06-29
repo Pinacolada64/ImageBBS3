@@ -20,7 +20,9 @@ There is no need to press kbd:[Return] at the end of each line.
 The editor uses _word-wrap_, so words which extend past the edge of the screen will be erased and put at the beginning of the next line.
 
 As the sysop, you can define how many lines of text (in multiples of ten) a user can type into the editor.
-(#TODO#: Refer to User Flags for more information.)
+
+TIP: Refer to xref:prg-im-routines.adoc#user-flags,User Flags for more information.
+
 If a user is in local or pseudo-local mode, they are allowed 253 lines in the editor.
 
 The amount of free memory is kept track of.

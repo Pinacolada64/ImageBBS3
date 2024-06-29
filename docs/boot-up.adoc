@@ -16,7 +16,7 @@ include::includes/boot-command.adoc[]
 [options="autowidth",options="header"]
 |====================
 | Character | Purpose
-| `A` | Text output aborted 
+| `A` | Text output aborted
 | `G` | Garbage collection occurring
 | `I` | Interrupt occurring
 | `L` | Loading data

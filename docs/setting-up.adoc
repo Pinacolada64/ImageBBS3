@@ -38,6 +38,7 @@ BBS Name, Main Prompt, Chat Messages, NEW User Credits
 === Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
+
 // TODO: Verify the steps are in fact word-for-word duplicates.
 
 === Introducing the `IM` Configuration Editor
@@ -56,11 +57,9 @@ TODO: This will incorporate Larry`'s docs plus re-use additional information in 
 
 === Final Notes
 
-////
 ****
 end
 ****
-////
 
 == Set Up Image BBS 3.0
 
@@ -107,7 +106,7 @@ We highly recommend you use higher capacity drives, since you will find that dis
 ****
 _Device_ refers to either the physical unit, or the device number(s) assigned to the particular device (_i.e._ one device online is usually set to 8, two devices to 8 and 9, etc.).
 
-// FIXME: is this a decent description?
+#FIXME# - is this a decent description?
 
 _Drive_ refers to the number of available separate storage spaces available on a device.
 (These are like _volumes_ on Windows or Linux operating systems.)
@@ -122,10 +121,23 @@ Partition 0 means "`current partition.`"
 If you have multiple devices connected, there may either be a switch somewhere on the device to change the device number, or--in the case of CMD and Rear Admiral drives--a "`Swap`" button to change the device number in software.
 
 _Directory space_ refers to the number of directory entries possible on the drive. The limit depends on the type of disk drive.
+////
 A 1581 drive allows 296 directory entries, while an SFD 1001 allows 224, etc.
 Check your drive manual to see what the limitation is.
+////
 
-// #TODO# 1541 limit? LtK limit? Other limits?
+.Directory Space and Total Blocks Per Device
+[%header]
+[%autowidth]
+|===
+^| Device ^| Directory Space ^| Total Blocks
+<| SFD-1001    >| 224 >|      ?
+<| CBM 1541    >|  ?  >|    664
+<| CBM 1571    >|  ?  >|  1,368
+<| CBM 1581    >| 296 >|  3,160
+<| CMD FD-2000 >|  ?  >|  6,336
+<| CMD FD-4000 >|  ?  >| 12,736
+|===
 
 _Drive space_ refers to blocks used, while _blocks free_ refers to blocks unused on the drive.
 
@@ -193,7 +205,7 @@ Directory files have a prefix of `d.`.
 The Program Disk contains module files--BASIC or ML programs--that load in when needed to execute functions.
 They are the main "`operating system`" of the BBS.
 
-These files have several prefixes (`i`, `sub.` and `++`), explained in more detail in the <<modules.adoc#module-types,Module Types>> section of this manual.
+These files have several prefixes (`i`, `sub.` and `++`), explained in more detail in the <<modules.adoc#_module_types,Module Types>>  section of this manual.
 
 They do not change, unless modified offline.
 
@@ -231,19 +243,19 @@ Option kbd:[4] is there in case you change your mind--it does a C64 cold start.
 Each method is explained separately.
 Please refer to the installation instructions for the method you intend to use.
 
-NOTE: There are <<Shared Image BBS 3.0 Setup>> steps to take no matter if you are upgrading from a previous version or a new installation.
+NOTE: There are xref:_shared_image_bbs_3_0_setup steps to take no matter if you are upgrading from a previous version or a new installation.
 
 ==== Configure a New BBS
 
 . Configure your hard drive and/or other system hardware for your Image drive assignments.
 
 ****
-If you don't have a lot of storage space available, it`'s recommended to:
+If you don`'t have a lot of storage space available, it`'s recommended to:
 
 - Use separate partitions or drives for Image drives 1 (System), 2 (Mail), and 5 (Program)
 - Combine drives 3 (Etcetera), 4 (Directory) and 6 (User) in a different drive or partition
 
-You'll probably want two additional drives or partitions for message boards and Upload/Download sections.
+You`'ll probably want two additional drives or partitions for message boards and Upload/Download sections.
 ****
 
 [start=2]
@@ -273,7 +285,7 @@ Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 
 . Copy `nm.times` (PRG) from Disk 2 to your Mail Disk.
 
-. It's recommended to use `copy-all.64l`, also included on the 3.0 UTILS disk, for copying all the `e.*` files (PRG, SEQ, REL) from Disk 2 to your Etcetera Disk.
+. It`'s recommended to use `copy-all.64l`, also included on the 3.0 UTILS disk, for copying all the `e.*` files (PRG, SEQ, REL) from Disk 2 to your Etcetera Disk.
 
 ====
 TIP: If you wish to run the "`Today in History`" logon module, copy all the `today.*` files to your Etcetera Disk.
@@ -285,7 +297,7 @@ include::includes/sub_modem-config.adoc[]
 
 ==== Installation
 
-// TODO: Intro here
+#TODO#: Intro here
 
 include::includes/boot-command.adoc[]
 
@@ -346,7 +358,7 @@ When finished, Image BBS displays a message for you to read and asks you to `Hit
 
 You are then prompted for the RS232 interface type you have connected to the C64:
 
-- Enter kbd:[0] if you have an OmniTronix, GGLabs  or similar user port interface
+- Enter kbd:[0] if you have an OmniTronix, GGLabs, or similar user port interface.
 
 - Enter kbd:[1] if you have a SwiftLink, Turbo232, or a clone of these on the cartridge port.
 
@@ -426,15 +438,15 @@ and you are prompted:
 
 kbd:[Y]es logs the time and date to `e.data` and sets the system clock.
 
-If a date different from the last saved timestamp was entered, Image BBS performs AutoMaintenance (nightly tasks such as rotating system logs--more tasks can be added later if desired).
+If a date different from the last saved timestamp was entered, Image BBS performs AutoMaintenance (nightly tasks such as rotating system logs--more tasks can be added later as desired).
 After AutoMaintenance is finished, the BBS returns to the System Idle screen.
 
 kbd:[N]o restarts the clock setting questions.
 
 === Console Login
 
-A _console login_ is when you're sitting in front of the C64 at the Idle Screen.
-Here's how to do that.
+A _console login_ is when you`'re sitting in front of the C64 at the Idle Screen.
+Here`'s how to do that.
 
 ****
 _Optional:_ If the lightbar highlight is already positioned on `Loc`, you can press kbd:[f1] to go to full screen mode.
@@ -456,7 +468,7 @@ This starts a console login.
 === Instant Login
 
 _Instant Login_ is used to bypass many of the activities and questions asked as a user logs on to the BBS.
-It's useful if a sysop wants to quickly log in, do some maintenance, then log off.
+It`'s useful if a sysop wants to quickly log in, do some maintenance, then log off.
 
 The BBS copyright message is displayed, and you are prompted:
 
@@ -474,7 +486,7 @@ The BBS copyright message is displayed, and you are prompted:
 ****
 You can define sysops (yourself included) as being able to perform Instant Logins--even remotely--in a list called the _QuickList_.
 
-There aren't any users defined in QuickList when a new BBS is set up, but you can go into kbd:[IM] later and set yourself, or other users as you acquire them, to do this.
+There aren`'t any users defined in QuickList when a new BBS is set up, but you can go into kbd:[IM] later and set yourself, or other users as you acquire them, to do this.
 
 Once you have done that, users are listed here in the QuickList option.
 They just type the number of the account to log on, type their password, and they can do an Instant Login.
@@ -493,8 +505,8 @@ The BBS greets you with a welcome message.
 
 ==== Select System Time Zone
 
-You are prompted to select the BBS's time zone.
-This is so that when callers from another time zone
+You are prompted to select the BBS`'s time zone.
+This is so that when callers from another time zone call, they can see times in their own local time zone.
 
 . Select your time zone.
 
@@ -511,16 +523,22 @@ This is so that when callers from another time zone
 
 | kbd:[5]
 | Mountain Standard Time (MST)
+
+| kbd:[4]
+| Pacific Standard Time (PST)
 |===
 
-, kbd:[5]=MST, kbd:[4]=PST)
-. The BBS will display the current time and `Stack Free: 239`.
+There are other time zones as displayed in the list.
 
 ====
 NOTE: Initially, the time may be off by a few hours.
-This is because the system's time zone has not been set for the BBS clock.
+This is because the system`'s time zone has not been set for the BBS clock.
 You can fix this later, during further BBS configuration.
+====
 
+. The BBS will display the current time and `Stack Free: 239`.
+
+====
 NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`gosub` without `return`, or `for` without `next` statements) on the stack.
 ====
 
@@ -589,7 +607,7 @@ You are returned to the Configuration Editor.
 ..  If you are running on a Lt. Kernal hard drive, select kbd:[A] `Lt. Kernal Device` to set your Lt. Kernal device number.
 
 ****
-If you're upgrading from a previous version and would like custom chat entry/exit messages:
+If you`'re upgrading from a previous version and would like custom chat entry/exit messages:
 
 [start=3]
 .. Select kbd:[M] `Chat Messages` to configure your _Entering Chat_ and _Exiting Chat_ messages.
@@ -611,7 +629,7 @@ If a Lt. Kernal hard drive is configured, you are asked:
 
  Edit Modem Config for Which Port? (RETURN = 0):
 
-Select Port 0 if you don't have a multiplexed Lt. Kernal system.
+Select Port 0 if you don`'t have a multiplexed Lt. Kernal system.
 Otherwise, select the port number of the Commodore 64 you are configuring.
 ****
 
@@ -666,7 +684,7 @@ The remaining items in the `Base Editor` menu are sysop utilities for maintainin
 . Select kbd:[K] `Quit` to return to the main menu.
 . Select kbd:[Q] `Quit` to exit to the Main Prompt.
 
-Refer to <<final-notes>> for further instructions.
+Refer to <<_final_notes>> for further instructions.
 
 ////
 ### Configuration
@@ -730,7 +748,7 @@ include::im-gglabs-modem-config.adoc[]
 .. Type kbd:[H]elp for instructions on how to configure your logon modules.
 .. Configure them for your preference.
 
-IMPORTANT: If you're upgrading from 1.2 to 3.0, it`'s highly recommended you include `i/lo-email` as a forced module in your login modules.
+IMPORTANT: If you`'re upgrading from 1.2 to 3.0, it`'s highly recommended you include `i/lo-email` as a forced module in your login modules.
 This asks any user whose account is still configured with a phone number to change it to an email address.
 
 ////
@@ -761,7 +779,7 @@ If you are using a CMD RTC to set the BBS clock at boot-up, this would be a good
 [start=7]
 . Type kbd:[K] to quit back to the Configuration Editor.
 . Type kbd:[Q] to quit back to the Main Prompt.
-. If you had macros defined in your 1.2 system and don't want to keep them, delete the `e.macros` file.
+. If you had macros defined in your 1.2 system and don`'t want to keep them, delete the `e.macros` file.
 
 If you would like to convert the file, follow these steps:
 

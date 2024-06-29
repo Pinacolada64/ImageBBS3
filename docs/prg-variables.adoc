@@ -16,7 +16,7 @@ This is explained in detail in the following paragraphs.
 
 An example of a variable used for a specific purpose is `na$`.
 This variable is used to print the handle of the user online.
-Storing something for a module in this variable would cause an undesirable effect (modifying the user's handle).
+Storing something for a module in this variable would cause an undesirable effect (modifying the user`'s handle).
 Basically, these types of variables are used to control system statistics and are best left alone, only to be used to output information.
 
 Some variables are used as interfaces between the BASIC and ML, an example being `pl`.
@@ -26,7 +26,9 @@ When you set `pl` in BASIC, it causes the ML input routines to accept both upper
 The main variables that can be used sometimes are arrays.
 Depending on which subsystem you are in, the arrays may or may not be in use.
 If they are not in use, it is safe to use them.
-The only exceptions to this is `st()`, `dv%()` and `tt$()`.
+The only exceptions to this are `bf()`, `st()`, `dv%()` and `tt$()`.
+
+* `bf()` holds the blocks free count for the system disks.
 
 * `st()` holds the Board Activity Register stats; changing the values of this array should be reserved for updating the BAR stats.
 
@@ -48,7 +50,7 @@ These variables have a set purpose, but are intended to change.
 
 === Variable
 
-This is the variable's name.
+This is the variable`'s name.
 
 === Type
 
@@ -61,7 +63,7 @@ This is the variable's name.
 icon:check[role=green] indicates you can assign a value to it within your own modules.
 
 icon:times-circle[role=red] indicates the variable is maintained by either the BBS ML or BASIC modules.
-User data corruption or other unwanted side effects may occur if this variable is reassigned.
+User data corruption or other unwanted side-effects may occur if this variable is reassigned.
 
 icon:question[role=blue] means the variable may be used in some circumstances, but not in others.
 
@@ -95,9 +97,9 @@ template:
 | icon:check[role=green]
 | User access level, `0-9`.
 
-*Read:* Get user's access level.
+*Read:* Get user`'s access level.
 
-*Write:* Set user's access level.
+*Write:* Set user`'s access level.
 
 | `af%`
 |
@@ -118,7 +120,8 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `co%`
 | User
 | icon:check[role=green]
-| Computer type: `co$(co%)` is the computer name.
+| Index into the computer type string array [`co$()`].
+`co$(co%)` is the computer name.
 
 | `ct%`
 | User
@@ -164,7 +167,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `ll%`
 | User
 | icon:check[role=green]
-| Line length (width of the user's screen in columns)
+| Line length (width of the user`'s screen in columns).
 
 | `mn%`
 | BBS
@@ -212,7 +215,7 @@ template:
 [%header]
 [cols=">,^,^,<"]
 |====================
-| Variable | Type | Write | Purpose
+| Variable | Type | Use? | Purpose
 
 | `am`
 | BBS
@@ -222,14 +225,17 @@ template:
 | `bd`
 | BBS
 | icon:check[role=green]
-| BBS boot drive, used only during initialization.
+| BBS boot drive device number, used only during initialization.
 
 | `bf`
 | BBS
 |
 | Temporary blocks free count.
 
-// bu
+| bu
+|
+|
+| 
 
 | `ca`
 | BBS
@@ -277,7 +283,7 @@ template:
 | `l1`
 | BBS
 | icon:times-circle[role=red]
-| BBS reservation:
+| BBS reservation: `0`=none, `1`=one, `2`=all calls
 
 | `l2`
 | BBS
@@ -290,8 +296,17 @@ template:
 | BBS reservation:
 
 // lc
-// le
-// lf
+
+| le
+|
+|
+| Lines in text editor x10
+
+| `lf`
+| User
+| icon:times-circle[role=red]
+| Linefeed flag.
+
 // lm
 
 | `lp`
@@ -307,9 +322,19 @@ Use: Disable or enable word-wrap for `&` text output.
 // mf
 // mm
 // mw
-// nc
+
+| nc
+| BBS
+| Edit with kbd:[IM]
+| Credits given to new user.
+
 // nf
-// nl
+
+| `nl`
+| User
+|
+| Graphics mode.
+
 // nm
 
 | `nt`
@@ -413,9 +438,9 @@ General-purpose work variable.
 | icon:check[role=green]
 | A horizontal line 2 characters less than the user`'s screen width.
 
-(Also MCI variable `&#163;vj`)
+(Also MCI variable `&#163;vj`.)
 
-| am$
+| `am$`
 |
 |
 |
@@ -433,7 +458,7 @@ General-purpose work variable.
 | BBS
 | icon:check[role=green]
 | Boot drive partition/LU number.
-Used once during `im` initialization.
+Used once in `im` during boot-up, and in `i.su/config`.
 
 | `bn$`
 | BBS
@@ -442,10 +467,10 @@ Used once during `im` initialization.
 
 (Also MCI variable `&#163;v5`.)
 
-| bs$ - used once, line  3100
+| `bs$`
 |
-|
-|
+| icon:check[role=green]
+| used once in `im`, line 3100
 
 | `c1$`
 | BBS
@@ -460,7 +485,7 @@ Used once during `im` initialization.
 | `c3$`
 | BBS
 | icon:times-circle[role=red]
-| `Returning To The Editor` message (hard-coded, `im` line .
+| `Returning To The Editor` message (hard-coded, `im` line `3060`).
 
 | `cc$`
 | BBS
@@ -470,9 +495,9 @@ Used once during `im` initialization.
 (Also MCI variable `&#163;vn`.)
 
 | `ch$`
+| BBS
 |
-|
-| Copy of co$?
+| Copy of `co$` (computer name).
 
 | `cm$`
 | BBS
@@ -490,7 +515,7 @@ Equivalent to `co$(co%)`.
 | `d1$`
 | BBS
 | icon:times-circle[role=red]
-| Current time and date information in 11-digit format.
+| Current time and date information in 11-digit format, updated by BBS ML.
 
 (Also MCI variable `&#163;v0`.)
 
@@ -568,15 +593,15 @@ Strings must end in null byte (`nl$`).
 | icon:times-circle[role=red]
 | 16 hexadecimal digits: `"0123456789abcdef"`.
 
-| im$
+| `im$`
+| BBS
 |
-|
-|
+| Current `sub.*` module.
 
-| in$
+| `in$`
+| BBS
 |
-|
-|
+| Modem initialization string.
 
 | `i1$`
 | BBS
@@ -588,20 +613,19 @@ Strings must end in null byte (`nl$`).
 | icon:check[role=green]
 | ``dim``__ensioned but unused?__ Sub-board "`joined read`" string from pre-TurboREL 1.2 SB subsystem.
 
-| l1$
+// i/lo.misc:
+| `l1$`
 |
 |
 |
 
-| l2$
+| `l2$`
+| BBS
 |
-|
-|
+| System reservation: password.
 
-| l3$
-|
-|
-|
+// `l3$`
+// dimensioned but unused
 
 | `ld$`
 | User
@@ -614,7 +638,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real last name of user online.
 
-| lm$
+| `lm$`
 |
 |
 |
@@ -661,15 +685,15 @@ Used to determine whether a message is new or not.
 | icon:check[role=green]
 | Current prompt text.
 
-| p1$
-|
-|
-|
+| `p1$`
+| BBS
+| icon:times-circle[role=red]
+| `i/*` module name.
 
-| p2$
-|
-|
-|
+| `p2$`
+| BBS
+| icon:times-circle[role=red]
+| `sub.*` module name.
 
 | `ph$`
 | User
@@ -680,7 +704,7 @@ Used to determine whether a message is new or not.
 
 | `po$`
 | BBS
-|
+| 
 | Text for system main level prompt.
 
 | `pp$`
@@ -690,10 +714,10 @@ Used to determine whether a message is new or not.
 
 | `pr$`
 | BBS
-|
-| Name of current ``pr``ogram (module) in memory.
+| icon:times-circle[role=red]
+| Name of current ``pr``ogram (``i.*`` module) in memory.
 
-| pu$
+| `pu$`
 |
 |
 |
@@ -703,7 +727,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Password of current online user
 
-| `qt$`
+| `qt$` 
 | BBS
 | icon:times-circle[role=red]
 | Quotation mark [`chr$(34)`].
@@ -720,7 +744,7 @@ Used to determine whether a message is new or not.
 
 (Also MCI variable `&#163;v3`.)
 
-| sb$
+| `sb$`
 |
 |
 |
@@ -733,63 +757,55 @@ Used to determine whether a message is new or not.
 | `ti$`
 | BBS
 | icon:check[role=green]
-| C= Time-of-day clock
+| Commodore 64 Time-of-day clock
 
-| tk$
-|
-|
-|
-
-| tt$
+| `tk$`
 |
 |
 |
 
-| tz$
+| `tt$`
 |
 |
-| Time zone
+|
+
+| `tz$`
+| User
+|
+| Time zone string, _e.g._ `PST`.
 
 | `u$`
 | BBS
 | icon:times-circle[role=red]
 | Reserved for command stacking.
 
-| uf$
-|
-|
-| User flags.
+| `uf$`
+| User
+| icon:times-circle[role=red]
+| User flags: a string of 20 characters containing 19 separate access flags (flag 18 is two characters).
 
-| uu$
-|
-|
-| Command stacking.
+// TODO: See xref:_im_subroutines#_user_flags
 
-| w$
-|
-|
-| Word-wrap input.
+| `uu$`
+| BBS
+| icon:times-circle[role=red]
+| Command stacking string.
+
+| `w$`
+| BBS
+| icon:check[role=green]
+| During `&,1,32` (input string in edit mode), it displays `p$: w$`, a new line, ``p$: ``, then waits for input.
+If kbd:[Return] is hit without typing a response, you can assign `w$` to `an$` (the standard "`answer string`") via `an$=w$`.
 
 | `x$`
 | BBS
 | icon:times-circle[role=red]
-| System drive/LU designators
-// #FIXME#?
-
-| z1$
-|
-|
-| only during config
-
-| z2$
-|
-|
-| only during config
-
-| z3$
-|
-|
-| only during config
+| System drive/LU designators #FIXME#?
+ 
+| `z1$`, `z2$`, `z3$`
+| BBS
+| icon:check[role=green]
+| Only used during boot-up or BBS configuration to display information in the scrolling message area.
 
 |===
 
@@ -806,7 +822,7 @@ template:
 |====================
 | Variable | Type | Use? | Purpose
 
-| `co$(9)`
+| `co$(1-9)`
 | BBS
 | icon:check[role=green]
 | Text of computer types.
@@ -903,25 +919,41 @@ set up Image 1.2 arrays:
 return
 ////
 
-`bb$(31)`
+[cols=1m,2]
+[%header]
+|===
+| Variable | Purpose
 
-dt$(31)
+| bb$(31)
+|
 
-ed$(61)
+| dt$(31)
+|
 
-nn$(61)
+| ed$(61)
+|
 
+| nn$(61)
+|
 
-a%(61)
+| a%(61)
+|
 
-c%(61)
+| c%(61)
+|
 
-d%(61)
+| d%(61)
+|
 
-e%(31)
+| e%(31)
+|
 
-f%(61)
+| f%(61)
+|
 
-ac%(31)
+| ac%(31)
+| Access group information
 
-so%(31)
+| so%(31)
+| Subop information
+|===
