@@ -9,10 +9,10 @@
 ' zz%=8
 	pr$="i.IM":&,52,44,3:mm=a%:&,52,45,3:gm=gmanda%:fl=.:&,18,0
 {:3002}
-	a$="menu2":gosub28
-	ifflthenreturn
+	a$="menu2":gosub 28
+	if flthen return
 {:3006}
-	&,28,1:n=15:dimm%(16,n),dt$(60),ed$(60),a%(60):iftr%<1thenreturn
+	&,28,1:n=15:dimm%(16,n),dt$(60),ed$(60),a%(60):if tr%<1then return
 	&,16,.,34,m%(.,1),"A","","Macros Editor"
 	&,16,.,34,m%(.,2),"B","","Command Set"
 	&,16,.,34,m%(.,3),"C","","Payroll Editor"
@@ -30,11 +30,11 @@
 	&,16,.,34,m%(.,14),"N","","Base Editors"
 {:3034}
 	&,16,.,34,m%(.,15),"Q","","Quit"
-	gosub{:3348}:iftr%<1orlm=norlm=.then{:3042}
-	onlmgoto{:3204},{:3187},{:3208},{:3068},{:3189},{:3190},{:3206},{:3084},{:3128},{:3188}
-	onlm-10goto{:3282},{:3104},{:3044},{:3192}
+	gosub {:3348}:if tr%<1orlm=norlm=.then {:3042}
+	onlmgoto {:3204},{:3187},{:3208},{:3068},{:3189},{:3190},{:3206},{:3084},{:3128},{:3188}
+	onlm-10goto {:3282},{:3104},{:3044},{:3192}
 {:3042}
-	&,18,1:goto300
+	&,18,1:goto 300
 {:3044}
 	&,28,1:n=8:dimm%(16,n)
 	&,16,.,34,m%(.,1),"A","","Local Info"
@@ -44,60 +44,60 @@
 	&,16,.,34,m%(.,5),"E","","Connections"
 	&,16,.,34,m%(.,6),"F","","Fwd. List"
 	&,16,.,34,m%(.,7),"G","","Netwall/Grf"
-	&,16,.,34,m%(.,8),"H","","Main Menu"
+	&,16,.,34,m%(.,8),"M","","Main Menu"
 {:3062}
-	n=8:gosub{:3348}:iftr%<1orlm=norlm=.then{:3006}
-	a$="netmail":gosub{:3198}:fl=1:gosub{:3002}:fl=.:goto{:3062}
-	a$="netmail":gosub{:3198}:goto{:3062}
+	n=8:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
+	a$="netmail":gosub {:3198}:fl=1:gosub {:3002}:fl=.:goto {:3062}
+	a$="netmail":gosub {:3198}:goto {:3062}
 {:3068}
-	&,28,1:n=5:dimm%(16,n),fb%(29,15),a%(60):iftr%<1then{:3006}
+	&,28,1:n=5:dimm%(16,n),fb%(29,15),a%(60):if tr%<1then {:3006}
 	&,16,.,34,m%(.,1),"A","","Login Mods"
 	&,16,.,34,m%(.,2),"B","","Maint Mods"
 	&,16,.,34,m%(.,3),"C","","Wall Ads"
 	&,16,.,34,m%(.,4),"D","","Quicklist"
-	&,16,.,34,m%(.,5),"E","","Main Menu"
-	n=5:gosub{:3348}:iftr%<1orlm=norlm=.then{:3006}
-	a$="logon":gosub{:3198}:fl=1:gosub{:3002}:fl=.:goto{:3068}
+	&,16,.,34,m%(.,5),"M","","Main Menu"
+	n=5:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
+	a$="logon":gosub {:3198}:fl=1:gosub {:3002}:fl=.:goto {:3068}
 {:3084}
 	&,28,1:n=4:zz%=8:dimam%(3,15),m%(16,n),b$(zz%*16-1),c$(60),a%(60)
-	&"{f6}Reading Checkmark Definitions...":iftr%<1then{:3006}
-	dr=1:a$="s.lightdefs,s,r":gosub4:x=.:ife%thenclose2:&:goto{:3092}
+	&"{f6}Reading Checkmark Definitions...":if tr%<1then {:3006}
+	dr=1:a$="s.lightdefs,s,r":gosub 4:x=.:if e%then close2:&:goto {:3092}
 	forx=.to16*zz%-1:&,2,2:b$(x)=a$:next:close2:&"Done{f6}"
 {:3092}
 	&,16,.,34,m%(.,1),"A","","LightBar Defs"
 	&,16,.,34,m%(.,2),"B","","Alarms"
 	&,16,.,34,m%(.,3),"C","","NetMail Alarms"
-	&,16,.,34,m%(.,4),"D","","Main Menu"
+	&,16,.,34,m%(.,4),"M","","Main Menu"
 {:3100}
-	n=4:gosub{:3348}:iftr%<1orlm=norlm=.then{:3006}
-	a$="lightbar":gosub{:3198}:goto{:3100}
+	n=4:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
+	a$="lightbar":gosub {:3198}:goto {:3100}
 {:3104}
 	&,28,1:n=7:zz%=6:dimm%(20,n)
-	a=1:a$="System":gosub{:3124}
-	a=2:a$="E-Mail":gosub{:3124}
-	a=3:a$="Etcetera":gosub{:3124}
-	a=4:a$="Directory":gosub{:3124}
-	a=5:a$="Program":gosub{:3124}
-	a=6:a$="User":gosub{:3124}
-	&,16,.,42,m%(.,7),"G","","Main Menu"
-	n=7:gosub{:3354}:iftr%<1orlm=norlm=.then{:3006}
-	gosub{:3268}:goto{:3104}
+	a=1:a$="System":gosub {:3124}
+	a=2:a$="E-Mail":gosub {:3124}
+	a=3:a$="Etcetera":gosub {:3124}
+	a=4:a$="Directory":gosub {:3124}
+	a=5:a$="Program":gosub {:3124}
+	a=6:a$="User":gosub {:3124}
+	&,16,.,42,m%(.,7),"M","","Main Menu"
+	n=7:gosub {:3354}:if tr%<1orlm=norlm=.then {:3006}
+	gosub {:3268}:goto {:3104}
 {:3124}
 	b$=right$("   "+str$(dv%(a)),3)+","+mid$(str$(dr%(a)),2)
 	&,16,.,42,m%(.,a),chr$(192+a),"",left$(a$+" Disk:     ",15)+b$:return
 {:3128}
-	&,28,1:n=14:dimm%(22,n):gosub33
+	&,28,1:n=14:dimm%(22,n):gosub 33
 {:3129}
-	x=20:gosub1:&,2,2:pt$=a$
+	x=20:gosub 1:&,2,2:pt$=a$
 {:3130}
-	x=38:gosub1:&,2,2:lk%=val(a$)
-	x=39:gosub1:&,2,2:a%(2)=val(a$)
-	x=40:gosub1:&,2,2:a%(3)=val(a$)
-	x=41:gosub1:&,2,2:a%(4)=val(a$):x=42:gosub1:&,2,2:a%(5)=val(a$)
-	x=43:gosub1:&,2,2:mm$=a$:x=45:gosub1:&,2,2:tz$=a$
-	x=47:gosub1:&,2,2:bn$=a$:x=51:gosub1:&,2,2:cc$=a$
-	x=58:gosub1:&,2,2:nc=val(a$):close2
-	a$=bd$+"bd.data,s,r":gosub4
+	x=38:gosub 1:&,2,2:lk%=val(a$)
+	x=39:gosub 1:&,2,2:a%(2)=val(a$)
+	x=40:gosub 1:&,2,2:a%(3)=val(a$)
+	x=41:gosub 1:&,2,2:a%(4)=val(a$):x=42:gosub 1:&,2,2:a%(5)=val(a$)
+	x=43:gosub 1:&,2,2:mm$=a$:x=45:gosub 1:&,2,2:tz$=a$
+	x=47:gosub 1:&,2,2:bn$=a$:x=51:gosub 1:&,2,2:cc$=a$
+	x=58:gosub 1:&,2,2:nc=val(a$):close2
+	a$=bd$+"bd.data,s,r":gosub 4
 	input#2,a$,b$,po$:close2
 	restore:fori=1to15:readtt$(i):next:tt$(.)=tt$(3)
 	&,16,.,46,m%(.,1),"A","","Lt. Kernal Device: "+str$(lk%)
@@ -107,7 +107,7 @@
 	a$=mid$("YesNo",-3*(a%(5)<>10)+1,3)
 	&,16,.,46,m%(.,5),"E","","Printer Linefeeds:  "+a$
 	&,16,.,46,m%(.,6),"F","","Password Masks:     "+mm$
-	&,16,.,46,m%(.,7),"G","","Time Zone:          "+left$(tz$,3):a$=po$
+	&,16,.,46,m%(.,7),"G","","Time Zone:          "+left$(tz$,3)
 	&,16,.,46,m%(.,8),"H","","Main Prompt:        "+left$(po$,15)
 	&,16,.,46,m%(.,9),"I","","BBS Name:           "+left$(bn$,15)
 	&,16,.,46,m%(.,10),"J","","System ID:          "+cc$
@@ -119,117 +119,118 @@
 {:3174}
 	&,16,.,46,m%(.,13),"M","","Chat Messages"
 	&,16,.,46,m%(.,14),"N","","Main Menu"
-	n=14:gosub{:3360}:a=lm:iftr%<1orlm=norlm=.then{:3006}
-	a$="misc":gosub{:3198}:goto{:3128}
+	n=14:gosub {:3360}:a=lm:if tr%<1orlm=norlm=.then {:3006}
+	a$="misc":gosub {:3198}:goto {:3128}
 	data"White","Red","Cyan","Purple","Green","Blue","Yellow","Orange","Brown"
 	data"Light Red","Dark Gray","Medium Gray","Light Green","Light Blue"
 {:3186}
 	data"Light Gray"
 {:3187}
-	a$="ecs":gosub{:3198}:goto{:3006}
+	a$="ecs":gosub {:3198}:goto {:3006}
 {:3188}
-	a$="modem":gosub{:3198}:goto{:3006}
+	a$="modem":gosub {:3198}:goto {:3006}
 {:3189}
-	a$="access":gosub{:3198}:goto{:3006}
+	a$="access":gosub {:3198}:goto {:3006}
 {:3190}
-	a$="filelist":gosub{:3198}:goto{:3006}
+	a$="filelist":gosub {:3198}:goto {:3006}
 {:3191}
-	a$="macros":gosub{:3198}:goto{:3006}
+	a$="macros":gosub {:3198}:goto {:3006}
 {:3192}
-	a$="SM":goto70
-	a$="NetSubEdit":gosub{:3198}:goto{:3044}
+	a$="SM":goto 70
+	a$="NetSubEdit":gosub {:3198}:goto {:3044}
 {:3198}
 ' 	&"{f6}Loading {pound}$a module.."
-' 	iflm$<>"IM."+a$thendr=5:gosub3:lm$="IM."+a$:a$=dr$+"i/"+lm$:loada$,dv%
-' 	&"{f6}":goto4000
+' 	if lm$<>"IM."+a$then dr=5:gosub 3:lm$="IM."+a$:a$=dr$+"i/"+lm$:loada$,dv%
+' 	&"{f6}":goto 4000
 	if p1$="IM."+a$ then 4000
  	&"{f6}Loading {f5}{pound}$a{f5} module...":a$="IM."+a$:gosub 72:if e%=. then 4000
  	&:return
 {:3204}
-	lm=1:goto{:3191}
+	lm=1:goto {:3191}
 {:3206}
-	lm=2:goto{:3191}
+	lm=2:goto {:3191}
 {:3208}
-	dr=6:a$="u.payroll,s,r":n=.:gosub4:ife%then{:3212}
+	dr=6:a$="u.payroll,s,r":n=.:gosub 4:if e%then {:3212}
 {:3210}
-	n=n+1:&,2,2:tt$(n)=a$:ifst=.then{:3210}
+	n=n+1:&,2,2:tt$(n)=a$:if st=.then {:3210}
 {:3212}
 	close2:cf=.
 {:3214}
-	&"{clear}{f6}{gray3}Payroll Editor{f6}{white}{pound}vj":poke53252,38
-	ifn=.then:&"{yellow}No Entries.{f6}":goto{:3222}
+	&"{clear}{f6}{gray3}Payroll Editor{f6}{white}{pound}vj":poke 53252,38
+	if n=.then:&"{yellow}No Entries.{f6}":goto {:3222}
 	fori=1ton:a%=i:b%=val(left$(tt$(i),3)):c%=val(mid$(tt$(i),5))
 	&"{lt. green}{pound}#2{pound}# {pound}%a{blue}) {lt. green}ID{white}{pound}#0{pound}%b{pound}{back arrow}17{pound}#4{pound}# {pound}%c {lt. green}Credits{f6}":i=i+rc*n:next
 {:3222}
 	&"{white}{pound}vjA{green}dd{blue}/{white}D{green}elete{blue}/{white}E{green}dit{blue}/{white}Q{green}uit{blue}: {white}{pound}g1"
-	on-(an$="A")-2*(an$="D")-3*(an$="E")goto{:3236},3246,3254
-	&"Quit{f6}":ifcf=.then{:3234}
+	on-(an$="A")-2*(an$="D")-3*(an$="E")goto {:3236},3246,3254
+	&"Quit{f6}":if cf=.then {:3234}
 {:3228}
-	&"{f6}{white}Save Changes? ":gosub96:ifa=.then{:3234}
-	dr=6:a$="u.payroll":gosub18
+	&"{f6}{white}Save Changes? ":gosub 96:if a=.then {:3234}
+	dr=6:a$="u.payroll":gosub 18
 	fori=1ton:print#2,tt$(i):next:close2
 {:3234}
-	goto{:3006}
+	goto {:3006}
 {:3236}
 	&"Add{f6:2}"
-	poke53252,4:&"ID: {pound}i1":b%=val(an$):ifb%<1orb%>urthen{:3214}
-	poke53252,5:&"Credits: {pound}i1":c%=val(an$):ifc%<1then{:3214}
+	poke 53252,4:&"ID: {pound}i1":b%=val(an$):if b%<1orb%>urthen {:3214}
+	poke 53252,5:&"Credits: {pound}i1":c%=val(an$):if c%<1then {:3214}
 	n=n+1:tt$(n)=right$(str$(1000+b%),3)+str$(c%):cf=1
-	goto{:3214}
+	goto {:3214}
 	&"Delete{f6:2}"
-	&"Which #? {pound}i1":a=val(an$):ifa<1ora>nthen{:3214}
-	cf=1:n=n-1:ifa=n+1then{:3214}
-	fori=aton:tt$(i)=tt$(i+1):next:goto{:3214}
+	&"Which #? {pound}i1":a=val(an$):if a<1ora>nthen {:3214}
+	cf=1:n=n-1:if a=n+1then {:3214}
+	fori=aton:tt$(i)=tt$(i+1):next:goto {:3214}
 	&"Edit{f6:2}"
-	&"Which #? {pound}i1":a=val(an$):ifa<1ora>nthen{:3214} ' was 3938
+	&"Which #? {pound}i1":a=val(an$):if a<1ora>nthen {:3214} ' was 3938
 	b$=(left$(tt$(a),3)):c$=mid$(tt$(a),5)
-	poke53252,4:w$=b$:p$="ID":pl=1:&,1,32:ifan$<>""thenb$=an$
-	poke53252,5:w$=c$:p$="Credits":pl=.:&,1,32:ifan$<>""thenc$=an$
+	poke 53252,4:w$=b$:p$="ID":pl=1:&,1,32:if an$<>""then b$=an$
+	poke 53252,5:w$=c$:p$="Credits":pl=.:&,1,32:if an$<>""then c$=an$
 	b%=val(b$):c%=val(c$)
-	tt$(a)=right$(str$(1000+b%),3)+str$(c%):cf=1:goto{:3214}
+	tt$(a)=right$(str$(1000+b%),3)+str$(c%):cf=1:goto {:3214}
 {:3268}
 	rem
 	p$="{gray3}Device{white}":w$=mid$(str$(dv%(lm)),2):&,1,32:a=val(an$)
-	ifan$<>""anda<>dv%(lm)anda>6anda<32thentf=1:dv%(lm)=a
+	if an$<>""anda<>dv%(lm)anda>6anda<32then tf=1:dv%(lm)=a
 	p$="{gray3}Drive/LU{white}":w$=mid$(str$(dr%(lm)),2):&,1,32:a=val(an$)
-	ifan$<>""anda<>dr%(lm)anda=>.anda<255thentf=1:dr%(lm)=a
-	iftfthengosub33:x=lm+51:gosub1:print#2,dv%(lm);r$;dr%(lm):close2
+	if an$<>""anda<>dr%(lm)anda=>.anda<255then tf=1:dr%(lm)=a
+	if tfthen gosub33:x=lm+51:gosub 1:print#2,dv%(lm);r$;dr%(lm):close2
 	return
 {:3282}
-	&"{f6:2}{purple}{pound}vj{cyan}   Remote Time Editor v3.0{f6}{purple}{pound}vj{cyan}":goto{:3286}
+' TODO: move this into i.IM/clockset
+	&"{f6:2}{purple}{pound}vj{cyan}   Remote Time Editor v3.0{f6}{purple}{pound}vj{cyan}":goto {:3286}
 	a$=d1$:a=mn%:t1=a:return
 {:3286}
 	&"{f6}{pound}{back arrow}10{cyan}Current Date/Time is{f6}{pound}{back arrow}07{pound}v0{f6:3}":d$=d1$:tz=.
 {:3288}
-	p$=" Day   ":w$=left$(d$,1):a=1:gosub{:3328}:ifa<1ora>7then{:3288}
+	p$=" Day   ":w$=left$(d$,1):a=1:gosub {:3328}:if a<1ora>7then {:3288}
 	dw$=mid$(str$(val(an$)),2,1)
 {:3292}
-	p$=" Month ":w$=mid$(d$,4,2):a=2:gosub{:3328}:ifa<1ora>12then{:3292}
-	gosub{:3334}:mo$=an$
+	p$=" Month ":w$=mid$(d$,4,2):a=2:gosub {:3328}:if a<1ora>12then {:3292}
+	gosub {:3334}:mo$=an$
 {:3296}
-	p$=" Date  ":w$=mid$(d$,6,2):a=2:gosub{:3328}:ifa<1ora>31then{:3296}
-	gosub{:3334}:dt$=an$
+	p$=" Date  ":w$=mid$(d$,6,2):a=2:gosub {:3328}:if a<1ora>31then {:3296}
+	gosub {:3334}:dt$=an$
 {:3300}
-	p$=" Year  ":w$=mid$(d$,2,2):a=2:gosub{:3328}:ifa<1ora>99then{:3300}
-	gosub{:3334}:yr$=an$
-	c$="A":e%=val(mid$(d$,8,2)):ife%>79thene%=e%-80:c$="P"
+	p$=" Year  ":w$=mid$(d$,2,2):a=2:gosub {:3328}:if a<1ora>99then {:3300}
+	gosub {:3334}:yr$=an$
+	c$="A":e%=val(mid$(d$,8,2)):if e%>79then e%=e%-80:c$="P"
 {:3306}
-	p$=" Hour  ":an$=mid$(str$(e%),2):gosub{:3334}:w$=an$:a=2:gosub{:3328}:ifa<1ora>12then{:3306}
-	gosub{:3326}:b=a:gosub{:3334}:hr$=an$
+	p$=" Hour  ":an$=mid$(str$(e%),2):gosub {:3334}:w$=an$:a=2:gosub {:3328}:if a<1ora>12then {:3306}
+	gosub {:3326}:b=a:gosub {:3334}:hr$=an$
 {:3310}
-	p$=" Min.  ":w$=right$(d$,2):a=2:gosub{:3328}:ifa<.ora>59then{:3310}
-	a=a-sgn(a):gosub{:3326}:c=a:mn$=an$:w$=c$
+	p$=" Min.  ":w$=right$(d$,2):a=2:gosub {:3328}:if a<.ora>59then {:3310}
+	a=a-sgn(a):gosub {:3326}:c=a:mn$=an$:w$=c$
 {:3314}
-	p$=" A/P   ":a=1:gosub{:3328}:on-(an$<>"A"andan$<>"P")goto{:3314}:ifan$<>v$thentz=1
-	if(an$="P"andb<>18)or(an$="A"andb=18)thenb=bor128:gosub{:3336}
-	ontz+1goto{:3346}:gosub{:3338}:&"{cyan}{pound}{back arrow}10Setting Date/Time to{f6}{pound}{back arrow}07{$04}"+a$+"{f6:2} OK?   {lt. green}: "
-	gosub96:ona+1goto{:3006}:gosub{:3340}:poke56331,b:poke56330,c:poke56329,89
-	poke56328,.:poke1010,1
-	gosub33:x=19:gosub1:print#2,d1$:close2:goto{:3006}
+	p$=" A/P   ":a=1:gosub {:3328}:on-(an$<>"A"andan$<>"P")goto {:3314}:if an$<>v$then tz=1
+	if (an$="P"andb<>18)or(an$="A"andb=18)then b=bor128:gosub {:3336}
+	ontz+1goto {:3346}:gosub {:3338}:&"{cyan}{pound}{back arrow}10Setting Date/Time to{f6}{pound}{back arrow}07{$04}"+a$+"{f6:2} OK?   {lt. green}: "
+	gosub 96:ona+1goto {:3006}:gosub {:3340}:poke 56331,b:poke 56330,c:poke 56329,89
+	poke 56328,.:poke 1010,1
+	gosub 33:x=19:gosub 1:print#2,d1$:close2:goto {:3006}
 {:3326}
 	a=16*int(a/10)+a-int(a/10)*10:return
 {:3328}
-	v$=w$:p$="{cyan}"+p$+"{gray3}":poke53252,a:pl=1:&,1,32:on-(an$="")goto{:3332}:&"{f6}"
+	v$=w$:p$="{cyan}"+p$+"{gray3}":poke 53252,a:pl=1:&,1,32:on-(an$="")goto {:3332}:&"{f6}"
 	a=val(an$):tz=(tzor-(a<>val(v$))):return
 {:3332}
 	&"{f6}":an$=v$:a=val(an$):return
@@ -240,11 +241,12 @@
 {:3338}
 	a$=dw$+yr$+mo$+dt$+hr$+mn$:return
 {:3340}
-	a=val(dw$):gosub{:3326}:poke52935,a:a=val(mo$):gosub{:3326}:poke52936,a
-	a=val(dt$):gosub{:3326}:poke 52937,a:a=val(yr$):gosub{:3326}:poke 52938,a
+	a=val(dw$):gosub {:3326}:poke 52935,a:a=val(mo$):gosub {:3326}:poke 52936,a
+	a=val(dt$):gosub {:3326}:poke 52937,a:a=val(yr$):gosub {:3326}:poke 52938,a
 	return
 {:3346}
-	&"{f6}No Changes Made - Aborted!{f6:2}":goto{:3006}
+	&"{f6}No Changes Made - Aborted!{f6:2}":goto {:3006}
+' --- end block ---
 {:3348}
 	gosub {:sub.menu_header}
 	&,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
@@ -262,9 +264,9 @@
 {:sub.prime_time_display}
 	if p1%=0 then b$="Not Set":return
 ' p1%=minutes, p2%=start, p3%=end
-' 10 p1%=0:p2%=0:p3%=0:gosub100
-' 20 p1%=60:p2%=1:p3%=9:gosub100
-' 40 p1%=240:p2%=1:p3%=23:gosub100
+' 10 p1%=0:p2%=0:p3%=0:gosub 100
+' 20 p1%=60:p2%=1:p3%=9:gosub 100
+' 40 p1%=240:p2%=1:p3%=23:gosub 100
 ' 99 stop
 	b$=right$(str$(p1%),3)+", ":b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
 	if p1%<1 then p2%=.:p3%=.:b=.:d=.
@@ -272,9 +274,9 @@
 	b$=b$+mid$(str$(dand15),2)+mid$("AP",(dand16)/16+1,1)
 	return
 '100 print"Prime Time: ";
-'102 if p1%=0 then b$="Not Set":goto150
+'102 if p1%=0 then b$="Not Set":goto 150
 '110 b$=right$(str$(p1%),3)+", ":b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
-'120 ifp1%<1thenp2%=.:p3%=.:b=.:d=.
+'120 if p1%<1then p2%=.:p3%=.:b=.:d=.
 '130 b$=b$+mid$(str$(band15),2)+mid$("AP",(band16)/16+1,1)+"-"
 '140 b$=b$+mid$(str$(dand15),2)+mid$("AP",(dand16)/16+1,1)
 '150 printb$:return

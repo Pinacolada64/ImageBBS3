@@ -1,16 +1,30 @@
 = Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.3, 2022-08-20
+v0.5, $SOURCE_DATE_EPOCH
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
 :icons: font
+:showtitle:
+
+:source-highlighter: pygments // enable source code highlighting
+:source-language: basic // set default source language to generic basic
+:pygments-style: manni // choose syntax highlighting stylesheet
+:pygments-css: styles // [styles | css] for html output, embed stylesheet in html file
+:pygments-linenums-mode: inline
+
+// GitHub Flavored AsciiDoc
+// https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
 
 // PDF generation config
 :pdftheme: default-sans
 
-// GitHub Flavored AsciiDoc
-// https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
+// Enable asciidoctor-lists to display lists of tables and code snippets
+== List of tables
+list-of::table[]
+
+== List of code snippets
+list-of::listing[]
 
 include::prg-introduction.adoc[]
 
@@ -24,11 +38,9 @@ include::prg-new-features.adoc[]
 
 include::prg-programming-etiquette.adoc[]
 
-include::prg-im-subroutines.adoc[]
+include::prg-im-routines.adoc[]
 
-### `sub.*` Module Jump Table
-
-Files with a `sub.` prefix contain routines which are used often, but to save memory and avoid code repetition, are separated from the main `im` module.
+include::prg-sub-routines.adoc[]
 
 include::prg-ampersand-calls.adoc[]
 

@@ -82,7 +82,7 @@ TIP: You can tell a command accepts a line range or parameter when there is an e
 
 === Line Ranges
 
-Most commands allow a _line range_ to be entered after the command, just like BASIC's `list` command.
+Most commands allow a _line range_ to be entered after the command, just like BASIC`'s `list` command.
 A line range can be specified in one of the following ways:
 
 ====
@@ -100,7 +100,7 @@ NOTE: _x_ represents the beginning line number in the range command, _y_ represe
 | _-y_ | From the beginning to line #_y_
 |====================
 
-Any delimiter (comma, etc.) may be used in place of the `-`, depending on one's preference.
+Any delimiter (comma, etc.) may be used in place of the `-`, depending on one`'s preference.
 
 === Exit the Editor
 
@@ -153,7 +153,7 @@ If no line range is given for the kbd:[.R]ead, kbd:[.L]ist, or kbd:[.M]CI Read c
 You can pause text with kbd:[Ctrl+S] or kbd:[Home] keys at any time.
 Messages may be aborted while paused with the spacebar or kbd:[/] keys.
 
-If enabled, the More Prompt also pauses after the number of lines equal to the user's screen height have been displayed, asking `...More (Y/n)`. 
+If enabled, the More Prompt also pauses after the number of lines equal to the user`'s screen height have been displayed, asking `...More (Y/n)`.
 kbd:[N]o aborts reading, while keys other than kbd:[N] are taken to mean the default of kbd:[Y]es, and reading continues.
 
 === Manipulate Text
@@ -427,10 +427,10 @@ The kbd:[.G]et and kbd:[.P]ut commands allow you to:
 . Edit using all the normal editor facilities
 . Save the buffer (kbd:[.P]ut) to any device and drive
 
-kbd:[.G]et appends the file to any text already in the editor's buffer.
+kbd:[.G]et appends the file to any text already in the editor`'s buffer.
 
 ====
-TIP: If you are editing SEQ files with C/G codes in them, before using kbd:[.G]et, use kbd:[.C]olumns kbd:[80] first to set the editor line length to 80 characters.
+TIP: If you are editing SEQ files with color codes or keyboard graphics in them, use kbd:[.C]olumns kbd:[80] first to set the editor line length to 80 characters *before* using kbd:[.G]et.
 This helps prevent the editor from word-wrapping long lines with C/G characters in them.
 ====
 
@@ -615,7 +615,7 @@ _Example:_
 | kbd:[.Q]uery | Show lines used and remaining
 | kbd:[.R]ead | Read without MCI interpreted
 | kbd:[.S]ave Text | Save text to disk
-| kbd:[.T]ext Transfer Mode | Don't echo text back to caller
+| kbd:[.T]ext Transfer Mode | Don`'t echo text back to caller
 | kbd:[.U]se Signature | Append signature made with kbd:[PS]
 | kbd:[.V]ersion | Show editor version
 | kbd:[.Y] Move | Move line range to specified line 
@@ -631,7 +631,7 @@ These commands can be used if in local mode.
 [%autowidth]
 |===
 | Command | Purpose
-| kbd:[.G]et File | Append to buffer a disk file's contents (filename, device, and drive are prompted for)
+| kbd:[.G]et File | Append a disk file`'s contents to the end of the buffer (the filename, device, and drive are prompted for)
 | kbd:[.P]ut File | Save a file (filename is prompted for); can Append or Replace existing file
 | kbd:[.!] DOS Command | Send DOS command (device, drive, and command are prompted for)
 | kbd:[.$] View Directory | View disk directory (device, drive, and pattern are prompted for)

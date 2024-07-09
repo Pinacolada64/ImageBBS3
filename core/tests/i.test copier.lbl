@@ -1,0 +1,102 @@
+{uses:../3_0-preface.lbl}
+
+{assign:im.open_file=4}
+{assign:im.read_cmd_channel=5}
+{assign:im.loadProtocol=28}
+{assign:im.mainPrompt=300}
+{assign:im.subDisplay=443}
+
+{alpha:alt}
+{number:3000}
+	rem i.test copier, image 3.0
+{number:3002}
+{step:2}
+' set program name for e.errlog, get debug status (checked means *disabled*):
+	pr$="test copier"+"":&,52,56,3:db=1-a%
+	&,18,1:lp=1:&"Test {f5}++ copier{f5} &,16,x params{f6:2}"
+	if db then:&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
+'	f$="copier":a$=f$:gosub {:im.loadProtocol}:if e% then:&:goto {:quit}
+	a$="copier":gosub 28:if e% then:&:goto {:quit}
+' report name of protocol:
+	&"{quotation}{pound}vl{quotation} loaded.{f6}"
+{:menu}
+	lp=1:&"0=copy, 1=count bytes, 2=copy some, 255=report protocol #{f6}"
+	&"&,16,{pound}i1":if an$="" then:&"Quitting.{f6}":goto {:quit}
+	an=int(val(an$)):op=-1*(an=0)-2*(an=1)-3*(an=2)-4*(an=255)
+	if op<1 or op>4 then:&"Invalid selection: 0-2 or 255.{f6}":goto {:menu}
+' a% is line # for calculated gosub (&,66,1):
+	a%=3000+op*100:&,66,1:goto {:menu}
+
+{:quit}
+' restore screen mask
+'	im=1:gosub {:im.subDisplay}
+	im=1:gosub 443
+'	&,18,1:goto {:im.mainPrompt}
+	&,18,1:goto 300
+
+{nice:100}
+' 3100
+' &,16,0: copy file:
+' show sub.display screen mask, and appropriate action message:
+	im=5:x=an+1:gosub 443
+' open files:
+	gosub {:sub.open_files}:if e% then:&
+' display status:
+	if e%=. then:&,16,0
+	return
+
+{nice:100}
+' 3200
+' &,16,1: count bytes in file: nothing returned, prints on screen
+	x=4 ' scanning
+{:3202}
+' im=5: use protocol display, an$=filename
+	im=5:an$="++ 2,p":gosub 443
+'	&"{pound}%b bytes{f6}"
+	return
+
+{nice:100}
+' 3300
+' &,16,2: copy some, based on the first 3 bytes of the file?
+	x=3:gosub {:3202} ' copying
+	return
+'	&"{up:2}Hit a key: {pound}g1"
+
+{nice:100}
+' &,16,255: report protocol number (seen in i.SB for '++ post'):
+	&"Protocol #{pound}%a{f6}":return
+
+' {nice:100}
+' {:sub.status_line}
+'	&"{clear}":&,69,0,15,"Good: 00000 Bad: 00000 Bytes: 000000",3:return
+
+{nice:100}
+{:sub.open_files}
+	dr=5:gosub 4:open 15,dv%,15:open 3,dv%,3,"++ 2,p,r":gosub 5:if e% then:&:return
+	dr=3:gosub 4:open 15,dv%,15:open 2,dv%,2,"e.++ 2 test,p,w":gosub 5:if e% then:&
+	return
+
+{':3014}
+'	close 3:close 2:&"{up:2}Hit a key: {pound}g1"
+
+' 1 = Sending:   inc Good
+' 2 = Receiving:
+' 3 = Copying:   inc Good
+' 4 = Scanning:  no particular result
+
+' 1 for x=1 to 4
+' 2 x$="Send":ifx>1tHx$="Receiv":ifx>2tHx$="Copy":ifx>3tHx$="Scann"
+' 3 printx;x$"ing":next
+'
+'  1 Sending
+'  2 Receiving
+'  3 Copying
+'  4 Scanning
+
+' Run: i.test copier
+
+' ----+----+----+----+----+----+----+----+
+' 0=copy, 1=count bytes, 2=copy some,
+' 255=report protocol #
+
+' Good: 00000  Bad: 00000  Bytes: 000179

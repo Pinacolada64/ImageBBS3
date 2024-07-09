@@ -307,7 +307,7 @@
 
 ' FIXME: &,15 is dropping the weekday
 '	if db then l=len(dt$):an$=dt$:&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
-	if db then an$=dt$+"":l%=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}%l{f6}{pound}v7M{f6}"
+	if db then an$=dt$:l%=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}%l{f6}{pound}v7M{f6}"
 	return
 {:sub.pad_number}
 ' add to dt$ the digit 'd%'. w=1: 'd', w=2: '0d'

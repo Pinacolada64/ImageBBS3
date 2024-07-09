@@ -172,7 +172,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `mn%`
 | BBS
 | icon:times-circle[role=red]
-| Minute of the day: `1-1440`
+| Minute of the day: `1-1440`, updated by BBS ML.
 
 | `p1%`
 | BBS
@@ -235,7 +235,7 @@ template:
 | bu
 |
 |
-| 
+|
 
 | `ca`
 | BBS
@@ -295,9 +295,12 @@ template:
 | icon:times-circle[role=red]
 | BBS reservation:
 
-// lc
+| `lc`
+|
+|
+|
 
-| le
+| `le`
 |
 |
 | Lines in text editor x10
@@ -363,7 +366,7 @@ Use: Disable or enable word-wrap for `&` text output.
 // rq
 // rs
 // sg
-// sh - slash hit?
+// sh - ascii value of last key hit?
 // sr - copy of st?
 // st - Commodore DOS status
 // t1
@@ -681,7 +684,7 @@ Used to determine whether a message is new or not.
 | Last network sort time/date in 11-digit format.
 
 | `p$`
-| BBS, ML
+| BBS
 | icon:check[role=green]
 | Current prompt text.
 

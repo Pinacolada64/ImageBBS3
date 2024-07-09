@@ -6,6 +6,11 @@
 
 == Structures [[structures]]
 
+////
+[source, basic]
+10 rem hello **is this bold?** it is not
+////
+
 ====
 NOTE: 2024-06-27: Documentation is under heavy development, correction and discovery.
 Feedback welcome.
@@ -26,7 +31,6 @@ Programmed properly, structs save RAM compared to having multiple string and num
 * uploader`'s handle
 * which computer it`'s for
 
-
 You can now hold all this information within a _single_ struct array, performing:
 
 * searches
@@ -39,11 +43,9 @@ Each piece of information is stored in one or more "`columns`" called a _field_.
 Multiple fields make up a _record_.
 You can perform operations on the data in the fields and records using `&,60` or `&,68`, and various sub-commands.
 
-Performing a struct search operation is much faster than searching through an array in BASIC with a `for...next` loop.
-
 === Static Arrays
 
-The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can't change once the struct is defined.
+The arrays are considered _static_ because, like static strings embedded in BASIC text (such as `a$="hello"`), the size of individual fields can`'t change once the struct is defined.
 // (unless the string is concatenated to or redefined entirely).
 
 ====
@@ -65,9 +67,9 @@ There are functions to:
 
 _Elements_ are the individual "`boxes`" in the array that data is held in.
 
-Strings can be stored in either a floating point [like `a()` or `b()`], or integer  [like `a%()` or `b%()`] array.
+Strings can be stored in either a floating point array [like `a()` or `b()`], or an integer array [like `a%()` or `b%()`].
 
-* Two bytes of a string's text can be stored per element of an integer array
+* Two bytes of a string`'s text can be stored per element of an integer array
 
 * Five bytes of a floating point array, or 4 bytes... #FIXME#
 
@@ -84,7 +86,7 @@ Strings can be stored in either a floating point [like `a()` or `b()`], or integ
 
 ////
 TODO: later
-Let's write a BASIC program to fill and display the elements of an integer array, and then we'll show how to refer to the elements:
+Let`'s write a BASIC program to fill and display the elements of an integer array, and then we`'ll show how to refer to the elements:
 
 .Sample Array
 #TODO#: x%(field,record)
@@ -137,7 +139,7 @@ Here is a byte-by-byte map of the struct we designed.
 
 // Representation of user data struct
 
-."`User Data`" Struct Data Storage
+."`User Data`" Struct Data Storage [[user-data-storage]]
 [cols="12"]
 [%autowidth]
 |===
@@ -228,16 +230,13 @@ Here is a byte-by-byte map of the struct we designed.
 ^| _unused_
 |===
 
-
 TIP: Because the unused byte 37 is _not_ on an even element boundary (the previous element is an odd number of bytes), it cannot be used.
 
 Since the ID# is an integer anyway, it would be best to use an integer array.
 The definition would look like this:
 
 [source,basic]
-----
 dim u%(18)
-----
 
 TIP: Remember that arrays start at element 0!
 There are 19 bytes in this struct, 0-18.
@@ -248,9 +247,7 @@ To do so, you would need a 2-dimensional array.
 This would change the `dim` statement to:
 
 [source,basic]
-----
 dim u%(18,x-1)
-----
 
 ====
 
@@ -261,7 +258,8 @@ dim u%(18,x-1)
 To refer to data in a struct, and hopefully reduce confusion about "`elements`" and "`bytes,`" the following terminology will be used:
 
 * The first number in the array notation is the _field number_ (like a field within a record of a RELative file).
-It's recommended to be an even number since integers occupy at least two bytes.
+It`'s recommended that the field number be an even number, since integers occupy at least two bytes.
+
 * The second number is the _record number_.
 When the size of the struct is ``dim``ensioned, you use this value to address individual records within the struct.
 
@@ -270,18 +268,16 @@ NOTE: _Record_ and _field_ are specified in what most people and programs would 
 Sorry, there`'s no way around this (that we`'re aware of).
 ====
 
-#TODO#: a visualization of fields in a record.
-
 .Fields in Records
 [width="100%",options="header",cols="6"]
-|====================
+|====
 ^| `u%(_field,record_)` 2+^| Fields 0-1 ^| Field 2 ^| Field 3 ^| Field 4
 | Record 0 [`u%(0,0)`] 5+^| -- _configuration information_ --
 // | Record 1 2+^| a \| b ^| c ^| d ^| e
 | Record 1 ^| a ^| b ^| c ^| d ^| e
 | Record 2 2+^| f \| g ^| h ^| i ^| j
 | Record 3 2+^| k \| l ^| m ^| n ^| o
-|====================
+|====
 
 ====
 TIP: Record `0`, field `0` [_e.g._, `u%(0,0)`] is often used to hold the number of records in the struct.
@@ -320,9 +316,9 @@ You may use code similar to the following examples:
 TIP: Integer arrays can store values from `-32768` to `32767`.
 ====
 
----
+'''
 
-=== `&,60,0` Put String
+=== `&,60,0` Put String [[put-string]]
 
 Copies a specified string variable (up to a specified length) into a field of a record of a struct.
 
@@ -333,11 +329,11 @@ Copies a specified string variable (up to a specified length) into a field of a 
 
 _length_: the maximum string length to put into the record.
 
-_struct%(field, record)_: the struct name, field and record you're putting the string into.
+_struct%(field, record)_: the struct name, field and record you`'re putting the string into.
 
 _string$_: the string variable name to assign the struct data to.
 
-.Put String
+.Put String Into Struct
 [source,basic]
 &,60,0,20,u%(1,1),na$
 
@@ -361,13 +357,13 @@ _string$_: the string variable name to assign the struct data to.
 
 `&,60,0,20,u%(1,1),**na$**`
 
-#TODO#: test if putting string longer than _length_ into struct is truncated -- it should be.
+#TODO#: test if putting string longer than _length_ into struct is truncated--it should be.
 
 .Returns
 
 `?type mismatch&#160;&#160;error`: if the parameter _string$_ is not a string variable #FIXME#
 
----
+'''
 
 === `&,60,1` Get String
 
@@ -379,31 +375,20 @@ This copies data from a field in a struct into a specified string variable.
 
 .Parameters
 
-The parameters _length_, _struct%(field, record)_, and _string$_ are the same as `Put String` above.
+The parameters _length_, _struct%(field, record)_, and _string$_ are the same as those used by <<put-string>>.
 
-.Get String
-====
+.Get String From Struct
 [source,basic]
-----
 &,60,1,20,u%(11,2),a$
-----
-====
-
-[IMPORTANT]
-====
-Feedback wanted: which is better, format 1 or format 2?
-But that's just, like, your opinion, man.
-====
 
 .User Data, Part 2
 ====
 In our earlier example user data struct, to access the third user’s password, you would do this:
 
- &,60,1,20,u%(11,2),a$
+[source]
+&,60,1,20,u%(11,3),a$
 
-.Parameters
-
-.Format 1
+TIP: Remember, the first record starts at `0`, but generally this holds configuration information.
 
 [%autowidth]
 [%header]
@@ -422,34 +407,11 @@ In our earlier example user data struct, to access the third user’s password, 
 | ...into the string variable `a$`.
 |===
 
----
-
-.Format 2
-`**&,60,1,**20,u%(11,2),a$`
-
-[start=1]
-. Get a string...
-
-`&,60,1,**20,**u%(11,2),a$`
-
-[start=2]
-. of at most 20 bytes...
-
-`&,60,1,20,**u%(11,2),**a$`
-
-[start=3]
-. from the array `u%()`, record `2`, field `11`...
-
-`&,60,1,20,u%(11,2),**a$**`
-
-[start=4]
-. into the string variable `a$`
-
 ====
 
----
+'''
 
-=== `&,60,2` Load Struct from Disk
+=== `&,60,2` Load Struct from Disk [[load-struct]]
 
 Loads the specified struct on disk into an array.
 
@@ -459,34 +421,31 @@ Loads the specified struct on disk into an array.
 
 .Parameters
 
-``&,60,2,0,``: Required parameters.
+``&,60,2,0,``: Required parameters to perform the call.
 
-_struct%(field, record)_,: #FIXME#
+_struct%(field, record)_,: The struct name `struct%()` to hold the ``load``ed data, plus the `record` and `field` to start ``load``ing to.
 
-_filename$_,: #FIXME#
+_filename$_,: the filename (either a string literal or string variable) to ``load``.
 
-_device_: #FIXME#
+_device_: the device number to ``load`` the struct data from.
 
 .Setup
 Assign the variable `dr` to the Image drive number desired, and `gosub 3`.
 This returns _device_ (`dv%`).
+This also returns the drive prefix, `dr$`.
 
-(For our example, we'll set `dr=6`, since `u.` files live on Image drive 6.)
+====
+TIP: For our example, we`'ll set `dr=6`, since `u.` files are stored on Image drive 6.
+====
 
 [source,basic]
 dr=6:gosub 3
 
-This also returns the drive prefix, `dr$`.
-
 .Load Struct from Disk
-====
 [source,basic]
-----
 &,60,2,0,u%(0,0),dr$+"u.handles",dv%
-----
-====
 
-.Parameters
+.&,60,2 Parameters
 
 [start=1]
 . Load a struct:
@@ -500,26 +459,28 @@ NOTE: The `0` is believed to be a necessary but ignored parameter.
 [start=2]
 . Use the `u%()` array (load to record `0`, field `0`):
 
-`&,60,2,0,**u%(0,0)**,dr$+"u.handles",dv%`
+[source]
+&,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 ====
 NOTE: You do not have to load the file at the start of the array.
-The starting record and field are specified in the array notation.
+The starting record and field are specified in the array notation: `struct%(_field_,_record_)`.
 This example loads the file `u.handles` into the `u%()` array, starting at the beginning of the array `(0,0)`.
-It could load starting at `(0,5)` -- record `5`, field `0` -- or anywhere else you want, as long as it is within the bounds of the struct's ``dim``ensions.
+It could load starting at `(0,5)`--record `5`, field `0`--or anywhere else you want, as long as it is within the bounds of the struct`'s ``dim``ensions.
 ====
 
 [start=3]
 . Use the drive prefix `dr$`, plus the fictitious `"u.handles"` filename:
 
-`&,60,2,0,u%(0,0),**dr$+"u.handles"**,dv%`
+[source]
+&,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 [start=4]
 . `dv%` is the device number to load the struct from:
 
 `&,60,2,0,u%(0,0),dr$+"u.handles",**dv%**`
 
----
+'''
 
 === `&,60,3` Save a Struct to Disk
 
@@ -530,7 +491,7 @@ This saves a struct to a specified disk file.
 ``&,60,3,0,`` _struct%(field, record)_, _bytes_, _filename$_, _device_
 
 .Setup
-#TODO# use `include::` from `&,60,2` setup
+// TODO: use `include::` from `&,60,2` setup
 
 .Parameters
 
@@ -544,7 +505,7 @@ The starting record and field numbers to save are specified by the numbers in th
 [source,basic]
 &,60,3,0,u%(0,0),3*38,dr$+"u.handles",dv%
 
-.Calculating Struct Size to Save
+.Calculating the Size of the Struct to Save
 ****
 The number of bytes should be calculated using the formula:
 
@@ -555,7 +516,7 @@ Floating-point arrays take 5 bytes per record.
 
 (There are 38 bytes per record &#215; 3 records in the example.)
 
-NOTE: Don't forget: records start at `0`!
+NOTE: Don`'t forget: records start at `0`, which is struct configuration information.
 ****
 
 The starting record and field is specified with (as above) `u%(0,0)`.
@@ -584,7 +545,7 @@ In our example, 3 records &#215; 38 bytes, using an integer array:
 [start=5]
 . device `dv%`, set by `gosub 3` before the struct save call
 
----
+'''
 
 === `&,60,4` Put Date
 
@@ -605,7 +566,6 @@ _string$_: the 11-digit date string (either a literal string or string variable?
 .Put Date Into Struct
 [source,basic]
 an$="10412208234":&,60,4,0,u%(3,0),an$
-====
 
 #TODO#: Explain example.
 
@@ -711,6 +671,7 @@ The number of fields meeting the condition is returned in the variable `a%`.
 .Syntax
 `&,60,6,` _num_, _command_, _a%(a,b)_, _b%(a,b)_, _size_, _bits_, _test_
 
+.i.GF: Scan Struct
 ////
 ;doscan - scan structures
 ; &,nn,6, num, com, a(a,b), b(a,b), l, bits, test
@@ -769,7 +730,7 @@ The number of fields meeting the condition is returned in the variable `a%`.
 | _bits_
 | The bits to set on `object%(a,b)` (?) if true?
 
-| test
+| _test_
 | x
 
 |===
@@ -882,6 +843,7 @@ _test_: the object to test for
 .+.UD from Image 2.0
 ====
 NOTE: This is still being researched.
+====
 
 The following code scans the U/D directory for entries which have an upload date older than `ld$`, setting bits `$4f` on `x1%(3,1)` (if the entry matches?):
 
@@ -926,7 +888,7 @@ Can apparently be a string name, or numeric: an array number?
 
 `b%(a,b)`: the array containing the comparisons matching `test` (?)
 
----
+'''
 
 === `&,60,7` Sort Struct
 
@@ -941,13 +903,12 @@ Does not work with numeric arrays.
 
 _a$(a,b)_: String array to sort
 
-_start_: Element to start sorting at
+_start_: Element to start sorting at?
 
 .i/lo/tt maint: Sort Struct
 ====
 [source,basic]
 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next:p=n-10
-====
 
 '''
 
@@ -1011,7 +972,7 @@ NOTE: More research needed.
 `8192+16384` exceeds the expected access levels of 0-9 (values 1-1023).
 ====
 
-.Example 2: i.UD
+.i.UD: Scan Numbers
 [source,basic]
 3310 &,60,8,rn,60,a,x1%(0,1),f%(1),1:f%(0)=a%
 
@@ -1021,7 +982,7 @@ NOTE: More research needed.
 . `rn`: Scan through `rn` records
 . `60`: the struct is 60 bytes per record
 . `a`: filter by access level `a`
-. `ud%(0,1)`: look in the `ud%(field=_0_, record=1)` (field _0_="don't care?")
+. `x1%(0,1)`: look in the `x1%(field=_0_, record=1)` (field _0_="don`'t care?")
 . `f%(_x_)`: put non-zero results in the `f%()` array
 . `1`: Start at record 1.
 
@@ -1042,7 +1003,7 @@ NOTE: More research needed.
 
 `size`: size of record, in bytes
 
-`struct%(field, record)`: (field="`don't care`"? #FIXME#), record to scan
+`struct%(field, record)`: (field="`don`'t care`"? #FIXME#), record to scan
 
 ====
 NOTE: This function call documentation is incomplete.
@@ -1188,7 +1149,7 @@ Unknown purpose.
 
 None yet.
 
-7'''
+'''
 
 === `&,60,13` Text Read
 

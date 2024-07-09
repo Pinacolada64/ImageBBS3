@@ -2,15 +2,15 @@
 {step:2}
 {:3000}
 ' Left Sub: Message Bases Closed
-	&,52,$26,3:ona%goto{:3534}
+	&,52,$26,3:ona%goto {:3534}
 {:3001}
-	gosub{:3528}:gosub{:3504}:pr$="":gosub{:3020}:on-(f1=3)goto{:3228}:it=20:goto{:3188}
+	gosub {:3528}:gosub {:3504}:pr$="":gosub {:3020}:on-(f1=3)goto {:3228}:it=20:goto {:3188}
 {:3002}
 	&"{f6} - Filing {pound}$a...{f6}":return
 {:3004}
 	dr=bn+6:return
 {:3006}
-	a$=left$(a$,len(a$)+(right$(a$,1)="{^}"orright$(a$,1)="?")):ifval(a$)thenifval(a$)<1thena$=mid$(a$,4)
+	a$=left$(a$,len(a$)+(right$(a$,1)="{^}"orright$(a$,1)="?")):if val(a$)then ifval(a$)<1then a$=mid$(a$,4)
 {:3008}
 	return
 {:3010}
@@ -18,7 +18,7 @@
 {:3012}
 	a=abs(int(val(an$))):return
 {:3014}
-	br=a+1:ifbr<1orbr>rnthenbr=1
+	br=a+1:if br<1orbr>rnthen br=1
 {:3016}
 	return
 {:3018}
@@ -30,33 +30,33 @@
 {:3024}
 	jm=-(e%(bn)>99):a$=right$(str$(e%(bn)),2+jm)+left$(a$,14-jm):return
 {:3026}
-	a$=bb$(bn):gosub{:3006}:p$="Sub#"+mid$(str$(bn),2)+": "+a$:cm$=p$:on-(sg=.)goto{:3008}:p$=sg$+" SIG{f6:2}"+p$:return
+	a$=bb$(bn):gosub {:3006}:p$="Sub#"+mid$(str$(bn),2)+": "+a$:cm$=p$:on-(sg=.)goto {:3008}:p$=sg$+" SIG{f6:2}"+p$:return
 	a=4:goto 11
-	gosub{:3032}:f$=a$:a$=ld$:gosub{:3032}:c=-(f$>a$):return
+	gosub {:3032}:f$=a$:a$=ld$:gosub {:3032}:c=-(f$>a$):return
 {:3032}
 	a$=mid$(a$,2):an$=mid$(a$,7,2):c=-1*(an$="12")-3*(an$="92"):c=c-5*(c=.)
 	a$=left$(a$,6)+mid$("0012"+an$,c,2)+mid$(a$,9):return
 {:3036}
-	on-(a$="N")-(a$="L")*2-(a$="{f2}")*3goto{:3306},3340,558:return
+	on-(a$="N")-(a$="L")*2-(a$="{f2}")*3goto {:3306},3340,558:return
 	&"{white}{pound}h3{pound}#3{pound}# {pound}%a":return
 {:3040}
 	a=val(mid$(a$,a,1)):return
 {:3042}
 	dr=4:a$="d.sub"+str$(e%(bn)):return
-	on-(a%=1)goto{:3016}:&"s":return
+	on-(a%=1)goto {:3016}:&"s":return
 {:3046}
 	b%=val(mid$(np$,a,1)):a%=(b%and1):b%=-((b%and2)=2):return
 {:3048}
-	a$=left$(dt$(a),11):gosub{:3032}:b%=-(a$>=yy$):a%=.:ifb%thenreturn
-	a$=mid$(dt$(a),12):gosub{:3032}:a%=-(a$>=yy$):return
+	a$=left$(dt$(a),11):gosub {:3032}:b%=-(a$>=yy$):a%=.:if b%then return
+	a$=mid$(dt$(a),12):gosub {:3032}:a%=-(a$>=yy$):return
 {:3052}
 	b$=left$(dt$(a),11):return
 ' 3054
 	a$=right$("0000"+mid$(str$(id),2),4)+n$:return
-	g$=k$:ifm%theng$=j$
-	c%=.:fori=1tokk-1:c%=c%+len(tt$(i)):next:rem ifc%<200thenreturn
+	g$=k$:if m%then g$=j$
+	c%=.:fori=1tokk-1:c%=c%+len(tt$(i)):next:rem if c%<200then return
 {:3060}
-'	a=2:gosub 11:c%=(int(c%/80))*(a+m%):rem   ifc%>50thenc%=50
+'	a=2:gosub 11:c%=(int(c%/80))*(a+m%):rem   if c%>50then c%=50
 ' c%=int(...) is redundant, outer set of parentheses is not needed
 ' same results:
 ' 10 c%=800:a=1:m%=1
@@ -67,7 +67,7 @@
 ' run
 '  20
 '  20
-	a=2:gosub 11:c%=(c%/80)*(a+m%):rem ifc%>50thenc%=50
+	a=2:gosub 11:c%=(c%/80)*(a+m%):rem if c%>50then c%=50
 {:3062}
 	cr=cr+c%:b$=str$(cr):lp=1
 {:3064}
@@ -77,86 +77,86 @@
 {:3068}
 	f2=f2and7:f2=f2-8*(right$(bb$(x),1)="{^}")-16*(right$(bb$(x),1)="?")
 	return
-	z=1:a$="w":gosub 32:ife%thenz=.:a$="a":gosub 32
+	z=1:a$="w":gosub 32:if e%then z=.:a$="a":gosub 32
 	print#2,na$r$id;r$d1$r$c$
 '	forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2:gosub 62 ' 35 bytes
 {number:3078}
 ' gosub line 39 in "im":
 	gosub 39:gosub 30:i=1:x=3:gosub 16:x=14:gosub 16:x=32:gosub 16
-	ify=1thenforx=2to24step11:gosub 16:next:x=31:gosub 16
-	x=25:onzgosub 16:goto{:3112}
+	if y=1then forx=2to24step11:gosub 16:next:x=31:gosub 16
+	x=25:onzgosub 16:goto {:3112}
 	c%(u%)=c%(v%):d%(u%)=d%(v%):dt$(u%)=dt$(v%)
 	nn$(u%)=nn$(v%):ed$(u%)=ed$(v%):return
-'	an$=mid$(a$,5):&,15,1:on-(left$(a$,1)<>"!")goto{:3090}:a$=an$+" {cyan}@ "+mid$(a$,2,3):return
-	an$=mid$(a$,5):&,15,1:ifleft$(a$,1)="!"thena$=an$+" {cyan}@ "+mid$(a$,2,3):return
+'	an$=mid$(a$,5):&,15,1:on-(left$(a$,1)<>"!")goto {:3090}:a$=an$+" {cyan}@ "+mid$(a$,2,3):return
+	an$=mid$(a$,5):&,15,1:if left$(a$,1)="!"then a$=an$+" {cyan}@ "+mid$(a$,2,3):return
 {:3090}
 ' FIXME: Pinacolada (DE1)
 	a$=an$+"{cyan}-"+cc$+mid$(str$(val(left$(a$,4))),2):return
 {:3092}
-	a%=bn:&"{f6}{lt. green}Sub {pound}$h #{pound}%a: {yellow}":a$=bb$(bn):gosub{:3006}:lp=1:&:d2$=a$
-	ifem=.thendr=1:gosub 3:a$="s.Sub"+str$(e%(bn))+str$(nl):gosub 14
-	q=.:a=12:gosub 11:b=a:a=8:gosub 11:ifa+bthenq=1
-	ifid=so%(bn)orid=so%thenq=1:&"{f6}{white}  - You Have{pound}$iAccess Here.{pound}q0{f6}"
-	if(f2and24)then:&"{f6}{lt. green}  - This is a Network Sub.{f6}"
-	rn=.:gosub{:3042}:forx=2to4:&,11,x:next
-	gosub 4:ife%then{:3112}
-	x=1:gosub 1:&,2,2:rn=val(a$):ifrn=.then{:3112}
+	a%=bn:&"{f6}{lt. green}Sub {pound}$h #{pound}%a: {yellow}":a$=bb$(bn):gosub {:3006}:lp=1:&:d2$=a$
+	if em=.then dr=1:gosub 3:a$="s.Sub"+str$(e%(bn))+str$(nl):gosub 14
+	q=.:a=12:gosub 11:b=a:a=8:gosub 11:if a+bthen q=1
+	if id=so%(bn)orid=so%then q=1:&"{f6}{white}  - You Have{pound}$iAccess Here.{pound}q0{f6}"
+	if (f2and24)then:&"{f6}{lt. green}  - This is a Network Sub.{f6}"
+	rn=.:gosub {:3042}:forx=2to4:&,11,x:next
+	gosub 4:if e%then {:3112}
+	x=1:gosub 1:&,2,2:rn=val(a$):if rn=.then {:3112}
 	fori=1torn:x=i+1:gosub 1:&,2,2:ed$(i)=a$:&,2,2:nn$(i)=a$:&,2,2:dt$(i)=a$
 	&,2,2:c%(i)=val(a$):&,2,2:d%(i)=val(a$):next
 {:3112}
 	close2:goto 61
 {:3114}
-	a%=.:b%=.:c%=.:nr=.:np=.:a$=ld$:gosub{:3032}:yy$=a$:np$=""
-	on-(rn=.)goto{:3128}:&"{f6}{yellow}Scanning for New Messages{white}":ifqb>1199then:&": {pound}#2{pound}#  0"
-	forx=1torn:a%=x:ifqb>1199then:&"{pound}h2{pound}%a"
-	c%=c%+d%(x):a=x:gosub{:3048}:np=np+b%:nr=nr+a%
+	a%=.:b%=.:c%=.:nr=.:np=.:a$=ld$:gosub {:3032}:yy$=a$:np$=""
+	on-(rn=.)goto {:3128}:&"{f6}{yellow}Scanning for New Messages{white}":if qb>1199then:&": {pound}#2{pound}#  0"
+	forx=1torn:a%=x:if qb>1199then:&"{pound}h2{pound}%a"
+	c%=c%+d%(x):a=x:gosub {:3048}:np=np+b%:nr=nr+a%
 	np$=np$+mid$(str$(a%+2*b%),2):next:&"{green}{f6}"
-	ifq<>0andnp+nr<rnthena%=rn-np-nr:&"{f6}{lt. red} - {white}{pound}%a {cyan}Old {pound}$j":ifa%>1then:&"s"
-	ifnpthenb%=np:&"{f6}{lt. red} - {white}{pound}%b {cyan}New {pound}$j":ifnp>1then:&"s"
+	if q<>0andnp+nr<rnthen a%=rn-np-nr:&"{f6}{lt. red} - {white}{pound}%a {cyan}Old {pound}$j":if a%>1then:&"s"
+	if npthen b%=np:&"{f6}{lt. red} - {white}{pound}%b {cyan}New {pound}$j":if np>1then:&"s"
 {:3128}
-	ifnrthena%=nr:a$=left$("s",-(nr>1)):&"{f6} {lt. red}- {white}{pound}%a {cyan}{pound}$j{pound}$a With New {white}{pound}$ks{pound}q0"
-	a%=rn:b$=j$:gosub{:3132}:b$=k$:a%=c%
+	if nrthen a%=nr:a$=left$("s",-(nr>1)):&"{f6} {lt. red}- {white}{pound}%a {cyan}{pound}$j{pound}$a With New {white}{pound}$ks{pound}q0"
+	a%=rn:b$=j$:gosub {:3132}:b$=k$:a%=c%
 {:3132}
 	a$=left$("s",-(a%<>1)):&"{f6} {lt. red}- {white}{pound}%a {cyan}{pound}$b{pound}$a Total":return
 {:3134}
 	&"{f6}{lt. blue}  #  Rsp{pound}{back arrow}15Title{f6}{pound}vj":return
 {:3136}
 	b$=" --- ":c%=a:d%=d%(a):c$=ed$(a)
-	gosub{:3046}:ifa%thenb$="*NRB*"
-	ifb%thenb$="*NEW*"
-	ifasc(c$)=140thenc$=mid$(c$,2):b$="*FZN*"
+	gosub {:3046}:if a%then b$="*NRB*"
+	if b%then b$="*NEW*"
+	if asc(c$)=140then c$=mid$(c$,2):b$="*FZN*"
 	&"{lt. green} {pound}#2{pound}# {pound}%c {yellow}{pound}#3[{lt. green}{pound}%d{yellow}] {lt. red}{pound}$b{cyan} {f5}{pound}$c{f5}{pound}{back arrow}39{pound}q0":return
-	gosub{:3148}:goto{:3112}
+	gosub {:3148}:goto {:3112}
 {:3148}
-	gosub{:3042}:gosub 4:ife%thenclose2:gosub{:3042}:a$=a$+",l,p":gosub 4
-	x=1:gosub 1:print#2,rn:ifrn=.thenclose2:gosub{:3042}:goto 19
+	gosub {:3042}:gosub 4:if e%then close2:gosub {:3042}:a$=a$+",l,p":gosub 4
+	x=1:gosub 1:print#2,rn:if rn=.then close2:gosub {:3042}:goto 19
 	x=s+1:gosub 1:print#2,ed$(s)r$nn$(s)r$dt$(s)r$c%(s)r$d%(s):return
 {:3154}
-	on-(rn=.)goto{:3018}:on-(nr+np=.)goto{:3170}:kk=.:a=a-(a=.):ift$="S"thengosub{:3134}
-	a$=ld$:gosub{:3032}:yy$=a$:r%=.
+	on-(rn=.)goto {:3018}:on-(nr+np=.)goto {:3170}:kk=.:a=a-(a=.):if t$="S"then gosub{:3134}
+	a$=ld$:gosub {:3032}:yy$=a$:r%=.
 {:3158}
-	gosub{:3046}:ifa%+b%=.then{:3166}
-	ift$="S"thengosub{:3136}:r%=r%+1:&mid$(" {f6}",2+((r%and1)=1),1)
-	ift$="R"then:&"{f6}":xx=.:n%=1:rq=a%:br=a:gosub{:3358}:a=br
-	kk=kk+1:ifsh+rcthena=rn
+	gosub {:3046}:if a%+b%=.then {:3166}
+	if t$="S"then gosub{:3136}:r%=r%+1:&mid$(" {f6}",2+((r%and1)=1),1)
+	if t$="R"then:&"{f6}":xx=.:n%=1:rq=a%:br=a:gosub {:3358}:a=br
+	kk=kk+1:if sh+rcthen a=rn
 {:3166}
-	a=a+1:on-(a<=rn)goto{:3158}:ift$="S"then:&"{f6}{lt. blue}{pound}vj"
-	br=1:ifkkthen{:3016}
+	a=a+1:on-(a<=rn)goto {:3158}:if t$="S"then:&"{f6}{lt. blue}{pound}vj"
+	br=1:if kkthen {:3016}
 {:3170}
 	&"{f6} - No New Activity.{f6}":return
 {:3172}
-	&"{f6}":gosub{:3136}:rs=.:an$=nn$(a):gosub{:3520}
-	ifqthen{:3178}
-	on-(asc(n0$)<>42)goto{:3178}:ifq=.thenb=d%(a):&"{f6}{pound}q0{pound}{back arrow}39 ":goto{:3184}
+	&"{f6}":gosub {:3136}:rs=.:an$=nn$(a):gosub {:3520}
+	if qthen {:3178}
+	on-(asc(n0$)<>42)goto {:3178}:if q=.then b=d%(a):&"{f6}{pound}q0{pound}{back arrow}39 ":goto {:3184}
 {:3178}
-	gosub{:3052}:&" {pound}q0 {cyan}{pound}{back arrow}04By: {yellow}{pound}v7{pound}q0"
+	gosub {:3052}:&" {pound}q0 {cyan}{pound}{back arrow}04By: {yellow}{pound}v7{pound}q0"
 	&"{f6}{cyan}{pound}{back arrow}04On: {white}{$04}"+b$+"{pound}{back arrow}39 "
-	b=d%(a):ifbthen:&" {cyan}{pound}{back arrow}04LR: {white}{$04}"+mid$(dt$(a),12)
+	b=d%(a):if bthen:&" {cyan}{pound}{back arrow}04LR: {white}{$04}"+mid$(dt$(a),12)
 {:3184}
 ' NOTE: optimized
-'	b$=k$:an$=str$(b):on-(b=1)goto{:3186}:b$=b$+"s":ifb=.thenan$=" No" ' 59 bytes
-'	b$=k$:an$=str$(b):ifb<>1thenb$=b$+"s":ifb=.thenan$=" No" ' 52 bytes
-	b$=left$(k$+"s",9+(b=1)):an$=str$(b):ifb=.thenan$=" No" ' 51 bytes
+'	b$=k$:an$=str$(b):on-(b=1)goto {:3186}:b$=b$+"s":if b=.then an$=" No" ' 59 bytes
+'	b$=k$:an$=str$(b):if b<>1then b$=b$+"s":if b=.then an$=" No" ' 52 bytes
+	b$=left$(k$+"s",9+(b=1)):an$=str$(b):if b=.then an$=" No" ' 51 bytes
 
 ' 1 b=0:gosub 3180
 ' 2 b=1:gosub 3180
@@ -168,245 +168,245 @@
 ' 10 end
 ' 20 printbleft$(k$+"s",9+(b=1)):return
 ' 3180 k$="Response"
-' 3182 b$=left$(k$+"s",9+(b=1)):an$=str$(b):ifb=.thenan$=" No"
+' 3182 b$=left$(k$+"s",9+(b=1)):an$=str$(b):if b=.then an$=" No"
 ' 3184 printan$" "b$
 ' 3188 return
 
 {:3186}
 	&"{f6}{pound}{back arrow}04{blue}[{yellow}{pound}v7 {cyan}{pound}$b {blue}]{f6}{pound}vj{f6}":return
 {:3188}
-'	lm$="":nl$=chr$(0):r$=chr$(13):lc=2:ontr%+1goto{:3274}:q=.:a=8:gosub 11:ifathenq=1
-	lm$="":lc=2:ontr%+1goto{:3274}:q=.:a=8:gosub 11:ifathenq=1
-	ifitthena=tr%:tr%=it+a:it=a
+'	lm$="":nl$=chr$(0):r$=chr$(13):lc=2:ontr%+1goto {:3274}:q=.:a=8:gosub 11:if athen q=1
+	lm$="":lc=2:ontr%+1goto {:3274}:q=.:a=8:gosub 11:if athen q=1
+	if itthen a=tr%:tr%=it+a:it=a
 {:3192}
-	gosub{:3466}:sy$="S"+"ub":gosub{:3408}:onlmgoto{:3228},{:3276}
+	gosub {:3466}:sy$="S"+"ub":gosub {:3408}:onlmgoto {:3228},{:3276}
 {number:3193}
 	bn=0:r=abs(int(val(an$)))
 {number:3194}
 {:3194}
-	a=r:ifr=.andbz>.thenan$="":gosub{:3324}:p$="{f6}Which Sub?":gosub 6:gosub{:3012}
-	on-(a=.)goto{:3266}:r=a:bn=.:goto{:3206}
+	a=r:if r=.andbz>.then an$="":gosub {:3324}:p$="{f6}Which Sub?":gosub 6:gosub {:3012}
+	on-(a=.)goto {:3266}:r=a:bn=.:goto {:3206}
 {:3198}
 	f=(a$="<"ora$=";")*2+1:r=bn+f
 {:3200}
-	on-(r<1orr>bz)goto{:3206}:b$=a$:a=1:ifsg=.thena=e%(r):a$=jn$:gosub{:3040}
-	ifa=.andr=bzthenr=1:goto{:3218}
-	ifa=.thena$=b$:r=r+f:goto{:3200}
+	on-(r<1orr>bz)goto {:3206}:b$=a$:a=1:if sg=.then a=e%(r):a$=jn$:gosub {:3040}
+	if a=.andr=bzthen r=1:goto {:3218}
+	if a=.then a$=b$:r=r+f:goto {:3200}
 {:3206}
-	a=.:ifr<1orr>bzthen:&"{f6}Unknown {pound}$h Number!{f6}":r=1:on-(bn<>.)goto{:3218}:r=.:goto{:3194}
-	f2=.:ifleft$(bb$(r),1)="."andmid$(bb$(r),3,1)="."thenf2=val(mid$(bb$(r),2,1))
-	x=r:gosub{:3068}
-	close2:if(f2and4)=4thena%=r:gosub{:3372}:ifan$<>c$thenr=bn:goto{:3206}
-	on-(mid$(oc$,r,1)="0")goto{:3222}:&"{f6}":a$=bb$(r):gosub{:3006}:lp=1:&
-	x=1:gosub 390:ifid=so%(r)orid=so%orqthen{:3222}
+	a=.:if r<1orr>bzthen:&"{f6}Unknown {pound}$h Number!{f6}":r=1:on-(bn<>.)goto {:3218}:r=.:goto {:3194}
+	f2=.:if left$(bb$(r),1)="."andmid$(bb$(r),3,1)="."then f2=val(mid$(bb$(r),2,1))
+	x=r:gosub {:3068}
+	close2:if (f2and4)=4then a%=r:gosub {:3372}:if an$<>c$then r=bn:goto {:3206}
+	on-(mid$(oc$,r,1)="0")goto {:3222}:&"{f6}":a$=bb$(r):gosub {:3006}:lp=1:&
+	x=1:gosub 390:if id=so%(r)orid=so%orqthen {:3222}
 {:3218}
-	ifbnthen{:3228}
-	a=2:onrgoto{:3222}:r=1:goto{:3206}
+	if bnthen {:3228}
+	a=2:onrgoto {:3222}:r=1:goto {:3206}
 {:3222}
-	onagoto{:3224},{:3276}
+	onagoto {:3224},{:3276}
 {:3224}
-	ifr=bnthengosub{:3114}:goto{:3228}
-	bn=r:br=1:gosub{:3092}:gosub{:3114}
+	if r=bnthen gosub{:3114}:goto {:3228}
+	bn=r:br=1:gosub {:3092}:gosub {:3114}
 {:3228}
-	sb$="S"+"B":os=sg:gosub{:3532}:f4=.:f1=.:lc=2:gosub{:3026}
+	sb$="S"+"B":os=sg:gosub {:3532}:f4=.:f1=.:lc=2:gosub {:3026}
 ' FIXME: 563: loads sub.comm2 (Resets system to default outputs, displays current prompt to the AREA window, and waits for uppercase input of up to 38 characters.) seems wasteful
 {:3229}
-'	gosub 563:iftr%<1then{:3276}
-	gosub{:3540}:iftr%<1then{:3276}
+'	gosub 563:if tr%<1then {:3276}
+	gosub {:3540}:if tr%<1then {:3276}
 {:3230}
-	ifid=so%(bn)orid=so%thenq=1
-	ifan$="LD"thengosub{:3388}:gosub{:3114}:goto{:3228}
-	gosub 220:ifrsthenlm$=""
-	t$=a$:onf4goto{:3270}
-	onrsgoto{:3228}:gosub{:3012}:ifathenr=a:goto{:3206}
-	ifz$=">>"orz$="<<"orz$="SG"thengosub{:3408}:onlmgoto{:3228},{:3276}:goto{:3194}
-	lm=-(z$="AS")-2*(z$="MS")-3*(z$="AC")-4*(z$="ID")-5*(z$="VS"):iflmthen{:3412}
+	if id=so%(bn)orid=so%then q=1
+	if an$="LD"then gosub{:3388}:gosub {:3114}:goto {:3228}
+	gosub 220:if rsthen lm$=""
+	t$=a$:onf4goto {:3270}
+	onrsgoto {:3228}:gosub {:3012}:if athen r=a:goto {:3206}
+	if z$=">>"orz$="<<"orz$="SG"then gosub{:3408}:onlmgoto {:3228},{:3276}:goto {:3194}
+	lm=-(z$="AS")-2*(z$="MS")-3*(z$="AC")-4*(z$="ID")-5*(z$="VS"):if lmthen {:3412}
 {number:3246}
-	ifa$=">"ora$="<"ora$="{f4}"ora$=";"then{:3198}
+	if a$=">"ora$="<"ora$="{f4}"ora$=";"then {:3198}
 ' 3248: FIXME: no line 3384. SG already handled by 3242, so remove this duplicate
-'	ifz$="SG"thengosub{:3384}:onlm+1goto{:3194},{:3228},{:3270},{:3276}
-	onlm+1goto{:3194},{:3228},{:3270},{:3276}
-	on-(z$="RA"orz$="SA")-(a$="P")*2-(a$="M")*3-(a$="Q")*4goto{:3290},{:3362},{:3370},{:3276}
-	x=2:on-(a$="V")-(a$="Z")*2-(a$="O")*3goto{:3342},3410,564
+'	if z$="SG"then gosub{:3384}:onlm+1goto {:3194},{:3228},{:3270},{:3276}
+	onlm+1goto {:3194},{:3228},{:3270},{:3276}
+	on-(z$="RA"orz$="SA")-(a$="P")*2-(a$="M")*3-(a$="Q")*4goto {:3290},{:3362},{:3370},{:3276}
+	x=2:on-(a$="V")-(a$="Z")*2-(a$="O")*3goto {:3342},3410,564
 {number:3253}
-	on-(a$="J"andsg=0)goto{:3374}
+	on-(a$="J"andsg=0)goto {:3374}
 {number:3254}
-	gosub{:3036}:ifrn=.thengosub{:3018}:goto{:3228}
-	ifa$="{f7}"thenz$="RN":t$="R":an$="RN"+mid$(an$,2)
-	ifz$="RN"orz$="SN"thena=val(mid$(an$,3,2)):a=-1*(a<=rn)*a:gosub{:3154}:goto{:3228}
+	gosub {:3036}:if rn=.then gosub{:3018}:goto {:3228}
+	if a$="{f7}"then z$="RN":t$="R":an$="RN"+mid$(an$,2)
+	if z$="RN"orz$="SN"then a=val(mid$(an$,3,2)):a=-1*(a<=rn)*a:gosub {:3154}:goto {:3228}
 ' Read hook
-	on-(a$="R"ora$="")-(a$="E")*2goto{:3354},{:3378}
-	ifa$="K"thengosub{:3368}:br=1:goto{:3228}
-	on-(a$="S")-(a$="A")*2goto{:3278},3310:goto{:3228}
+	on-(a$="R"ora$="")-(a$="E")*2goto {:3354},{:3378}
+	if a$="K"then gosub{:3368}:br=1:goto {:3228}
+	on-(a$="S")-(a$="A")*2goto {:3278},3310:goto {:3228}
 {:3266}
-	on-(sg=.ortz=1)goto{:3276}:sg=.:an$="":goto{:3192}
-	a$="s.menu 8":dr=1:gosub 14:goto{:3360}
+	on-(sg=.ortz=1)goto {:3276}:sg=.:an$="":goto {:3192}
+	a$="s.menu 8":dr=1:gosub 14:goto {:3360}
 {:3270}
 	s$="":lm$="":sg=-sg*(z$="UD"orz$="UX"):os=sg:sb$=left$(sb$,-2*(sg<>.))
 	on-(z$="O"orz$="O%")goto 234:is=.:on-(it=.)goto 216:tr%=it:goto 216
 {:3274}
-	s$="":lm$="":sg=.:os=.:sb$="":gosub{:3506}:goto 300
+	s$="":lm$="":sg=.:os=.:sb$="":gosub {:3506}:goto 300
 {:3276}
-	s$="":lm$="":sg=.:os=.:sb$="":on-(it=.ortr%=.)goto 300:tr%=it:gosub{:3506}:goto 300
+	s$="":lm$="":sg=.:os=.:sb$="":on-(it=.ortr%=.)goto 300:tr%=it:gosub {:3506}:goto 300
 {:3278}
-	gosub{:3010}:rs=br:r%=(rsand1):ifa>.anda<=rnthenrs=a:r%=(rsand1)
-	ifrn=.thengosub{:3018}:goto{:3228}
-	gosub{:3134}
-	fora=rstorn:br=a:gosub{:3014}:gosub{:3136}
-	a=a+rc*rn:ifa<rnthen:&mid$(" {f6}",2+((aand1)=r%),1)
-	next:&"{f6}{pound}vj":goto{:3228}
+	gosub {:3010}:rs=br:r%=(rsand1):if a>.anda<=rnthen rs=a:r%=(rsand1)
+	if rn=.then gosub{:3018}:goto {:3228}
+	gosub {:3134}
+	fora=rstorn:br=a:gosub {:3014}:gosub {:3136}
+	a=a+rc*rn:if a<rnthen:&mid$(" {f6}",2+((aand1)=r%),1)
+	next:&"{f6}{pound}vj":goto {:3228}
 {:3290}
-	r%=1:a=.:gosub{:3154}:g=bn
+	r%=1:a=.:gosub {:3154}:g=bn
 {:3292}
-	bn=bn+1:ifbn>bzorshortr%<1thenbn=g:on-(u$<>""andz$="RA")gosub{:3456}:goto{:3228}
-	ifsg=.thena=e%(bn):a$=jn$:gosub{:3040}:ifa=.then{:3292}
-	gs=val(mid$(ba$,bn,1)):gosub{:3456}:ifsh<>.thenbn=g:goto{:3228}
-	gosub{:3026}:gosub 9:on-(mid$(oc$,bn,1)="1")goto{:3292}
-	b=abs(val(bb$(bn))):f2=int(-10*b*(b<1)):x=bn:gosub{:3068}
-	close2:if(f2and4)=4thena%=bn:gosub{:3372}:ifan$<>c$then:&"{f6}":goto{:3292}
-	g=bn:gosub{:3092}:gosub{:3114}:&"{f6}":a=.:gosub{:3154}:goto{:3292}
+	bn=bn+1:if bn>bzorshortr%<1then bn=g:on-(u$<>""andz$="RA")gosub {:3456}:goto {:3228}
+	if sg=.then a=e%(bn):a$=jn$:gosub {:3040}:if a=.then {:3292}
+	gs=val(mid$(ba$,bn,1)):gosub {:3456}:if sh<>.then bn=g:goto {:3228}
+	gosub {:3026}:gosub 9:on-(mid$(oc$,bn,1)="1")goto {:3292}
+	b=abs(val(bb$(bn))):f2=int(-10*b*(b<1)):x=bn:gosub {:3068}
+	close2:if (f2and4)=4then a%=bn:gosub {:3372}:if an$<>c$then:&"{f6}":goto {:3292}
+	g=bn:gosub {:3092}:gosub {:3114}:&"{f6}":a=.:gosub {:3154}:goto {:3292}
 {:3306}
-	gosub{:3010}:ifa<1ora>bzthena=bn
-	a%=a:&"{f6}{pound}$h #{pound}%a ":a$=bb$(a):gosub{:3006}:lp=1:&:return
-	gosub{:3010}:ifa<1ora>rnthena=br
-	ifrn=.thengosub{:3018}:goto{:3228}
+	gosub {:3010}:if a<1ora>bzthen a=bn
+	a%=a:&"{f6}{pound}$h #{pound}%a ":a$=bb$(a):gosub {:3006}:lp=1:&:return
+	gosub {:3010}:if a<1ora>rnthen a=br
+	if rn=.then gosub{:3018}:goto {:3228}
 {:3314}
-	gosub{:3014}:gosub{:3172}:&"{f6}N-Next {pound}$j{f6}L-Last {pound}$j{f6}R-Read {pound}$j{f6}M-Mail Poster{f6:2} -> {pound}g1{pound}v7{f6}"
-	ontr%+1goto{:3276}:on-(an$="N"oran$="L")-(an$="R")*2goto{:3320},3356
-	on-(an$="M")goto{:3322}:goto{:3228}
+	gosub {:3014}:gosub {:3172}:&"{f6}N-Next {pound}$j{f6}L-Last {pound}$j{f6}R-Read {pound}$j{f6}M-Mail Poster{f6:2} -> {pound}g1{pound}v7{f6}"
+	ontr%+1goto {:3276}:on-(an$="N"oran$="L")-(an$="R")*2goto {:3320},3356
+	on-(an$="M")goto {:3322}:goto {:3228}
 {:3320}
-	a=a-(an$="N")+(an$="L"):on-(a>.anda<=rn)goto{:3314}:a=-rn*(a=.)-(a>rn):goto{:3314}
+	a=a-(an$="N")+(an$="L"):on-(a>.anda<=rn)goto {:3314}:a=-rn*(a=.)-(a>rn):goto {:3314}
 {:3322}
-	br=a:s$=nn$(a):gosub{:3366}:a=br:goto{:3314}
+	br=a:s$=nn$(a):gosub {:3366}:a=br:goto {:3314}
 {:3324}
-	gosub{:3010}:r%=(aand1):ifa<1ora>bzthena=1:r%=1
-	&"{f6}Available {pound}$hs:{f6:2}{white}{pound}vj":forx=atobz:c$=" ":b$=" -- ":ifso%(x)=idthenc$=">"
-	d$=" ":ifsg=.thena$=jn$:a=e%(x):gosub{:3040}:ifa=.thend$="*"
-	d$=mid$(d$+"+",1-(right$(bb$(x),1)="{^}"orright$(bb$(x),1)="?"),1):a=val(bb$(x))*10:ifa=.thena=1
+	gosub {:3010}:r%=(aand1):if a<1ora>bzthen a=1:r%=1
+	&"{f6}Available {pound}$hs:{f6:2}{white}{pound}vj":forx=atobz:c$=" ":b$=" -- ":if so%(x)=idthen c$=">"
+	d$=" ":if sg=.then a$=jn$:a=e%(x):gosub {:3040}:if a=.then d$="*"
+	d$=mid$(d$+"+",1-(right$(bb$(x),1)="{^}"orright$(bb$(x),1)="?"),1):a=val(bb$(x))*10:if a=.then a=1
 	a=a-1:b$=mid$("{lt. blue}Std {cyan}Anon{yellow}N-An{lt. green}Pswd{lt. green}Pswd{purple}P-An{green}P-NA",a*5+1,5)
-	a%=x:a$=bb$(x):gosub{:3006}:&" {white}{rvrs on}{pound}#2{pound}# {pound}%a{pound}$d{pound}$c{pound}$b {pound}$a{pound}{back arrow}39{rvrs off}":ifrcthenx=bz
-	ifx<bzthen:&mid$(" {f6}",2+((xand1)=r%),1)
+	a%=x:a$=bb$(x):gosub {:3006}:&" {white}{rvrs on}{pound}#2{pound}# {pound}%a{pound}$d{pound}$c{pound}$b {pound}$a{pound}{back arrow}39{rvrs off}":if rcthen x=bz
+	if x<bzthen:&mid$(" {f6}",2+((xand1)=r%),1)
 	next:&"{f6}{white}{pound}vj":return
-	gosub{:3324}:&"{cyan}  {rvrs on} To Change, Enter New {pound}$h Number. ":return
+	gosub {:3324}:&"{cyan}  {rvrs on} To Change, Enter New {pound}$h Number. ":return
 {:3342}
-	b$="{f6}Presently No":ifso%(bn)<1then{:3348}
-	gosub 35:x=so%(bn):gosub 1:&,2,2:close2:ifa$="{^}"ora$="RES"then{:3348}
+	b$="{f6}Presently No":if so%(bn)<1then {:3348}
+	gosub 35:x=so%(bn):gosub 1:&,2,2:close2:if a$="{^}"ora$="RES"then {:3348}
 	an$=a$:&,15,1:b$="{f6} User #"+str$(so%(bn))+", "+an$+" Is The"
 {:3348}
-	lp=1:&"{yellow}{pound}$b{pound}$iHere.":goto{:3228}
-	a$=bb$(bn):gosub{:3006}:fd$=a$:g$=k$:ifm%theng$=j$
+	lp=1:&"{yellow}{pound}$b{pound}$iHere.":goto {:3228}
+	a$=bb$(bn):gosub {:3006}:fd$=a$:g$=k$:if m%then g$=j$
 	a$=" {yellow}"+g$+" To "+fd$:goto 50
 {:3354}
 ' Sub# prompt Read hook
-	lm=1:goto{:3400}
-	lm=2:goto{:3400}
+	lm=1:goto {:3400}
+	lm=2:goto {:3400}
 {:3358}
-	lm=3:goto{:3400}
+	lm=3:goto {:3400}
 {:3360}
-	lm=4:goto{:3400}
+	lm=4:goto {:3400}
 {:3362}
-	lm=5:goto{:3400}
+	lm=5:goto {:3400}
 {:3364}
-	lm=6:goto{:3400}
+	lm=6:goto {:3400}
 {:3366}
-	lm=2:goto{:3402}
+	lm=2:goto {:3402}
 {:3368}
-	lm=1:goto{:3404}
+	lm=1:goto {:3404}
 {:3370}
-	lm=2:goto{:3404}
+	lm=2:goto {:3404}
 {:3372}
-	lm=3:goto{:3404}
+	lm=3:goto {:3404}
 {:3374}
-	lm=4:goto{:3404}
+	lm=4:goto {:3404}
 {:3376}
-	z$=lm$:lm=5:b$="sb-misc":gosub {:3414}:one%+1gosub4000:b$=z$:goto{:3414}
+	z$=lm$:lm=5:b$="sb-misc":gosub {:3414}:one%+1gosub 4000:b$=z$:goto {:3414}
 {:3378}
-	lm=1:goto{:3406}
+	lm=1:goto {:3406}
 {:3388}
-	b$="ld":gosub{:3414}:one%+1gosub4000:return
+	b$="ld":gosub {:3414}:one%+1gosub 4000:return
 {:3400}
 ' Read hook
 ' loads sub.comm2 at some point; reset output defaults?
 ' 3008 = return
-	b$="sb-post":gosub{:3414}:one%+1goto4000:on-(lm=3orlm=6)goto{:3008}:goto{:3228}
+	b$="sb-post":gosub {:3414}:one%+1goto 4000:on-(lm=3orlm=6)goto {:3008}:goto {:3228}
 {:3402}
-	b$="sb-mail":gosub{:3414}:one%+1gosub4000:on-(lm=2)goto{:3008}:b$="sb-post":goto{:3414}
+	b$="sb-mail":gosub {:3414}:one%+1gosub 4000:on-(lm=2)goto {:3008}:b$="sb-post":goto {:3414}
 {:3404}
-	b$="sb-misc":gosub{:3414}:one%+1goto4000:on-(lm=1orlm=3)goto{:3008}:goto{:3228}
+	b$="sb-misc":gosub {:3414}:one%+1goto 4000:on-(lm=1orlm=3)goto {:3008}:goto {:3228}
 {:3406}
-	b$="sb-edit":gosub{:3414}:one%+1goto4000:goto{:3228}
+	b$="sb-edit":gosub {:3414}:one%+1goto 4000:goto {:3228}
 {:3408}
-	b$="load":goto{:3500}
-	b$="maint":onqgosub{:3500}:goto{:3228}
+	b$="load":goto {:3500}
+	b$="maint":onqgosub {:3500}:goto {:3228}
 {:3412}
-	b$="subop":gosub{:3500}:goto{:3228}
+	b$="subop":gosub {:3500}:goto {:3228}
 {:3414}
-	cm$="MM."+b$:gosub 9:iflm$=b$thene%=.:return
-	dr=5:gosub 3:a$=dr$+"i/MM."+b$:loada$,dv%:gosub 5:ife%then{:3420}
+	cm$="MM."+b$:gosub 9:if lm$=b$then e%=.:return
+	dr=5:gosub 3:a$=dr$+"i/MM."+b$:loada$,dv%:gosub 5:if e%then {:3420}
 	lm$=b$:return
 {:3420}
 	&"{f6}Error Loading Module, Access Denied{f6:2}":return
 {:3422}
-	l=.:k=1:fori=1tokk:ifl+len(tt$(i))>79thenl=.:k=k+1
+	l=.:k=1:fori=1tokk:if l+len(tt$(i))>79then l=.:k=k+1
 	l=l+1+len(tt$(i)):next:return
 	m%=-(rs=.):a=ww%:ww%=xx-1+m%:x=ww%:gosub 1:print#2,a;r$;k+1-m%:return
-	gosub{:3422}:x=ww%:xx=.:yy=.:ifx=.thenx=yy%
+	gosub {:3422}:x=ww%:xx=.:yy=.:if x=.then x=yy%
 {:3430}
-	gosub 1:&,2,2:xx=val(a$):&,2,2:if(k+1-m%)<=val(a$)then{:3434}
-	yy=x:x=xx:on-(x>.)goto{:3430}:x=yy%:return
+	gosub 1:&,2,2:xx=val(a$):&,2,2:if (k+1-m%)<=val(a$)then {:3434}
+	yy=x:x=xx:on-(x>.)goto {:3430}:x=yy%:return
 {:3434}
-	c=x:b=(k+1-m%):a=val(a$)-b:ifyy=.thenww%=ww%+b:on-(a>1)goto{:3444}:ww%=xx:return
+	c=x:b=(k+1-m%):a=val(a$)-b:if yy=.then ww%=ww%+b:on-(a>1)goto {:3444}:ww%=xx:return
 	x=yy:gosub 1:&,2,2:yy=val(a$):&,2,2:gosub 1
-	yy=yy+b:on-(a>1)goto{:3440}:yy=xx
+	yy=yy+b:on-(a>1)goto {:3440}:yy=xx
 {:3440}
-	print#2,yy;r$;a$:ifa>1thenx=yy:gosub 1:print#2,xx;r$;a
+	print#2,yy;r$;a$:if a>1then x=yy:gosub 1:print#2,xx;r$;a
 	x=c:return
 {:3444}
 	x=ww%:gosub 1:print#2,xx;r$;a:x=c:return
 	l=.:gosub 1:cmd2,;:fortt=1tokk
-	ifl+len(tt$(tt))>79thenl=.:print#2,;:x=x+1:gosub 1:cmd2,;
-	printtt$(tt);r$;:l=l+1+len(tt$(tt)):next:ifx+1>yy%thenyy%=x+1
-	b%=2:a%=yy%:&,16,9:ifb%>=yy%thenyy%=b%+1
+	if l+len(tt$(tt))>79then l=.:print#2,;:x=x+1:gosub 1:cmd2,;
+	printtt$(tt);r$;:l=l+1+len(tt$(tt)):next:if x+1>yy%then yy%=x+1
+	b%=2:a%=yy%:&,16,9:if b%>=yy%then yy%=b%+1
 	x=yy%:gosub 1:print#2,nl$:x=1:gosub 1:print#2,yy%r$zz%r$ww%:close2:return
 {:3456}
-	ifpm=.orsh<>.or((f2and4)=4andgs=0)ormid$(oc$,bn,1)="1"thenreturn
+	if pm=.orsh<>.or((f2and4)=4andgs=0)ormid$(oc$,bn,1)="1"then return
 {:3458}
-	&"{f6}{yellow}[P]ost  [N]ext  [Q]uit: {pound}g1{pound}v7{f6}":on-(an$="P")-(an$="Q")*2goto{:3460},{:3462}:return
+	&"{f6}{yellow}[P]ost  [N]ext  [Q]uit: {pound}g1{pound}v7{f6}":on-(an$="P")-(an$="Q")*2goto {:3460},{:3462}:return
 {:3460}
-	tz=bn:bn=g:gosub{:3364}:bn=tz:goto{:3458}
+	tz=bn:bn=g:gosub {:3364}:bn=tz:goto {:3458}
 	sh=47:u$="":return
-	&,16,255:ifpr=a%thenreturn
+	&,16,255:if pr=a%then return
 {:3466}
 	a$="post":gosub 28
 	&,16,255:pr=a%:return
-	on-(e%<>.)goto{:3008}:gosub 4:on-(e%<>.)goto{:3008}:b%=2:&,16,8:xx%=a%:x=1
+	on-(e%<>.)goto {:3008}:gosub 4:on-(e%<>.)goto {:3008}:b%=2:&,16,8:xx%=a%:x=1
 	gosub 1:&,2,2:yy%=val(a$):&,2,2:zz%=val(a$):&,2,2:ww%=val(a$):return
-	&,16,3:a$=tt$:br=rn+1:ed$(br)=a$:gosub{:3024}:gosub{:3004}:a$=a$+",l,q":gosub 4
+	&,16,3:a$=tt$:br=rn+1:ed$(br)=a$:gosub {:3024}:gosub {:3004}:a$=a$+",l,q":gosub 4
 {number:3475}
-	on-(e%>.)goto{:3008}:x=2:gosub 1
+	on-(e%>.)goto {:3008}:x=2:gosub 1
 {number:3476}
-	print#2,nl$nl$nl$r$:a$=tt$:gosub{:3024}:gosub{:3004}:gosub 4:yy%=3:zz%=yy%:return
+	print#2,nl$nl$nl$r$:a$=tt$:gosub {:3024}:gosub {:3004}:gosub 4:yy%=3:zz%=yy%:return
 	b%=xx-1:&,16,6:return
 {:3500}
 ' FIXME: use 73 routine in IM...
-	iflm$<>b$thenlm$=b$:dr=5:gosub 3:loaddr$+"i/MM."+lm$,dv%
-	cm$="MM."+lm$:gosub 9:goto4000
+	if lm$<>b$then lm$=b$:dr=5:gosub 3:loaddr$+"i/MM."+lm$,dv%
+	cm$="MM."+lm$:gosub 9:goto 4000
 {:3504}
 'MP mode? 0, 1, 2
-	onval(mid$(uf$,2,1))+1goto{:3508},{:3510},{:3510}
+	onval(mid$(uf$,2,1))+1goto {:3508},{:3510},{:3510}
 {:3506}
-	onval(mid$(uf$,2,1))+1goto{:3508},{:3510},{:3508}
+	onval(mid$(uf$,2,1))+1goto {:3508},{:3510},{:3508}
 {:3508}
 	&,52,34,0:return
 {:3510}
-	&,52,34,1:&,52,35,3:on-(a%=1)goto{:3508}:return
+	&,52,34,1:&,52,35,3:on-(a%=1)goto {:3508}:return
 {:3520}
 	ni=val(an$):n1$=cc$+mid$(str$(ni),2):b$="-"+n1$:n2$=""
-	ifleft$(an$,1)="!"thenni=-1:n1$=mid$(an$,2,3):b$=" @ "+n1$
-	an$=mid$(an$,5):&,15,6,94:ifan$<>""andni=-1thenn2$=an$:b$=b$+"/"+n2$
+	if left$(an$,1)="!"then ni=-1:n1$=mid$(an$,2,3):b$=" @ "+n1$
+	an$=mid$(an$,5):&,15,6,94:if an$<>""andni=-1then n2$=an$:b$=b$+"/"+n2$
 	an$=a$:n0$=a$:&,15,1:an$=an$+b$:return
 {:3528}
-	dr=1:a$="s.SB"+str$(nl):ifll%=80thena$=a$+" 80"
+	dr=1:a$="s.SB"+str$(nl):if ll%=80then a$=a$+str$(80)
 	gosub 13:return
 {:3532}
 	&,40
@@ -420,17 +420,17 @@
 ' FIXME: moved from sub.comm2:
 ' {:61098}
 ' NOTE: im=6: 61098 and 61100 are in IM (212)
-' 	cm$=p$:gosub 9:gosub{:61100}
+' 	cm$=p$:gosub 9:gosub {:61100}
 ' 	cm$=left$(p$,11)+":"+left$(an$,4):gosub 9:cm$=p$:return
 ' {:61100}
-' 	s=.:sh=.:gosub 12:poke53252,38:gosub{:61908}:&"{f6:2}":goto 6
+' 	s=.:sh=.:gosub 12:poke 53252,38:gosub {:61908}:&"{f6:2}":goto 6
 ' {:61908}
-' 	poke970,.:an$=d1$:&,15:b$=right$(an$,7)
-'	goto{:61915}
+' 	poke 970,.:an$=d1$:&,15:b$=right$(an$,7)
+'	goto {:61915}
 ' {:61915}
 ' im: 208
-' 	&"{f6:2} - {pound}$bM":a%=tr%:ifa%<100then:&" - {pound}%a Min. Left"
-' 	ifzzthena%=usr(0):&"{f6} - Stack Free: {pound}%a"
+' 	&"{f6:2} - {pound}$bM":a%=tr%:if a%<100then:&" - {pound}%a Min. Left"
+' 	if zzthen a%=usr(0):&"{f6} - Stack Free: {pound}%a"
 ' 	return
 
 ' ---REORGANIZED ---
@@ -439,10 +439,10 @@
 ' NOTE: im=6: 61098 and 61100 are in IM (212)
 ' {:61100}
 ' 12: reset output defaults
-	s=.:sh=.:gosub 12:poke53252,38:cm$=p$:gosub 9:poke970,.:an$=d1$:&,15
+	s=.:sh=.:gosub 12:poke 53252,38:cm$=p$:gosub 9:poke 970,.:an$=d1$:&,15
 ' {:61908} + im: 208
-	&"{f6:2} - "+right$(an$,7)+"M":a%=tr%:ifa%<100then:&" - {pound}%a Min. Left"
-	ifzzthena%=usr(0):&"{f6} - Stack Free: {pound}%a"
+	&"{f6:2} - "+right$(an$,7)+"M":a%=tr%:if a%<100then:&" - {pound}%a Min. Left"
+	if zzthen a%=usr(0):&"{f6} - Stack Free: {pound}%a"
 ' 6: command stacking stuff
 	&"{f6:2}":gosub 6:cm$=left$(p$,17)+":"+left$(an$,4):gosub 9:cm$=p$:return
 ' 2020-10-30 size:  9901 bytes

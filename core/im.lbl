@@ -33,14 +33,14 @@
 	a=val(mid$(fl$,a,1-(a=18))):return
 {:12}
 ' reset output defaults
-'	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
-	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0":goto {:sub.reset_color}
+	poke 53253,.:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
+'	poke 53253,0:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0":goto {:sub.reset_color}
 {:13}
 	&"{clear}"
 {:14}
 	a$=a$+",s,r":gosub {:4}:if e%=. then:&,3,2
 {:15}
-	close 2:goto {:sub.reset_color}
+	close 2:goto {:12}
 {:16}
 	gosub {:1}:input#2,st(x):st(x)=st(x)+i
 {:17}
@@ -268,11 +268,11 @@
 {:260}
 	rem
 {:261}
-	ifec%>0andcr-ec%<0then:&"{red}Not Enough Credits!{f6}":return
+	if ec%>. and cr-ec%<. then:&"{red}Not Enough Credits!{f6}":return
 {:262}
-	cr=cr-ec%:ifep$=""orid=1then{:264}
+	cr=cr-ec%:if ep$="" or id=1 then {:264}
 {:263}
-	&"{f6}{white}Password{blue}:{white}":&,6:ifan$<>ep$then:&"{f6}{red}Incorrect Password.{f6}":return
+	&"{f6}{white}Password{blue}:{white}":&,6:if an$<>ep$ then:&"{f6}{red}Incorrect Password.{f6}":return
 {:264}
 	f4=.:on ec goto {:265},{:266},{:267},{:268}:return
 {:265}
@@ -381,6 +381,8 @@
 {:374}
 	b=3:b$="Graphic Menu":gosub {:371}:&,52,44,a:return
 {:375}
+' a=screen to display in sub.display, save a in 'curdsp' ($12e4, current display)
+' for logic about what to update per screen
 	&,53,a:im=2+a:goto {:443}
 {:376}
 	a=pm:b$="Prompt":gosub {:370}:pm=a:return
@@ -585,55 +587,55 @@
 ' poke 836,1  : ?
 ' poke 650,128: enable keyboard repeat
 	poke 56328,.:poke 56579,peek(56579) or 38:poke 56577,peek(56577) or 36
+' 3070:
 	dim tt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
 ' NOTE: these unused ECS command arrays take 1574 bytes, "im-cuts" mod removes them
-'	rem dimec%(19,24),es%(3,49),ei%(50)
 '	dim ec%(19,24),es%(3,49),ei%(50)
-{number:3073}
+{number:3072}
 	restore:for i=1 to 9:read a$:co$(i)=a$+"":next
 ' bd$=boot drive?
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys 49155:&,53
-	&,69,1,1,"im Revision: Aug 15, 2022  3:30 PM",3
+	d1$="2"+"2405218146":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
 ' not needed anymore, 12/2020 ML fixes Y2K display
 '	poke $16ec,$32:poke $16ed,$30
 	a$="NTSC":if peek(678) then a$="PAL"
 	gosub {:3400}:z3$=a$+" System Detected.":gosub {:3404}
-	close 15:open 15,dv%,15:&,18,.:poke 53248,1:am$="1"+"0001018600"
+	close 15:open 15,dv%,15:&,18,.:poke 53248,1
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub {:3404}:close 2:close 15:open 15,dv%,15
-	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub{:5}
+	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub {:5}
 	if e% then close 2:gosub {:3200}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
-	input#2,dv%(3),dr%(3),po$:close2:restore:ifpo$=""thenpo$="Main: "
+	input#2,dv%(3),dr%(3),po$:close 2:restore:if po$="" then po$="Main: "
 {:3090}
-	reada$:ifa$<>"*"then{:3090}
-	rem ifdv%=lk%thenprint#15,"l800"
-	gosub {:33}:fori=1to6:x=i+51:gosub {:1}:&,2,2:dv%(i)=val(a$)
+	read a$:if a$<>"*"then {:3090}
+	rem if dv%=lk% then print#15,"l800"
+	gosub {:33}:for i=1 to 6:x=i+51:gosub {:1}:&,2,2:dv%(i)=val(a$)
 	&,2,2:dr%(i)=val(a$):next:close2
 ' i.IM/modem does write RS232 interface type to e.data
 	gosub {:33}:x=32:gosub {:1}:&,2,2:a=val(a$):close2
-{:3096}
+{:3102}
 	dr=5:gosub {:4}:a$=dr$+"ml.rs232":&,7,dv%,2:&,16,a
 	z3$="Reading System Info...":gosub {:3404}
-1111	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3096}
+	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3102}
 	x=1:gosub {:1}:&,2,2:bs$=a$:close2
 	im=.:gosub {:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
 	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
 	dr=3:gosub {:3}:z3$="Loading Preset Definitions...":gosub {:3414}:gosub {:3404}
 	&"{lt. blue}{f6}ECS Defs: ":a$=dr$+"e.ecs.main":&,42,4:gosub {:5}:&"{cyan}Done.{f6}"
 	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub {:5}:&"{cyan}Done.{f6}"
-	&"{lt. blue}LightBar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub {:5}:&"{cyan}Done.{f6}"
+	&"{lt. blue}Lightbar Defs: ":a$=dr$+"e.lightbar":&,7,dv%,8:gosub {:5}:&"{cyan}Done.{f6}"
 	z3$="Setting Alarm Tables...":gosub {:3404}
 	&"{f6:4}{lt. blue}Alarm Table: ":a$=dr$+"e.alarms":&,7,dv%,9:gosub {:5}:&"{cyan}Done.{f6}"
 	dr=2:gosub {:3}
 	&"{lt. blue}Network Alarm Table: ":a$=dr$+"nm.times":&,7,dv%,12:gosub {:5}:&"{cyan}Done.{f6}"
-	dr=3:a$="e.fkeys,s,r":gosub {:4}:ife%thenclose2:goto {:3128}
+	dr=3:a$="e.fkeys,s,r":gosub {:4}:if e% then close 2:goto {:3128}
 	z3$="Enabling Function Keys...":gosub {:3404}
-	fori=1to8:&,2,2:ifright$(a$,1)="{back arrow}"thena$=left$(a$,len(a$)-1)+r$
-	tt$(i)=a$:next:close2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
+	for i=1 to 8:&,2,2:if right$(a$,1)="{back arrow}" then a$=left$(a$,len(a$)-1)+r$
+	tt$(i)=a$:next:close 2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
 '	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8):z3$="Setting Up Variables... (e.data)":gosub {:3404}
 	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8)
 {:3128}
-	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:ife%thenclose2:gosub {:3250}:goto {:3128}
+	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:if e% then close 2:gosub {:3250}:goto {:3128}
 	x=1:gosub {:1}:&,2,2:ca=val(a$):x=12:gosub {:1}:&,2,2:ur=val(a$)-1
 	x=17:gosub {:1}:&,2,2:d3$=a$:x=18:gosub {:1}:&,2,2:pp$=a$
 	x=19:gosub {:1}:&,2,2:z$=a$:x=20:gosub {:1}:input#2,p1%,p2%,p3%
@@ -654,20 +656,21 @@
 	x=51:gosub {:1}:&,2,2:cc$=a$
 	x=58:gosub {:1}:&,2,2:nc=val(a$)
 	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
-' clock set method:
+' 3160: clock set method <in larry's im>:
 	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
+; FIXME: line # off by two; should be
 {:3158}
-	poke970,.:poke971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
+	poke 970,.:poke 971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
 	gosub {:30}:forx=1to38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2
 	an$=am$:lt$=am$:tk$=left$(am$,1):gosub {:3300}
 	close2:gosub {:3186}:&,37
-	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":fori=54272toi+24:pokei,.:next
+	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":for i=54272 to i+24:poke i,.:next
 	f1=3:&,27,1:goto {:302}
 {:3170}
-	a=val(left$(z$,1)):gosub {:3184}:poke52935,a
-	a=val(mid$(z$,2,2)):gosub {:3184}:poke52938,a
-	a=val(mid$(z$,4,2)):gosub {:3184}:poke52936,a
-	a=val(mid$(z$,6,2)):gosub {:3184}:poke52937,a
+	a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
+	a=val(mid$(z$,2,2)):gosub {:3184}:poke 52938,a
+	a=val(mid$(z$,4,2)):gosub {:3184}:poke 52936,a
+	a=val(mid$(z$,6,2)):gosub {:3184}:poke 52937,a
 	b=val(mid$(z$,8,2))
 	c=val(mid$(z$,10,2))
 	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.:return
@@ -677,15 +680,15 @@
 	forq=.to6:bf(q)=-1:next
 	z3$="Reading Blocks Free...":gosub {:3404}:forq=1to6:dr=q:gosub {:61}
 ' NOTE: with LtK emulation, blocks free could be 6-digit value
-' NOTE: MCI integer display outputs 1-5 digits, and so str$(a) should stand
+' NOTE: MCI integer display outputs 1-5 digits, and so str$(a) should stand instead of {pound}!a
 '	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
 ' ----+----+----+----+----+----+----+----+
 '      System Disk.........: xxxxx
-	   E-Mail Disk.........: xxxxx
-	   Etcetera Disk.......: xxxxx
-	   Directory Disk......: xxxxx
-	   Plus-File Disk......: xxxxx
-	   User Disk...........: xxxxx
+'	   E-Mail Disk.........: xxxxx
+'	   Etcetera Disk.......: xxxxx
+'	   Directory Disk......: xxxxx
+'	   Plus-File Disk......: xxxxx
+'	   User Disk...........: xxxxx
 
 	read b$:&"{f6}{rvrs off}{pound}{back arrow}05{lt. blue}"+left$(b$+" Disk...............",20)+": "+str$(a):next:q=.:return
 {:3200}
@@ -693,32 +696,32 @@
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
 	&"{pound}{back arrow}10{yellow}({white}2{yellow}) {lt. green}to Convert from Image 1.2{f6}"
 	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6:3}"
-	gosub{:3408}:lm=val(an$):on lm goto {:3220},{:3222},{:3224},{:3226}
+	gosub {:3408}:lm=val(an$):on lm goto {:3220},{:3222},{:3224},{:3226}
 	return
 {:3220}
-	z3$="Configure New Image BBS 3.0":goto{:3228}
+	z3$="Configure New Image BBS 3.0":goto {:3228}
 {:3222}
-	z3$="Convert from Image BBS 1.2":goto{:3228}
+	z3$="Convert from Image BBS 1.2":goto {:3228}
 {:3224}
-	z3$="Convert from Image BBS 2.0":goto{:3228}
+	z3$="Convert from Image BBS 2.0":goto {:3228}
 {:3226}
-	z3$="Reset C64":gosub{:3404}:gosub{:93}:on a+1 goto {:999}:sys 64738
+	z3$="Reset C64":gosub {:3404}:gosub {:93}:on a+1 goto {:999}:sys 64738
 {:3228}
 	gosub {:3404}:&"{f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}{pound}{back arrow}36   {f6}"
 ' 3199	lm=val(an$):a$="su.config":dr=.:d1%=peek(186):d2%=val(bd$):dv%(.)=d1%:goto {:73}
 '	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
 	a$="su.config":new4000:&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000:return ' FIXME
 {:3250}
-	dr=3:a$="e.lightdefs,s,r":gosub {:4}:ife%thenclose2:goto {:3300}
+	dr=3:a$="e.lightdefs,s,r":gosub {:4}:if e% then close2:goto {:3300}
 	z3$="Setting Default Checkmarks...":gosub {:3404}
 ' FIXME: if e% (error condition), don't jump into the middle of a for-next loop. change to 3210 at least
-	forx=.to7:&,2,2:iflen(a$)<>16then{:3258}
-'	fori=1to16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
-	fori=1to16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
+	for x=. to 7:&,2,2:if len(a$)<>16 then {:3258}
+'	for i=1 to 16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
+	for i=1 to 16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
 {:3258}
-	next:close2
+	next:close 2
 {:3300}
-	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:ife%=.thenreturn
+	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:if e%=. then return
 	dr=3:a$="e.log"+left$(lt$,1):gosub {:18}:close2:an$=d1$:&,15:d6$=an$
 	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub {:51}
 	gosub {:33}:x=44:gosub {:1}:print#2,d6$:close2
@@ -728,14 +731,14 @@
 	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
 	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
 	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
-	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke1010,1:return
+	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1:return
 {:3358}
 	gosub {:3364}:sys 49155:goto {:3362}
 ' 1010: timeflag: 1=time set
 	gosub {:33}:x=35:gosub {:1}:&,2,2:d1$=a$:close 2:poke 1010,1:return
 {:3362}
 ' read LtK clock:
-	z$="":for a=49159 to 49169:z$=z$+chr$(peek(a)):next:poke1010,1:return
+	z$="":for a=49159 to 49169:z$=z$+chr$(peek(a)):next:poke 1010,1:return
 {:3364}
 	z$="Setting Clock by Lt.Kernal...":gosub {:3404}:dr=5:gosub {:4}:a$=dr$+"swr.ml":&,7,dv%,2:return
 {:3366}
@@ -750,11 +753,11 @@
 	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
 	b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
 {:3408}
-	c$="{yellow}{gray3}":i=i+1:ifi>2theni=1
+	c$="{yellow}{gray3}":i=i+1:if i>2 then i=1
 	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 {:3410}
-	getan$:z=z+1:ifan$<>""thenz2$="":z=.:goto {:3400}
-	ifz=20thenz=.:goto {:3408}
+	getan$:z=z+1:if an$<>""then z2$="":z=.:goto {:3400}
+	if z=20then z=.:goto {:3408}
 	goto {:3410}
 ' NOTE: Immutable line number, called from i/su.config
 {:3414}
@@ -780,13 +783,13 @@
 {:4006}
 	restore
 {:4008}
-	reada$:ifa$<>"errors"then{:4008}
-	&,40:d$="GURU":ifx>.andx<30thenfork=1tox:readd$:next
+	reada$:if a$<>"errors" then {:4008}
+	&,40:d$="GURU":if x>. and x<30 then for k=1 to x:read d$:next
 	a%=x:&"{f6}{lt. red} SYSTEM ERROR #{pound}%a {white}({pound}$d ERROR){f6}":r$=chr$(13)
-	a$="im":ifel=>3000thena$=pr$:ifel=>4000thena$=p1$:ifel=>60000thena$=p2$
+	a$="im":if el=>3000 then a$=pr$:if el=>4000 then a$=p1$:if el=>60000 thena $=p2$
 	a=el:&"{lt. blue} In Line:{gray3}{pound}!a {lt. blue}Of {gray3}{pound}$a{f6}"
 	&"{f6}{lt. red}Recording Error, Please Wait...":d$=str$(x)+" ("+d$+" ERROR)"
-	dr=3:a$="e.errlog,s,a":gosub {:4}:ife%=.then{:4024}
+	dr=3:a$="e.errlog,s,a":gosub {:4}:if e%=.then{:4024}
 	a$="e.errlog,s,w":gosub {:4}
 {:4024}
 	print#2,na$r$id;r$d1$r$ac%;r$ph$r$rn$r$co$(co%)r$
@@ -797,12 +800,12 @@
 ' etc.
 	print#2,"Program: "pr$r$"Module: "p1$r$"Sub Module: "p2$
 	print#2,"ML File: "ml$r$"Protocol: "d4$r$
-	fori=1to10:a$=chr$(58-i):ifhs$(i)<>""thenprint#2," {f8}"a$": "hs$(i)
-'	next:print#2,"{^}":close2:poke53280,2
+	for i=1 to 10:a$=chr$(58-i):if hs$(i)<>""then print#2," {f8}"a$": "hs$(i)
+'	next:print#2,"{^}":close 2:poke 53280,2
 ' 6/23/2021: Trb-R: enable changing border colors on error
 	next:print#2,"{^}":close 2:&,52,$39,3:if a% then poke 53280,2
 	a$="User  : "+na$+r$+"Error :"+d$+r$+"Line  :"+str$(b)+r$+"Time  : {$04}"+d1$+r$
-	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':remgosub51
+	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':rem gosub 51
 	close2:&,37:forx=1to4:&,11,x:next:sy$="":sb$="":sg=.
 	p2$="":is=.:p1$="":pr$="":ml$="":pr=-1:pf=.
 ' FIXME: 6/23/2021
@@ -813,7 +816,7 @@
 	a$="FATAL ERROR!!":gosub {:51}:sys 64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
 {:4050}
 ' TODO: Loc mode check just completed, 4050 not called anywhere else, so remove
-'	&,52,4,3:if(a%=1)ori%orid=1then{:4068}
+'	&,52,4,3:if a%=1 or i% or id=1 then {:4068}
 	if i% or id=1 then {:4068}
 	gosub {:4092}:kk=.:a$="s.errmail,s,r":dr=1:gosub {:4}:if e% then close 2:goto {:4068}
 {:4054}

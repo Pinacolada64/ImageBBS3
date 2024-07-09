@@ -161,13 +161,13 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
 . kbd:[IM]: type these characters at a prompt.
 . kbd:[D] `Logon Editor`: A graphic menu option is selected by either:
-* typing kbd:[D] to select `Logon Editor` (it's a _hotkey_, so hitting kbd:[Return] to select it is not necessary)
+* typing kbd:[D] to select `Logon Editor` (it`'s a _hotkey_, so hitting kbd:[Return] to select it is not necessary)
 * using the cursor keys to move to `Logon Editor`, and kbd:[Return] to select it
 . You would follow the same procedure for the second menu option, kbd:[D] `Quicklist`.
 
 ==== Latin Junk
 
-Because I'm such a nerd:
+Because I`'m such a nerd:
 
 * _e.g._ is short for _exemplī grātiā_, meaning "`for example.`"
 

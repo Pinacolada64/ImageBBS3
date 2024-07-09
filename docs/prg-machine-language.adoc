@@ -28,16 +28,61 @@ This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) 
 [%header]
 [%autowidth]
 |===
-| Function  | Label       | Parameter(s) | Returns
-| `&,16,0`	| `find`      | `an$`=user name | ?
-| `&,16,1`	| `loadindex` | `a$`=filename | ?
-| `&,16,2`	| `saveindex` | `a$`=filename | ?
-| `&,16,3`	| `makeindex` | `a$`=filename, `b%`=? | ?
-| `&,16,4`	| `instindex` | `a%`=id| ?
-| `&,16,5`	| `deltindex` | `a%`=id| ?
-| `&,16,6`	| `nextindex` | ? | ?
-| `&,16,7`	| `setcrskip` | ? | ?
-| `&,16,8`	| `findindex` | `a%`=id | `a%`=0: not found
+| Function  | Description | Entry | Exit
+| `&,16[,0]`
+| `find`--use a binary search to find `an$` in index
+
+| LFN #2 for the REL file channel must be `open`
+
+LFN #15 for the command channel must be `open`
+
+`an$`=user name
+
+| If `an$` is found: `a%`=value found, `b%`=the position found in
+
+ If `an$` is not found: `a%`=`0`, `b%`=the position to insert to (probably the last record)
+
+| `&,16,1`
+| `loadindex`--load an index file into the index buffer
+| `a$`="__drive__:__filename__", `dv%`=device #
+| `a%`=number of entries in index
+
+| `&,16,2`
+| `saveindex`--save an index to disk
+| `a$`="__drive__:__filename__", `dv%`=device #
+| _n/a_
+
+| `&,16,3`
+| `makeindex`--clear the index buffer
+| _n/a_
+| _n/a_
+
+| `&,16,4`
+| `instindex`--insert a value into the index buffer
+| `a%`=value, `b%`=position
+| _n/a_
+
+| `&,16,5`
+| `deltindex`--delete a value from the index buffer
+| `b%`=position
+| _n/a_
+
+| `&,16,6`
+| `nextindex`--return the next value from the index buffer
+| `b%`=current position
+| `a%`=value at new position, `b%`=new position
+
+| `&,16,7`
+| `setcrskip`--set the # of carriage returns (CRs) to skip when reading data.
+
+This allows fields other than the first one to be indexed.
+| `a%`=number of CRs to skip
+| _n/a_
+
+| `&,16,8`
+| `findindex`--find the first occurrence of the value given
+| `a%`=value to find
+| `b%`=0: not found, otherwise position found at
 |===
 
 ==== `++ punter`
@@ -72,15 +117,15 @@ This module can display PRG files.
 The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
 
 `&,16,0`: 
-Add menu string
+Add menu item
 
 _Parameters:_
 
-`&,16,0,_?_,_menu%(element,byte)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
+`&,16,0,_?_,_menu%(field, record)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
 
 `?`: `42`: draw two-column menu
 
-`menu%(_element,byte_)`: struct to put menu text in
+`menu%(_field,record_)`: struct to put menu text in
 
 `hotkey(s)`: One (kbd:[B]) or two (kbd:[/B]) keys to type to select this menu item
 
@@ -90,17 +135,19 @@ _Parameters:_
 
 _Example:_
 
-.i.GF:
- 3518 if pf>1 then:&,16,0,42,q%(0,n),"/B","Op ","Return to Previous Menu":n=n+1
+.i.GF: add menu item
+[source]
+3518 if pf>1 then:&,16,0,42,q%(0,n),"/B","Op ","Return to Previous Menu":n=n+1
 
-.i.IM
- &,16,.,34,m%(.,1),"A","","Macros Editor"
+.i.IM: add menu item
+[source]
+3008 &,16,.,34,m%(.,1),"A","","Macros Editor"
 
 _Returns:_
 
 `a%`: which item was selected
 
----
+'''
 
 `&,16,1`: Add string
 
@@ -108,19 +155,21 @@ _Parameters:_
 
 Unknown.
 
----
+'''
 
 `&,16,2`: Use menu
 
 _Parameters:_
 
-`&,16,2,_?_,_menu%(element,byte)_,_item_count?_,_?_,_?_,_menu_height?_,_?_,_?_,_?_`
+ &,16,2, _?_, _menu%(field,record)_, _item_count?_, _?_, _?_, _menu_height?_, _?_, _?_, _?_
 
-#FIXME#
+// #FIXME#
 
 _Examples:_
 
- xxxx &,16,2,42,q%(0,0),n,36,1,n,6,6,0:a$=chr$(q%(3,a%) and 255)
+.i.IM: Use menu
+[source]
+3350 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
 
  xxxx &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.
 
@@ -128,7 +177,7 @@ _Returns:_
 
 `a%`: item number selected
 
----
+'''
 
 `&,16,3`: ?
 

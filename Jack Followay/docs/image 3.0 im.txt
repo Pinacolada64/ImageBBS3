@@ -261,7 +261,8 @@ If the 2nd character is a `%` (i.e., `O%` or `O%!`), gosub 302 (load `i.lo`, the
 
 330: Randomly outputs a macro from file "e.macros". (gosub 1996)
 
-999 | goto 1610 | `return` jump-point. 
+999 | `return` jump-point. | `goto 1610`
+
 If an `on-goto` statement needs to exit a subroutine, you can say:
 
 [code, basic]

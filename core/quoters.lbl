@@ -1,0 +1,11 @@
+' encoded f-keys:
+{quoter:133=comma	} ' f1
+{quoter:134=colon	} ' f3
+' can't use "quote", that puts a literal quote mark in the string and breaks things:
+{quoter:135=quotation	} ' f5
+{quoter:136=asterisk	} ' f7
+
+{quoter:137=question	} ' f2
+{quoter:138=equal	} ' f4
+' f6 is excluded since {return} in quotes puts a literal chr$(13) in the string
+{quoter:140=up_arrow	} ' f8

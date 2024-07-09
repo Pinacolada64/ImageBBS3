@@ -35,7 +35,7 @@ If you want to keep your existing news files and canned message files, copy the 
 
 === Edit `bd.data`
 
-Here you'll change your device/drive assignments.
+Here you`'ll change your device/drive assignments.
 
 [start=1]
 . Log on to your 1.2 system.
@@ -52,7 +52,7 @@ Lines 1 through 12 identify your Image drive assignments.
 . kbd:[.L]ist the file and make sure everything is correct.
 . kbd:[.P]ut the file as ``d.data`` (__not__ ``bd.data``) to your new 3.0 Program Disk.
 
-IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0's `e.last` file is in a different format.)
+IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0`'s `e.last` file is in a different format.)
 
 [start=9]
 . Shut down your computer and reboot the BBS.

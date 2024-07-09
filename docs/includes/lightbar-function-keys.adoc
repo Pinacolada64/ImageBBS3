@@ -1,0 +1,29 @@
+:experimental:
+=== Lightbar Function Keys
+
+The function keys kbd:[f1]-kbd:[f8] are used to switch pages, move the "`lit`" portion of the lightbar, and enable/disable individual lightbar positions, shown in the table below:
+
+.Lightbar Function Keys
+[options="autowidth",options="header"]
+|====================
+| Key      | Purpose
+| kbd:[f1] | toggle between full and split screen mode
+| kbd:[f2] | toggle between 1 and 2 mHz (`FAST` in BASIC 7.0) mode when using a Commodore 128 in C64 mode
+| kbd:[f3] | move highlighted position left
+| kbd:[f4] | page backward through lightbar pages
+| kbd:[f5] | move highlighted position right
+| kbd:[f6] | page forward through lightbar pages
+| kbd:[f7] | toggle the left check mark of the selected lightbar position
+| kbd:[f8] | toggle the right check mark of the selected lightbar position
+|====================
+
+kbd:[f1]: Split screen mode is useful when you want to access the lightbar and view BBS status/caller information. Full screen mode allows you to read more text on the screen (it doesn't show the information displayed while in split screen mode).
+
+You must be in split screen mode to enable or disable lightbar positions via the function keys.
+
+kbd:[f2]: Toggles between `FAST` (2 mHz) and `SLOW` (1 mHz) modes on a Commodore 128 in 64 mode.
+
+TIP: When you are in `FAST` mode, the BBS should operate faster at 2 mHz.
+However, the screen goes blank since the VIC chip cannot display the 40 column screen clearly at 2 mHz.
+Depending on which disk drives or other storage devices you have connected, disk access might not see any speed increase, since the C64's serial bus operates at 1 mHz.
+This is also a restriction while using CMD's SuperCPU in 20 mHz mode.

@@ -1,0 +1,53 @@
+{assign:3	=3	} ' open command channel
+{assign:5	=5	} ' get DOS error status
+{assign:92	=92	} ' >>>Canceled!
+{assign:94	=94	} ' Yes/No prompt, default [No]
+{assign:289	=289	} ' prompt for input, translate encoded f-keys to plain text
+{assign:349	=349	} ' prompt for device,drive
+{assign:350	=350	} ' parse device,drive string, return d1%=device, d2%=drive, a=0: device present, a=1: device not present
+{assign:390	=390	} ' read record from e.text
+{assign:999	=999	} ' general-purpose RETURN
+
+{step:2}
+{:60000}
+	on im gosub {:dos_command},{:directory},{:file_read}:return
+
+{nice:10}
+{:device_prompt}
+' two possibilities:
+' 1) DR from main prompt, or
+' 2) coming from another module
+' 349: so ask Device, Drive:
+' 350: otherwise parse DRdevice,drive:
+' 390: display "Device not present" from e.text:
+	on -(an$="") gosub 349:gosub 350:if a=. then x=6:gosub 390
+	return
+
+{nice:100}
+{:dos_command}
+	gosub {:device_prompt}:if a then return
+	&"{f6}Disk Command?: ":poke 53252,58
+	gosub 289:z$=an$:if z$="" or z$="@" then gosub 3:gosub 5:&:return
+' guard against n0: (format) or s0: (scratch) DOS commands:
+	b$=left$(z$,1) and 127:if b$="n" or b$="s" then gosub 94:if a=. then return
+	gosub 3:print#15,z$:gosub 5:&:return
+
+{nice:100}
+{:directory}
+	gosub {:device_prompt}:if a then return
+' pl=0: uppercase/lowercase input
+	t%=.:b%=.:w$="*":pl=.:p$="Pattern":&,1,32:if an$="" then an$=w$
+	&,15,2:close 1:open 1,dv%,.,"$"+dr$+an$:get#1,a$,a$:poke 970,.
+{:directory_2}
+' TODO: check st instead?
+	&,8,1,1:&:&"{f6}":if mid$(a$,7,6)<>"blocks" then b%=b%+val(a$):t%=t%+1
+	on -(rc+sh=.) goto {:directory_2}:gosub 92
+{:directory_3}
+	close 1:&"{pound}# {pound}#5{pound}%b blocks.{f6}{pound}#5{pound}%t files.{f6}"
+	&"Another?: ":gosub 94:on a goto {:directory}:return
+
+{nice:100}
+{:file_read}
+	&"{f6}File read not done.{f6}":return
+{nice:100}
+	rem sub.sysdos (c)nissa 2019-01-04 lh, 2024-05-27 rs

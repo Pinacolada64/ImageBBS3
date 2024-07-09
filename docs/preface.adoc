@@ -1,9 +1,33 @@
 [preface]
 == Preface
 
-To understand the history of Image BBS v3.0 you have to go back to 1991. Ray Kelm and John Moore started work on Image v2.0 and the C128 version. After a couple of years, John passed away and Ray lost interest in the C64 version of the software. Fred Dart who was supplying technical phone support got Ray to send him what he had up to that point. Fred recruited myself, Jack Followay, and Larry Gartin to help at least get the software to the marketplace. We hit the ground running and before long I had the EM section done, VF section done, and NF section done. Jack Followay was working on the im and other items. Larry Gartin was beta testing what we had going on. Fred was testing and fixing what he thought needed to be fixed. In the spring of 1996, I experienced a hard drive failure and left the programming team. At that point Fred Dart brought on Bob Sisco and Bob, Fred, Jack and Larry continued work. At some point over the next few years 2.0 was worked on but never released. When Fred passed away all work pretty much ceased.
+To understand the history of Image BBS v3.0, you have to go back to 1991.
+Ray Kelm and John Moore started work on Image v2.0 and the C128 version.
+After a couple of years, John passed away and Ray lost interest in the C64 version of the software.
+Fred Dart, who was supplying technical phone support, got Ray to send him what he had up to that point.
+Fred recruited myself, Jack Followay, and Larry Gartin to help at least get the software to the marketplace.
+We hit the ground running, and before long I had the EM section done, VF section done, and NF section done.
+Jack Followay was working on the `im` file, and other items.
+Larry Gartin was beta-testing what we had going on.
+Fred was testing and fixing what he thought needed to be fixed.
+In the spring of 1996, I experienced a hard drive failure and left the programming team.
+At that point, Fred Dart brought on Bob Sisco; Bob, Fred, Jack and Larry continued work.
+At some point over the next few years, 2.0 was worked on but never released.
+When Fred passed away all work pretty much ceased.
 
-In 2015, I was moving to a new home and didn’t want to bring my old Commodore stuff with me, so I sent Larry Hedman my backup disks of my BBS’ 2.0 was one of them. He took those files and over the next 3 years cultivated them into a working system. The final release of 2.0 was in December 2018. Days after the release of 2.0 and my BBS on a stick, Larry and I discussed the source code disks we got from Jack Followay. There was a BBS program on there which wasn’t like the 2.0 we worked on. This was a completely renumbered version of 2.0. It was about 50% complete. Most of the subsystems did not work or where not fully written yet. We decided then we would take what was there and complete it and release it as 3.0 since it was a completely new basic portion. We also were able to get some of the ML changed and working. That project was started in December 2018 and Larry took the helm, and he pretty much wrote everything. So that brings us to today.
+In 2015, I was moving to a new home and didn`’t want to bring my old Commodore stuff with me, so I sent Larry Hedman my backup disks of my BBS’; 2.0 was one of them.
+He took those files and over the next 3 years cultivated them into a working system.
+The final release of 2.0 was in December 2018.
+Days after the release of 2.0 and my BBS on a stick, Larry and I discussed the source code disks we got from Jack Followay.
+There was a BBS program on there which wasn’t like the 2.0 we worked on.
+This was a completely renumbered version of 2.0.
+It was about 50% complete.
+Most of the subsystems did not work, or were not fully written yet.
+We decided then we would take what was there and complete it and release it as 3.0 since it was a completely new BASIC portion.
+We also were able to get some of the ML changed and working.
+That project was started in December 2018 and Larry took the helm, and he pretty much wrote everything.
+
+So that brings us to today.
 
 Thank you for downloading Image BBS v3.0 © NISSA BBS Software.
 
@@ -29,7 +53,8 @@ For taking the helm and working with Jack in the late 90’s trying to get 2.0 o
 The next few guys I am going to mention are what have made Image BBS what it was and what it is today.
 
 Ray Kelm::
-For coming out of retirement to fix the issues with the ML and creating a full source code to be able to be mod and rebuild anytime anyone wants. Ray has been amazing me with his programming skills for 30 years, and he never ceases to amaze me. Thank you, Ray!
+For coming out of retirement to fix the issues with the ML and creating a full source code to be able to be mod and rebuild anytime anyone wants.
+Ray has been amazing me with his programming skills for 30 years, and he never ceases to amaze me. Thank you, Ray!
 
 === In Memoriam
 

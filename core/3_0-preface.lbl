@@ -1,89 +1,8 @@
-{'uses:3_0-preface.lbl}
+' to include this file, include "-pref:3_0-preface.lbl" on the command line:
+' {quoter:} directives cannot be included in this file, see "quoters.lbl" instead
 
-{undef:use_static_labels}
-{ifdef:use_static_labels}
-{info:INFO: assigning static labels}
-
-{assign:im.rel_pointer	=1}
-{assign:im.get_drive	=2}
-{assign:im.open_cmd_channel=3}
-{assign:im.open_file	=4}
-{assign:im.read_cmd_channel=5}
-{assign:im.prompt	=6}
-{assign:im.get_key	=7}
-{assign:im.area_window	=9}
-{assign:im.rel_command	=10}
-{assign:im.get_user_flag	=11}
-{assign:im.output_defaults=12}
-{assign:im.seqReadClear	=13}
-{assign:im.seqRead	=14}
-{assign:im.BAR.adjust	=16}
-{assign:im.BAR.write	=17}
-{assign:im.seqWrite	=18}
-{assign:im.fileScratch	=19}
-{assign:im.loadProtocol	=28}
-{assign:im.open_e_stats	=30}
-{assign:im.open_e_data	=33}
-{assign:im.open_u_config=35}
-{assign:im.writeTTarray	=39}
-{assign:im.getFreeDirEntry	=60}
-{assign:im.getBlocksFree	=61}
-{assign:im.prepLoadIfile	=70}
-{assign:im.SetIslashDrive	=72}
-{assign:im.loadIslashFile	=73}
-{assign:im.loadSubFile	=74}
-{assign:im.prepSubLoad	=78}
-{assign:im.loadModule	=79}
-{assign:im.clearArrays	=82}
-{assign:im.clearTTarray	=83}
-{assign:im.leaveFeedback	=85}
-
-' messages:
-{assign:im.center	90}
-{assign:im.canceled	92}
-{assign:im.are_you_sure.no=93}
-{assign:im.no		94}
-{assign:im.are_you_sure.yes=95}
-{assign:im.yes		=96}
-
-{assign:im.main_prompt=300}
-
-' toggles:
-{assign:im.toggle_mode=370}
-{assign:im.toggle_user_flag=371}
-{assign:im.toggleExpertMode=372}
-{assign:im.toggleMorePrompt=373}
-{assign:im.toggleMenuMode	=374}
-' 375?
-{assign:im.togglePromptMode	=376}
-{assign:im.open_e_text	=390}
-
-{assign:im.subComm1	=428}
-{assign:im.subComm2	=429}
-{assign:im.subParam1	=430}
-{assign:im.subParam2	=431}
-{assign:im.subMenus	=436}
-{assign:im.subSysDos	=437}
-{assign:im.subStats	=438}
-{assign:im.subBar	=439}
-{assign:im.subEditor	=440}
-{assign:im.subHandles	=441}
-{assign:im.subProtos	=442}
-{assign:im.subMisc	=445}
-{assign:im.subModem	=446}
-{assign:im.subInfo	=447}
-{assign:im.subLocal	=448}
-{assign:im.subMisc2	=449}
-
-{assign:im.find_id	=505}
-
-{assign:genericReturn	=999}
-{assign:iPeriodModule	=3000}
-{assign:iSlashModule	=4000}
-{assign:imSubroutine	=60000}
-
-{else}
-{info:INFO: assigning regular labels}
+' currently, using labels for line numbers outside the range of the current file
+' does not work on included files
 {assign:1	=1	} ' im.rel_pointer
 {assign:2	=2	} ' im.get_drive
 {assign:3	=3	} ' im.open_cmd_channel
@@ -95,87 +14,106 @@
 {assign:10	=10	} ' im.rel_pointer_cmd
 {assign:11	=11	} ' im.get_user_flag
 {assign:12	=12	} ' im.output_defaults
-{assign:13	=13	} ' im.seqReadClear
-{assign:14	=14	} ' im.seqRead
-{assign:16	=16	} ' im.BAR.adjust
-{assign:17	=17	} ' im.BAR.write
+{assign:13	=13	} ' im.seq_read_clear_screen
+{assign:14	=14	} ' im.seq_read
+{assign:16	=16	} ' im.bar_adjust
+{assign:17	=17	} ' im.bar_write
 
 ' DOS stuff:
-{assign:18	=18	} ' im.seqWrite
-{assign:19	=19	} ' im.fileScratch
-{assign:28	=28	} ' im.loadProtocol
+{assign:18	=18	} ' im.seq_write
+{assign:19	=19	} ' im.file_scratch
+' TODO: 128: move im.getFreeDirEntry (60) and im.getBlocksFree (61) here
+{assign:28	=28	} ' im.load_protocol
+
+' file access:
 {assign:30	=30	} ' im.open_e_stats
-{assign:32	=32	}
+{assign:31  =31 } ' im.open_e_access
+{assign:32	=32	} ' im.m_file
 {assign:33	=33	} ' im.open_e_data
 {assign:35	=35	} ' im.open_u_config
-{assign:39	=39	} ' im.writeTTarray
-{assign:50	=50	}
+{assign:36  =36 } ' im.open_e_file
+{assign:39	=39	} ' im.dump_tt_array
+{assign:40  =40 } ' im.open_s_new_user
+{assign:41  =41 } ' im.open_s_config
+{assign:42  =42 } ' im.open_s_file
+{assign:43  =43 } ' im.open_e.say
+{assign:50	=50	} ' im.check_local_mode
+{assign:51  =51 } ' im.open_s_config
+
+' TODO: move these to the 2x range
 {assign:60	=60	} ' im.getFreeDirEntry
 {assign:61	=61	} ' im.getBlocksFree
 
-{assign:70	=70	} ' im.prepLoadIfile
-{assign:71	=71	} ' im.loadIfile
+' module loading
+{assign:70	=70	} ' im.prep_load_i.file
+{assign:71	=71	} ' im.load_i.file
 {assign:72	=72	}
-{assign:73	=73	} ' im.loadIslashFile
-{assign:74	=74	} ' im.loadSubFile
-{assign:78	=78	} ' im.prepSubLoad
-{assign:79	=79	} ' im.loadModule
+{assign:73	=73	} ' im.load_i/file
+{assign:74	=74	} ' im.load_sub.file
+{assign:78	=78	} ' im.prep_load_sub.file
+{assign:79	=79	} ' im.load_module
 {assign:80	=80	} '
 
-{assign:82	=82	} ' im.clearArrays
-{assign:83	=83	} ' im.clearTTarray
+{assign:82	=82	} ' im.clear_arrays
+{assign:83	=83	} ' im.clear_tt_array
 {assign:84	=84	} ' im.calc_prime_time
 
-{assign:85	=85	} ' im.leaveFeedback
+{assign:85	=85	} ' im.prompt_leave_feedback
 
 ' messages:
 {assign:90	=90	} ' im.center
+{assign:92	=92	} ' im.msg_canceled
+
 {assign:93	=93	} ' im.are_you_sure.no
-{assign:94	=94	} ' im.no
+{assign:94	=94	} ' im.msg_no
 {assign:95	=95	} ' im.are_you_sure.yes
-{assign:96	=96	} ' im.yes
+{assign:96	=96	} ' im.msg_yes
 
 {assign:200	=200	} '
 {assign:216	=216	} '
 {assign:220	=220	} '
 {assign:234	=234	} '
 {assign:289	=289	} ' input an$, fall through:
-{assign:290	=290	} ' convert special characters
+{assign:290	=290	} ' convert special characters in an$
 {assign:300	=300	} ' im.main_prompt
-{assign:304	=304	} '
-{assign:349	=349	} ' im.getDeviceDrive
-{assign:350	=350	} ' im.setDrive
+{assign:304	=304	} ' save array pointers (level 1), gosub 306, restore array pointers
+{assign:306	=306	} ' dimension Image 1.2 arrays
+{assign:349	=349	} ' im.prompt_device_drive
+{assign:350	=350	} ' im.set_drive
 {assign:304	=304	}
 {assign:370	=370	}
 {assign:375	=375	} '
 
+' TODO: 128, move to 3x-5x range
 {assign:390	=390	} ' im.open_e_text
 
-{assign:428	=428	} ' im.subComm1
-{assign:429	=429	} ' im.subComm2
-{assign:430	=430	} ' im.subParam1
-{assign:431	=431	} ' im.subParam2
-{assign:436	=436	} ' im.subMenus
-{assign:437	=437	} ' im.subSysDos
-{assign:438	=438	} ' im.subStats
-{assign:439	=439	} ' im.subBar
-{assign:440	=440	} ' im.subEditor
-{assign:441	=441	} ' im.subHandles
-{assign:442	=442	} ' im.subProtos
-{assign:445	=445	} ' im.subMisc
-{assign:446	=446	} ' im.subModem
-{assign:447	=447	} ' im.subInfo
-{assign:448	=448	} ' im.subLocal
-{assign:449	=449	} ' im.subMisc2
+{assign:427	=427	} ' im.sub_turbo (supercpu)
+{assign:428	=428	} ' im.sub_comm1
+{assign:429	=429	} ' im.sub_comm2
+{assign:430	=430	} ' im.sub_param1
+{assign:431	=431	} ' im.sub_param2
+{assign:436	=436	} ' im.sub_menus
+{assign:437	=437	} ' im.sub_sysdos
+{assign:438	=438	} ' im.sub_stats
+{assign:439	=439	} ' im.sub_bar
+{assign:440	=440	} ' im.sub_editor
+{assign:441	=441	} ' im.sub_handles
+{assign:442	=442	} ' im.sub_protos
+{assign:443	=443	} ' im.sub_display
+{assign:444	=444	} ' im.sub_feedback
+{assign:445	=445	} ' im.sub_misc
+{assign:446	=446	} ' im.sub_modem
+{assign:447	=447	} ' im.sub_info
+{assign:448	=448	} ' im.sub_local
+{assign:449	=449	} ' im.sub_misc2
+{assign:450	=450	} ' im.stack
 
 {assign:505	=505	} ' im.find_id
 {assign:563	=563	} '
 
 {assign:999	=999	} ' im.genericReturn
-{assign:3000	=3000	}
 
-{assign:4000	=4000	}
+{assign:3000	=3000	} ' starting line of i.* main modules
+{assign:4000	=4000	} ' starting line of i/* sub-modules
 {assign:4500	=4500	} ' starting line of i/lo.* login modules
 {assign:60000	=60000	} ' starting line of sub.* modules
-
-{endif}

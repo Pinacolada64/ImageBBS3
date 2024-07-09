@@ -58,8 +58,10 @@ print"there!"
 
 Gives the result:
 
+====
  Hello
  there
+====
 
 To work around this, you can output a _carriage return_, which moves the cursor to the beginning of the next line.
 
@@ -500,7 +502,7 @@ The string typed in response to a prompt is returned in `an$`.
 `if an$<>"" then na$=an$`: Just typing kbd:[Return] (to accept the default, `w$`) sets `an$` to a null string.
 If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
 
-.Input Line: Set Line Length, Default Text, Prompt and Allowing MCI & Graphics Characters
+.Input Line: Set Line Length, Default Text, Prompt and Allow MCI & Graphics Characters
 [source,basic]
 poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$
 
@@ -2081,10 +2083,12 @@ fora=0to3:?a,3000+a*100:next
  3         3300
 ////
 
+====
 [NOTE]
 Within Image BBS`'s line numbering scheme, you are limited to calling lines `1-32767`.
 Therefore, calculated ``goto``s cannot be used in a `sub.*` module to call lines from `60000-`.
 // TODO: change &,66 to accept a floating point parameter
+====
 
 '''
 

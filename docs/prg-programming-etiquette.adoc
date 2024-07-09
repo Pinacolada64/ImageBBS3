@@ -1,9 +1,8 @@
 // label used for inter-document cross-reference
 === Programming Etiquette [[programming-etiquette]]
 
-Be nice.
-Write clean code.
-#FIXME#
+. Number lines by twos so that adding additional code is easier.
+. Major blocks of code can start on multiples of `100`--e.g., `100`, `200`, `300`.
 
 ==== Programming Theory
 
@@ -16,30 +15,37 @@ _Static strings_ look like:
 [source, "basic"]
 10 a$="hello":b$="there"
 
-They are given a _string descriptor_ (the address, length and type of string) within the BASIC program itself.
-Normally this isn't a problem.
-However, when you load another module over the top of that string text, the string pointer still points to the same address.
-Then when printed, the string variable displays random bytes of the new module, often BASIC tokens.
+They are given a _variable descriptor_ (which includes the address, length, and type of string) which points within the BASIC program itself.
+Normally this isn`'t a problem.
+However, when you load another module over the top of that string text, the string pointer still points to the same address, which by now could be overwritten by different code.
+Now when printed, the string variable could display random bytes of the new module.
+Often these bytes are BASIC _tokens_, or BASIC keywords reduced to a single byte to save memory and improve interpretation time.
 
-There's a way to get around this.
+There`'s a way to get around this.
 
-_Dynamic strings_ are different: they're created when two strings get concatenated together.
-You've probably looked through Image's code and seen lines like:
+_Dynamic strings_ are different: they`'re created when two strings get concatenated together.
+You`'ve probably looked through Image`'s code and seen lines like:
 
-.i.SB
-[source, "basic"]
+.i.SB: String Concatenation Example
+[source, basic]
 3192 ... sy$="Su"+"b" ...
 
-The reason for concatenating two strings together like this is because strings created this way have string descriptors which point higher in memory (they get created from the top of BASIC downwards).
+Why not just write `sy$="Sub"`?
+There is a reason for concatenating two strings together like this.
+Strings created this way have string descriptors which are created from the top of BASIC, down toward the end of the BASIC program.
 Each new string defined by concatenation creates a new string, moving the pointer to that string downwards, towards the end of your BASIC program--and your static strings.
 
+.Details: Garbage Collection
 ====
-This is the whole reason _garbage collection_ exists--as more static strings and dynamic strings get defined, the pointers to the next free byte move toward each other.
-You'll eventually run out of space, triggering a garbage collection as the old definitions of strings get erased to reclaim memory.
-(Image BBS uses a custom garbage collection routine, which is much faster than the one in standard Microsoft BASIC.)
+This is the whole reason _garbage collection_ exists--as more dynamic strings get defined, the pointer to the next free byte moves toward the end of your program.
+If you define too many strings, you`'ll eventually run out of space, triggering a garbage collection to erase the old definitions of strings to reclaim memory.
+
+[NOTE]
+Image BBS uses a custom garbage collection routine, which is much faster than the one in standard Microsoft BASIC.
 ====
 
-But the long and the short of it is that the string definition caused by, _e.g._: `sy$="S"+"ub"` lives higher in memory and the text shouldn't be overwritten by loading another module, causing strings to output bytes of your program.
+But the long and the short of it is: the string definition caused by, _e.g._: `sy$="S"+"ub"` is located past the end of your program`'s code, higher in memory.
+The text shouldn`'t be overwritten by loading another module, which can sometimes cause strings to output bytes of your program.
 
 ==== Module Structure
 
@@ -47,7 +53,7 @@ When developing a module, bugs are certain to happen.
 These bugs are logged to `e.errlog`.
 There are variables shown in the error log which can be handy to show which line or module the program was in when it crashed.
 
-.`e.errlog` Filename Hints
+.e.errlog Filename Hints
 [%autowidth]
 [%header]
 |====================
@@ -60,20 +66,20 @@ There are variables shown in the error log which can be handy to show which line
 [NOTE]
 ====
 `pr$` is considered the main program name.
-`p1$` is considered a loadable module name (similar to the Little Modem Program _e.g.,_ `+.XX.YY`) sub-modules of Image 1.2.
+`p1$` is considered a sub-module name (similar to the Little Modem Program sub-modules, _e.g.,_ filenames such as `+.XX.YY` of Image 1.2).
 ====
 
 If your module spans from, say, lines `3000-4000` (or beyond), it would be a good idea to do something like:
 
 [source,basic]
 ----
-pr$="i."+"test calls":p1$=pr$
+pr$="i."+"test calls":p1$=pr$+""
 ----
 
 to assign both `pr$` (error lines 3000-) and `p1$` (error lines 4000-) to the same string.
 This avoids leaving garbage strings in `e.errlog` because of the previously-mentioned "`static string`" issue.
 
-If your module is a collection of sub-modules, it is helpful to define in your main program:
+If your module contains a collection of sub-modules, you might find it helpful to define in your main program something similar to:
 
 [source,basic]
 ----
@@ -88,7 +94,7 @@ And in your sub-module, define:
 4000 p1$=pr$+".structs"
 ----
 
-so that `e.errlog` reads:
+so that in the event of an error, `e.errlog` reads:
 
 [source]
 ----
