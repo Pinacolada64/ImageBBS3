@@ -1,5 +1,5 @@
 // IM - GGLabs modem configuration
-// include::include/im-gglabs-config.adoc[]
+// include::includes/im-gglabs-config.adoc[]
 
 :experimental:
 
@@ -44,7 +44,8 @@ Then hit any key to return to the `Modem Config` page.
 Review your settings.
 If any changes need to be made, type the corresponding number (such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type kbd:[2] and select kbd:[E]).
 
-NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<setting-up.adoc#Configure a New BBS,Configure a New BBS>>.
+NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<setting-up.adoc#configure-a-new-bbs>>
+// Configure a New BBS>>.
 
 When finished configuring your modem, type kbd:[X] to `Exit Modem Config`. Answer `Update Modem Flags?` with kbd:[Y]es.
 

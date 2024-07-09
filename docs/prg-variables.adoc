@@ -1,4 +1,5 @@
 :icons: font
+:experimental:
 
 == Variables
 
@@ -171,7 +172,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `mn%`
 | BBS
 | icon:times-circle[role=red]
-| Minute of the day: `1-1440`
+| Minute of the day: `1-1440`, updated by BBS ML.
 
 | `p1%`
 | BBS
@@ -191,7 +192,7 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `pt%`
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Active flag 
+| Prime Time: Active flag
 
 | `tc%`
 | User
@@ -234,7 +235,7 @@ template:
 | bu
 |
 |
-| 
+|
 
 | `ca`
 | BBS
@@ -294,16 +295,19 @@ template:
 | icon:times-circle[role=red]
 | BBS reservation:
 
-// lc
+| `lc`
+|
+|
+|
 
-| le
+| `le`
 |
 |
 | Lines in text editor x10
 
-| lf
+| `lf`
 | User
-|
+| icon:times-circle[role=red]
 | Linefeed flag.
 
 // lm
@@ -362,7 +366,7 @@ Use: Disable or enable word-wrap for `&` text output.
 // rq
 // rs
 // sg
-// sh - slash hit?
+// sh - ascii value of last key hit?
 // sr - copy of st?
 // st - Commodore DOS status
 // t1
@@ -491,7 +495,7 @@ Used once in `im` during boot-up, and in `i.su/config`.
 | icon:times-circle[role=red]
 | 2-character system identifier, sometimes shown with user ID.
 
-(Also MCI variable `£vn`.)
+(Also MCI variable `&#163;vn`.)
 
 | `ch$`
 | BBS
@@ -516,35 +520,35 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | Current time and date information in 11-digit format, updated by BBS ML.
 
-(Also MCI variable `£v0`.)
+(Also MCI variable `&#163;v0`.)
 
 | `d2$`
 | BBS
 | icon:times-circle[role=red]
 | Time and date of last logoff, or Library name at entry.
 
-(Also MCI variable `£v8`.)
+(Also MCI variable `&#163;v8`.)
 
 | `d3$`
 | BBS
 | icon:times-circle[role=red]
 | Handle of last user on the system.
 
-(Also MCI variable `£v9`.)
+(Also MCI variable `&#163;v9`.)
 
 | `d4$`
 | BBS
 | icon:times-circle[role=red]
 | Name of current ML protocol in memory.
 
-(Also MCI variable `£vl`.)
+(Also MCI variable `&#163;vl`.)
 
 | `d5$`
 | BBS
 | icon:times-circle[role=red]
 | True last call date of user online in 11 digit format.
 
-(Also MCI variable `£vk`.)
+(Also MCI variable `&#163;vk`.)
 
 | `d6$`
 | BBS
@@ -571,7 +575,7 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | ECS command password.
 
-| `f1$`-`f8$`
+| `f1$`--`f8$`
 | BBS
 |
 | Programmable function key definitions.
@@ -590,7 +594,7 @@ Strings must end in null byte (`nl$`).
 | `hx$`
 | BBS
 | icon:times-circle[role=red]
-| 16 hexadecimal digits: `0123456789abcdef`.
+| 16 hexadecimal digits: `"0123456789abcdef"`.
 
 | `im$`
 | BBS
@@ -629,7 +633,7 @@ Strings must end in null byte (`nl$`).
 | `ld$`
 | User
 | icon:times-circle[role=red]
-| Last call date of user in 11-digit format.
+| Last call date of user online in 11-digit format.
 Used to determine whether a message is new or not.
 
 | `ll$`
@@ -667,7 +671,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Handle of current caller.
 
-(Also MCI variable `£v2`.)
+(Also MCI variable ``&#163;v2``)
 
 | `nl$`
 | BBS
@@ -699,7 +703,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | E-mail address of current user online.
 
-(Also MCI variable `£v4`.)
+(Also MCI variable `&#163;v4`.)
 
 | `po$`
 | BBS
@@ -741,7 +745,7 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real name of user online (``ff$+" "+ll$``)
 
-(Also MCI variable `£v3`.)
+(Also MCI variable `&#163;v3`.)
 
 | `sb$`
 |
@@ -756,16 +760,22 @@ Used to determine whether a message is new or not.
 | `ti$`
 | BBS
 | icon:check[role=green]
-| C= Time-of-day clock
+| Commodore 64 Time-of-day clock
 
-// `tk$`
+| `tk$`
+|
+|
+|
 
-// `tt$`
+| `tt$`
+|
+|
+|
 
 | `tz$`
+| User
 |
-|
-| Time zone
+| Time zone string, _e.g._ `PST`.
 
 | `u$`
 | BBS
@@ -775,17 +785,20 @@ Used to determine whether a message is new or not.
 | `uf$`
 | User
 | icon:times-circle[role=red]
-| User flags.
+| User flags: a string of 20 characters containing 19 separate access flags (flag 18 is two characters).
+
+// TODO: See xref:_im_subroutines#_user_flags
 
 | `uu$`
-|
-|
+| BBS
+| icon:times-circle[role=red]
 | Command stacking string.
- 
+
 | `w$`
-|
-|
-| Word-wrap input.
+| BBS
+| icon:check[role=green]
+| During `&,1,32` (input string in edit mode), it displays `p$: w$`, a new line, ``p$: ``, then waits for input.
+If kbd:[Return] is hit without typing a response, you can assign `w$` to `an$` (the standard "`answer string`") via `an$=w$`.
 
 | `x$`
 | BBS
@@ -793,9 +806,9 @@ Used to determine whether a message is new or not.
 | System drive/LU designators #FIXME#?
  
 | `z1$`, `z2$`, `z3$`
-|
-|
-| only during boot-up or config
+| BBS
+| icon:check[role=green]
+| Only used during boot-up or BBS configuration to display information in the scrolling message area.
 
 |===
 
@@ -909,25 +922,41 @@ set up Image 1.2 arrays:
 return
 ////
 
-`bb$(31)`
+[cols=1m,2]
+[%header]
+|===
+| Variable | Purpose
 
-dt$(31)
+| bb$(31)
+|
 
-ed$(61)
+| dt$(31)
+|
 
-nn$(61)
+| ed$(61)
+|
 
+| nn$(61)
+|
 
-a%(61)
+| a%(61)
+|
 
-c%(61)
+| c%(61)
+|
 
-d%(61)
+| d%(61)
+|
 
-e%(31)
+| e%(31)
+|
 
-f%(61)
+| f%(61)
+|
 
-ac%(31)
+| ac%(31)
+| Access group information
 
-so%(31)
+| so%(31)
+| Subop information
+|===
