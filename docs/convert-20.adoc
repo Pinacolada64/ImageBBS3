@@ -25,7 +25,7 @@ NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in 
 CAUTION: What if you`'ve written custom board entry files or login screens?
 
 [start=8]
-. Copy all the `s.*` files from IMAGE 3.0 D2 to your System Disk.
+. Copy all the `s.*` files from `IMAGE 3.0 D2` to your System Disk.
 
 ****
 If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your Etcetera Disk.
@@ -40,14 +40,16 @@ include::includes/boot-command.adoc[]
 
 . Image 3.0 will perform all the necessary tasks of converting your 2.0 to 3.0 and will end up at the idle screen.
 
+====
 NOTE: Since the 3.0 modem configuration is different from 2.0, Image BBS won`'t communicate with your virtual modem yet.
 You can fix this in a later step.
+====
 
 [start=6]
 . Log on to your BBS from the console.
 . Type kbd:[IM] to go to the Configuration Editor.
 
-Continue to the <<setting-up.adoc#Shared Image BBS 3.0 Setup,Shared Image BBS 3.0 Setup>> section.
+Continue to the <<setting-up.adoc#_shared_image_bbs_3_0_setup,Shared Image BBS 3.0 Setup>> section.
 
 ////
 . Configure your modem.

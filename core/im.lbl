@@ -1,5 +1,5 @@
 ' Image BBS 3.0 "im" file
-' dated 2020-11-11
+' dated 2024-06-11
 
 ' C64List4_04.exe im.prg -lbl -crunch -keycase -varcase -ovr -alpha:alt
 
@@ -22,15 +22,15 @@
 	an$=uu$:on -(an$<>"") gosub {:310}:on -(an$<>"") goto {:314}:pl=1:&,1:goto {:310}
 {:7}
 	&"{pound}g1":a$=an$:return
-{:8}
-	&"{f6}8{f6}":return:remove
 {:9}
 ' nt=net transfer
 	on nt goto {:999}:&,69,4,21,left$(" "+cm$+"{space:21}",22),$8c:return
 {:10}
 	print#15,"p{$02}"chr$(x and 255)chr$(x/256)"{$01}":return
 {:11}
-	a=val(mid$(fl$,a,1)):return
+' return 1-digit value from fl$ unless position 18/19 [two-digit time-per-day allowed]
+'	a=val(mid$(fl$,a,1)):return
+	a=val(mid$(fl$,a,1-(a=18))):return
 {:12}
 ' reset output defaults
 	poke 53253,.:poke 2024,.:poke 2031,.:poke 53260,.:&"{pound}u0{pound}q"+chr$(df%+48):return
@@ -67,10 +67,13 @@
 {:31}
 	dr=3:a$="e.access":goto {:4}
 {:32}
-	dr=2:a$="m."+left$(tt$,14)+",s,"+a$:goto {:4}
+	dr=2:a$=left$("m."+tt$,16)+",s,"+a$:goto {:4}
 {:33}
 	dr=3:a$="e.data":goto {:4}
 {:34}
+' TODO: use w$ here instead of a$, eliminate all this shuffling of variable crap
+' &,52,46: left Xpr, Enable Express Login? why check this????
+'	e%=a%:&,52,46,3:am=a%:a%=e%:dr=3:a$="e.log"+left$(lt$,am)+",s,"+a$:goto {:4}
 	e%=a%:&,52,46,3:am=a%:a%=e%:dr=3:a$="e.log"+left$(lt$,am)+",s,"+a$:goto {:4}
 {:35}
 	dr=6:a$="u.config":goto {:4}
@@ -92,7 +95,7 @@
 {:42}
 	a$="s."+a$:dr=1:goto {:13}
 {:43}
-	dr=3:a$="e.say":gosub {:4}:on sgn(e%) goto {:999}:x=1:gosub {:1}:input#2,x
+	dr=3:a$="e.say":gosub {:4}:on e% goto {:46}:x=1:gosub {:1}:input#2,x
 {:44}
 	a=rnd(-ti):x=int(rnd(1)*x)+2:gosub {:1}
 {:45}
@@ -101,13 +104,17 @@
 	close 2:return
 {:47}
 ' TODO: ,s,a / ,s,w routine here?
-'	&"{f6}47{f6:2}":goto {:90}
+'	&"{f6}47{f6:2}":goto{:90}
 {:50}
 	if i% then return
 {:51}
+' log a$ to e.log
 	c$=a$:a$="a":gosub {:34}:if e%=. then print#2,c$
 {:52}
-	close 2:a$=c$:an$=c$:a=a%:&,52,13,3:b=a%:a%=a:if b=. then return
+' log to printer
+' TODO: use w$ as write/append variable?
+'	close 2:a$=c$:an$=c$:a=a%:&,52,13,3:b=a%:a%=a:if b=. then return
+	close 2:a$=c$:an$=c$:a=a%:&,52,13,3:if a%=. then return
 {:53}
 	open 16,4,15:close 16:if st then return
 {:54}
@@ -186,6 +193,7 @@
 {:98}
 	&"{f6}Are You Sure?: ":return
 
+' FIXME: compare to master im, possibly revert this block of changes, I didn't know what I was doing
 {:100}
 ' moved 'p2$="sub."+a$' to 110
 	gosub {:110}:is=is+1:im$(is)=im$
@@ -197,6 +205,8 @@
 {:110}
 ' 6/23/2021: Remove gosub 20, "L:"
 ' NOTE: can't find {:110} in other modules, moved 'p2$="sub."+a$' to here
+' TODO: use 110 to load sub.* files at boot-up to speed up loading modules, since the previous module doesn't need to be reloaded
+' NOTE: is im$ used anywhere else?
 	p2$="sub."+a$:dr=5:gosub {:2}:im$=a$:cm$=p2$:gosub {:9}:a$=dr$+cm$:load a$,dv%
 {:112}
 	return
@@ -258,11 +268,11 @@
 {:260}
 	rem
 {:261}
-	if ec%>0andcr-ec%<0then:&"{red}Not Enough Credits!{f6}":return
+	if ec%>. and cr-ec%<. then:&"{red}Not Enough Credits!{f6}":return
 {:262}
-	cr=cr-ec%:if ep$=""orid=1then {:264}
+	cr=cr-ec%:if ep$="" or id=1 then {:264}
 {:263}
-	&"{f6}{white}Password{blue}:{white}":&,6:if an$<>ep$then:&"{f6}{red}Incorrect Password.{f6}":return
+	&"{f6}{white}Password{blue}:{white}":&,6:if an$<>ep$ then:&"{f6}{red}Incorrect Password.{f6}":return
 {:264}
 	f4=.:on ec goto {:265},{:266},{:267},{:268}:return
 {:265}
@@ -312,7 +322,7 @@
  	pu$=an$:if an$="{f8}{f2}" then {:315}
 '	pu$=an$:on -(an$="{f8}{f2}") goto {:315}
 {:311}
-' ^x, execute command #x
+' ^x, execute command #x in command history
 	if left$(an$,1)="{f8}" then an$=hs$(10-val(mid$(an$,2,1))):goto {:314}
 {:312}
 	&,15,6,140:uu$=an$:an$=a$
@@ -594,12 +604,12 @@
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub {:3404}:close 2:close 15:open 15,dv%,15
 	fl=.:open 2,dv%,2,bd$+"bd.data,s,r":gosub {:5}
-	if e% then close 2:gosub {:3200}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto {:3084}
-	input#2,dv%(3),dr%(3),po$:close2:restore:if po$=""then po$="Main: "
-{:3092}
-	reada$:if a$<>"*"then {:3092}
-	rem if dv%=lk%thenprint#15,"l800"
-	gosub {:33}:fori=1to6:x=i+51:gosub {:1}:&,2,2:dv%(i)=val(a$)
+	if e% then close 2:gosub {:3200}:gosub {:3510}:z2$="":&"{home} ":&,28,1:goto{:3084}
+	input#2,dv%(3),dr%(3),po$:close 2:restore:if po$="" then po$="Main: "
+{:3090}
+	read a$:if a$<>"*"then {:3090}
+	rem if dv%=lk% then print#15,"l800"
+	gosub {:33}:for i=1 to 6:x=i+51:gosub {:1}:&,2,2:dv%(i)=val(a$)
 	&,2,2:dr%(i)=val(a$):next:close2
 ' i.IM/modem does write RS232 interface type to e.data
 	gosub {:33}:x=32:gosub {:1}:&,2,2:a=val(a$):close2
@@ -618,20 +628,18 @@
 	&"{f6:4}{lt. blue}Alarm Table: ":a$=dr$+"e.alarms":&,7,dv%,9:gosub {:5}:&"{cyan}Done.{f6}"
 	dr=2:gosub {:3}
 	&"{lt. blue}Network Alarm Table: ":a$=dr$+"nm.times":&,7,dv%,12:gosub {:5}:&"{cyan}Done.{f6}"
-	dr=3:a$="e.fkeys,s,r":gosub {:4}:if e%then close2:goto {:3128}
+	dr=3:a$="e.fkeys,s,r":gosub {:4}:if e% then close 2:goto {:3128}
 	z3$="Enabling Function Keys...":gosub {:3404}
-	fori=1to8:&,2,2:if right$(a$,1)="{back arrow}"then a$=left$(a$,len(a$)-1)+r$
-	tt$(i)=a$:next:close2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
+	for i=1 to 8:&,2,2:if right$(a$,1)="{back arrow}" then a$=left$(a$,len(a$)-1)+r$
+	tt$(i)=a$:next:close 2:f1$=tt$(1):f2$=tt$(2):f3$=tt$(3):f4$=tt$(4)
 '	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8):z3$="Setting Up Variables... (e.data)":gosub {:3404}
 	f5$=tt$(5):f6$=tt$(6):f7$=tt$(7):f8$=tt$(8)
 {:3128}
-	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:if e%then close2:gosub {:3250}:goto {:3128}
+	z3$="Setting Up Variables... (e.data)":gosub {:3404}:gosub {:33}:if e% then close 2:gosub {:3250}:goto {:3128}
 	x=1:gosub {:1}:&,2,2:ca=val(a$):x=12:gosub {:1}:&,2,2:ur=val(a$)-1
 	x=17:gosub {:1}:&,2,2:d3$=a$:x=18:gosub {:1}:&,2,2:pp$=a$
 	x=19:gosub {:1}:&,2,2:z$=a$:x=20:gosub {:1}:input#2,p1%,p2%,p3%
-' move l2 reservation flag here
 ' FIX: move l2 reservation flag here
-'	x=21:gosub {:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3))
 	x=21:gosub {:1}:&,2,2:l2=val(a$):l2$=(mid$(a$,3)):if l2 then:&,52,40,1
 	x=35:gosub {:1}:&,2,2:am$=a$:x=36:gosub {:1}:&,2,2:mc=val(a$)
 ' y%=time set method, lk%=lt.kernal hd device #
@@ -656,7 +664,7 @@
 	gosub {:30}:forx=1to38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2
 	an$=am$:lt$=am$:tk$=left$(am$,1):gosub {:3300}
 	close2:gosub {:3186}:&,37
-	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":fori=54272toi+24:poke i,.:next
+	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":for i=54272 to i+24:poke i,.:next
 	f1=3:&,27,1:goto {:302}
 {:3170}
 	a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
@@ -671,12 +679,18 @@
 {:3186}
 	forq=.to6:bf(q)=-1:next
 	z3$="Reading Blocks Free...":gosub {:3404}:forq=1to6:dr=q:gosub {:61}
-' NOTE: can we do {pound}!a at the end?
-' NOTE: with LtK emulation, blocks free could be 6 digit value
-' NOTE: MCI integer display outputs 1-5 digits, and so str$(a) should stand
-' TODO: look at changing str$(a) to {pound}!a
+' NOTE: with LtK emulation, blocks free could be 6-digit value
+' NOTE: MCI integer display outputs 1-5 digits, and so str$(a) should stand instead of {pound}!a
 '	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}30{cyan}"+str$(a):next:q=.:return
-	read b$:&"{f6}{rvrs off}{lt. blue} {pound}$b Disk:{pound}{back arrow}10{cyan}"+str$(a)+"{pound}{back arrow}39":next:q=.:return
+' ----+----+----+----+----+----+----+----+
+'      System Disk.........: xxxxx
+'	   E-Mail Disk.........: xxxxx
+'	   Etcetera Disk.......: xxxxx
+'	   Directory Disk......: xxxxx
+'	   Plus-File Disk......: xxxxx
+'	   User Disk...........: xxxxx
+
+	read b$:&"{f6}{rvrs off}{pound}{back arrow}05{lt. blue}"+left$(b$+" Disk...............",20)+": "+str$(a):next:q=.:return
 {:3200}
 	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
@@ -698,16 +712,16 @@
 '	lm=val(an$):a$="su.config":&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000 ' FIXME
 	a$="su.config":new4000:&,7,dv%,2:gosub {:5}:on e%+1 gosub 4000:return ' FIXME
 {:3250}
-	dr=3:a$="e.lightdefs,s,r":gosub {:4}:if e%then close2:goto {:3300}
+	dr=3:a$="e.lightdefs,s,r":gosub {:4}:if e% then close2:goto {:3300}
 	z3$="Setting Default Checkmarks...":gosub {:3404}
 ' FIXME: if e% (error condition), don't jump into the middle of a for-next loop. change to 3210 at least
-	forx=.to7:&,2,2:if len(a$)<>16then {:3258}
-'	fori=1to16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
-	fori=1to16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
+	for x=. to 7:&,2,2:if len(a$)<>16 then {:3258}
+'	for i=1 to 16:b$=mid$(a$,i,1):&,52,(x)*16+i-1,val(b$):next
+	for i=1 to 16:&,52,x*16+i-1,val(mid$(a$,i,1)):next
 {:3258}
-	next:close2
+	next:close 2
 {:3300}
-	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:if e%=.then return
+	dr=3:a$="e.log"+left$(lt$,1):gosub {:4}:if e%=. then return
 	dr=3:a$="e.log"+left$(lt$,1):gosub {:18}:close2:an$=d1$:&,15:d6$=an$
 	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub {:51}
 	gosub {:33}:x=44:gosub {:1}:print#2,d6$:close2
@@ -739,7 +753,7 @@
 	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
 	b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
 {:3408}
-	c$="{yellow}{gray3}":i=i+1:if i>2then i=1
+	c$="{yellow}{gray3}":i=i+1:if i>2 then i=1
 	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
 {:3410}
 	getan$:z=z+1:if an$<>""then z2$="":z=.:goto {:3400}
@@ -754,11 +768,10 @@
 	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
 	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
 	data"*","System","E-Mail","Etcetera","Directory","Plus-File","User"
-' TODO: put this in i.su/config
 {:3510}
 ' TODO: move this into i/su.config
-	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for Swif tlink{f6}> {pound}g1"
-	a=val(an$):if a<0ora>1then {:3510}
+	&"{f6}RS232 Device Type:{f6}Enter 0 for User Port{f6}Enter 1 for SwiftLink{f6}> {pound}g1"
+	a=val(an$):ifa<0ora>1then{:3510}
 	gosub {:33}:x=32:gosub {:1}:print#2,an$:close2:return
 {crunch:off}
 	rem copr. 1994 new image 9/21/94
@@ -766,17 +779,17 @@
 {:4000}
 	&,38:cm$=cm$+"":p$=p$+"":pr$=pr$+"":p1$=p1$+"":p2$=p2$+""
 	on-(x<128)goto {:4006}:a$="FATAL ERROR!!":gosub {:51}:sys64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
-	&,38:&,61,.,8:print"&,37:goto 300:":end
+	&,38:&,61,.,8:print"&,37:goto300:":end
 {:4006}
 	restore
 {:4008}
-	reada$:if a$<>"errors"then {:4008}
-	&,40:d$="GURU":if x>.andx<30then fork=1tox:readd$:next
+	reada$:if a$<>"errors" then {:4008}
+	&,40:d$="GURU":if x>. and x<30 then for k=1 to x:read d$:next
 	a%=x:&"{f6}{lt. red} SYSTEM ERROR #{pound}%a {white}({pound}$d ERROR){f6}":r$=chr$(13)
-	a$="im":if el=>3000then a$=pr$:if el=>4000then a$=p1$:if el=>60000then a$=p2$
+	a$="im":if el=>3000 then a$=pr$:if el=>4000 then a$=p1$:if el=>60000 thena $=p2$
 	a=el:&"{lt. blue} In Line:{gray3}{pound}!a {lt. blue}Of {gray3}{pound}$a{f6}"
 	&"{f6}{lt. red}Recording Error, Please Wait...":d$=str$(x)+" ("+d$+" ERROR)"
-	dr=3:a$="e.errlog,s,a":gosub {:4}:if e%=.then {:4024}
+	dr=3:a$="e.errlog,s,a":gosub {:4}:if e%=.then{:4024}
 	a$="e.errlog,s,w":gosub {:4}
 {:4024}
 	print#2,na$r$id;r$d1$r$ac%;r$ph$r$rn$r$co$(co%)r$
@@ -787,12 +800,12 @@
 ' etc.
 	print#2,"Program: "pr$r$"Module: "p1$r$"Sub Module: "p2$
 	print#2,"ML File: "ml$r$"Protocol: "d4$r$
-	fori=1to10:a$=chr$(58-i):if hs$(i)<>""then print#2," {f8}"a$": "hs$(i)
-'	next:print#2,"{^}":close2:poke 53280,2
+	for i=1 to 10:a$=chr$(58-i):if hs$(i)<>""then print#2," {f8}"a$": "hs$(i)
+'	next:print#2,"{^}":close 2:poke 53280,2
 ' 6/23/2021: Trb-R: enable changing border colors on error
 	next:print#2,"{^}":close 2:&,52,$39,3:if a% then poke 53280,2
 	a$="User  : "+na$+r$+"Error :"+d$+r$+"Line  :"+str$(b)+r$+"Time  : {$04}"+d1$+r$
-	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':remgosub 51
+	a$=a$+"Pfile : "+pr$+r$+"Area  : "+cm$+r$+"." ':rem gosub 51
 	close2:&,37:forx=1to4:&,11,x:next:sy$="":sb$="":sg=.
 	p2$="":is=.:p1$="":pr$="":ml$="":pr=-1:pf=.
 ' FIXME: 6/23/2021
@@ -803,7 +816,7 @@
 	a$="FATAL ERROR!!":gosub {:51}:sys 64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
 {:4050}
 ' TODO: Loc mode check just completed, 4050 not called anywhere else, so remove
-'	&,52,4,3:if (a%=1)ori%orid=1then {:4068}
+'	&,52,4,3:if a%=1 or i% or id=1 then {:4068}
 	if i% or id=1 then {:4068}
 	gosub {:4092}:kk=.:a$="s.errmail,s,r":dr=1:gosub {:4}:if e% then close 2:goto {:4068}
 {:4054}
@@ -837,4 +850,4 @@
 	gosub {:35}:x=1:gosub {:1}:&,2,2:i1$=a$:close2:return
 {crunch:off}
 	rem copr. 1996 new image 5/6/96-jlf
-	rem im (c)nissa 200929 lh-ad
+	rem im (c)nissa 2020-09-29 lh-ad

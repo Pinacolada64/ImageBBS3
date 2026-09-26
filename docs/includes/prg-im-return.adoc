@@ -1,0 +1,2 @@
+// include::includes/prg-im-return.adoc[]
+This routine exits via `return`.

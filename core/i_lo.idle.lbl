@@ -64,10 +64,13 @@
 	&,52,4,3:zz=a%:if zzthen im=4:gosub 446:goto {:4008}
 	if peek(1010)>.andmid$(am$,2,6)<>mid$(d1$,2,6)then mm=7:goto {:3000}
 	&,52,29,3:if peek(1010)>.anda%then mm=3:goto {:3000}
-	poke 646,df%:&,16:a$="":if peek(198)then geta$
-	on-(a$="")goto {:4230}:poke 198,.:onwc+1goto {:4222}
-	b=.:lm=1:fori=1towc%(0,0):if asc(a$)=wc%(0,i)then b=i:i=wc%(0,0)+1
-	next:on-(b=.)goto {:4224}:&,60,1,16,wc%(8,b),cm$:gosub 9:&,60,1,11,wc%(2,b),a$
+	poke 646,df%:&,16:a$="":if peek(198) then get a$
+' 10 b=1:on b+1 goto 20:print"b<>0":end
+' 20 ?"b=0"
+' see "i.edit idlecmds" for info:
+	on -(a$="") goto {:4230}:poke 198,.:if wc=. then {:4222}
+	b=.:lm=1:for i=1 to wc%(0,0):if asc(a$)=wc%(0,i) then b=i:i=wc%(0,0)+1
+	next:on b+1 goto {:4224}:&,60,1,16,wc%(8,b),cm$:gosub 9:&,60,1,11,wc%(4,b),a$
 	lm=wc%(1,b):mm=8:goto 72
 {:4222}
 	x=val(a$):if xthen onxgoto {:4450},{:4465},{:4465},{:4465},{:4462},{:4464},{:4452},{:4454}
@@ -88,10 +91,12 @@
 {:4254}
 	im=7:goto 446
 {:4256}
+' modem carrier xor value:
 	poke 53258,16-peek(53258):return
 {:4258}
 	mm=7:goto {:3000}
 {:4259}
+' modem carrier xor value:
 	poke 53258,16-peek(53258):goto {:4204}
 {:4260}
 	poke 2042,.:poke 53248,1:&"{clear}{f6:2}Loading Image-Term..{f6}":gosub 304:b$="term":x=11
@@ -101,17 +106,19 @@
 {:4266}
 	gosub {:4040}:goto {:4204}
 {:4270}
-	on-(a$="?")goto {:4300}:poke 53248,1:poke 971,16:&"{clear}{f6}{cyan}{$ac}{pound}o{$a2}{pound}o{$a2}{pound}h1{lt. blue}{$bb}{f6}"
-	&"{cyan}{rvrs on}{$a1}{lt. blue}1)Set Time{pound}{back arrow}202)View BAR{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}3)View Blocks Free{pound}{back arrow}204)View"
-	&" Clock/Calls{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}5)Garbage Collect{pound}{back arrow}206)Reset Modem{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
-	&"{cyan}{rvrs on}{$a1}{lt. blue}7)Set Password{pound}{back arrow}208)View Logs{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}+)Speaker On{pound}{back arrow}20-)Speaker "
+' TODO: use blocks free display subroutine?
+	on -(a$="?")goto {:4300}:poke 53248,1:poke 971,16:&"{clear}{f6}{cyan}{$ac}{pound}o{$a2}{pound}o{$a2}{pound}h1{lt. blue}{$bb}{f6}"
+	&"{cyan}{rvrs on}{$a1}{lt. blue}1) Set Time{pound}{back arrow}202) View BAR{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}3) View Blocks Free{pound}{back arrow}204) View"
+	&" Clock/Calls{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}5) Garbage Collect{pound}{back arrow}206) Reset Modem{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+	&"{cyan}{rvrs on}{$a1}{lt. blue}7) Set Password{pound}{back arrow}208) View Logs{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}+) Speaker On{pound}{back arrow}20-)Speaker "
 	&"Off{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}{back arrow})Image-Term{pound}{back arrow}20A)Auto-Maint{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}R)Re-Load LO{pound}{back arrow}20"
-	&"T)Invert Carrier  {blue}{rvrs off}{$a1}{f6}":if wc%(.,.)=.then {:4290}
-	a=.:fori=1towc%(.,.):a$=mid$("{cyan}{rvrs on}{$a1}{lt. blue}",a*4+1):e$=mid$("{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{pound}{back arrow}20",(1-a)*8+1,8)
-	on-(wc%(0,i)=0)goto {:4288}:b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
+' more "e.idle cmds" stuff:
+	&"T)Invert Carrier  {blue}{rvrs off}{$a1}{f6}":if wc%(.,.)=. then {:4290}
+	a=.:for i=1 to wc%(.,.):a$=mid$("{cyan}{rvrs on}{$a1}{lt. blue}",a*4+1):e$=mid$("{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{pound}{back arrow}20",(1-a)*8+1,8)
+	on -(wc%(0,i)=0) goto {:4288}:b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
 	&a$+b$+")"+c$+e$:a=1-a
 {:4288}
-	next:if a=1then:&"{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+	next:if a=1 then:&"{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
 {:4290}
 	&"{lt. blue}{$bc}{blue}{rvrs on}{pound}o{$a2}{pound}o{$a2}{pound}h1{rvrs off}{$be}{f6}":poke 53248,.:poke 2042,.:k=50:return
 {:4300}
@@ -132,7 +139,7 @@
  	&,52,$36,3:m$="{pound}# {pound}#4{pound}%m Min ":for i=. to 9:m%=l%(7,i)
 ' 4410: getString: c$=caller, getDate: an$=date wmmddyyhhmm
 	&,60,1,20,l%(8,i),c$:&,60,5,.,l%(1,i),an$:if len(c$)<4 then {:4415}
-' 4411: format d$="mm/dd" from short date; &,15: get long date, t$="hh:mm P"
+' 4411: format d$="mm/dd" from short date; &,15: get long date, t$="hh:mm xM"
 	d$=mid$(an$,4,2)+"/"+mid$(an$,6,2):&,15:t$=right$(an$,7)+"M"
 ' 4412:
 	if a%=. then:&"{f6}{rvrs on}{gray2}{pound}$d @ {pound}$t"+m$

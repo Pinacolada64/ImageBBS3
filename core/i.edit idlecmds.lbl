@@ -50,7 +50,7 @@
 ' tz (edit flag) = 1 [no "edits" have taken place, but it forces a save prompt on quit]
 ' wc%(0,0) = 1 [# of items in struct]
 ' sample keypress: "0", lm=0
-	tz=1:wc%(0,0)=1:wc%(0,1)=asc("0"):wc%(1,1)=0
+	tz=1:wc%(0,0)=1:wc%(0,1)=asc("0"):wc%(1,1)=1
 ' sample filename: "test"
 	&,60,0,11,wc%(2,1),"test"
 ' sample menu item text: "Test"
@@ -244,14 +244,17 @@
 ' so looks like the struct layout is thus:
 ' from 4220- i/lo.idle:
 ' dim wc%(15,30)
-' <n>=struct
-' wc%(0,<n>) 1  byte  - [k]ey
-' wc%(1,<n>) 1  byte  - [l]m value, "sub-task" within a multi-function module
-' wc%(2,<n>) 11 bytes - [f]ilename ("i/lo-"+a$)
-' wc%(8,<n>) 16 bytes - [t]itle to display in menu/Area window
+'
+' element,<n>="record" in struct
+'   wc%(0,<n>) 2  bytes - [k]ey
+'   wc%(1,<n>) 2  bytes - [l]m value, "sub-task" within a multi-function module
+'   wc%(2,<n>) 6  bytes - [f]ilename ("i/lo-"+a$ is 11+.5 rounded up to 12)
+'   wc%(8,<n>) 16 bytes - [t]itle to display in menu/Area window
 
-' *** each element uses two bytes if stored in an integer array ***
+' *** each integer array element uses two bytes ***
 
-' 0   1   2    7   8     15
+'                    1    1
+' 0   1   234567   89012345  element
+'0-1 2-3  4 - 15   16 -- 31  byte
 '[k] [l] [ffffff] [tttttttt]
-' 1   1     11        16     bytes
+' 1   1     12        16     bytes

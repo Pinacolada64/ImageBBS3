@@ -28,9 +28,8 @@ I`'d like to thank the Academy...
 
 == Introduction
 
-```
+[source, basic]
 print"hello, world"
-```
 
 == In the Beginning
 
@@ -77,7 +76,7 @@ Ryan is writing these.
 MIT license? https://mit-license.org/
 Only trouble is "`for profit`" phrasing.
 
-include::03-supported-hardware.adoc[]
+include::../03-supported-hardware.adoc[]
 // == Supported Hardware
 
 == Modem/Telnet Bridge Setup
@@ -432,7 +431,7 @@ They will be transferred to both the #TODO# _Command Reference Appendix_ and rel
 
 === `MENU`  Access-Aware Menu Editor
 
-Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way,  the user only sees commands they have access to).
+Generates `e.menu *` (PRG) files from `s.menu *` (SEQ) files which are access level aware (that way, the user only sees commands they have access to).
 The access levels have to be set for each command.
 
 === `MU`    Message Move Utility

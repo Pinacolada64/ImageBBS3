@@ -20,15 +20,18 @@ There is no need to press kbd:[Return] at the end of each line.
 The editor uses _word-wrap_, so words which extend past the edge of the screen will be erased and put at the beginning of the next line.
 
 As the sysop, you can define how many lines of text (in multiples of ten) a user can type into the editor.
-(#TODO#: Refer to User Flags for more information.)
+
+TIP: Refer to xref:prg-im-routines.adoc#user-flags,User Flags for more information.
+
 If a user is in local or pseudo-local mode, they are allowed 253 lines in the editor.
 
 The amount of free memory is kept track of.
 If this amount becomes too small (less than 256 bytes), the message
 
-```
+[source]
+----
  *** End Of Memory ***
-```
+----
 
 appears, and you must use kbd:[.S] to save, or kbd:[.A] to abort.
 
@@ -137,12 +140,13 @@ This displays line numbers, used in line ranges for other commands, and the text
 
 `Editor Command: kbd:[L]ist kbd:[1-2]`
 
-```
+[source]
+----
 1:
 This is line one.
 2:
 This is line two.
-```
+----
 
 If no line range is given for the kbd:[.R]ead, kbd:[.L]ist, or kbd:[.M]CI Read commands, all text in the buffer is read or listed.
 
@@ -173,12 +177,14 @@ Then the same line number is displayed, and you may then type the new line below
 
 .Example:
 `kbd:[.]Editor Command: kbd:[E]dit kbd:[1]`
-```
+
+[source]
+----
 1:
 This is line one.
 1:
 _
-```
+----
 
 * kbd:[DELete] or kbd:[Return] as the first character on the line causes the editor to respond with `(No Change.)` and return to the main editor.
 * kbd:[.] as the first character causes `Editor Command:Exit` to appear and abort the Edit command.
@@ -199,11 +205,12 @@ Enter the line range after the `Move&#160;` prompt.
 
 Enter these lines:
 
-```
+[source]
+----
 line 1
 line 2
 line 3
-```
+----
 
 `kbd:[.]Editor Command:kbd:[Y]Move kbd:[1]`
 
@@ -211,14 +218,15 @@ line 3
 
 `Editor Command:kbd:[L]ist`
 
-```
+[source]
+----
 1:
 line 2
 2:
 line 1
 3:
 line 3
-```
+----
 
 ==== Copy Lines
 
@@ -451,7 +459,9 @@ A filename, device and drive are prompted for.
 kbd:[.!] issues a DOS command.
 
 ====
-TIP: If a "`new`" (starts with `n`) or "`scratch`" (starts with `s`) DOS command is issued, you are prompted to confirm your actions.
+TIP: If a "`new`" DOS command (which can format a disk or partition; it starts with `n`) or "`scratch`" DOS command (which can delete a file or group of files using DOS wildcards; it starts with `s`) is issued, you are prompted to confirm your actions with a "`yes/no`" prompt.
+Selecting kbd:[N]o will not perform the command.
+Selecting kbd:[Y]es performs the command.
 ====
 
 === Get Help

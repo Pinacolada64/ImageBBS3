@@ -1,10 +1,11 @@
 :experimental:
+:icons: font
 
 == Setting Up
 
 === Image Drive Numbers
 
-(((Image drive))) Image drive numbers are
+(((Image drive))) Image drive numbers are #FIXME#
 
 === Boot Disk
 
@@ -14,7 +15,7 @@
 
 ==== Upgrade From 2.0
 
-=== New Setup of 3.0
+=== New Setup of 3.0 [[configure-a-new-bbs]]
 
 ==== Sysop Information
 
@@ -30,26 +31,29 @@ Handle, First/Last Names, Email Address, Password
 
 ==== BBS Information
 
-BBS Name, Main Prompt, Chat Messages, NEW Credits
+BBS Name, Main Prompt, Chat Messages, NEW User Credits
 
 ==== RS232 Interface Type
 
 === Shared Image BBS 3.0 Setup
 
 Since a lot of steps are shared between different upgrade options, I chose to add this "`Shared Image BBS 3.0 Setup Steps`" section to cut down on a few pages of duplicate instructions.
-#TODO#: Verify the steps are in fact word-for-word duplicates.
+
+// TODO: Verify the steps are in fact word-for-word duplicates.
 
 === Introducing the `IM` Configuration Editor
 
-#TODO#: Cross-reference more in-depth `IM` chapter.
+// TODO: Cross-reference more in-depth `IM` chapter.
 
 ==== GGlabs GLink232-LT
 
 SwiftLink clone
 
-#TODO#: This will incorporate Larry`'s docs plus re-use additional information in the expanded 1.2b docs.
-Give URL of GGlabs order page.
-This needs work to be fully converted to ASCIIdoctor still.
+////
+TODO: This will incorporate Larry`'s docs plus re-use additional information in the expanded 1.2b docs.
+ Give URL of GGlabs order page.
+ This needs work to be fully converted to ASCIIdoctor still.
+////
 
 === Final Notes
 
@@ -299,7 +303,7 @@ include::includes/boot-command.adoc[]
 
 [start=4]
 
-. When you are prompted
+. When you are prompted #FIXME#
 
 ....
 Insert All System Disks In Correct
@@ -347,14 +351,14 @@ Configure your Image drive assignments.
 
 You can customize information asked for pertaining to your BBS.
 
-#TODO#: Seems like this part could be folded into <<Shared Image BBS 3.0 Setup>>. I'm not sure if the conversion process follows these steps exactly.
+// TODO: Seems like this part could be folded into <<Shared Image BBS 3.0 Setup>>. I'm not sure if the conversion process follows these steps exactly.
 
 At this point, Image BBS creates several files needed for its own operation.
 When finished, Image BBS displays a message for you to read and asks you to `Hit any key`.
 
 You are then prompted for the RS232 interface type you have connected to the C64:
 
-- Enter kbd:[0] if you have an OmniTronix or similar user port interface
+- Enter kbd:[0] if you have an OmniTronix, GGLabs, or similar user port interface.
 
 - Enter kbd:[1] if you have a SwiftLink, Turbo232, or a clone of these on the cartridge port.
 
@@ -497,16 +501,44 @@ The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
 === Online Configuration
 
-The BBS greets you with a welcome message and prompts you to select your time zone.
+The BBS greets you with a welcome message.
 
-. Select your time zone (kbd:[7]=EST, kbd:[6]=CST, kbd:[5]=MST, kbd:[4]=PST)
-. The BBS will display the current time and `Stack Free: 239`.
+==== Select System Time Zone
+
+You are prompted to select the BBS`'s time zone.
+This is so that when callers from another time zone call, they can see times in their own local time zone.
+
+. Select your time zone.
+
+.US Time Zones
+[%autowidth]
+|===
+| Key | Time Zone
+
+| kbd:[7]
+| Eastern Standard Time (EST)
+
+| kbd:[6]
+| Central Standard Time (CST)
+
+| kbd:[5]
+| Mountain Standard Time (MST)
+
+| kbd:[4]
+| Pacific Standard Time (PST)
+|===
+
+There are other time zones as displayed in the list.
 
 ====
 NOTE: Initially, the time may be off by a few hours.
 This is because the system`'s time zone has not been set for the BBS clock.
 You can fix this later, during further BBS configuration.
+====
 
+. The BBS will display the current time and `Stack Free: 239`.
+
+====
 NOTE: Any `Stack Free` number less than 239 at the Main Prompt means there is garbage (`gosub` without `return`, or `for` without `next` statements) on the stack.
 ====
 
@@ -652,7 +684,7 @@ The remaining items in the `Base Editor` menu are sysop utilities for maintainin
 . Select kbd:[K] `Quit` to return to the main menu.
 . Select kbd:[Q] `Quit` to exit to the Main Prompt.
 
-Refer to <<final-notes>> for further instructions.
+Refer to <<_final_notes>> for further instructions.
 
 ////
 ### Configuration
@@ -751,7 +783,7 @@ If you are using a CMD RTC to set the BBS clock at boot-up, this would be a good
 
 If you would like to convert the file, follow these steps:
 
-#FIXME# more exact steps.
+// FIXME: more exact steps.
 
 .. Type kbd:[RD] at the Main Prompt.
 Read the SEQuential file `e.i.macros`.
@@ -768,7 +800,7 @@ TIP: You might want to move this record to the end of the file, since the first 
 .. Edit record 1, replacing the data in it with a number equal to 1 less than the number of macros in `e.i.macros`.
 .. You can then use kbd:[DC] to scratch `e.i.macros`, since it is not needed anymore.
 
-=== Final Notes
+=== Final Notes [[final-notes]]
 
 From here, explore and become familiar with the new features.
 

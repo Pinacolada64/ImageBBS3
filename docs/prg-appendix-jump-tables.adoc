@@ -1,0 +1,106 @@
+.Details: Jump Tables
+****
+A _jump table_ is used to give assembly language routines stable entry point addresses that don't change, even if routines pointed to change in size or location.
+This is done by maintaining a list of routine addresses to be "`jumped to`" (the instruction is ``jmp`` in 6510 assembly code).
+
+In other words: if there are several routines in a protocol file that do _not_ use a jump table, entry point addresses will change as a routine's size changes, shifting subsequent inline routine entry points around by the number of bytes added or subtracted by the modification.
+
+Here are three cases illustrated where not having a jump table, having a jump table, and the ease of maintaining stable routine entry points
+
+.Without a Jump Table
+If your code doesn't use a jump table, you must modify BASIC `sys` addresses (shown in **bold**) as your routines change size or location.
+
+[%autowidth]
+[%header]
+[cols="1m,2m,3m,4m"]
+[grid="none"]
+|===
+| sys&#160;address | address  | instruction | comment
+| `sys 49152` | **c000** | lda #$01    | ; routine 1
+|             |   c002   | rts         |
+| `sys 49155` | **c003** | lda #$02    | ; routine 2
+|             |  c005    | rts         |
+| `sys 49158` | **c006** | lda #$03    | ; routine 3
+|             |   c008   | rts         |
+|===
+
+In other words: if there are several routines in a protocol file that does _not_ use a jump table, entry point addresses will change as a routine's size changes, shifting subsequent inline routine entry points around by the number of bytes added or subtracted by the modification.
+
+When a few instructions are added to routines as illustrated below, the entry points change.
+Continually updating BASIC `sys` addresses as your routines change size is both tedious and unnecessary.
+
+.Without a Jump Table, Modified
+[%autowidth]
+[%header]
+[cols="1m,2m,3m,4m"]
+[grid="none"]
+|====
+| sys&#160;address | ML&#160;address | instruction | comment
+| `sys 49152` |  **c000**  | lda #$01    | ; sub-function 1: &,16[,0]
+|             |    c002    | ldx #$02    |
+|             |    c004    | ldy #$03    |
+|             |    c006    | rts         |
+| `sys 49159` |  **c007**  | lda #$02    | ; sub-function 2: &,16,1 (or &,17)
+|             |    c009    | rts         |
+| `sys 49162` |  **c00a**  | lda #$03    | ; sub-function 3: &,16,2
+|             |    c00c    | rts         |
+|====
+
+.With a Jump Table
+If you start code out with a jump table to your routine entry points, it acts as a springboard to point to your functions in the right direction, no matter where they end up being relocated to.
+
+Instead, just change the address that the jump table entry ``jmp``s to, and you can keep the BASIC ``sys`` address that calls the routine the same (stable).
+
+As an example, each of these instructions in a fictitious protocol`'s assembly language jump table starting at ``$c000`` take 3 bytes:
+
+[%autowidth]
+[%header]
+[cols="1m,2m,3m,4m"]
+[grid="none"]
+|====
+| sys&#160;address | ML&#160;address | instruction | comment
+| `sys 49152` |    c000    | jmp **$c009** | ; call sub-function 1: &,16[,0]
+| `sys 49155` |    c003    | jmp **$c00f** | ; call sub-function 2: &,16,1 (or &,17)
+| `sys 49158` |    c006    | jmp **$c012** | ; call sub-function 3: &,16,2
+|             |  **c009**  | lda #$01      | ; sub-function 1
+|             |    c00b    | ldx #$02      |
+|             |    c00d    | ldy #$03      |
+|             |    c00e    | rts           |
+|             |  **c00f**  | lda #$02      | ; sub-function 2
+|             |    c011    | rts           |
+|             |  **c012**  | lda #$03      | ; sub-function 3
+|             |    c00c    | rts           |
+|====
+
+.With a Jump Table, Modified
+When the routines grow in size, you just adjust the addresses in the `jmp` table, from `$c000-$c009`.
+
+[%autowidth]
+[%header]
+[cols="1m,2m,3m,4m"]
+[grid="none"]
+|====
+| sys&#160;address | ML&#160;address | instruction | comment
+| `sys 49152` |    c000    | jmp **$c009** | ; call sub-function 1: &,16[,0]
+| `sys 49155` |    c003    | jmp **$c00f** | ; call sub-function 2: &,16,1 (or &,17)
+| `sys 49158` |    c006    | jmp **$c012** | ; call sub-function 3: &,16,2
+|             |  **c009**  | lda #$01      | ; sub-function 1
+|             |    c00b    | ldx #$02      |
+|             |    c00d    | ldy #$03      |
+|             |    c00e    | rts           |
+|             |  **c00f**  | lda #$02      | ; sub-function 2
+|             |    c011    | rts           |
+|             |  **c012**  | lda #$03      | ; sub-function 3
+|             |    c00c    | rts           |
+|====
+
+
+`c000: jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
+
+`c003: jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
+
+`c006: jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+
+`c009:` _<first byte of first routine>_
+****
+

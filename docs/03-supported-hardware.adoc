@@ -1,4 +1,4 @@
-:icon: image
+:icons: font
 
 == Supported Hardware
 
@@ -36,7 +36,7 @@ icon:check[role=green] This hardware is emulated in VICE, if you purchase the Ji
 
 ==== CMD Hard Drive
 
-The (((hard drive, Creative Micro Designs))) Creative Micro Designs hard drive was manufactured by CMD for a high degree of compatability with Commodore 64/128 computers.
+The (((hard drive, Creative Micro Designs))) Creative Micro Designs hard drive was manufactured by CMD for a high degree of compatibility with Commodore 64/128 computers.
 
 icon:check[role=green] As of October 2020, this hardware is emulated in VICE 3.5.
 
@@ -55,7 +55,7 @@ The (((hard drive, Lt. Kernal))) Lt. Kernal hard drive was manufactured by Fisca
 icon:check[role=green] As of October 2020, this hardware is emulated in VICE 3.5, although it needs a Host Adapter cartridge image not shipped with VICE.
 
 ====
-TIP: Both the cartridge image and setup instructions are available for download from a ZIP file in a https://sourceforge.net/p/vice-emu/patches/_discuss/thread/fe9b5cbac1/0628/attachment/LTK-testfiles.zip[VICE development thread].
+TIP: Both the Host Adapter cartridge image and setup instructions are available for download from a ZIP file in a https://sourceforge.net/p/vice-emu/patches/_discuss/thread/fe9b5cbac1/0628/attachment/LTK-testfiles.zip[VICE development thread].
 ====
 
 ==== Rear Admiral Hard Drive
@@ -89,15 +89,18 @@ It has many functions:
 * Kernal replacement
 * SwiftLink emulation on the II+
 
-It is available for purchase from the https://ultimate64.com/[1541 Ultimate website].
+It is available for purchase from the https://ultimate64.com/[1541 Ultimate web site].
 
 icon:times-circle[role=red] This hardware is not emulated within VICE.
 
-=== Real-Time Clock Chips
+=== Real-Time Clocks
 
-_Real-time clocks_ (RTCs) update the timestamps when files are created or modified using mass storage devices like large capacity disk drives, hard drives or RAMdrives.
+_Real-time clocks_ (RTCs) do two things:
 
-There are several pieces of hardware which support this.
+* set the system clock at boot time
+* update disk directory timestamps when files are created or modified.
+
+There are several mass storage devices which support this: large capacity disk drives, hard drives or RAMdrives.
 
 ==== CMD FD 2000/4000
 
@@ -114,43 +117,56 @@ icon:check[role=green] These devices are emulated within VICE 3.5, if you get th
 
 ==== Dallas Semiconductor DS12C887 Emulation
 
-This is a RTC which plugs into the expansion (cartridge) port.
-It reads the date and time from the host operating system.
+(((RTC, DS12C887))) This plugs into the expansion (cartridge) port.
 
-icon:check[role=green] (((real-time clock, DS12C887))) This feature is emulated within VICE.
+icon:check[role=green] This feature is emulated within VICE.
+It reads the current date and time from the host operating system.
 
 ====
-TIP: The DS12C887 emulation has a number of addresses it can be set to in order to read the operating system`'s date and time  while in BASIC.
+TIP: The DS12C887 emulation has a number of addresses it can be set to in order to read the operating system's date and time  while in BASIC.
 While running the BBS, addresses `$d500` or `$d600` should be used.
 Other addresses conflict with either:
 
 // TODO: check LtK and DS12C887 interoperability!
 
-* the BBS`'s existing ML
-* a SwiftLink-232/Turbo232 cartridge`'s default memory addressing at `$de00`
-* _possibly_ the Lt. Kernal`'s host adapter; tests need to be done. (If this works, it will be a good way to set the clock on boot.)
+* the BBS's existing ML
+* a SwiftLink-232/Turbo232 cartridge's default memory addressing at `$de00`
+* _possibly_ the Lt. Kernal's host adapter; tests need to be done. (If this works, it will be a good way to set the clock on boot.)
 ====
 
 icon:times-circle[role=red] While test code has been written to read the RTC and set the BBS clock, it is not yet officially integrated into Image BBS.
 
 === Modems
 
-==== RS-232 Bridges
+==== Wifi Modems
 
-(((RS232 bridge)))
+// TODO: could use some direction on this, don't have any of the hardware
 
-==== Telnet BBS Cable
+// CometPlus: http://cometplus.net/
 
-(((RS232 bridge, telnet cable)))
+=== RS-232 Bridges
 
-=== Peripherals
+An RS-232 bridge (((RS232 bridge))) program does two major things:
 
-==== CMD SuperCPU
+* emulates a modem for the BBS to communicate with
+* forwards outgoing BBS traffic to the Internet
+* forwards incoming traffic to the BBS
 
-(((hardware, CMD SuperCPU))) A 65816 CPU 8/16-bit upgrade for the C64 and C128.
-It provides 20 mHz speed enhancements to software.
+==== BBS Server
 
-icon:check[role=green] This is emulated only in `xscpu64`, the C64 SuperCPU version of VICE.
+==== tcpser
+
+=== RS-232 Interfaces
+
+An RS-232 interface (((RS232 interface))) is a module which plugs directly into the Commodore 64 and handles sending data to or receiving data from either a RS-232 bridge or a modem.
+Depending on the type, it can plug into either the user port, or cartridge (expansion) port.
+Only one type can be used at a time, due to the structure of the RS-232 machine language code in Image BBS.
+
+==== GGLabs GLink-LT
+
+Glink-LT is a modern clone of the Commodore VIC-1011A RS232 user port adapter for Commodore 8-bit computers.
+
+Specifications and ordering information can be found on the https://gglabs.us/node/2044[GGLabs GLink-LT web page].
 
 ==== SwiftLink-232
 
@@ -159,18 +175,6 @@ icon:check[role=green] This is emulated only in `xscpu64`, the C64 SuperCPU vers
 On a physical C64, the SwiftLink-232 cartridge plugs into the expansion (cartridge) port and provides speeds up to 38,400 BPS.
 
 icon:check[role=green] This is emulated within VICE.
-
-==== 1541 Ultimate II+ SwiftLink Emulation
-
-(((RS232 interface, 1541 Ultimate II+ SwiftLink Emulation)))
-
-Starting with firmware version 3.7, basic emulation of the SwiftLink cartridge is possible, using the Ethernet port on the 1541 Ultimate for RS232 I/O and allow incoming and outgoing connections using terminal programs or BBSes.
-
-With firmware version 3.10a dated July 2021, the `atv1` Hayes command (terse numeric modem responses) is supported, which Image BBS uses.
-
-icon:times-circle[role=red] The 1541 Ultimate II+ is not emulated within VICE...
-
-icon:check[role=green] ...although the SwiftLink-232 and Turbo232 are.
 
 ==== CMD Turbo232
 
@@ -184,13 +188,39 @@ NOTE: 38.4K is the highest BPS rate that the Image 3.0 RS232 routines support.
 
 icon:check[role=green] This hardware is emulated within VICE.
 
-==== GGlabs GLink232-LT
+==== GGLabs GLink232T
 
-(((RS232 interface, GGlabs GLink232-LT)))
+(((RS232 interface, GGlabs GLink232T)))
 
-A clone of the Turbo232 interface, it can be ordered from https://gglabs.us/node/2057[GGLabs`' store].
+A clone of the Turbo232 interface, it can be ordered from https://gglabs.us/node/2057[GGLabs' store].
 
 icon:times-circle[role=red] This hardware is not emulated within VICE.
+
+==== 1541 Ultimate II+ SwiftLink Emulation
+
+(((RS232 interface, 1541 Ultimate II+ SwiftLink Emulation)))
+
+Starting with firmware version 3.7, basic emulation of the SwiftLink cartridge is possible, using the Ethernet port on the 1541 Ultimate for RS232 I/O and allow incoming and outgoing connections using terminal programs or BBSes.
+
+With firmware version 3.10a dated July 2021, the `atv1` Hayes command (terse numeric modem responses) is supported, which Image BBS uses.
+
+icon:times-circle[role=red] The 1541 Ultimate II+ is not emulated within VICE...
+
+icon:check[role=green] ...although the SwiftLink-232 and Turbo232 are.
+
+=== Telnet BBS Cable
+
+If you use a real Commodore 64 to host your BBS, you use an RS-232 bridge program to forward BBS data to the Internet via the telnet protocol.
+To connect the Commodore 64 to the RS-232 bridge program, you need a cable which connects to the Commodore 64 on one end (((RS232 bridge, telnet cable))) and the computer running the RS-232 bridge on the other end.
+
+=== Other Peripherals
+
+==== CMD SuperCPU
+
+(((hardware, CMD SuperCPU))) A 65816 CPU 8/16-bit upgrade for the C64 and C128.
+It provides 20 mHz speed enhancements to software.
+
+icon:check[role=green] This is emulated only in `xscpu64`, the C64 SuperCPU version of VICE.
 
 === Printers
 

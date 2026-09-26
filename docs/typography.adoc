@@ -1,8 +1,11 @@
 :experimental: // enable kbd:[] macro
+:icons: font
 
 === Typography Notes
 
 There are several conventions used in this manual.
+
+==== Variable Names
 
 _Italic text_ represents a variable.
 
@@ -11,17 +14,21 @@ _name_
 
 Variable names made of two words are tied together with an underscore (`_`).
 
-.Variable Name
-====
+.Compound Variable Name
+****
 ``__first_name__``
-====
+****
 
 This method differentiates _first_name_ as being separate from two variables named _first_ and _name_.
 
-The highlighted words #FIXME# and #TODO# represent things in the documentation which aren`'t complete yet, but are intended to be finished as soon as possible.
+==== Highlighted Text
+
+The highlighted words #FIXME# and #TODO# represent things in the documentation which aren't complete yet, but are intended to be finished as soon as possible.
+
+==== Keyboard Keys and Typed Commands
 
 Letters enclosed in rounded, shaded squares represent keys on the Commodore 64 keyboard.
-They generally are either options, or should be pressed, during a series of instructions in the manual.
+They generally are either options for, or should be pressed during, a series of instructions in the manual.
 
 .Keyboard Keys
 ====
@@ -29,12 +36,13 @@ kbd:[Ctrl] or kbd:[f1]: A single keypress.
 
 kbd:[Shift+T]: Two keys with a **+** between them represent holding down the first key while typing the second key.
 
-kbd:[.C]: Two keystrokes in sequence
+kbd:[.],kbd:[C]: Two keystrokes in sequence
 ====
+
+.Typed Commands
 
 The same notation can also represent BBS commands typed at a prompt.
 
-.User Commands
 ====
 * kbd:[ST], kbd:[AT], or kbd:[O!]
 * Type kbd:[Y]es
@@ -50,7 +58,7 @@ Monospace text on a gray background usually represents output shown on the scree
 Bold monospace text represents text typed by the user in response to a prompt.
 
 .Example
-`Enter your user name or ID#: **45**`
+`Enter your user name or ID#: **45**` kbd:[Return]
 
 ==== Callouts
 
@@ -64,7 +72,7 @@ Example code <1>
 More examples <2>
 
 ----
-<1> A longer explanation of what the first line of code, data  or instruction does goes here.
+<1> A longer explanation of what the first line of code, data  or instruction does will go here.
 
 <2> Another explanation of the next line of example code, data or instruction.
 
@@ -76,16 +84,16 @@ They are presented here, in order of increasing severity, with some examples fro
 ====
 NOTE: **Note**
 
-This is extra information which #FIXME#
+This is extra information about a topic which is considered important.
 
 .Example
-x
+#FIXME#
 ====
 
 ====
 TIP: **Tip**
 
-This can be advanced information, or letting you know something helpful which isn`'t immediately obvious from what is presented on screen.
+This can be advanced information, or letting you know something helpful which isn't immediately obvious from the documentation--perhaps it's semi-hidden in a BBS module, or not presented as an option on screen.
 
 .Example
 When in the Image Term phonebook, some options such as kbd:[D]ial or kbd:[E]dit allow typing either:
@@ -98,11 +106,13 @@ When in the Image Term phonebook, some options such as kbd:[D]ial or kbd:[E]dit 
 ====
 IMPORTANT: **Important**
 
-x
+This can be used to emphasize a point in the documentation which is
 
 .Example
 Also copy `im` to your modules disk.
 If a BASIC error is caught by the error-trapping routine, the `im` module reloads from the modules disk instead of the copy on the boot drive or partition that you booted the BBS from.
+
+Without this second copy of `im` present, your BBS may crash when an error is encountered.
 ====
 
 ====
@@ -126,12 +136,24 @@ The warning should contain an explanation of why doing something is harmful.
 Deleting the configuration file `bd.data` requires you to reconfigure many aspects of your BBS.
 ====
 
+==== Sidebars
+
+These contain information which can be of interest to some, but is not required reading.
+They look like this:
+
+.Details: Something or Other
+****
+This is a deep dive into a technical issue that may be skipped over depending on the reader's interest.
+****
+
 ==== Command Path
 
-Like a search path in an operating system, this gives you the steps to reach a command.
+Like a search path for executables in an operating system, this gives you the location of (and steps to reach) a command.
 
-.Command Path Example
+.Command Path
 ====
+To add sysops to the immediate logon list:
+
 The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 ====
 

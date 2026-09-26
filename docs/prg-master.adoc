@@ -58,3 +58,6 @@ include::prg-lightbar.adoc[]
 include::prg-memory-map.adoc[]
 
 include::prg-file-formats.adoc[]
+
+[appendix]
+include::prg-appendix-jump-tables.adoc[]
