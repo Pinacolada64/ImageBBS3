@@ -565,7 +565,7 @@ _string$_: the 11-digit date string (either a literal string or string variable?
 
 .Put Date Into Struct
 [source,basic]
-an$="10412208234":&,60,4,0,u%(3,0),an$
+an$="20412208234":&,60,4,0,u%(3,0),an$
 
 #TODO#: Explain example.
 
@@ -575,7 +575,7 @@ Structs store an 11-digit date in 3 elements (6 bytes) using Binary Coded Decima
 Two decimal digits are stored per byte, using the high and low _nybbles_ (_i.e._, 4-bit halves of an 8-bit number).
 
 [source, basic]
-an$="10412208234":&,60,4,0,u%(0,1),an$
+an$="20412208234":&,60,4,0,u%(0,1),an$
 
 [cols="8"]
 [%autowidth]
@@ -589,7 +589,7 @@ an$="10412208234":&,60,4,0,u%(0,1),an$
 
 // 8 cells
 >| Binary
-^| `%0001&#160;%0000`
+^| `%0010&#160;%0000`
 ^| `%0100&#160;%0001`
 ^| `%0010&#160;%0010`
 ^| `%0000&#160;%1000`
@@ -598,7 +598,7 @@ an$="10412208234":&,60,4,0,u%(0,1),an$
 >| `%xxxx`
 
 >| Decimal
->| `1&#160;&#160;&#160;&#160;&#160;&#160;0`
+>| `2&#160;&#160;&#160;&#160;&#160;&#160;0`
 >| `4&#160;&#160;&#160;&#160;&#160;&#160;1`
 >| `2&#160;&#160;&#160;&#160;&#160;&#160;2`
 >| `0&#160;&#160;&#160;&#160;&#160;&#160;8`
