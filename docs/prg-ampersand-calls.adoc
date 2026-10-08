@@ -909,7 +909,7 @@ Non-abortable file read.
 
 '''
 
-=== `&,13` arbit
+=== `&,13` arbit [[arbit]]
 
 A function reserved to arbitrate port use in multi-port Lt.Kernal hard drive setups.
 
@@ -2025,45 +2025,143 @@ Option 5 does the same thing in ML as option 4 does in BASIC.
 
 '''
 
-=== `&,53` Logoff
+=== `&,53` Logoff [[logoff]]
 
 :function_count: 1
 include::includes/prg-ml-function-warning.adoc[]
 
-_Parameters:_
+Reset the sysop screen's indicators and BBS flags after a user logs off, and set or clear the idle timer flag `curdsp`.
 
-`&,53[,__screen_number__]`
+====
+NOTE: This description comes from reading the source code (see <<logoff-source>>), and has not been tested on a running BBS yet.
+====
 
-* Resets various flags:
-** chat page counter
-** sound repeat counter
-* clears status line indicators
+.Syntax
+`&,53[,__idle__]`
 
-If specified, __screen_number__ stores the current screen mask number in `curdsp` (`$12e4`), which is used for logic in updating the proper items per screen (_e.g._, the idle timer only when a user is online).
-
-.Screen Masks
+.Parameters
 [%autowidth]
 [%header]
-[cols="^1m,2"]
-|====================
-| Number | Purpose
-| 1 | User online
-| 2 | System idle
-| 3 | FIXME
-| 4 | FIXME
-| 5 | FIXME
-|====================
-_Example:_
+|===
+| Parameter | Range | Purpose
 
-.im:
+| _idle_
+| `0`-`255`
+| Stored in `curdsp` (`$12e4`, decimal `4836`).
+`0` (or leaving it out) turns the idle timer off; anything else turns it on.
+|===
+
+==== What It Does
+
+[%autowidth]
+[%header]
+|===
+| Action | Details
+
+| Sets `curdsp`
+| To _idle_, or `0` if it is left out (see <<logoff-idle-timer>>)
+
+| Clears the chat page flag
+| `chatpage` (`$d008`, decimal `53256`) is set to `0`
+
+| Clears the sound repeat counter
+| `sndrept` (decimal `962`) is set to `0`
+
+| Re-links `d1$` to the BBS clock
+| `d1$` is pointed back at the 11-byte date string which the ML keeps up to date (`d1str`).
+If a module assigned its own value to `d1$`, this undoes it.
+
+| Blanks 3 status line indicators
+| Columns 30-32 of the bottom line of the sysop screen are set to reverse spaces.
+These columns show:
+
+* column 30: `A` when the user aborts output (kbd:[/], kbd:[Space] or kbd:[Ctrl+c]), or `P` while output is paused (kbd:[Ctrl+s])
+* column 31: `G` during garbage collection, or `L` while waiting for the Lt.Kernal port lock (<<arbit,`&,13`>>)
+* column 32: nothing in the 3.0 source writes to this column
+|===
+
+==== The Idle Timer (`curdsp`) [[logoff-idle-timer]]
+
+The ML only checks whether `curdsp` is zero or not:
+
+* When `curdsp` is not `0`, and the BBS is not in local mode, the idle timer counts up while the BBS waits for a keypress.
+* When `curdsp` is not `0`, and the screen is in its normal mode, the idle time is shown on the sysop screen (`I=`).
+
+In Image BBS 3.0, `&,53` is the only thing that writes `curdsp`, and the BBS only ever stores `0` in it:
+
+[%autowidth]
+[%header]
+|===
+| Where | Call | `curdsp`
+
+| `im`, startup (`{:3074}` in older listings)
+| `sys 49155:&,53`
+| `0`
+
+| `i/lo.idle`, logoff
+| `a=.:gosub 375`, which does `&,53,a`
+| `0`
+|===
+
+So, as far as this source shows, the idle timer is never turned on.
+
+#TODO#: Check on a running BBS whether `I=` counts while a user is online.
+If it doesn't, `poke 4836,1` should make it start counting.
+
+==== Screen Masks
+
+Line 375 of `im` uses `&,53` and then displays a sysop screen mask:
 
 [source,basic]
-----
 375 &,53,a:im=2+a:goto 443 <1>
-----
 
-<1> `&,53,a`: Reset flags, store `a` (current screen mask). `im=2+a:goto 443`: display proper screen mask using `sub.display`
+<1> `&,53,a`: reset the indicators and flags, and store `a` in `curdsp`.
+`im=2+a:goto 443`: load `sub.display` and show screen mask `im`.
 
+The screen mask numbers are ``sub.display``'s `im` values, listed under xref:prg-im-routines.adoc#line-443[`gosub 443`].
+They are not the value stored in `curdsp`: that is `a`, which is `im-2`.
+For example, `a=0` stores `0` in `curdsp` and shows mask `2`, "`waiting for call`".
+
+NOTE: The "`user online`" mask is `im=1`, which would need `a=-1`.
+The `&` command parser can't accept a negative number, so line 375 can't show that mask.
+This suggests `curdsp` and the screen mask number were never meant to be the same number.
+
+==== Source References [[logoff-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,53` jump table entry
+| `source/jmptb.s`: `.word logoff //&,53`
+
+| `logoff` routine
+| `source/setup.s`: `logoff:`
+
+| Label addresses (`curdsp`, `chatpage`, `sndrept`, `tdisp`)
+| `source/equat.s`
+
+| Idle timer counting (checks `curdsp`)
+| `source/chrio.s`: `getchr8`
+
+| Idle timer display (checks `curdsp`)
+| `source/shdlr.s`: `dspidle`
+
+| Status line column 30 (`A`, `P`)
+| `source/chrio.s`: `output0` through `output2`
+
+| Status line column 31 (`G`, `L`)
+| `source/gc.s`: `gc`; `source/miscl.s`: `lock`
+
+| BBS code that calls `&,53`
+| `core/im.lbl`: `{:375}` and the startup line with `sys 49155`; `core/i_lo.idle.lbl`: `gosub 375`
+
+| Screen masks
+| `core/sub.display.lbl`: `on im gosub ...` at line 60000
+|===
+
+Test program: `core/tests/i.test calls.lbl`, line `{:5850}`.
 '''
 
 === `&,54` Text Editor Interface

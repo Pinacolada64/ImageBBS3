@@ -575,7 +575,23 @@
 	gosub {:sub.todo}:return
 
 {:5850} ' &,53: logoff, also see &,53,a
-	gosub {:sub.todo}:return
+' &,53[,idle]: stores idle in curdsp ($12e4, 4836): 0 = idle timer off,
+' anything else = on. Also clears the chat page flag (53256) and sound
+' repeat counter (962), re-links d1$ to the ML's live date string, and
+' blanks status line columns 30-32.
+' curdsp is restored afterwards. A pending chat page is cleared.
+	&"{f6}&,53 Logoff{f6:2}"
+	q=peek(4836):x=q:&"curdsp before:   {pound}!x{f6:2}"
+' d1$: give it a value of its own, then let &,53 point it back at the clock
+	d1$="test":&"d1$ set to:      {quotation}"+d1$+"{quotation}{f6}"
+	&,53:x=peek(4836):&"After &,53:     d1$={quotation}"+d1$+"{quotation} (expect date){f6}"
+	&"                curdsp={pound}!x (expect 0){f6}"
+	&,53,1:x=peek(4836):&"After &,53,1:   curdsp={pound}!x (expect 1){f6}"
+	&,53,255:x=peek(4836):&"After &,53,255: curdsp={pound}!x (expect 255){f6}"
+' idle timer: does I= count on the sysop screen while curdsp is not 0?
+' (only shown when the screen is in its normal mode)
+	&,53,1:lp=1:&"{f6}Idle timer on: watch for I= counting on the sysop screen, then hit a key: {pound}g1{f6}"
+	&,53,q:x=peek(4836):&"Restored:       curdsp={pound}!x{f6}":return
 
 {:5900} ' &,54: text editor interface
 	gosub {:sub.todo}:return
