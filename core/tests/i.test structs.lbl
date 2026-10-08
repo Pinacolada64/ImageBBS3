@@ -171,12 +171,18 @@
 '	&"Sorted:{f6}":&,60,7,0,s%(8,1),1
 
 ' &,60,7, sort$(a,b), start
-	poke 970,.:for i=1 to t:&,60,7,0,an$(1,i),30-i:&"Iteration {pound}!i/30{f6}":gosub {:sub.display_animals}:if sh or rc then gosub 92:i=t
-	next:&"Final sorted array:{f6}"
+'	poke 970,.:for i=1 to t:&,60,7,0,an$(1,i),30-i:&"Iteration {pound}!i/30{f6}":gosub {:sub.display_animals}:if sh or rc then gosub 92:i=t
+'	next:&"Final sorted array:{f6}"
+' &,60,7,0,a$(r,c),count sorts count elements that are next to each other in
+' memory, starting at a$(r,c). in a 2-d array the FIRST index changes fastest,
+' so the names run down an$(0..t-1,1). count must be 2 or more: it used to be
+' 0 here, which the sort takes as 65535 (and with an$(1,x) it also mixed in
+' the empty an$(0,x) column)
+	poke 970,.:&,60,7,0,an$(0,1),t:&"Sorted array:{f6}"
 {:sub.display_animals}
 ' display string array:
-	poke 970,.:for x=1 to t:n%=x:&f$+"{pound}%n) "+an$(1,x)+"{f6}"
-'	if x=24 then:&"Paused:{pound}g1{pound}h7"
+	poke 970,.:for x=0 to t-1:n%=x:&f$+"{pound}%n) "+an$(x,1)+"{f6}"
+	if sh or rc then gosub 92:x=t
 	next:return
 
 {:3500} ' &,60,8: Scan Numbers
@@ -375,7 +381,7 @@
 ' tt$(): sorted array of animals
 ' l=length of longest animal name (to create proper size struct, assuming 2 chars fits in 1 element)
 	l=.:for n=1 to t:read a$:tt$(n)=a$:x=len(a$):if x>l then l=x:if db then:&" {pound}!l"
-	next:t%=t+1:dim an$(1,t%)::if db then:&"{f6}dim an$(1,{pound}%t),"
+	next:t%=t+1:dim an$(t%,1)::if db then:&"{f6}dim an$({pound}%t,1),"
 ' 11 elements of storage, plus +.5 rounds up to next whole number
 	l%=l/2+11.5:dim s%(l%,t%):if db then:&"s%({pound}%l,{pound}%t){f6}"
 ' s$=string variable, saves a few bytes; f$=format string for integer variables
@@ -387,17 +393,20 @@
 ' ex.: ud%(21,xn) 21=byte,xn=file #
 ' s%(byte,element) -or- s%(column,row)
 ' -or- s%(field,record)
-' Element:  s%(1,n)    | s%(2,n) | s%(5,n) | s%(8,n) | s%(11,n) and an$(1,n)
+' Element:  s%(1,n)    | s%(2,n) | s%(5,n) | s%(8,n) | s%(11,n) and an$(n,1)
+' adjusted                            4         6         7?
+' Bytes:    1-2          3-5       6-8       9         10...L
 ' Type:     int        | date1   | date2   | int     | string
 ' Size:     2 bytes    | 3 bytes | 3 bytes | 2 bytes | l (longest name)
-' Range:    1...n      | random  | d1$     | random  | animal name
+' Range:    1...32767  | random  | d1$     | random  | animal name
 ' Function: &,60,6     | &,60,5  | &,60,4  | &,60,8? | &,60,0       &,60,7
 ' Label:    ScanStruct | GetDate | PutDate | ScanNum | GetString    SortArray
 	if db then:&"Populating struct...{f6}"
 ' tt$() is sorted animal names from DATA statements
 ' t=total # of records in struct
 ' [using 1...t+1 instead of 0...t because some config info will be in s%(x,0)]
-' an$(1,x) is animal names array (for &,60,7 sorting purposes)
+' an$(x,1) is animal names array (for &,60,7 sorting purposes: the names run
+' along the first index, so they are next to each other in memory)
 ' x=current animal name length
 ' s%( 0,0): t, # of animals
 ' s%(11,0): l, max length of animal names
@@ -424,8 +433,9 @@
 	if db then:&"Randomized list:{f6}"
 	for i=0 to sr-1:v%=rnd(0)*(rh-i)
 	ra%(i)=so%(v%):so%(v%)=so%(rh-i-1):if db then v%=ra%(i):&f$+"{pound}%v  "
-' s%(8,n) = random number for &,60,9: ScanStruct
-	s%(1,i+1)=so%(i):s%(8,i+1)=v%
+' s%(8,i) = random number for &,60,9: ScanStruct
+' an$(i,1): the name of the animal picked, ra%(i) (v% is only its position in so%())
+	s%(1,i)=so%(i):s%(8,i)=v%:an$(i,1)=tt$(ra%(i))
 
 ' &,60,0: PutString: max length l animal name tt$(1,i+1) in s%(11,i+1):
 ' s%(8,i+1): random integer

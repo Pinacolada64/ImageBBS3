@@ -988,25 +988,107 @@ Test program: `core/tests/i.test structs.lbl`, line `{:3400}`.
 
 '''
 
-=== `&,60,7` Sort Struct
+=== `&,60,7` Sort Array [[sort-array]]
 
-Sort a string array (only two-dimensional?).
-Does not work with numeric arrays.
+Sort string array elements into ascending order.
+
+====
+NOTE: This description comes from reading the source code (see <<sort-array-source>>).
+The Image BBS call in the example below fits it, but it has not been tested on a running BBS yet.
+====
 
 .Syntax
-
-`&,60,7,0,` _a$(a, b)_, _start_
+`&,60,7,0,` _a$(element)_, _count_
 
 .Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
 
-_a$(a,b)_: String array to sort
+| `0`
+|
+| Necessary but ignored
 
-_start_: Element to start sorting at?
+| _a$(element)_
+|
+| The first element to sort.
+This must be a string array: the sort works on string descriptors.
 
-.i/lo/tt maint: Sort Struct
+| _count_
+| `2`-`65535`
+| How many elements to sort, starting at _a$(element)_.
+_Must be at least 2_: see the warning below.
+|===
+
+==== Which Elements Are Sorted
+
+`&,60,7` sorts the _count_ elements which come one after another in memory, starting at _a$(element)_.
+
+In a two-dimensional array, the _first_ index changes fastest.
+With `dim a$(20,8)`, the elements in memory are:
+
+ a$(0,0) a$(1,0) ... a$(20,0) a$(0,1) a$(1,1) ... a$(20,1) a$(0,2) ...
+
+So `&,60,7,0,a$(5,2),10` sorts `a$(5,2)` to `a$(14,2)`: entries 5-14 of "`column`" 2.
+To sort a list in a two-dimensional array, store it along the first index.
+
+==== How It Sorts
+
+* Each element is compared with every element after it, and the two are swapped if the later one is smaller: a simple exchange sort, so the time grows with the square of _count_.
+* Only the string descriptors (length and address) are swapped; the strings themselves don't move.
+* Strings are compared byte by byte as PETSCII values.
+If one string is the start of the other, the shorter one comes first.
+** Shifted (uppercase) letters (`$c1`-`$da`) sort _after_ unshifted (lowercase) letters (`$41`-`$5a`).
+** A space (`$20`) sorts before the digits, so numbers right-justified to the same width sort in numeric order.
+
+[WARNING]
 ====
+_count_ must be at least `2`.
+The sort subtracts 1 from _count_ to find the last element, and stops when it reaches it:
+
+* With `0`, the last element becomes `65535`.
+* With `1`, the comparisons run on past the end before reaching it.
+
+Either way, it compares and swaps "`string descriptors`" far past the end of the array, corrupting memory.
+Check _count_ before calling `&,60,7`.
+====
+
+==== Example
+
+.i/lo/tt maint: Sort the Top Ten Lists
 [source,basic]
+4002 &,11:n=20:dim a$(n,8):gosub 35:x=0:p=n:m=mn%
 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next:p=n-10
+
+`a$(n,8)` holds 8 lists (`i`=`1`-`8`: calls, downloads, uploads, ...) of up to `n`=`20` entries each, filled from entry `n` downwards to `p+1`.
+Each entry is a number right-justified to 7 characters, followed by a user's handle, so sorting the strings also sorts the numbers.
+Line 4016 sorts entries `p+1` to `n` of each list.
+The module then writes each list out from entry `n` downwards, highest first.
+
+If fewer than two entries are filled in (`n-p` is `0` or `1`), line 4016 runs into the problem in the warning above.
+
+==== Source References [[sort-array-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,60,7` dispatch
+| `source/struct.s`: `entry2` and `functbl`
+
+| `sort` routine
+| `source/struct.s`: `sort:` through `sort9:`
+
+| Finding element _n_ (3 bytes per descriptor), and reading a descriptor
+| `source/struct.s`: `calcp`, `calcs`
+
+| Comparing two strings
+| `source/struct.s`: `strcmp`
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3450}`.
 
 '''
 
