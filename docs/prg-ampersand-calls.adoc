@@ -952,24 +952,22 @@ an$=d1$:&,15:&an$
 
 .Result
 ====
-`Thu Apr 29, 2021&#160;&#160;4:29 P`
+`Apr 29, 2021&#160;&#160;4:29 P`
 ====
 
 . `an$=d1$`:
 Put current 11-digit date (`d1$`, _e.g._ `60429218427`) into `an$`
 
 . `&,15`:
-Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&#160;&#160;4:29 P`` and assign that to `an$`
+Convert 11-digit date to a long date string, _e.g._ ``Apr 29, 2021&#160;&#160;4:29 P`` and assign that to `an$`
 
 ====
-NOTE: The result is always 24 characters long, and ends with `A` or `P` rather than `AM` or `PM`.
+NOTE: The result is always 20 characters long: it leaves out the weekday, and ends with `A` or `P` rather than `AM` or `PM`.
+This is deliberate: it is a "`just the date`" format, and code which draws boxes or columns depends on its length.
 Append the `M` yourself, _e.g._ `an$=d1$:&,15:t$=right$(an$,7)+"M"` puts ``&#160;4:27 PM`` into `t$`.
 
-Earlier versions of `&,15` returned only 20 characters, leaving off the weekday (``Aug 17, 2004&#160;&#160;4:27 P``).
-The weekday was calculated, but the copy into `an$` began 4 characters into the string.
-
-The weekday is taken from the first digit of the date string as-is; it is not calculated from the date.
-A weekday digit of `0`, `8` or `9` is shown as `???`.
+To show the weekday as well, output the date with kbd:[Ctrl+d] instead, _e.g._ `&chr$(4)+d1$` (see <<date-format>>).
+That weekday is taken from the first digit of the date string as-is, not calculated from the date: `0`, `8` or `9` is shown as `???`.
 ====
 
 . `&an$`:
