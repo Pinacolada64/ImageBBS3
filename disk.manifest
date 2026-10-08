@@ -1,0 +1,35 @@
+# disk.manifest: files "make disk" puts on the boot disk (build/image30.d81).
+# Each line: <file under build/><TAB><C64 filename>. Lines starting with # are ignored.
+# Each file replaces the release Disk 1 file of the same name, or is added if new.
+# Only list BASIC modules that build with no errors and no unresolved line
+# numbers (shown as [50] etc. by petcat): a broken module can crash the BBS.
+
+# --- machine language (make asm) ---
+asm/ml.prg	ml 3.0
+asm/boot.prg	boot 3.0
+asm/image.prg	image 3.0
+asm/rs232.prg	ml.rs232
+asm/post.prg	++ post
+asm/path.prg	++ path
+asm/tagscan.prg	++ tagscan
+asm/net.prg	++ net
+asm/punter.prg	++ punter
+asm/xmodem.prg	++ xmodem
+asm/copier.prg	++ copier
+asm/clock.prg	++ clock
+asm/menu2.prg	++ menu2
+asm/sort.prg	++ sort
+
+# --- BASIC modules (make basic) ---
+basic/i.main.prg	i.main
+basic/i.IM.prg	i.IM
+basic/i_IM.misc.prg	i/IM.misc
+basic/i.SB.prg	i.SB
+basic/i_su.config.prg	i/su.config
+basic/sub.display.prg	sub.display
+
+# --- test programs (make tests); run from the BBS as modules ---
+tests/i.test calls.prg	i.test calls
+tests/i.test structs.prg	i.test structs
+tests/i.test-convert.prg	i.test-convert
+tests/i.test date.prg	i.test date
