@@ -370,24 +370,24 @@
 	l=0:h=6:q=1:m=1:gosub {:sub.input_range}:on q goto {:3950}:if m then return
 	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
 
-{:15_5}' &,15,5:
-' Old: d1$="19011038045"
-'      an$="Sun Nov  3, 2090 12:45 PM PST"
-' New: d1$="9011038045"
-'      an$="??? Oct 38, 2001  4:57 AM PST"
+{:15_5}' &,15,5: newdate
+' Drops the weekday digit, leaving a sortable 10-digit "yymmddhhmm";
+' also changes hour 12 -> 00 (12 AM) and 92 -> 80 (12 PM).
+' Result is shown as plain text: Ctrl-D always reads 11 digits.
 '
-' Old: d1$="11410288045"
-'      an$="Sun Oct 28, 2014 12:45 PM PST"
-' New: d1$="1410288045"
-'      an$="Sun Feb 88, 2041  4:57 AM PST"
+' "61112250412" -> "1112250412"  Fri Nov 25, 2011  4:12 AM (hour unchanged)
+' "61112251204" -> "1112250004"  hour 12 -> 00
+' "61112259204" -> "1112258004"  hour 92 -> 80
+' "2111225"     -> "2111225"     not 11 digits: unchanged
 
-	an$="19011038045":gosub {:sub.test_newdate} ' before: sun nov  3, 2090  8:45 pm
-	an$="11410288045":gosub {:sub.test_newdate} ' before: sun oct 28, 2014  8:45 pm
+	an$="61112250412":gosub {:sub.test_newdate}
+	an$="61112251204":gosub {:sub.test_newdate}
+	an$="61112259204":gosub {:sub.test_newdate}
+	an$="2111225":gosub {:sub.test_newdate}
 	return
 {:sub.test_newdate}
-	&"{f6}Old":gosub {:sub.show_newdate}:&,15,5:&"New"
-{:sub.show_newdate}
-	&": d1$={quotation}{pound}v7{quotation}{f6}{pound}{back arrow}05an$={quotation}{$04}"+an$+"{quotation}{f6}":return
+	&"{f6}Old: an$={quotation}{pound}v7{quotation}{f6}":&,15,5
+	&"New: an$={quotation}{pound}v7{quotation}{f6}":return
 
 {:15_6}
 ' from programmer's reference guide

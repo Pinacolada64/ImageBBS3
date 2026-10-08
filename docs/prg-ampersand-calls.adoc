@@ -1080,14 +1080,23 @@ These point to, and are the same as, `&,15,2`.
 
 ==== `&,15,5` newdate
 
-Some sort of hour (?) conversion.
+Convert an 11-digit Image BBS date in `an$` into a 10-digit, sortable `yymmddhhmm` string.
 
-_Syntax:_
+* The weekday digit is removed.
+* An hour of `12` is changed to `00` (12 AM) and `92` to `80` (12 PM), to match the <<date-format>>.
 
-`an$="_wyymmddhhmm_":&,15,5:&"kbd:[Ctrl+d]"+an$`
+If `an$` is not exactly 11 characters long, it is left unchanged.
+
+[source,basic]
+an$="61112250412":&,15,5:&an$
+
+.Result
+`1112250412`
+
+Because AM hours (`00`-`11`) sort before PM hours (`80`-`91`), two converted dates can be compared as strings, _e.g._ `if a$>b$ then...` is true when `a$` is the later date.
 
 ====
-NOTE: This function is currently being researched.
+NOTE: Don't display the result with kbd:[Ctrl+d]: that always reads 11 digits, so a 10-digit string is decoded one position off (_e.g._ `??? Oct 38, 2001`).
 ====
 
 '''
