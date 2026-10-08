@@ -206,9 +206,10 @@ Pressing kbd:[f7] again ends chat mode, displaying the customizable "`exiting ch
 
 Then the user is returned to the area and prompt they were at before entering chat mode. If the user was in the BBS text editor, the BBS displays
 
-```
+[source]
+----
 * Returning to Editor *
-```
+----
 
 ====
 

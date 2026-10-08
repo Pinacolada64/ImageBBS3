@@ -234,11 +234,12 @@ kbd:[.Z] (`Copy`) will copy a line range of text to a specified line number.
 
 Continuing our previous `Move` example:
 
-```
+[source]
+----
 line 2
 line 1
 line 3
-```
+----
 
 Enter a line number or line range here:
 
@@ -252,7 +253,8 @@ This example copies lines 1-3 to lines 4-6.
 
 `Editor Command:kbd:[L]ist`
 
-```
+[source]
+----
 1:
 line 2
 2:
@@ -265,7 +267,7 @@ line 2
 line 1
 6:
 line 3
-```
+----
 
 === Editor Modes
 
