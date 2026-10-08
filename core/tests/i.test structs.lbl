@@ -195,6 +195,8 @@
 
 {:3550} ' &,60,9: Scan Sum
 ' &,60,9, record_count, record_size, struct%(field, record)
+	gosub {:sub.scansum_carry}
+{:scansum_prompt}
 	&"# of records to sum together (1-{pound}!t): {pound}i1":if an$="" then return
 	an=int(val(an$)):if an<1 or an>t then return
 	poke 970,0:&"Summing:{f6}BASIC loop addition:{f6}"
@@ -207,7 +209,18 @@
 	n%=9:gosub {:header_page_6}:&,60,9,an,(l%+1)*2,s%(8,1):&"ScanSum Total: {pound}%a{f6}"
 	if x<>a% then:&"Does not match.{f6}"
 	if x=a% then:&"Matches.{f6}"
-	goto {:3550}
+	goto {:scansum_prompt}
+{:sub.scansum_carry}
+' &,60,9's carry bug: once the running total passes 65535, the carry from
+' the high byte isn't cleared, so the record address moves on by size+1
+' and every later record is read one byte off.
+' zu%(1,4): 4 records of 2 integers (4 bytes): zu%(0,r)=value, zu%(1,r)=0
+' 30000*3 = 90000 passes 65535 on record 3; record 4 is 100
+	if zu=0 then dim zu%(1,4):zu=1
+	for r=1 to 3:zu%(0,r)=30000:zu%(1,r)=0:next:zu%(0,4)=100:zu%(1,4)=0
+	&,60,9,4,4,zu%(0,1):x=a%:&"{f6}Scan Sum carry check: 30000+30000+30000+100{f6}"
+	&"a%={pound}!x: 24564 = correct (90100 wrapped past 65535),{f6}"
+	&"-15472 = record 4 read one byte off (the bug){f6:2}":return
 
 {:3600} ' &,60,10: Copy Record
 	gosub {:sub.todo}:return

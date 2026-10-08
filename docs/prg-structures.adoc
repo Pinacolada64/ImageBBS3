@@ -1120,29 +1120,84 @@ Test program: `core/tests/i.test structs.lbl`, line `{:3500}`.
 
 '''
 
-=== `&,60,9` Scan Sum
+=== `&,60,9` Scan Sum [[scan-sum]]
+
+Add up one integer field across a number of records.
+`a%` returns the total.
+
+====
+NOTE: This description comes from reading the source code (see <<scan-sum-source>>).
+No Image BBS 3.0 BASIC code calls `&,60,9`; it is only used by the test program.
+====
 
 .Syntax
+`&,60,9,` _count_, _size_, _field%(field, record)_
 
-`&,60,9,` _number_, _size_, _struct%(field, record)_
+.Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
 
-`number`: number of records to scan
+| _count_
+| `0`-`255`
+| Number of records to add up
 
-`size`: size of record, in bytes
+| _size_
+| `0`-`255`
+| Record size in bytes.
+After each record, _field_ moves on by this many bytes.
 
-`struct%(field, record)`: (field="`don`'t care`"? #FIXME#), record to scan
-
-====
-NOTE: This function call documentation is incomplete.
-====
-
-.Example
-
-None yet.
+| _field%(field, record)_
+|
+| The integer field to add up, in the first record
+|===
 
 .Returns
+`a%`: the total, or `0` if _count_ is `0`.
 
-`a%`: #FIXME#: total of values in struct?
+==== What Happens for Each Record
+
+. The field's low byte is added to the running total's low byte, then its high byte, plus the carry, to the total's high byte.
+. _field_ moves on by _size_ bytes, to the next record.
+
+.Example
+[source,basic]
+dim u%(1,3):u%(0,1)=10:u%(0,2)=20:u%(0,3)=30
+&,60,9,3,4,u%(0,1):&"{pound}%a"
+
+.Result
+`60`: each record of `u%(1,3)` is 2 integers, or 4 bytes long.
+
+==== Limits
+
+* The total is 16 bits, and is stored in `a%` as it is: a total of `32768`-`65535` shows up as a negative number, and anything larger wraps around past `65535`.
+* Each value is added as an unsigned number: `-1` in the array counts as `65535`.
+* *A bug once the total passes `65535`*: the carry from adding the high byte isn't cleared before the next record's address is worked out, so that address is one byte too far.
+Every record after that is read one byte off, so the total is wrong.
+For example, with the values `30000`, `30000`, `30000` and `100`, `a%` should be `24564` (`90100`, wrapped past `65535`), but is `-15472`.
++
+While the total stays below `65536`, the result is correct.
+The carry can't be used to detect the overflow, either: it is changed again before `a%` is stored, and `&` doesn't pass the status register back to BASIC.
+
+==== Source References [[scan-sum-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,60,9` dispatch
+| `source/struct.s`: `entry2` and `functbl`
+
+| `scansum` routine
+| `source/struct.s`: `scansum:` through `scansum4:`
+
+| The carry bug
+| `source/struct.s`: `scansum2` (adding the high byte) and the `lda size` / `adc $6b` after it
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3550}`, which also shows the carry bug.
 
 '''
 
