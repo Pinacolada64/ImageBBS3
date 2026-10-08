@@ -281,10 +281,9 @@
 	an$=fs$:w$=an$:pl=.:p$="Find what":&,1,32
 {:struct_11_unchanged}
 	if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
-' &,65 is the long-date routine, not a string conversion, and &,15,2 / &,64
-' only decode f-keys (the wrong direction), so wildcards are converted here
-	fs$=an$:if op=1 then gosub {:sub.encode_wildcards}
-	return
+' no conversion needed for wildcards: &,1 encodes what's typed, so a typed ?
+' arrives as chr$(137) (f2) and * as chr$(136) (f7), as &,60,11 expects
+	fs$=an$:return
 
 {nice:5}
 {:struct_11_num_records}
@@ -324,13 +323,6 @@
 {:struct_11_quit}
 '	&,28,2:return
 	return
-{:sub.encode_wildcards}
-' &,60,11's pattern mode (op=1) only treats chr$(137) (f2) as "any one
-' character" and chr$(136) (f7) as "anything from here on": a typed ? or *
-' would be matched literally, so convert them
-	b$="":for i=1 to len(fs$):c$=mid$(fs$,i,1):if c$=chr$(63) then c$=chr$(137)
-	if c$=chr$(42) then c$=chr$(136)
-	b$=b$+c$:next:fs$=b$:return
 
 {step:2}
 {:3700} ' &,60,12: Game Scan
