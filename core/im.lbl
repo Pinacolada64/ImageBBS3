@@ -166,9 +166,9 @@
 {:84}
 	a=int(mn%/60):pt%=-(a>=p2% and a<p3%)*sgn(p1%):return
 {:85}
-	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:on a+1 goto {:999}:dr=3:gosub {:61}
+	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:if a=. then return
 {:86}
-	x=2:on -(bf<35) goto {:390}:im=1:goto {:444}
+	dr=3:gosub {:61}:x=2:on -(bf<35) goto {:390}:im=1:goto {:444}
 {:90}
 ' TODO: double-check bytes saved
 '	q$="":on -(ll%<42) goto {:999}:for r=1 to int((ll%-42)/2):q$=q$+" ":next:return
