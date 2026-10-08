@@ -27,6 +27,7 @@ basic/i_IM.misc.prg	i/IM.misc
 basic/i.SB.prg	i.SB
 basic/i_su.config.prg	i/su.config
 basic/sub.display.prg	sub.display
+basic/i_MM.load.prg	i/MM.load
 
 # --- test programs (make tests); run from the BBS as modules ---
 tests/i.test calls.prg	i.test calls

@@ -4,6 +4,8 @@
 ' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
 ' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
 ' identical to the original.
+' changed since then: line 4110 tests x1%(2,1), the SIG's sysop, instead of
+' x1%(0,1), the flags word, so SIG sysops always see their own SIGs
 
 {uses:3_0-preface.lbl}
 {alpha:alt}
@@ -20,7 +22,7 @@
 4104 xx=-(sy$="U/D")-2*(sy$="U/X"):f=4096+2^xx
 4106 &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
 4108 &,60,6,x1%(0,0),5,x1%(0,1),x1%(0,1),36,8192,f
-4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(0,1),36,16384,id
+4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
 4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
 4114 a$=left$(an$,2):an$=mid$(an$,3):if a%=0 then 4146
 4116 if a$=">>" or a$="<<" then r=sg+1+2*(a$="<<"):on-(r<>0) goto 4124

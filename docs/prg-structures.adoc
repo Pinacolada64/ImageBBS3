@@ -957,6 +957,7 @@ Testing that field instead would make line 4110 mean "`also list the SIGs you ar
 4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
 
 As released, a SIG's sysop who doesn't have the access level for their own SIG doesn't see it in this list.
+`core/i_MM.load.lbl` has this fix.
 ====
 
 ==== Source References [[scan-struct-source]]
