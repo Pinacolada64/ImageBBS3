@@ -1,6 +1,6 @@
 = Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.5, $SOURCE_DATE_EPOCH
+v0.5, {docdate}
 :experimental: // enable kbd:[] macro
 :toc: left
 :toclevels: 4
@@ -61,3 +61,6 @@ include::prg-file-formats.adoc[]
 
 [appendix]
 include::prg-appendix-jump-tables.adoc[]
+
+[index]
+== Index
