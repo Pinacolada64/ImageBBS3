@@ -154,13 +154,15 @@ convan1:
 		dey
 		bpl convan1
 		jsr convert
-// copy "Www Mmm dd, yyyy hh:mm A" (24 bytes): includes weekday,
-// omits trailing "M" since callers append it themselves
-		lda #24
+// copy 20 bytes, date1+4 to date1+23: "Mmm dd, yyyy hh:mm A"
+// the weekday (date1+0 to +2) is left out on purpose: a "just the date"
+// format, and code which draws boxes and columns depends on its length.
+// callers add the "M" after "A"/"P" themselves.
+		lda #20
 		jsr makeroom
-		ldy #23
+		ldy #19
 convan2:
-		lda date1,y
+		lda date1+4,y
 		sta (varbuf+1),y
 		dey
 		bpl convan2
