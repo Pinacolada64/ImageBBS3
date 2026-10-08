@@ -565,7 +565,7 @@ _string$_: the 11-digit date string (either a literal string or string variable?
 
 .Put Date Into Struct
 [source,basic]
-an$="10412208234":&,60,4,0,u%(3,0),an$
+an$="20412208234":&,60,4,0,u%(3,0),an$
 
 #TODO#: Explain example.
 

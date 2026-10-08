@@ -961,6 +961,17 @@ Put current 11-digit date (`d1$`, _e.g._ `60429218427`) into `an$`
 . `&,15`:
 Convert 11-digit date to a long date string, _e.g._ ``Thu Apr 29, 2021&#160;&#160;4:29 P`` and assign that to `an$`
 
+====
+NOTE: The result is always 24 characters long, and ends with `A` or `P` rather than `AM` or `PM`.
+Append the `M` yourself, _e.g._ `an$=d1$:&,15:t$=right$(an$,7)+"M"` puts ``&#160;4:27 PM`` into `t$`.
+
+Earlier versions of `&,15` returned only 20 characters, leaving off the weekday (``Aug 17, 2004&#160;&#160;4:27 P``).
+The weekday was calculated, but the copy into `an$` began 4 characters into the string.
+
+The weekday is taken from the first digit of the date string as-is; it is not calculated from the date.
+A weekday digit of `0`, `8` or `9` is shown as `???`.
+====
+
 . `&an$`:
 Output `an$`
 
