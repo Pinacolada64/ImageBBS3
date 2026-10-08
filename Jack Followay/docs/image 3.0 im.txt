@@ -38,7 +38,7 @@ Layout :
 
 9: Prints (strictly text) contents of (cm$) to "Area" window of the SysOp Screen.  (gosub 1360)
 
-10: Same as line 1, however, it is suggested that you call this routine by line 1 for some systems compatibility. (gosub 1002)
+10: Same as line 1, however, it is suggested that you call this routine by line 1 for some systems' compatibility. (gosub 1002)
 
 11: Checks status of user flags.  Variable (a) must be set for the appropriate flag before calling this routine, and will contain the result open exit.  See Table 2 for valid values.  (gosub 1004)
 
@@ -166,7 +166,7 @@ Layout :
 
 74-75: Load and execute a 'sub.*' module file beginning at line 60000.  'sub' modules are subroutines used to supplement the 'image' file.  sub.modem has a subroutine at line 100. (Replaces 2.0's im. files)
 
-79: Loads i.module from device, drive in (dr), then RETURNs.  (Lines 70-75 fall thru to lines 76-78 then to this line before returning and executing at the appropriate line).
+79: Loads i.module from device, drive in (dr), then RETURNs.  (Lines 70-75 fall through to lines 76-78 then to this line before returning and executing at the appropriate line).
 
 80: Similar to 24, except uses (p1$) as a reference to currently loaded file, rather than (pr$).
 
