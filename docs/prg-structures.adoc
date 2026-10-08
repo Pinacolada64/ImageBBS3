@@ -890,6 +890,7 @@ The module then shows `b%`, `c%` and `d%` as "`New`", "`Tagged`" and "`Unvalidat
 
 ===== i.GF: Files the User Can Access
 
+.i.GF (release 231231; `core/i.GF.lbl`)
 [source,basic]
 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
 3168 rn=a%:if rn then:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1

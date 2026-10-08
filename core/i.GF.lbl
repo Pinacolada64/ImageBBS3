@@ -1,0 +1,219 @@
+' i.GF: General Files (libraries of files, programs, text and sub-menus)
+' imported from the release disk (MASTER D1 231231.d81), "i.GF" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
+' identical to the original.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+' structs (see the Programmer's Reference Guide, "Structures"); field meanings
+' are from how this module uses them:
+' s%(39,60): the current library, file "d.<name>". 40 integers = 80 bytes/record.
+'  record 0 is the library's header:
+'   s%(0,0) = number of entries     s%(1,0) = library type, tp: 0 files,
+'   s%(2,0) = subop's user id                 1 U/X, 2 U/D, 3 sub-boards
+'   s%(3,0), s%(4,0) = device, drive
+'   s%(15,0) = short title, 10 bytes (d2$)
+'   s%(25,0) = this library's name, 30 bytes (pf$(pf), e.g. "GF.Main")
+'  records 1 on are the entries:
+'   s%(0,r) = flags word: bit 1 = this user may see the entry
+'   s%(1,r) = access groups allowed (one bit per access level)
+'   s%(2,r) = entry type: 1 Dir, 2 Prg, 3 Mod, 4 Txt, 5 Mov, 6 RLE,
+'             7 U/X, 8 U/D, 9 Sub (see line 3050)
+'   s%(3,r), s%(4,r) = device, drive
+'   s%(5,r) = credits it costs          s%(6,r) = times used
+'   s%(10,r) = date last used, 6 bytes (&,60,4 / &,60,5)
+'   s%(13,r) = description, up to 28 bytes
+'   s%(27,r) = filename, 16 bytes
+' e%(60): record numbers of the entries this user may see (rn = how many)
+3000 &,18,0:&,28,1:gosub 3003:lm$="":dim s%(39,60),e%(60),m%(3,25),q%(20,25):gosub 3010
+3001 a$="menu2":gosub 28
+3002 cp=1:f%=10:&,52,$27,3:on a%goto 3234:goto 3180
+3003 &,52,$2 c,3:mm=a%:&,52,$2 d,3:mm=mmand a%and nl:return
+3004 a=abs(int(val(mid$(an$,2,4)))):return
+3006 a=abs(int(val(left$(an$,4)))):return
+' &,60,1,length,struct%(field,record),string$: Get String
+'   copy up to length bytes into string$, stopping at a chr$(0)
+'   here: the header's short title into d2$, and the library's name into p$
+3008 &,60,1,20,s%(15,0),d2$:&,60,1,30,s%(25,0),p$:if qthen p$="(M) "+p$
+3009 gosub 3570:return
+3010 lc=7:h$="Library":j$="File":k$="":l$="":m$=""
+3012 i$="Subop":r$=chr$(13):sy$="Files"+"":return
+3050 a$="{gray3}???":b$="":on agoto 3051,3052,3053,3054,3055,3056,3057,3058,3059:return
+3051 dr=4:a$="{yellow}Dir":b$="d.GF.":return
+3052 dr=0:a$="{lt. blue}Prg":b$="i.":return
+3053 dr=0:a$="{lt. blue}Mod":b$="i/GF.":return
+3054 dr=0:a$="{lt. green}Txt":return
+3055 dr=0:a$="{lt. green}Mov":return
+3056 dr=0:a$="{lt. green}RLE":return
+3057 dr=4:a$="{yellow}U/X":b$="d.UX.":return
+3058 dr=4:a$="{yellow}U/D":b$="d.UD.":return
+3059 dr=4:a$="{yellow}Sub":b$="d.SB.":return
+3070 dr=4:gosub 3:a$=dr$+"d."+pf$(pf):return
+' &,60,2,0,struct%(field,record),filename$,device: load a struct from disk
+'   0 = necessary but ignored; gosub 3070 sets a$="d."+library name, and dv%
+3072 gosub 3070:&,60,2,0,s%(0,0),a$,dv%:goto 5
+' &,60,3,0,struct%(field,record),bytes,filename$,device: save a struct
+'   bytes = 80 (header) + 80 per entry; the old file is scratched first
+3074 gosub 3070:print# 15,"s" a$:&,60,3,0,s%(0,0),80+80*s%(0,0),a$,dv%:goto 5
+3080 lp=1:&"{f6}Sorry, you do not have enough{shft space}credits!":goto 3200
+3082 lp=1:&"{f6}Sorry, you must be in color/graphics mode to view movies.":goto 3200
+3090 b=0:for i=0 to 9:a%=i:&"Group #{pound}%a?: ":gosub 94:b=b+2^i*a:next:a=b:return
+3100 on mmgoto 3109:&"{clear} {blue}{pound}o{$a2}{pound}o{$a2}{f6} {rvrs on}{lt. green} {pound}$h: {pound}v8{pound}{back arrow}39{f6}"
+3101 on-(s%(2,0)=0) goto 3104:an$=so$:&,15,1:on-(s%(2,0)<>idor id=0) goto 3103
+3102 &" {rvrs on} (You are the {pound}$i here){pound}{back arrow}39{f6}":q=1:goto 3104
+3103 &" {rvrs on} {pound}$i: {pound}v7{pound}{back arrow}39{f6}"
+3104 &" {rvrs on}{blue}{pound}o{$a2}{pound}o{$a2}{f6}{pound}q0":return
+3105 &"{purple} {$b0}{pound}$y{$ae}{f6} {$dd}{lt. green} This {pound}$h is Empty.{pound}{back arrow}38{purple}{$dd}{f6} {$ad}{pound}$y{$bd}{f6}{pound}q0":return
+' 3106: &,60,1: the entry's description (28 bytes) into c$
+3106 a%=br:x=e%(br):a=s%(2,x):gosub 3050:&,60,1,28,s%(13,x),c$
+3108 &" {purple}{$dd}{white}{pound}#2{pound}# {pound}%a {pound}$a{lt. blue}: {cyan}{pound}$c{pound}{back arrow}38{purple}{$dd}{f6}":return
+3109 return
+3110 on mmgoto 3109:gosub 3100:if tpthen return
+3111 if rn=0 then 3105
+3112 &"{purple} {$b0}{pound}$y{$ae}{f6}{lt. green}":for br=1 to rn:gosub 3106:br=br+rn*rc:next:&"{purple} {$ad}{pound}$y{$bd}{f6}{pound}q0":return
+3120 gosub 3100:if tpthen return
+3121 if rn=0 then 3105
+3122 kk=1:gosub 3004:if a>0 and a<=rnthen kk=a
+3124 &"{purple} {$b0}{pound}$y{$ae}{f6}{lt. green}":for br=kkto rn:gosub 3130:br=br+rn*s:if br<rnthen:&"{purple} {$ab}{pound}$y{$b3}{f6}{pound}q0"
+3126 next:&"{purple} {$ad}{pound}$y{$bd}{f6}{pound}q0":return
+' 3130: &,60,1: the entry's filename (16 bytes) into a$
+3130 gosub 3106:s=rc:on-(q=0) goto 3138:a%=s%(1,x):&,60,1,16,s%(27,x),a$
+3134 &"{purple} {$dd}{cyan}File:{pound}$b{pound}$a{pound}{back arrow}29Accs:{pound}#4{pound}%a{purple}{$dd}{f6}":s=s+rc
+3136 if a<>1 then b%=s%(3,x):c%=s%(4,x):&"{purple} {$dd}{cyan}Dev:{pound}#2{pound}%b Drv:{pound}#3{pound}%c{pound}{back arrow}38{purple}{$dd}{f6}"
+3138 a%=s%(5,x):if a%then:&"{purple} {$dd}{cyan}Credits:{pound}%a{pound}{back arrow}38{purple}{$dd}{f6}":s=s+rc
+' &,60,5,0,struct%(field,record),string$: Get Date: the 6-byte date (year
+'   first, see &,60,4) as an 11-digit date in an$; 0 = necessary but ignored
+3140 on agoto 3144:a%=s%(6,x):&,60,5,0,s%(10,x),an$
+3142 if a%then:&,15:&"{purple} {$dd}{cyan}Used {pound}%a Times{pound}{back arrow}38{purple}{$dd}{f6} {$dd}{cyan}Last:{pound}v7M{pound}{back arrow}38{purple}{$dd}{f6}":s=s+rc
+3144 return
+3150 gosub 3074:goto 3164
+3152 dr=1:a$="s."+pf$(pf)+",s,r":gosub 4:if e%then close 2:return
+3154 &"{pound}m<2{pound}m>2{f6}":&,3,2:close 2:&"{pound}q0{f6}":return
+3160 y$=mid$(ak$,2,36):q=0:a=13:gosub 11:b=a:a=8:gosub 11:if a+bthen q=1
+3161 s%(0,0)=0:s%(1,0)=tp:s%(2,0)=0:s%(3,0)=dv%(4):s%(4,0)=dr%(4)
+' &,60,0,length,struct%(field,record),string$: Put String
+'   copy string$ into the struct, cut off at length bytes, and pad the rest
+'   with chr$(0). here: the library's name into the header, 30 bytes
+3162 &,60,0,30,s%(25,0),pf$(pf):gosub 3072:gosub 3008
+3164 tp=s%(1,0):dv%(7)=s%(3,0):dr%(7)=s%(4,0):if s%(2,0)=idand id<>0 then q=1
+' 3165: a subop (q) sees every entry: each flags word is set to 1 (not just
+'   bit 1), and the scan below is skipped
+3165 if qthen a%=s%(0,0):if a%then for i=1 to a%:s%(0,i)=1:next:goto 3168
+' &,60,6,count,oper,flags%(f,r),object%(f,r),size,bits,test: Scan Struct
+'   for each record: unless oper has 128, clear bits in the flags word;
+'   compare object with test; if true, set bits and add 1 to a%
+'   oper bits: 1 invert, 0/6 and/compare, 8 less-than, 64 date, 128 keep bits
+' 3166: oper 0 = (object and test)<>0: set bit 1 where the entry's access
+'   groups, s%(1,r), include the user's access level bit, 2^ac%.
+'   a% = how many entries the user may see
+3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+' &,60,8,number,size,access,struct%(f,r),result%(1),start: Scan Numbers
+'   number of records, record size, access (bits to look for?), field to
+'   scan, result array (the 1 seems to be ignored), record to start at
+' 3168: put the record numbers of the entries with bit 1 set into e%()
+3168 rn=a%:if rnthen:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1
+3170 a$="{^}":if s%(2,0)<>0 then x=s%(2,0):gosub 35:gosub 1:&,2,2:close 2
+3172 if a$="{^}" or a$="RES" then a$="No One"
+3174 so$=a$:if qthen sy$=sy$+"-Maint"
+3176 return
+3180 on-(pf<>0) goto 3182:pf=0:a$="GF.Main"+"":tp=0
+3181 pf=pf+1:pf$(pf)=a$
+3182 gosub 3160:if u$="" then gosub 3152:on-(tp=0) gosub 3110
+3183 gosub 3010:on-(s%(1,0)=0) goto 3200
+3184 dr=5:gosub 3:a$=dr$+"i/GF."+left$(pf$(pf),2):load a$,dv%
+3186 rk=1:gosub 4000:goto 3200
+3198 if e%then:&"Error Reading {f5}{pound}$b{f5}.{f6:2}"
+3200 gosub 3003:on-(mm=1 and u$="") goto 3220
+3202 gosub 3008:im=6:gosub 429:on-(tr%<1) goto 3235:im=2:gosub 429:on f4goto 3233:on rsgoto 3200
+3204 gosub 3006:if athen br=a:goto 3400
+3206 if pf>1 and (a$="<" or a$="B") then pf=pf-1:goto 3182
+3208 if pf>1 and a$="M" then pf=1:goto 3182
+3209 if q=1 and a$="Z" then 3231
+3210 on-(a$="Q") goto 3235:gosub 3212:goto 3200
+3212 on-(a$="L")-2*(a$="S") goto 3110,3120:if a$="{f2}" then im=1:goto 436
+3214 on-(a$="") goto 3110
+3218 &"{f6:2}Unknown Command. Type {f5}?{f5} for Help.{f6:2}":return
+3220 cx=1
+3222 gosub 3500:on-(tr%<1) goto 3235:on-(a$="R") goto 3222:on-(a$="Q") goto 3235
+3223 cx=a%:a=val(a$):if athen br=a:goto 3400
+3225 on-(a$="{f2}")-2*(a$="O")-3*(a$="Z" and q=1) goto 3232,3230,3231
+3226 if pf>1 and a$="B" then pf=pf-1:goto 3182
+3227 if pf>1 and a$="M" then pf=1:goto 3182
+3229 goto 3222
+3230 a$="other":goto 3300
+3231 a$="maint":goto 3300
+3232 gosub 3550:&"{pound}i1":goto 3200
+3233 pf=0:goto 234
+3234 x=1:gosub 390
+3235 pf=0:f1=.:&,18,1:goto 300
+3300 if lm$<>"GF-"+a$then dr=5:gosub 3:lm$="GF-"+a$:a$=dr$+"i/"+lm$:load a$,dv%
+3302 cx=1
+3304 rk=1:gosub 4000
+3306 if mm=0 then 3314
+3308 gosub 3350:on-(tr%<1) goto 3202:on-(a$="R") goto 3304:on-(a$="Q") goto 3200
+3312 cx=a%:rk=2:gosub 4000:on tzgosub 3150:on rsgoto 3200:goto 3306
+3314 im=6:gosub 429:on-(tr%<1) goto 3235:im=2:gosub 429:on f4goto 3233:on rsgoto 3304:goto 3306
+3350 &,52,$22,3:m%(0,0)=0:m%(1,0)=-1:m%(2,0)=-1:m%(3,0)=asc("R")
+3352 m%(1,1)=n*256+2:m%(1,n)=(n-1)*256+1
+3354 &,70,cx,n+1:&,70,0,mp%-1:a$=mid$(str$(a%),2)
+3356 if m%(3,a%) then a$=chr$(m%(3,a%))
+3358 fd=0:return
+3400 on-(br<1 or br>rn) goto 3200:x=e%(br):if nl=0 and s%(2,br)=5 then 3082
+3402 a=7:gosub 11:if qor aor s%(5,x)=0 then 3410
+3404 a=s%(5,x):on-(a>cr) goto 3080:cr=cr-a:if cp=0 then 3410
+3406 dr=3:a$="e.cr.pool 1,s,r":gosub 4:input# 2,b:input# 2,c:c=c+a:close 2
+3408 a$="e.cr.pool 1":gosub 18:print# 2,b:print# 2,c:close 2
+' &,60,4,0,struct%(field,record),string$: Put Date: store an 11-digit date
+'   in 6 bytes, year first, so dates compare in order; 0 = ignored
+' 3410: count one more use, store today (d1$) as the date last used, and save
+3410 s%(6,x)=s%(6,x)+1:&,60,4,0,s%(10,x),d1$:gosub 3074
+' 3412: &,60,1: the description again, reading 30 bytes (3106 reads 28)
+3412 a=s%(2,x):gosub 3050:&,60,1,30,s%(13,x),c$:a$=" "+a$+"   : "+c$
+3414 on-(a>1 and a<7) gosub 50:a=s%(2,x):gosub 3050
+3416 d1%=s%(3,x):d2%=s%(4,x):dr=0:if a=1 then dr=4
+' 3418: &,60,1: the entry's filename (16 bytes), after the prefix in b$
+3418 gosub 3:&,60,1,16,s%(27,x),a$:b$=b$+a$
+3420 on agoto 3422,3440,3430,3428,3424,3426,3434,3436,3438
+3422 a$=mid$(b$,3):goto 3181
+3424 gosub 4:on-(e%<>0) goto 3198:&"{clear}{pound}u1":&,3,2,f%:&"press a key:{pound}g1{f6}{clear}":goto 3198
+3426 &,52,16,3:g%=a%:&,52,16,0:gosub 13:&,52,16,g%:goto 3198
+3428 gosub 13:goto 3198
+3430 if "GF."+a$<>lm$then lm$="GF."+a$:a$="i/"+lm$:load a$,dv%
+3432 gosub 4000:goto 3200
+3434 tp=1:a$=mid$(b$,3):goto 3181
+3436 tp=2:a$=mid$(b$,3):goto 3181
+3438 tp=3:a$=mid$(b$,3):goto 3181
+3440 z$=a$:gosub 304:a$=z$:dr=0:goto 71
+3500 s$=left$("                    ",18-len(d2$)/2):gosub 3008
+3502 &"{pound}u0{rvrs off}{clear}{rvrs on}{blue}{pound}{back arrow}39{f6}"
+3504 &"{rvrs on}{blue} {gray3}          IMAGE{shft space}BBS{shft space}V3.0{pound}{back arrow}37{blue}  {f6}"
+3506 &"{rvrs on}{blue} {gray3}{pound}$s{pound}v8{pound}{back arrow}37{blue}{rvrs off} {rvrs on} {f6}{rvrs on}{blue}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3511 n=0:if rn=0 then 3518
+3512 ct$="??? Dir Prg Mod Txt Mov RLE U/X U/D Sub ":m=5
+3513 &,16,1,42,q%(0,n),"1",ct$,80,s%(0,1),1,s%(2,1),s%(13,1),28,rn,9,1:n=b%
+3518 if pf>1 then:&,16,0,42,q%(0,n),"/B","Op ","Return to Previous Menu":n=n+1
+3520 if pf>1 then:&,16,0,42,q%(0,n),"/M","Op ","Return to Main Menu":n=n+1
+3522 if qthen:&,16,0,42,q%(0,n),"/Z","Op ","Maintenance Options":n=n+1
+3524 &,16,0,42,q%(0,n),"/O","Op ","Other Options":n=n+1
+3526 &,16,0,42,q%(0,n),"/{f2}","Op ","Help":n=n+1
+3528 &,16,0,42,q%(0,n),"/Q","Op ","Quit":n=n+1
+3530 &,16,2,42,q%(0,0),n,36,1,n,6,6,0:a$=chr$(q%(3,a%) and 255)
+3532 &,70,0,mp%-1:return
+3550 &"{home}{down:4}{yellow}"
+3552 &"{right:3}{rvrs on}{pound}{back arrow}34{f6}"
+3554 &"{right:3}{rvrs on} Cursor Keys Move Highlight    {rvrs off} {f6}"
+3556 &"{right:3}{rvrs on} '/'{shft space}Keys are 'Hot' Keys       {rvrs off} {f6}"
+3558 &"{right:3}{rvrs on} Use RETURN to Select an Item  {rvrs off} {f6}"
+3560 rem:&" Ðress ‡Ò‡ to Òeprint the Íenu ’ ‹"
+3562 &"{right:3}{rvrs on}{pound}{back arrow}34{rvrs off} {f6}"
+3564 &"{right:3}{rvrs on} Press any key to continue     {rvrs off} {f6}"
+3566 &"{right:3}{rvrs on}{pound}{back arrow}34{rvrs off} {f6}"
+3568 &"{right:4}{pound}{back arrow}35{f6}":fd=3:return
+3570 d2$=mid$(p$,4):if left$(p$,3)="(M)" then d2$=mid$(p$,8)
+' 3572: &,60,0: the short title (d2$, 10 bytes) into the header, then save
+3572 &,60,0,10,s%(15,0),d2$:goto 3074
+3600 rem:"i.ÇÆ (c)nissa 230526 lh"
