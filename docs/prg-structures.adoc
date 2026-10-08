@@ -903,7 +903,7 @@ C64 BASIC's `^` can return a value slightly below a whole number; `&,60,6` round
 
 ===== i/MM.load: SIGs the User Can Use
 
-.i.MM.load: SIG list (as quoted)
+.i/MM.load: SIG list (release 231231; `core/i_MM.load.lbl`)
 [source,basic]
  4006 dr=3:gosub3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto5
  4008 dr=3:gosub3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto5
@@ -944,9 +944,20 @@ C64 BASIC's `^` can return a value slightly below a whole number; `&,60,6` round
 | <<scan-numbers,`&,60,8`>> lists the SIGs with bit `8192` or `16384` set
 |===
 
-#TODO#: As quoted, line 4110 compares the flags word (`x1%(0,1)`) with the user's ID number, which would rarely be true.
-Line 4126 shows that `x1%(2,_r_)` holds the SIG's sysop (`so%=x1%(2,sg)`), so `x1%(2,1)` ("`you are this SIG's sysop`") may be what was meant.
-Check the original `i/MM.load`.
+[WARNING]
+====
+Line 4110 is very likely a bug.
+It compares each SIG's flags word (`x1%(0,_r_)`) with the user's ID number, which is only true by coincidence.
+This is how the line appears in release 231231 (checked against `i/MM.load` on Disk 1), not a copying mistake.
+
+Line 4126 shows that `x1%(2,_r_)` holds the SIG's sysop (`so%=x1%(2,sg)`).
+Testing that field instead would make line 4110 mean "`also list the SIGs you are sysop of`", which fits what line 4112 collects:
+
+[source,basic]
+4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
+
+As released, a SIG's sysop who doesn't have the access level for their own SIG doesn't see it in this list.
+====
 
 ==== Source References [[scan-struct-source]]
 

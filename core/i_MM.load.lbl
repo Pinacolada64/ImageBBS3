@@ -1,0 +1,55 @@
+' i/MM.load: SIG list and selection (loaded from i.MM)
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.load" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
+' identical to the original.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 dim ba$,bz,lm,oc$,r,sg,sg$,tz:&,27,2:dim x1%(17,60),x2%(60),x3%(60,2)
+4002 lm=1:gosub 4100:x=lm:y=sg:z=tz:&,28,2:return
+4004 &,15,6,133:r=abs(int(val(a$))):return
+4006 dr=3:gosub 3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto 5
+4008 dr=3:gosub 3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto 5
+4010 lp=1:&"Sorry, that function is temporarily not available.":return
+4100 q=.:a=12:gosub 11:b=a:a=8:gosub 11:if a+bthen q=1
+4102 gosub 4006:if e%<>0 or x1%(0,0)=0 then 4146
+4104 xx=-(sy$="U/D")-2*(sy$="U/X"):f=4096+2^xx
+4106 &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
+4108 &,60,6,x1%(0,0),5,x1%(0,1),x1%(0,1),36,8192,f
+4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(0,1),36,16384,id
+4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
+4114 a$=left$(an$,2):an$=mid$(an$,3):if a%=0 then 4146
+4116 if a$=">>" or a$="<<" then r=sg+1+2*(a$="<<"):on-(r<>0) goto 4124
+4118 tz=0:gosub 4004:on-(r<>0) goto 4124:if a%=1 then r=1:tz=1:goto 4124
+4120 &"{f6}{white} ##  SIG Name{f6:2}":for i=1 to x2%(0):a%=i:x=x2%(i):&,60,1,30,x1%(3,x),b$
+4122 &"{white}{pound}#3{pound}# {pound}%a  {cyan}{pound}$b{f6}":next:&"{white}{f6}":p$="Which SIG?":gosub 6:gosub 4004
+4124 if r<1 or r>x2%(0) then 4168
+4126 sg=x2%(r):r=0:so%=x1%(2,sg):&,60,1,30,x1%(3,sg),s$
+4128 sg$=s$:gosub 4008:bz=0:if e%then 4144
+4130 bz=x3%(0,xx):if bz<1 then 4144
+4132 if bz>60 then bz=60
+4134 for b=1 to bz:e%(b)=x3%(b,xx):next
+4136 rem:b$=sg$:&"‹×elcome to the \$b ÓÉÇ!‹"
+4138 dr=1:a$="s.Sig"+str$(sg)+str$(nl):if ll%=80 then a$=a$+" 80"
+4139 gosub 14
+4140 gosub 35:x=so%:gosub 1:&,2,2:close 2
+4142 b$=an$:an$=a$:&,15,1:&"{f6}Your SIG Host here is {pound}v7.{f6}":an$=b$:goto 4152
+4144 &"{f6}This SIG has no "+sy$+" Boards.{f6:2}":sg=0:bz=0:goto 4120
+4146 sg=0:close 2:dr=3:a$="e."+sy$:gosub 4:if e%then 4010
+4148 &,2,2:bz=val(a$):close 2:if bz>60 then bz=60
+4150 for i=1 to bz:e%(i)=i:next
+4152 dr=3:a$="e."+sy$:gosub 4:if e%then 4010
+4154 ba$="":oc$="":b=0:for s=1 to bz:x=e%(s)+1:gosub 1:&,2,2:&,2,2:a=val(a$)
+4156 &,2,2:if ((aand 2^ac%)=0) then 4166
+4158 b=b+1:ac%(b)=a:bb$(b)=a$:&,2,2:a=abs(int(val(a$))):so%(b)=a+(a=0)
+4160 &,2,2:dv%(b+6)=val(a$):&,2,2:dr%(b+6)=val(a$):e%(b)=e%(s)
+4162 d$="0":if (so%(b)=id) or (so%=id) or qthen d$="1"
+4164 ba$=ba$+d$:&,2,2:oc$=oc$+mid$(str$(val(a$)),2)
+4166 next:close 2:bz=b:on-(bz=0 and sg>0) goto 4144:lm=0:return
+4168 if sgthen lm=1:return
+4170 lm=2:return
+4172 rem:"i/ÍÍ.load (c)nissa 200504 lh"
