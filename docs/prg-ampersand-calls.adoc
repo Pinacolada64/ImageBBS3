@@ -123,7 +123,8 @@ Image BBS converts these special characters from their encoded form to readable 
 
 The `image seq reader` utility used in BASIC also does this.
 
-TIP: A new `&` command, `&,15,2`, does the same thing when passed `an$`, the string to translate.
+TIP: <<_15_4,`&,15,4`>> does the same thing to `an$`, the string to translate.
+<<_15_2,`&,15,2`>> is similar, but leaves kbd:[f5], kbd:[f6] and kbd:[f8] encoded, since those would break a record in a SEQ file.
 
 As it relates to carriage returns, though, we can see in the following table:
 
@@ -143,6 +144,34 @@ _Key_ is what you type on the Commodore 64 keyboard.
 _Quoted_ is what it looks like in "`quote mode.`"
 
 _Character_ is what the encoded character represents.
+
+The encoded characters are `chr$(133)`-`chr$(140)`:
+
+[%autowidth]
+[%header]
+|===
+| Key | kbd:[f1] | kbd:[f3] | kbd:[f5] | kbd:[f7] | kbd:[f2] | kbd:[f4] | kbd:[f6] | kbd:[f8]
+| Code | `133` | `134` | `135` | `136` | `137` | `138` | `139` | `140`
+| Character | `,` | `:` | `"` | `*` | `?` | `=` | kbd:[Return] | `^`
+|===
+
+===== Typed Input Is Encoded [[input-encoding]]
+
+Image BBS also encodes characters as they are typed.
+Its input routines, such as <<_1_input_line,`&,1`>> (line input) and `&,23` (get a character), replace each typed `,` `:` `"` `*` `?` `=` and `^` with its encoded character.
+kbd:[Return] is left alone, since it ends the input.
+
+This means:
+
+* What a user types can be written to a SEQ file as it is: commas, colons and quotes can't break up the record.
+* A program checking what was typed must compare against the encoded character.
+A typed `?` arrives as `chr$(137)`, so `if an$="?" then...` is never true; use `if an$=chr$(137) then...`.
+* Wildcards typed for <<prg-structures.adoc#scan-string,`&,60,11` Scan for String>> arrive ready to use.
+
+There is no `&` call to encode a string built in BASIC; `&,15,2`, `&,15,4` and `&,64` only decode.
+Write the encoded characters in yourself, _e.g._ `"ok"+chr$(136)`.
+
+The encoding is done by `getchr` in `source/chrio.s`, from `getchr11` on: each character is looked up in the ML's `spchars` table, and if found (except kbd:[Return]), replaced with `$85` plus its position in the table.
 
 ==== `&` By Itself
 
@@ -364,6 +393,9 @@ An example is given below.
 `pl=0`: allow both lowercase and uppercase.
 
 `pl=1`: convert lowercase input to uppercase.
+
+NOTE: Typed `,` `:` `"` `*` `?` `=` and `^` arrive in `an$` already encoded, _e.g._ a typed `?` is `chr$(137)`.
+See <<input-encoding>>.
 
 _Parameters:_
 
