@@ -72,6 +72,7 @@ FORCE:
 # Several .lbl names contain spaces, which make can't use as targets, so
 # these are shell loops: each file is rebuilt only if its .lbl is newer.
 # Modules that fail to build are reported, and the loop carries on.
+# C64List 4.04 ignores {crunch:on}, so -crunch is passed for files that use it.
 
 define build_lbl_dir
 	@mkdir -p $(2); fail=0; \
@@ -81,7 +82,8 @@ define build_lbl_dir
 		out="$(2)/$$b.prg"; \
 		[ "$$out" -nt "$$f" ] && [ "$$out" -nt core/3_0-preface.lbl ] && continue; \
 		echo "C64List: $$f"; \
-		( cd "$$(dirname "$$f")" && $(RUN_C64LIST) "$$b.lbl" -prg:"$(call winpath,$(2))/$$b.prg" -ovr ) \
+		crunch=; grep -q -i '{crunch:on}' "$$f" && crunch=-crunch; \
+		( cd "$$(dirname "$$f")" && $(RUN_C64LIST) "$$b.lbl" -prg:"$(call winpath,$(2))/$$b.prg" $$crunch -ovr ) \
 			> "$(2)/$$b.log" 2>&1 \
 			|| { echo "  FAILED: see $(2)/$$b.log"; rm -f "$$out"; fail=1; }; \
 	done; \
