@@ -1338,13 +1338,13 @@ Copy one record from one struct to a record in another struct.
 
 '''
 
-=== `&,60,11` Scan for String [[scan-string]]
+=== `&,60,11` Scan for String [[scan-for-string]]
 
 Find the records whose string field matches a search string, either exactly or as a pattern with wildcards.
 Their record numbers go into an array, and `a%` returns how many there are.
 
 ====
-NOTE: This description comes from reading the source code (see <<scan-string-source>>).
+NOTE: This description comes from reading the source code (see <<scan-for-string-source>>).
 No Image BBS 3.0 BASIC code calls `&,60,11`; it is only used by the test program.
 ====
 
@@ -1373,7 +1373,7 @@ After each record, _field_ moves on by this many bytes.
 | _string$_
 | `1`-`80` characters
 | The string to search for: a string variable or a literal string.
-_Must not be empty_: see <<scan-string-hazards>>.
+_Must not be empty_: see <<scan-for-string-hazards>>.
 
 | _field%(field, record)_
 |
@@ -1430,7 +1430,7 @@ NOTE: The kbd:[f7] wildcard only works at the end of _string$_ (`text*`, not `*t
 * A record's string is read up to its first `chr$(0)`, and at most 255 characters.
 If a string fills its whole field with no `chr$(0)`, it runs on into the next field.
 
-==== Memory Hazards [[scan-string-hazards]]
+==== Memory Hazards [[scan-for-string-hazards]]
 
 `&,60,11` copies _string$_ into an 80-byte buffer in the ML (`buffer`, `$ce77`-`$cec6`).
 The 6 bytes right after it, at `$cec7` (`52935`), hold the BBS's current date (`bootdate`): weekday, month, date, year, hour and minute.
@@ -1453,7 +1453,7 @@ fs$="okapi":&,60,11,t,(l%+1)*2,0,fs$,s%(11,1),f%(1),1:f%(0)=a%
 
 This searches `t` records, `(l%+1)*2` bytes each, for an exact match of `okapi`, putting the record numbers of any matches in `f%(1)` on.
 
-==== Source References [[scan-string-source]]
+==== Source References [[scan-for-string-source]]
 
 [%autowidth]
 [%header]

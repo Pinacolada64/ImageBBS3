@@ -166,7 +166,7 @@ This means:
 * What a user types can be written to a SEQ file as it is: commas, colons and quotes can't break up the record.
 * A program checking what was typed must compare against the encoded character.
 A typed `?` arrives as `chr$(137)`, so `if an$="?" then...` is never true; use `if an$=chr$(137) then...`.
-* Wildcards typed for <<prg-structures.adoc#scan-string,`&,60,11` Scan for String>> arrive ready to use.
+* Wildcards typed for <<prg-structures.adoc#scan-for-string,`&,60,11` Scan for String>> arrive ready to use.
 
 There is no `&` call to encode a string built in BASIC; `&,15,2`, `&,15,4` and `&,64` only decode.
 Write the encoded characters in yourself, _e.g._ `"ok"+chr$(136)`.
