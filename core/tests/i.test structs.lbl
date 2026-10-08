@@ -248,7 +248,7 @@
 '* {f7}, {asterisk} = *, which specifies any characters from this point to the end of the string
 '// TODO: Check if "?" or "*" are usable, or only encoded f-keys
 '
-'str: #FIXME#: string variable/string literal to scan for?
+'str: FIXME: string variable/string literal to scan for?
 '
 'a1(a,b): source struct a1, field a, record b, to scan
 '
@@ -281,15 +281,16 @@
 	an$=fs$:w$=an$:pl=.:p$="Find what":&,1,32
 {:struct_11_unchanged}
 	if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
-' NEW: &,65,2: convert regular ? and * to {f2} and {f7} (I think)
-' NOTE: using &,15,2 does not return results after G)o
-	&,65,2:fs$=an$:&"(Changed to {quotation}{pound}v7{quotation}.){f6}":return
+' &,65 is the long-date routine, not a string conversion, and &,15,2 / &,64
+' only decode f-keys (the wrong direction), so wildcards are converted here
+	fs$=an$:if op=1 then gosub {:sub.encode_wildcards}
+	return
 
 {nice:5}
 {:struct_11_num_records}
-	p$="Number of records to scan [1-{pound}!t}]":w$=str$(t):&,1,32:if an$="" or an$=w$ then {:struct_11_unchanged}
-	an=int(val(an$)):if an<1 or an>t then:&"Out of range.{f6}":goto {:struct_11_num_records}
-	nr=an:return
+	p$="Number of records to scan [1-{pound}!t]":w$=mid$(str$(t),2):&,1,32:if an$="" or an$=w$ then {:struct_11_unchanged}
+	nr=int(val(an$)):if nr<1 or nr>t then:&"Out of range.{f6}":goto {:struct_11_num_records}
+	return
 
 {nice:5}
 {:struct_11_operation}
@@ -309,18 +310,27 @@
 ' s%(11,1)=field/record in struct to search
 ' f%(1)=array and starting element to put search results in (assuming it puts record numbers here)
 ' sr=starting record
-	if db then:&"&,60,11,"+str$(nr)+",{pound}!t,"+str$(op)+",{quotation}"+fs$+"{quotation},s%(11,1),f%(0),"+str$(sr)+"{f6}"
-	&,60,11,nr,t,op,fs$,s%(11,1),f%(1),sr
+	if db then:&"&,60,11,"+str$(nr)+","+mid$(str$((l%+1)*2),2)+","+str$(op)+",{quotation}"+fs$+"{quotation},s%(11,1),f%(1),"+str$(sr)+"{f6}"
+' record size: dim s%(l%,t%) gives (l%+1)*2 bytes per record (this used to
+' pass t, the number of records, which skipped through the names)
+	&,60,11,nr,(l%+1)*2,op,fs$,s%(11,1),f%(1),sr
 	if a%=. then lp=1:&"(No records matching those search parameters found.){f6}":return
 ' do GetString on each element of f%()
 	poke 970,.:&"Results ({pound}%a):{f6}"
 ' r%=element in result array
-	for x=1 to a%:x%=x:r%=f%(x):&,60,1,l,s%(11,r%),an$:&f$+"{pound}%x) {pound}%r {quotation}{pound}v7{quotation}{f6}":if rc or sh then x=a%:gosub 92
+	for x=1 to a%:x%=x:r%=f%(x):&,60,1,l,s%(11,r%),an$:&f$+"{pound}%x) {pound}%r {quotation}{pound}v7{quotation}{f6}":if rc or sh then x=a%:gosub 92:sh=.
 	next:return
 
 {:struct_11_quit}
 '	&,28,2:return
 	return
+{:sub.encode_wildcards}
+' &,60,11's pattern mode (op=1) only treats chr$(137) (f2) as "any one
+' character" and chr$(136) (f7) as "anything from here on": a typed ? or *
+' would be matched literally, so convert them
+	b$="":for i=1 to len(fs$):c$=mid$(fs$,i,1):if c$=chr$(63) then c$=chr$(137)
+	if c$=chr$(42) then c$=chr$(136)
+	b$=b$+c$:next:fs$=b$:return
 
 {step:2}
 {:3700} ' &,60,12: Game Scan
