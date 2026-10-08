@@ -15,9 +15,8 @@ _name_
 Variable names made of two words are tied together with an underscore (`_`).
 
 .Compound Variable Name
-****
+
 ``__first_name__``
-****
 
 This method differentiates _first_name_ as being separate from two variables named _first_ and _name_.
 
@@ -27,38 +26,50 @@ The highlighted words #FIXME# and #TODO# represent things in the documentation w
 
 ==== Keyboard Keys and Typed Commands
 
-Letters enclosed in rounded, shaded squares represent keys on the Commodore 64 keyboard.
+Text enclosed in rounded, shaded squares represents keys on the Commodore 64 keyboard.
 They generally are either options for, or should be pressed during, a series of instructions in the manual.
 
 .Keyboard Keys
-====
 kbd:[Ctrl] or kbd:[f1]: A single keypress.
 
 kbd:[Shift+T]: Two keys with a **+** between them represent holding down the first key while typing the second key.
 
-kbd:[.],kbd:[C]: Two keystrokes in sequence
-====
+kbd:[.C]: A dot command, typed as two keystrokes: kbd:[.] then kbd:[C]
 
 .Typed Commands
 
 The same notation can also represent BBS commands typed at a prompt.
 
-====
 * kbd:[ST], kbd:[AT], or kbd:[O!]
 * Type kbd:[Y]es
-====
 
 Monospace text on a gray background usually represents output shown on the screen.
 
-.Output or Prompt
-====
+.Output Block
  Enter your user name or ID#:
-====
 
+////
 Bold monospace text represents text typed by the user in response to a prompt.
 
 .Example
 `Enter your user name or ID#: **45**` kbd:[Return]
+////
+
+==== Code Blocks
+
+Text inside curly braces (such as `\{f6\}`) is often used to represent keys or color codes (like `\{white\}`) to type, since the keypress shading (kbd:[f6]) isn`'t available in code blocks.
+
+If you are typing the listing on a real C64, there are no curly brace keys on the keyboard.
+(Symbols not available on the C64 keyboard were deliberately chosen to avoid mistakenly typing them in.)
+
+.Details: C64List brace entities
+****
+The text inside the curly braces is used by a Windows utility named C64List.
+(It also works nicely under Winefootnote:[https://www.winehq.org/] in Linux.)
+C64List can take text files and create C64 binaries out of them.
+
+For more information about C64List, see #FIXME#.
+****
 
 ==== Callouts
 
@@ -67,10 +78,8 @@ They provide a way to add annotations to lines below the block of text.
 The numbers are not meant to be typed, but match the number below the block of text.
 
 ----
-
 Example code <1>
 More examples <2>
-
 ----
 <1> A longer explanation of what the first line of code, data  or instruction does will go here.
 
@@ -106,7 +115,7 @@ When in the Image Term phonebook, some options such as kbd:[D]ial or kbd:[E]dit 
 ====
 IMPORTANT: **Important**
 
-This can be used to emphasize a point in the documentation which is
+This can be used to emphasize a point in the documentation which is #FIXME#
 
 .Example
 Also copy `im` to your modules disk.
