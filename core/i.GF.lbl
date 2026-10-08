@@ -111,9 +111,10 @@
 '   groups, s%(1,r), include the user's access level bit, 2^ac%.
 '   a% = how many entries the user may see
 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
-' &,60,8,number,size,access,struct%(f,r),result%(1),start: Scan Numbers
-'   number of records, record size, access (bits to look for?), field to
-'   scan, result array (the 1 seems to be ignored), record to start at
+' &,60,8,count,size,bits,field%(f,r),result%(e),first: Scan Numbers
+'   for each record: if the field shares any bit with bits, store the record
+'   number in result%(e), result%(e+1), ...; first = number of the first
+'   record scanned. a% = how many matched. the struct isn't changed
 ' 3168: put the record numbers of the entries with bit 1 set into e%()
 3168 rn=a%:if rnthen:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1
 3170 a$="{^}":if s%(2,0)<>0 then x=s%(2,0):gosub 35:gosub 1:&,2,2:close 2

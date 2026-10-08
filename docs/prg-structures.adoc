@@ -1012,83 +1012,111 @@ _start_: Element to start sorting at?
 
 === `&,60,8` Scan Numbers [[scan-numbers]]
 
-Scan through a specified field in a struct for non-zero values.
-`a%` returns how many non-zero values there are.
-The list of non-zero values are returned in the specified array.
+List the records whose integer field shares a bit with a bit mask: their record numbers go into an array, and `a%` returns how many there are.
+Unlike <<scan-struct,`&,60,6`>>, it doesn't change the struct.
+
+====
+NOTE: This description comes from reading the source code (see <<scan-numbers-source>>).
+The Image BBS calls in <<scan-numbers-examples>> all fit it, but it has not been tested on a running BBS yet.
+====
 
 .Syntax
-
-`&,60,8,` _number_, _size_, _access_, _struct%(field, record)_, _result%(1)_, _start_
+`&,60,8,` _count_, _size_, _bits_, _field%(field, record)_, _result%(element)_, _first_
 
 .Parameters
-
-`number`: number of records to scan
-
-`size`: size of the record, in bytes
-
-`access`: access level to filter results by (in bits?)
-
-`struct%(field, record)`: the struct, record and field to scan
-
-`result%(1)`: the single-dimension array to put the results in.
-`1` seems to be a dummy parameter: ignored, but necessary to be interpreted as a valid array reference.
-
-`start`: record to start scanning at
-
-.i/MM.load: Scan Numbers
-[source,basic]
-4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
-
-[%header]
 [%autowidth]
+[%header]
 |===
-| Parameter | Purpose
-| `&,60,8`
-| Scan Numbers sub-command
+| Parameter | Range | Purpose
 
-| `x1%(0,0)`
-| number of records
+| _count_
+| `0`-`255`
+| Number of records to scan
 
-| `36`
-| the struct is 36 bytes per record
+| _size_
+| `0`-`255`
+| Record size in bytes.
+After each record, _field_ moves on by this many bytes.
 
-| `8192+16384`
-| filter by bits 14/15 ($2000, `%00100000 00000000` + $4000, `%01000000 00000000`)
+| _bits_
+| `0`-`65535`
+| A record matches if its field shares _any_ bit with _bits_.
+(It only means "`any non-zero value`" if _bits_ is `65535`.)
 
-| `x1%(0,1)`
-| look in the `x1%(field=_0_, record=1)` (field _0_="`don`'t care?`")
+| _field%(field, record)_
+|
+| The integer field to test, in the first record to scan
 
-| `x2%(1)`
-| put non-zero results in the `x2%()` array
+| _result%(element)_
+|
+| Where to store the first match.
+Usually element `1`, which leaves element `0` free for the count: `x2%(0)=a%`.
 
-| `1`
-| Start at record 1.
+| _first_
+| `0`-`255`
+| The record number recorded for the first record scanned; each record after that is one more.
+This doesn't set where scanning starts: _field%(field, record)_ does.
+Use the same record number as in _field%(field, record)_.
 |===
-
-====
-NOTE: More research needed.
-`8192+16384` exceeds the expected access levels of 0-9 (values 1-1023).
-These are the bits which lines 4108 and 4110 set using <<scan-struct,`&,60,6`>>, just before this line: see <<scan-struct-examples>>.
-====
-
-.i.UD: Scan Numbers
-[source,basic]
-3310 &,60,8,rn,60,a,x1%(0,1),f%(1),1:f%(0)=a%
-
-// FIXME: order of params changed -- this is Jack's struct UD
-
-. `&,60,8`: Scan Numbers sub-command
-. `rn`: Scan through `rn` records
-. `60`: the struct is 60 bytes per record
-. `a`: filter by access level `a`
-. `x1%(0,1)`: look in the `x1%(field=_0_, record=1)` (field _0_="don`'t care?")
-. `f%(_x_)`: put non-zero results in the `f%()` array
-. `1`: Start at record 1.
 
 .Returns
-`a%`: number of results returned, `0`=none.
+`a%`: how many records matched, `0` if none.
 
-`a%(a)`: one-dimensional array of results, from `a%(1--a)`
+_result%(element)_ on: the record numbers of the matching records, in order.
+
+==== What Happens for Each Record
+
+. The field's 2 bytes are ``and``ed with _bits_: high byte first, then low byte.
+. If either result is not `0`, the record number is stored in the next element of _result%()_, and `a%` goes up by `1`.
+. The record number goes up by `1`, and _field_ moves on by _size_ bytes.
+
+Record numbers are stored as `0`-`255`, since the count and record number are each one byte.
+
+==== Examples [[scan-numbers-examples]]
+
+[%autowidth]
+[%header]
+|===
+| Module | Call | Lists
+
+| `i/MM.load`
+| `4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%`
+| SIGs whose flags word has bit `8192` (`$2000`) or `16384` (`$4000`) set, which lines 4108 and 4110 set using <<scan-struct,`&,60,6`>> (see <<scan-struct-examples>>)
+
+| `i.GF`
+| `3168 rn=a%:if rn then:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1`
+| Entries with flag bit `1` set: the ones the user may see, from the `&,60,6` scan on line 3166
+
+| `i.UD` (Jack Followay)
+| `&,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%`
+| Files whose flags word shares bits with `a`, _e.g._ `1` = unvalidated
+
+| `sub.menus`
+| `&,60,8,60,60,2^ac%+zz*32768,jm%(1,.),fd%(1),.`
+| Menu items allowed for the user's access level, plus items marked with bit 15 (`32768`) when the sysop is in local mode (`zz`).
+_first_ is `0`, since the scan starts at record `0`: `jm%(1,.)`.
+|===
+
+TIP: `8192` and `16384` in `i/MM.load` aren't access levels: they are flag bits 13 and 14 (counting from `0`), set earlier by `&,60,6`.
+
+==== Source References [[scan-numbers-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,60,8` dispatch
+| `source/struct.s`: `entry2` and `functbl`
+
+| `scannums` routine
+| `source/struct.s`: `scannums:` through `scannum6:`
+
+| _size_, _bits_
+| `source/struct.s`: `getsize`, `getword`
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3500}`.
 
 '''
 

@@ -46,10 +46,11 @@
 ' 4110: oper 7 = object equals test: set bit 16384 where the SIG's sysop,
 '   x1%(2,r), is this user. (released as x1%(0,1), the flags word: a bug)
 4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
-' &,60,8,number,size,access,struct%(f,r),result%(1),start: Scan Numbers
-'   number of records, record size, access (bits to look for?), field to
-'   scan, result array (the 1 seems to be ignored), record to start at
-'   a% = how many found; x2%() gets the record numbers, x2%(0)=a% saves the count
+' &,60,8,count,size,bits,field%(f,r),result%(e),first: Scan Numbers
+'   for each record: if the field shares any bit with bits, store the record
+'   number in result%(e), result%(e+1), ...; first = number of the first
+'   record scanned. a% = how many matched. the struct isn't changed
+'   (x2%(0)=a% saves the count)
 ' 4112: list the SIGs with bit 8192 or 16384 set (from 4108 and 4110)
 4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
 4114 a$=left$(an$,2):an$=mid$(an$,3):if a%=0 then 4146

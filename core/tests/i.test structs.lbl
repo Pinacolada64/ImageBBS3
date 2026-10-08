@@ -138,9 +138,9 @@
 	for r=1 to 5:zs%(0,r)=0:a$=mid$(d$,r*11-10,11):&,60,4,0,zs%(2,r),a$:next
 	&"{f6}&,60,6 Scan Struct{f6}Numbers: 5, 300, 1000, 32767, -1 (65535){f6}"
 	lp=1:&"Dates: 2004-12-20, 2021-05-17, 2023-01-01 12:00 AM, 2026-10-08, 2023-01-01 1:30 AM{f6:2}"
-	o=0:t=4:e=4:gosub {:sub.scan_num}:o=1:e=1:gosub {:sub.scan_num}
-	o=14:t=1000:e=2:gosub {:sub.scan_num}:o=15:e=3:gosub {:sub.scan_num}
-	o=6:t=300:e=4:gosub {:sub.scan_num}:o=7:e=1:gosub {:sub.scan_num}
+	o=0:tt=4:e=4:gosub {:sub.scan_num}:o=1:e=1:gosub {:sub.scan_num}
+	o=14:tt=1000:e=2:gosub {:sub.scan_num}:o=15:e=3:gosub {:sub.scan_num}
+	o=6:tt=300:e=4:gosub {:sub.scan_num}:o=7:e=1:gosub {:sub.scan_num}
 ' dates: 12:00 AM is stored as hour 00, so 1:30 AM (record 5) sorts after it
 	o=79:e=3:&,60,6,5,o,zs%(0,1),zs%(2,1),10,1,"12301011200":gosub {:sub.scan_show}
 	o=78:e=2:&,60,6,5,o,zs%(0,1),zs%(2,1),10,1,"12301011200":gosub {:sub.scan_show}
@@ -154,7 +154,7 @@
 	o=128:e=2:&,60,6,5,o,zs%(0,1),zs%(0,1),10,1,1:gosub {:sub.scan_show}
 	return
 {:sub.scan_num}
-	&,60,6,5,o,zs%(0,1),zs%(1,1),10,1,t
+	&,60,6,5,o,zs%(0,1),zs%(1,1),10,1,tt
 {:sub.scan_show}
 	x=a%:&"oper {pound}!o: a%={pound}!x (expect {pound}!e), flags":for r=1 to 5:x=zs%(0,r):&" {pound}!x":next:&"{f6}":return
 
@@ -180,7 +180,7 @@
 	next:return
 
 {:3500} ' &,60,8: Scan Numbers
-' &,60,8, record_count, record_size, access, struct%(field, record), result%(1), start
+' &,60,8, record_count, record_size, bits, field%(field, record), result%(element), first
 
 ' 3310 &,60,8,rn,60,a,ud%(0,1),f%(1),1:f%(0)=a%
 
@@ -188,7 +188,8 @@
 '  8192 = $2000 = %00100000 00000000
 ' 16384 = $4000 = %01000000 00000000
 
-	&,60,8,s%(0,0),2,1023,s%(8,1),f%(1),1:&"Total: {pound}%a{f6}"
+' record size: dim s%(l%,t%) gives l%+1 integers = (l%+1)*2 bytes per record
+	&,60,8,s%(0,0),(l%+1)*2,1023,s%(8,1),f%(1),1:&"Total: {pound}%a{f6}"
 	poke 970,.:if a% then for n=1 to a%:&f$+"{pound}!n: "+str$(f%(n))+"{f6}"
 	return
 
@@ -200,8 +201,10 @@
 	x=.:for n=1 to an:y=s%(8,n):&"{pound}#2{pound}!n: {pound}!y{f6}":x=x+y:next:&"Total: {pound}!x{f6}"
 	poke 970,.:&"ScanSum:{f6}"
 ' FIXME: illegal quantity error
-' &,60,9, number, record_size (?), struct%(field, record)
-	n%=9:gosub {:header_page_6}:&,60,9,an,2,s%(8,1):&"ScanSum Total: {pound}%a{f6}"
+' &,60,9, number, record_size, struct%(field, record)
+' (record size was 2 here, which summed fields 8, 9, 10... of record 1;
+' check whether the illegal quantity error is still there)
+	n%=9:gosub {:header_page_6}:&,60,9,an,(l%+1)*2,s%(8,1):&"ScanSum Total: {pound}%a{f6}"
 	if x<>a% then:&"Does not match.{f6}"
 	if x=a% then:&"Matches.{f6}"
 	goto {:3550}
