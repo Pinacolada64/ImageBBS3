@@ -1345,11 +1345,220 @@ _sound_=
 `repeat=`
 Number of times to repeat: [`0`: Stop repeat | `1-254`: Repeat count | `255`: infinite]
 
-=== `&,26` ecschk
+=== `&,26` Find Record by Flags and Name [[ecschk]]
+
+Search a table of fixed-size records held in an integer array (such as a xref:prg-structures.adoc#structures[struct]) for the first record whose flag word shares a bit with _mask_, and whose name matches _string$_.
+
+The routine is called `ecschk` in the source, but it is not the same as the `ecschk` used by <<_42_check_for_ecs_command,`&,42`>>.
 
 ====
-NOTE: This is currently being researched.
+NOTE: This description comes from reading the source code (see <<ecschk-source>>), and has not been tested on a running BBS yet.
+Nothing in Image BBS 3.0's BASIC code calls `&,26`.
 ====
+
+.Syntax
+`&,26,` _size_, _count_, _mask_, _array%(element)_, _string$_
+
+.Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
+
+| _size_
+| `0`-`255`
+| Length of each record, in bytes
+
+| _count_
+| `0`-`255`
+| Number of records to search (`0` searches 256 records)
+
+| _mask_
+| `0`-`65535`
+| Bits to test against each record's flag word.
+A negative number gives `?illegal quantity&#160;&#160;error`.
+
+| _array%(element)_
+|
+| The array element where the first record starts
+
+| _string$_
+|
+| The name to search for: a string variable or a literal string.
+Only the first 8 characters are used.
+|===
+
+.Returns
+`a%`: the number of the first matching record, counting from `1`; `0` if no record matches.
+
+==== Record Layout
+
+Each record is _size_ bytes long.
+`&,26` only looks at bytes 2-3 and 6-13; the other bytes can hold anything.
+
+.&,26 Record Layout
+[%autowidth]
+[%header]
+|===
+| Bytes | In an integer array | Purpose
+
+| 0-1
+| _element_
+| Not used by `&,26`
+
+| 2-3
+| _element_+1
+| Flag word: byte 2 is ``and``ed with the high byte of _mask_, byte 3 with the low byte
+
+| 4-5
+| _element_+2
+| Not used by `&,26`
+
+| 6-13
+| _element_+3 to +6
+| Name: 8 bytes, padded with `chr$(0)` (as stored by xref:prg-structures.adoc#put-string[`&,60,0` Put String])
+|===
+
+A record matches when both of these are true:
+
+. _Flag test_: the flag word and _mask_ have at least one bit in common.
+. _Name test_: the record's name bytes equal _string$_, padded with `chr$(0)` to 8 characters.
+If _size_ is less than 14, only the name bytes up to the end of the record are compared.
+
+==== Special Cases
+
+[%autowidth]
+[%header]
+|===
+| Condition | Result
+
+| _string$_ is empty (`""`)
+| `a%=0` without searching
+
+| _mask_ is `0`
+| `a%=0`: no flag word can share a bit with `0`
+
+| _count_ is `0`
+| 256 records are searched
+
+| The match is past record 255
+| Can't be returned: the record number is only 1 byte
+
+| The flag word has bit 15 set
+| The flag word is stored as a negative number in the array (_e.g._ `-32768`), but the bit is passed in _mask_ as a positive number (`32768`)
+|===
+
+==== Example
+
+Structs store each record's fields next to each other, so in `t%(7,2)` each record `t%(0-7,_r_)` is 8 integers, or 16 bytes long.
+
+[source,basic]
+dim t%(7,2)
+t%(1,1)=1:&,60,0,8,t%(3,1),"FOO"
+t%(1,2)=2:&,60,0,8,t%(3,2),"BAR"
+&,26,16,2,2,t%(0,1),"BAR":&"{pound}%a"
+
+.Result
+`2`: record 2 is the first record with bit `2` set in its flag word and the name `BAR`.
+
+==== Possible Use [[ecschk-possible-use]]
+
+====
+NOTE: This section is an interpretation, based on how similar code elsewhere in Image BBS works.
+It has not been confirmed by any code that calls `&,26`.
+====
+
+`&,26` answers the question: "`Is the command this user typed in my command table, and are they allowed to use it?`"
+
+Think of the table as a list of commands.
+Each record holds:
+
+* the command's name (_e.g._ `FOO` or `BAR`), and
+* a flag word saying which access groups may use it: one bit per group.
+
+You pass in what the user typed as _string$_, and a _mask_ with the user's own access group bit set.
+If the command is in the table _and_ the user's bit is set in its flag word, `a%` returns its record number; otherwise, `0`.
+The program can then branch on that number, with `on a% goto...` or <<calcgoto,`&,66` Calculated `goto`>>.
+
+===== Why the Mask Is Probably a "`Who's Allowed`" Bit
+
+The ECS (Extended Command Set) module used by <<_42_check_for_ecs_command,`&,42`>> does almost the same job, and its code shows what the mask is for.
+It builds a mask with one bit set for the user's access level, `ac%`, by shifting a `1` bit left `ac%` times:
+
+[source,asm]
+ldx #var_ac_integer  ; ac% = user's access level
+...
+sec                  ; the 1 bit to shift in
+lda #0
+sta acc
+sta acc+1
+ecsc3:
+rol acc              ; acc = 2^ac%
+rol acc+1
+dex
+bpl ecsc3
+
+It then ``and``s that bit with each command's access bytes, and compares the command name: the same pattern as `&,26`.
+The difference is that `&,26` lets the caller choose the mask, the record size and where the table is, while `&,42` uses its own fixed ECS table format.
+
+===== Example: An Access-Checked Command Lookup
+
+[source,basic]
+' ct%(7,n): command table; name in ct%(3,r), allowed access groups in ct%(1,r)
+' nc: number of commands; cm$: command the user typed
+' a level 5 user has mask 2^5=32
+' int(...+.5): C64 BASIC's ^ can return a value slightly below a whole number
+m=int(2^ac%+.5):&,26,16,nc,m,ct%(0,1),cm$
+if a%=0 then &"Unknown command.{f6}":return
+on a% goto 1000,1100,1200
+
+This does in one machine language call what would otherwise be a slow BASIC loop comparing strings.
+
+===== Why Nothing Calls It
+
+`&,26` may be left over from an earlier way of handling ECS, where command definitions were held in a BASIC struct and searched with `&,26`.
+When Image BBS 3.0 moved ECS into its own swapped-in module (`&,42`, with its own table format), `&,26` stayed in the jump table, but nothing used it any more.
+This would also explain why the routine is named `ecschk`.
+
+#TODO#: Check Image BBS 2.0's ECS code to confirm or rule this out.
+
+`&,26` could still be useful for any "`find by name, but only if allowed`" table, such as a sysop's own commands, file transfer protocols, or sub-boards limited to certain access groups.
+
+==== Source References [[ecschk-source]]
+
+To check this description against the code:
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,26` jump table entry
+| `source/jmptb.s`: `.word ecschk //&,26`
+
+| `ecschk` routine
+| `source/miscl.s`: `ecschk:` through `ecsdone:`
+
+| _size_ and _count_ parsed into `.X` and `.Y`
+| `source/wedge.s`: `getaxy`
+
+| _mask_ (`evalint`), _array%(element)_ (`fnvar`), _string$_ (`evalstr`)
+| `source/ml.s`: `evalint0`, `fnvar0`, `evalstr0`
+
+| Flag test
+| `source/miscl.s`: `ecsc5` (high byte) and `ecsc6` (low byte)
+
+| Name test
+| `source/miscl.s`: `ecsscan1` / `ecsscan2`
+
+| `chr$(0)` padding by `&,60,0`
+| `source/miscl.s`: `putstruc`
+
+| `&,42`'s access level mask, used in <<ecschk-possible-use>>
+| `source/ecs.s`: `ecschk:` and `ecsc3` (namespace `ecsml`)
+|===
+
+Test program: `core/tests/i.test calls.lbl`, line `{:4500}`.
 
 '''
 

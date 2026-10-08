@@ -471,8 +471,29 @@
 ' <repeat> = 255: infinite
 	gosub {:sub.todo}:return
 
-{:4500} ' &,26: ecschk
-	gosub {:sub.todo}:return
+{:4500} ' &,26: ecschk (find record by flags and name)
+' &,26,size,count,mask,array%(element),s$
+' a%=first record (1-count) whose flag word (bytes 2-3) shares a bit
+' with mask, and whose name (bytes 6-13, chr$(0)-padded) matches s$; 0=none
+' zt%(7,2): each record zt%(0-7,r) is 8 integers (16 bytes)
+' flags in zt%(1,r), name from zt%(3,r); search starts at record 1
+	if zt=0 then dim zt%(7,2):zt=1
+	zt%(1,1)=1:&,60,0,8,zt%(3,1),"FOO"
+	zt%(1,2)=2:&,60,0,8,zt%(3,2),"BAR"
+	&"&,26 Find Record by Flags and Name{f6:2}"
+	&,26,16,2,2,zt%(0,1),"BAR":&"mask 2, BAR:      {pound}%a (expect 2){f6}"
+	&,26,16,2,1,zt%(0,1),"BAR":&"mask 1, BAR:      {pound}%a (expect 0){f6}"
+	&,26,16,2,3,zt%(0,1),"FOO":&"mask 3, FOO:      {pound}%a (expect 1){f6}"
+	&,26,16,2,3,zt%(0,1),"":&"mask 3, empty:    {pound}%a (expect 0){f6}"
+	&,26,16,2,0,zt%(0,1),"BAR":&"mask 0, BAR:      {pound}%a (expect 0){f6}"
+' only 8 characters are compared:
+	&,26,16,2,3,zt%(0,1),"BARxxxxxZ":&"mask 3, BARxxxxxZ:{pound}%a (expect 0){f6}"
+	&,60,0,8,zt%(3,2),"BARxxxxx"
+	&,26,16,2,3,zt%(0,1),"BARxxxxxZ":&"mask 3, BARxxxxxZ:{pound}%a (expect 2){f6}"
+' bit 15: stored as -32768, passed in mask as 32768:
+	zt%(1,2)=-32768:&,26,16,2,32768,zt%(0,1),"BARxxxxx"
+	&"mask 32768:       {pound}%a (expect 2){f6}"
+	return
 
 {:4550} ' &,27: array pointer save
 ' TODO: protect against &,27,1 (erases working variables for BBS)
