@@ -1001,11 +1001,24 @@ NOTE: Extra spaces between the numbers have been added for ease of reading, but 
 | 2-3   | `**yr**` | year    | `00`...`99` (the year within the century, `20xx`, is displayed using `&,15`)
 | 4-5   | `**mo**` | month   | `01`...`12`
 | 6-7   | `**dt**` | date    | `01`...`31`
-| 8-9   | `**hr**` | hour    | `00`...`11` (12:00 AM, midnight--11:00 AM, 1 hour until noon)
+| 8-9   | `**hr**` | hour    | `12`, `01`...`11` (12:00 AM, midnight--11:00 AM, 1 hour until noon)
 
-`80`...`92` (12:00 PM, noon--11:00 PM, 1 hour until midnight)
+`92`, `81`...`91` (12:00 PM, noon--11:00 PM, 1 hour until midnight)
+
+`00` and `80` are also accepted as 12 AM and 12 PM (see note below)
 | 10-11 ^| `**mi**` | minute  | `00`...`59`
 |===
+
+====
+NOTE: The hour is the CIA #1 time-of-day clock's hours register, written as two BCD digits.
+Bit 7 of that register is the PM flag, which is why PM hours start at `8`.
+The clock counts `12`, `01`...`11` for AM hours, so midnight is `12` and noon is `92`; it never shows `00` or `80`.
+
+When converting a date to text, `&,15` and kbd:[Ctrl+d] accept either `12`/`00` for 12 AM and `92`/`80` for 12 PM.
+<<newdate,`&,15,5`>> changes `12` to `00` and `92` to `80` so that dates sort correctly.
+
+The 12 o`'clock hour is shown as `12` and `92` in the source: see `irq2` (the midnight check `hrs = $12`), `makdate` (`source/irqhn.s`), and `htom`/`mtoh` (`source/swap3.s`).
+====
 
 The current time and date is stored in the string `d1$`, which is continually updated by the ML.
 Here is a sample definition of `d1$`:
@@ -1078,12 +1091,13 @@ These point to, and are the same as, `&,15,2`.
 
 '''
 
-==== `&,15,5` newdate
+==== `&,15,5` newdate [[newdate]]
 
 Convert an 11-digit Image BBS date in `an$` into a 10-digit, sortable `yymmddhhmm` string.
 
 * The weekday digit is removed.
-* An hour of `12` is changed to `00` (12 AM) and `92` to `80` (12 PM), to match the <<date-format>>.
+* An hour of `12` is changed to `00` (12 AM) and `92` to `80` (12 PM).
+`d1$` itself uses `12` and `92` for those hours (see the <<date-format>>), which would otherwise sort after `11` and `91`.
 
 If `an$` is not exactly 11 characters long, it is left unchanged.
 
@@ -2114,15 +2128,34 @@ _Parameters:_
 
 '''
 
-===	`&,58` setalarm
+===	`&,58` setalarm [[set-alarm]]
+
+Set the alarm time on Complex Interface Adapter #1 (CIA #1).
 
 _Parameters:_
 
 `&,58,_hour_,_minute_`
 
-`hour`: hour
+`hour`: hour, in the same form as <<set-time,`&,62` Set Time>> uses (_e.g._ `81` for 1 PM)
 
 `minute`: minute
+
+`&,58` shares its code with `&,62` (`setalm` and `settim` in `source/irqhn.s`).
+The differences are that `&,58` writes to the CIA's alarm registers instead of the clock, and does _not_ swap hours `12` and `92` (see <<set-time>>).
+A BASIC program has to do that swap itself.
+
+_Example:_
+
+.im: set the clock, then the alarm
+[source,basic]
+&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.
+
+After setting the clock to `b`:`c`, this swaps hours `12` and `92` in `b`, then sets the alarm to `b`:`00`.
+
+#TODO#: The expression also changes `13` to `1` and `93` to `81`, though neither can come from `d1$`.
+This suggests the alarm was meant to be set to the top of the _next_ hour (`b+1`).
+As written, the alarm is set to the current hour at `:00`, which has already passed.
+It is not yet known what the CIA alarm triggers in Image BBS.
 
 '''
 
@@ -2198,27 +2231,123 @@ NOTE: `0,0` is the top left corner of the screen.
 
 '''
 
-=== `&,62` Set Time
+=== `&,62` Set Time [[set-time]]
 
-Set BBS clock.
+Set the hours and minutes of the BBS clock: the time-of-day (TOD) clock in Complex Interface Adapter #1 (CIA #1).
+The date is not changed.
 
-// CIA timer?
+====
+NOTE: This description comes from reading the source code (see <<set-time-source>>), and has not been tested on a running BBS yet.
+====
 
-_Parameters:_
-
+.Syntax
 `&,62,` _hour_, _minute_
 
-`hour`: hour
+.Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
 
-`minute`: minute
+| _hour_
+| see below
+| Hour, in the same form as `d1$` (see the <<date-format>>)
 
-_Example:_
+| _minute_
+| `0`-`59`
+| Minute
+|===
 
-.im: Set Time with &,62
+Both values are converted to BCD (binary coded decimal) and written to the CIA's hours and minutes registers.
+Bit 7 of the hours register is the PM flag, so `80`-`92` (`$80`-`$92` in BCD) are PM hours:
+
+.&,62 Hour Values
+[%autowidth]
+[%header]
+|===
+| _hour_ | CIA hours register | Time
+
+| `12`
+| `$12`
+| 12 AM (midnight hour)
+
+| `1`-`11`
+| `$01`-`$11`
+| 1 AM-11 AM
+
+| `92`
+| `$92`
+| 12 PM (noon hour)
+
+| `81`-`91`
+| `$81`-`$91`
+| 1 PM-11 PM
+|===
+
+`0` and `80` are not valid hours for the CIA clock, and are not checked for.
+It is not yet known what the CIA does with them.
+
+==== Why Hours 12 and 92 Are Swapped
+
+The 6526 CIA flips the AM/PM flag whenever hour 12 is written to its hours register.
+To make up for this, `&,62` writes `$92` when it is asked for 12 AM (which the CIA flips to `$12`), and `$12` when it is asked for 12 PM (which the CIA flips to `$92`).
+
+<<set-alarm,`&,58`>> (Set Alarm) uses the same code, but does _not_ do this swap.
+
+==== Side Effects
+
+* Seconds and tenths of a second are set to `0`.
+Writing tenths last also restarts the clock: the CIA stops updating its time-of-day registers after the hours register is written, until tenths is written.
+* CIA #1 control register B (`$dc0f`) is set to `$01`: time-of-day writes set the clock (not the alarm), timer B is started, and the register's other bits are cleared.
+* The next IRQ updates the clock on the screen, as if a minute had passed.
+If a user is online with 1-100 minutes left, this also takes 1 minute off their time remaining.
+
+==== Example
+
+.im: set the date and time from z$
 [source,basic]
-3182 &,62,h,m
+a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
+a=val(mid$(z$,2,2)):gosub {:3184}:poke 52938,a
+a=val(mid$(z$,4,2)):gosub {:3184}:poke 52936,a
+a=val(mid$(z$,6,2)):gosub {:3184}:poke 52937,a
+b=val(mid$(z$,8,2))
+c=val(mid$(z$,10,2))
+&,62,b,c
 
-// FIXME
+`z$` holds an 11-digit date.
+`&,62` only sets the time, so the weekday, year, month and date are converted to BCD (by `{:3184}`) and ``poke``d into the ML's date storage (`bootdate` in `source/ml.s`) instead.
+
+==== Source References [[set-time-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,62` jump table entry
+| `source/jmptb.s`: `.word settim //&,62`
+
+| `settim` routine (shared with `setalm`, `&,58`)
+| `source/irqhn.s`: `settim:` through `settim5:`
+
+| 12/92 swap
+| `source/irqhn.s`: `settim`, `settim1`
+
+| Decimal to BCD conversion
+| `source/irqhn.s`: `settim3`
+
+| CIA #1 time-of-day and control register B addresses
+| `source/equat.s`: `ten`, `scs`, `min`, `hrs`, `ciacrb`
+
+| Minute update and time remaining (`timeflag`)
+| `source/irqhn.s`: `irq2`, `irq2a`
+
+| BBS code that calls `&,62`
+| `core/im.lbl`: `{:3170}`
+|===
+
+Test program: `core/tests/i.test calls.lbl`, line `{:6300}`.
+
 '''
 
 :function_count: 3

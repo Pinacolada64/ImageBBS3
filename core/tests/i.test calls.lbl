@@ -609,7 +609,35 @@
 	gosub {:sub.todo}:return
 
 {:6300} ' &,62: set time
-	gosub {:sub.todo}:return
+' &,62,hour,minute: hour as in d1$: 12, 1-11 = AM; 92, 81-91 = PM
+' The CIA hours register (BCD) should show the same two digits as the hour,
+' and d1$ (rebuilt by the ML on the next IRQ) should too.
+' 0 and 80 aren't valid CIA hours: see what happens.
+'
+' This changes the real BBS clock: d1$ is saved, and the time is restored
+' afterwards (seconds since the test started are lost).
+' Minute 30 is used so that 12 AM doesn't trigger the midnight date
+' rollover in irq2 (hours=$12 and minutes=0).
+' Each &,62 may take 1 minute off the user's time remaining.
+'
+' CIA #1 time of day: 56331 ($dc0b) hours, 56330 ($dc0a) minutes,
+' 56328 ($dc08) tenths. Reading hours freezes these registers until
+' tenths is read, so tenths is read last.
+	&"{f6}&,62 Set Time{f6:2}"
+	lp=1:&"This changes the BBS clock (it is restored afterwards). Continue? ":gosub 96:if a=. then return
+	s$=d1$:hx$="0123456789abcdef":h$="1201119281910080"
+	&"{f6}Before: d1$={quotation}{pound}$s{quotation}{f6:2}"
+	for i=0 to 7:h=val(mid$(h$,i*2+1,2)):e$=mid$(h$,i*2+1,2):if i>5 then e$="??"
+	c=30:gosub {:sub.test_settim}:next
+	h=val(mid$(s$,8,2)):c=val(mid$(s$,10,2)):&,62,h,c
+	&"{f6}Restored: d1$={quotation}"+d1$+"{quotation}{f6}":return
+{:sub.test_settim}
+' set the time, wait for the next IRQ, then read the CIA clock and d1$
+	&,62,h,c:for w=1 to 100:next
+	hv=peek(56331):mv=peek(56330):tv=peek(56328)
+	r$=mid$(hx$,int(hv/16)+1,1)+mid$(hx$,(hv and 15)+1,1)
+	&"&,62,{pound}!h,{pound}!c: CIA hours ${pound}$r (expect {pound}$e), d1$ hour "+mid$(d1$,8,2)+"{f6}"
+	return
 
 {:6350} ' &,63: inline1
 	gosub {:sub.todo}:return
