@@ -19,7 +19,7 @@
 
 ==== Sysop Information
 
-Handle, First/Last Names, Email Address, Password
+Handle, First/Last Names, E-mail Address, Password
 
 ==== Clock Set Method
 
@@ -167,10 +167,10 @@ Also, system news files are located here.
 News files have a prefix of `n.`.
 
 [start=2]
-. The "`E-Mail Disk`" (((system disks, e-mail)))
+. The "`E-mail Disk`" (((system disks, E-mail)))
 
-E-Mail files contain all user e-mail messages.
-_Forced mail_, e-mail messages that are not optional to view (and can contain various user account manipulation directives), are also stored here.
+E-mail files contain all user E-mail messages.
+_Forced mail_, E-mail messages that are not optional to view (and can contain various user account manipulation directives), are also stored here.
 These use much more directory space than disk space.
 
 E-mail files have a prefix of `m.`.
@@ -703,7 +703,7 @@ c.	(_Optional_) Set Cursor Menu Mode On.
 d.	Hit kbd:[Return] to exit.
 e.	At the Main Prompt, type kbd:[EP] to Edit your Parameters.
 f.	Select kbd:[I]nfo.
-g.	Change your phone number to your email address.
+g.	Change your phone number to your E-mail address.
 h.	Type kbd:[Return] to exit.
 7.	At this point, it is suggested you log off using the kbd:[O] command and answer `Update User File?` with kbd:[Y]es. This saves the new parameters to your account. You can then log back on in any mode you choose.
 
@@ -749,7 +749,7 @@ include::im-gglabs-modem-config.adoc[]
 .. Configure them for your preference.
 
 IMPORTANT: If you`'re upgrading from 1.2 to 3.0, it`'s highly recommended you include `i/lo-email` as a forced module in your login modules.
-This asks any user whose account is still configured with a phone number to change it to an email address.
+This asks any user whose account is still configured with a phone number to change it to an E-mail address.
 
 ////
 [start=14]

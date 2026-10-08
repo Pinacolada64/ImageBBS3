@@ -138,7 +138,7 @@ IMPORTANT: Copy `im` to Program disk for error recovery.
 === New Setup of 3.0
 ==== Sysop Information
 
-Handle, First/Last Names, Email Address, Password
+Handle, First/Last Names, E-mail Address, Password
 
 ==== Clock Set Method
 
@@ -525,11 +525,11 @@ If while the user is in one subsystem and types another subsystem command, kbd:[
 
 === `#`, `Return` Read E-mail
 
-=== `D` Delete e-mail
+=== `D` Delete E-mail
 
 === `FR` Personal file storage
 
-=== `L` List e-mail
+=== `L` List E-mail
 
 === `R` `Rx` Respond to a Message
 

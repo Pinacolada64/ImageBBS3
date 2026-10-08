@@ -270,7 +270,7 @@ This prevents beep sound effects from being played when a `&,25[,0]` command is 
 
 | *NetMail Enable*
 
-This allows NetMail options in the E-Mail subsystem, NetSub options in the sub-boards, and NetMaint to process NetMail and NetSubs.
+This allows NetMail options in the E-mail subsystem, NetSub options in the sub-boards, and NetMaint to process NetMail and NetSubs.
 
 | `28&#160;Net&#160;29`
 
@@ -324,7 +324,7 @@ The user won't be able to type the British pound sign (kbd:[&#163;]) to enter MC
 | *Enable MailCheck at Logon*
 
 Enables kbd:[M]`ail Check` option when user logs in.
-If chosen, this option allows the user to see whether they have e-mail waiting for them; they can then decide if they wish to log on to the BBS or not.
+If chosen, this option allows the user to see whether they have E-mail waiting for them; they can then decide if they wish to log on to the BBS or not.
 
 | `32&#160;Chk&#160;33`
 
@@ -472,7 +472,7 @@ Run Image 1._x_ `+` files, if they've been renumbered to lines `3000-`.
 
 | *Disable 2nd Security Check*
 
-During login, a second login security question is not asked (first or last names, e-mail address).
+During login, a second login security question is not asked (first or last names, E-mail address).
 
 | `50&#160;Sc2&#160;51`
 

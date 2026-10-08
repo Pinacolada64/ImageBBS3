@@ -505,7 +505,7 @@ For more information, see  <<modules.adoc#emulation-mode,Image 1.x Emulation Mod
 
 `Sc2` left: _Disable 2nd Security Check_
 
-If enabled, the user is only prompted for their account password, not their first and last names or their email address.
+If enabled, the user is only prompted for their account password, not their first and last names or their E-mail address.
 
 `Sc2` right: _Undefined_
 

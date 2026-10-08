@@ -74,8 +74,8 @@ The record size is 31 bytes.
 // Would like the cell formatted like:
 // System device
 // System drive
-// E-Mail device
-// E-Mail drive
+// E-mail device
+// E-mail drive
 // etc.
 // alas...
 
@@ -83,7 +83,7 @@ The record size is 31 bytes.
 // this table cell spans 6 rows 52-57
 .6+| For records 52-57, devices and drives are in separate fields of each record (stored as two lines separated by a carriage return).
 // subsequent cells don't need 2nd column specified
-| 53 | -- | E-Mail device, drive
+| 53 | -- | E-mail device, drive
 | 54 | -- | Etcetera device, drive
 | 55 | -- | Directory device, drive
 | 56 | -- | Module device, drive

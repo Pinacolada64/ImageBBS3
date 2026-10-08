@@ -64,7 +64,7 @@ Enter:
 // FIXME: only if there are multiple monospace items per cell do they have the shaded background.
 ! `dr` ! Purpose ! Prefix
 ! 1 ! System files ! ``s.``, ``n.``
-! 2 ! E-Mail/NetMail ! ``m.``, ``nm.``
+! 2 ! E-mail/NetMail ! ``m.``, ``nm.``
 ! 3 ! Etcetera Files ! ``e.``
 ! 4 ! Directory Files ! ``d.``
 ! 5 ! Plus Files ! ``i.``, ``i/``, ``sub.``, ``++``
@@ -199,7 +199,7 @@ The values of each flag are as follows:
 !  8 ! Remote Maint Access
 h! 18 ! Time Per Day Allowed (first digit)
 
-! 9  ! E-Mail Access
+! 9  ! E-mail Access
 h! 19 ! Time Per Day Allowed (second digit)
 
 ! 10 ! User List Access
@@ -306,11 +306,11 @@ _Exit:_
 
 | gosub&#160;32
 | gosub&#160;1062
-| Opens E-Mail file for desired user.
+| Opens E-mail file for desired user.
 
 _Enter:_
 
-`tt$`: user`'s handle of the E-Mail file to open
+`tt$`: user`'s handle of the E-mail file to open
 
 `a$`: should equal `,r` for reading from the file, or `,w` for writing to the file.
 
@@ -606,7 +606,7 @@ NOTE: If an ECS command is detected, the routine at line 304 is called.  If noth
 !  `3` ! Editor Menu/Help ! kbd:[.?] or kbd:[.H]
 !  `4` ! Local Mode Menu ! kbd:[??]
 !  `5` ! File Transfer Menu ! kbd:[UD]
-!  `6` ! E-Mail Menu ! kbd:[EM]
+!  `6` ! E-mail Menu ! kbd:[EM]
 !  `7` ! General Files Menu ! kbd:[GF]
 !  `8` ! End of Bulletin Menu ! kbd:[SB]
 !  `9` ! Disk Transfer Menu ! kbd:[UX]
@@ -728,7 +728,7 @@ If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo
 !  `3` ! Editor Menu/Help
 !  `4` ! Local Mode Menu (`zz`)
 !  `5` ! File Transfer Menu (`UD`)
-!  `6` ! E-Mail Menu (`EM`)
+!  `6` ! E-mail Menu (`EM`)
 !  `7` ! General Files Menu (`GF`)
 !  `8` ! End of Bulletin Menu (`SB`)
 !  `9` ! Disk Transfer Menu (`UD`/`UX`)
