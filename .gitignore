@@ -23,3 +23,7 @@ local_history.patch
 # exclude DocBook XML built from AsciiDoctor, and editor backups:
 **/*.xml
 **/*.bak
+
+# build output
+build/
+source/stamp.s
