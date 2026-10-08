@@ -4,12 +4,15 @@
 
 ' filesystem driver saves as test-convert2/
 
+' tests &,64 (string conversions on an$, same as &,15,1-&,15,4)
 ' source code: swap2.s, convert
-' breakpoint is $c009 (swapped in from $f809 I think)
+' breakpoint is $c009: &,64 is jump table entry $f809, the swap2 module,
+' which is swapped in to $c000. (&,65 is $fc09, swap3's convdate, the
+' date routine &,15 uses: it doesn't touch an$. This test used &,65 before.)
 
 ' set up breakpoint:
 ' 1) run module
-' 2) at "&,65," prompt, Alt-H to enter monitor
+' 2) at "&,64," prompt, Alt-H to enter monitor
 ' 3) w exec c009
 ' 4) x
 
@@ -48,16 +51,16 @@
 	fs$="{pound}#3{pound}# "
 {:menu}
 	lp=1:&"[Return=Quit, 1=convnam, 2=convdsk, 3=convimg, 4=chkspcl]{f6}"
-	&"Sub-Function: &,65,{pound}i1":if an$="" then:&"Quitting.{f6}":goto 300
+	&"Sub-Function: &,64,{pound}i1":if an$="" then:&"Quitting.{f6}":goto 300
 	op=int(val(an$)):if op<1 or op>4 then:&"Out of range.{f6}":goto {:menu}
 	if op=1 then {:test_convnam}
-	lp=1:&"Plaintext: "+s1$
-' convert plaintext special characters into Image-encoded function keys?
-' &,15,2 already converts special chars to readable symbols
-	an$=s1$:&,65,op:if an$="" then:&"Result: null string{f6}":goto {:menu}
-' s3$ is... the result of &,65,op
-' test s3$ against s1$ (plaintext), then s2$ (f-key encoded)
-	s3$=an$:lp=1:&"Converted: "+s3$+"{f6}"
+' 2=convdsk and 4=chkspcl decode f-keys, so convert the encoded string s2$;
+' 3=convimg replaces $,*?:=; with -, so convert the plaintext string s1$
+	x$=s2$:if op=3 then x$=s1$
+' &,64 changes an$ in place: +"" makes a copy, so s1$/s2$ aren't changed too
+	an$=x$+"":&,64,op:if an$="" then:&"Result: null string{f6}":goto {:menu}
+' s3$ is the result of &,64,op
+	s3$=an$:lp=1:&"Before: "+x$+"{f6}":lp=1:&"After:  "+s3$+"{f6}"
 {undef:use_this}
 {ifdef:use_this}
 ' don't, not yet... if ever
@@ -74,9 +77,8 @@
 	if a then:&"FIXME"
 	next
 {endif}
-	lp=1:o=op:&"Testing encoded f-key string s2$ against s3$ (&,65,{pound}!o):{f6}"
-	x$=s2$:gosub {:sub.test_conversion}
-	lp=1:&"Testing plaintext string s1$ against s3$ (&,65,{pound}!o):{f6}"
+' expected results: see "Expected" table at the end
+	lp=1:o=op:&"Testing plaintext string s1$ against s3$ (&,64,{pound}!o):{f6}"
 	x$=s1$:gosub {:sub.test_conversion}
 
 	&"Run again?: ":gosub 96:if a then {:menu}
@@ -87,18 +89,20 @@
 	&"[{quotation}Q{quotation} quits]{f6:2}":&,1,32
 	if an$="Q" then:&"Quitting.{f6}":goto {:menu}
 	if an$="" then an$=w$:&"Return sets an$={quotation}{pound}$w{quotation}{f6}"
+' &,64 changes an$ in place: +"" makes a copy, so w$ and the literal above
+' (in this program's text) aren't changed too
+	an$=an$+"":w$=an$+""
 	&"Before: w$={quotation}{pound}$w{quotation}{f6}"
 	lp=1:&"Pause to enable {quotation}watch exec c045{quotation} breakpoint - Key: {pound}g1{f6}"
-	an$="O'MALLEY'S BAR":&,65,0
-	' type mismatch error:
-	' &,65,0,"O'MALLEY'S BAR"
+' expect "O'malley's Bar" for the default
+	&,64,1
 	lp=1:&"Pause to {quotation}disable 1{quotation} breakpoint - Key: {pound}g1{f6}"
 	&" After: an$={quotation}{pound}v7{quotation}{f6}"
 	goto {:test_convnam}
 
 {:sub.test_conversion}
 '  x$ is either s1$ (plaintext) or s2$ (f-key encoded)
-' s3$ is x$ converted with &,65,op
+' s3$ is x$ converted with &,64,op
 	l=len(s3$):&"Space or / aborts.{f6}":for ct=1 to l
 	a%=asc(mid$(x$,ct,1)):b%=asc(mid$(s3$,ct,1)):c%=ct
 	if a%<>b% then:&"{f6}Mismatch, position {pound}%c:{f6}"
@@ -112,12 +116,20 @@
 	&"equal.{f6}"
 	return
 
+' Expected (s3$ compared with plaintext s1$):
+' &,64,1 convnam  see {:test_convnam}: "O'MALLEY'S BAR" -> "O'malley's Bar"
+' &,64,2 convdsk  s2$ -> not equal: f5 (34 ") and f6 (13 Return) stay encoded
+' &,64,3 convimg  s1$ -> not equal: each , * ? becomes - (45)
+' &,64,4 chkspcl  s2$ -> equal: all eight f-keys decoded
+
+' Earlier results, from when this test called &,65 (swap3's date routine,
+' which doesn't change an$): every sub-function left an$ unchanged, so
+' plaintext s1$ "passed" and encoded s2$ "failed" (Table 1, below).
 ' Test		Encoded Plaintext
 ' &,65,1	fail	pass		Table 1
 ' &,65,2	fail	pass		Table 1
 ' &,65,3	fail	pass		Table 1
 ' &,65,4	fail	pass		Table 1
-
 ' Table 1: Mismatches
 ' pos.  orig.   translated
 ' 1	135	34

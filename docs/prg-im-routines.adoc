@@ -801,7 +801,7 @@ _Enter:_
 Asks user to select protocol (unless in Console Local mode, which defaults to Copier), then loads the protocol.
 !===
 
-| gosub&#160;443
+| [[line-443,Load sub.display]]gosub&#160;443
 | _none_
 | Loads `sub.display`, which is responsible for displaying various sysop console screen masks.
 and executes a `gosub 60000`.

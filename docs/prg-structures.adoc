@@ -547,7 +547,7 @@ In our example, 3 records &#215; 38 bytes, using an integer array:
 
 '''
 
-=== `&,60,4` Put Date
+=== `&,60,4` Put Date [[put-date]]
 
 Put an 11-digit date string into a struct (which is stored in 6 bytes as Binary Coded Decimal).
 
@@ -569,48 +569,67 @@ an$="20412208234":&,60,4,0,u%(3,0),an$
 
 #TODO#: Explain example.
 
-.Details: Binary Coded Decimal
+.Details: How Put Date Stores a Date
 ****
-Structs store an 11-digit date in 3 elements (6 bytes) using Binary Coded Decimal (BCD) format.
-Two decimal digits are stored per byte, using the high and low _nybbles_ (_i.e._, 4-bit halves of an 8-bit number).
+Put Date stores an 11-digit date in 3 integer elements (6 bytes).
+The first 5 bytes use Binary Coded Decimal (BCD): each byte holds two decimal digits (`0`-`9`), one in each _nybble_ (4-bit half of the byte).
+The 6th byte is the weekday digit, as a character.
 
-[source, basic]
-an$="20412208234":&,60,4,0,u%(0,1),an$
+The digits are not stored in the order they appear in the string: the weekday goes last, so the year comes first.
+That way, comparing the bytes in order compares the dates in time order, which is how <<scan-struct,`&,60,6`>> tests whether one date is before another.
 
-[cols="8"]
+[source,basic]
+an$="20412208234":&,60,4,0,u%(1,0),an$
+
 [%autowidth]
+[%header]
 |===
-// 4 cells, cols 2-3, 4-5, 6-7 span
->|Element
-2+^|`u%(0,1)`
-2+^|`u%(0,2)`
-2+^|`u%(0,3)`
->|_unused_
+| Byte | Element | Holds | Digits from `an$` | Stored as
 
-// 8 cells
->| Binary
-^| `%0010&#160;%0000`
-^| `%0100&#160;%0001`
-^| `%0010&#160;%0010`
-^| `%0000&#160;%1000`
-^| `%0010&#160;%0011`
->| `%0100`
->| `%xxxx`
+| 1
+| `u%(1,0)`
+| year
+| 2-3: `04`
+| `$04` (`%0000&#160;%0100`)
 
->| Decimal
->| `2&#160;&#160;&#160;&#160;&#160;&#160;0`
->| `4&#160;&#160;&#160;&#160;&#160;&#160;1`
->| `2&#160;&#160;&#160;&#160;&#160;&#160;2`
->| `0&#160;&#160;&#160;&#160;&#160;&#160;8`
->| `2&#160;&#160;&#160;&#160;&#160;&#160;3`
->|  `&#160;&#160;&#160;&#160;&#160;&#160;4`
->|  `&#160;&#160;&#160;&#160;x`
+| 2
+| `u%(1,0)`
+| month
+| 4-5: `12`
+| `$12` (`%0001&#160;%0010`)
+
+| 3
+| `u%(2,0)`
+| date
+| 6-7: `20`
+| `$20` (`%0010&#160;%0000`)
+
+| 4
+| `u%(2,0)`
+| hour
+| 8-9: `82`
+| `$82` (`%1000&#160;%0010`)
+
+| 5
+| `u%(3,0)`
+| minute
+| 10-11: `34`
+| `$34` (`%0011&#160;%0100`)
+
+| 6
+| `u%(3,0)`
+| weekday
+| 1: `2`
+| `$32`, the character `2`
 |===
+
+An hour of `12` is stored as `00`, and `92` as `80`, so that 12 o`'clock sorts before 1 o`'clock (see xref:prg-ampersand-calls.adoc#newdate[`&,15,5`]).
+<<get-date,`&,60,5`>> changes them back.
 ****
 
 '''
 
-=== `&,60,5` Get Date
+=== `&,60,5` Get Date [[get-date]]
 
 Convert a 6-byte Binary Coded Decimal (BCD) date string (as shown above) to the Image BBS 11-digit date format.
 
@@ -661,134 +680,230 @@ Convert a 6-byte Binary Coded Decimal (BCD) date string (as shown above) to the 
 
 '''
 
-=== `&,60,6` Scan Struct
+=== `&,60,6` Scan Struct [[scan-struct]]
 
-Test whether various conditions are met for each record in a struct.
-The field to scan within each record is specified.
-If the condition is met, add the record number to the specified array.
-The number of fields meeting the condition is returned in the variable `a%`.
+Test a field in each record of a struct, and set bits in the record's flags word where the test is true.
+`a%` returns the number of records where the test was true.
+
+====
+NOTE: This description comes from reading the source code (see <<scan-struct-source>>).
+The Image BBS calls in <<scan-struct-examples>> all fit it, but it has not been tested on a running BBS yet.
+====
 
 .Syntax
-`&,60,6,` _num_, _command_, _a%(a,b)_, _b%(a,b)_, _size_, _bits_, _test_
-
-.i.GF: Scan Struct
-////
-;doscan - scan structures
-; &,nn,6, num, com, a(a,b), b(a,b), l, bits, test
-; num = # of structures to scan
-; com = command number
-; com = 0: 2 byte and, <>0
-; com = 1: 2 byte and, ==0
-; com = 2: 2 byte cmp, <
-; com = 3: 2 byte cmp, >=
-; com = 4: date cmp, <
-; com = 5: date cmp, >=
-; a(a,b) = starting flags element
-; b(a,b) = starting object element
-; l = unknown (rns)
-; bits = the bits to set if true
-; test = the object to test for
-////
-
-// 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+`&,60,6,` _count_, _oper_, _flags%(field, record)_, _object%(field, record)_, _size_, _bits_, _test_
 
 .Parameters
-[cols="1,2a"]
-[%header]
-|===
-| Parameter | Purpose
-
-| _num_
-| The number of records to scan.
-
-| _command_
-| What to compare, using the following table:
-
-// nested table
-.Scan Struct Comparisons
 [%autowidth]
 [%header]
-!===
-! Command ! Purpose ! Add If Result
-! 0 ! 2-byte `and` ! not equal to `0`
-! 1 ! 2-byte `and` ! equal to `0`
-! 2 ! 2-byte compare ! less than (`<`)
-! 3 ! 2-byte compare ! greater than or equal to (`>=`)
-! 4 ! date compare ! date is less than (`<`)
-! 5 ! date compare ! date is greater than or equal to (`>=`)
-!===
+|===
+| Parameter | Range | Purpose
 
-| _flag%(field,record)_
-| Flag field
+| _count_
+| `0`-`255`
+| Number of records to scan
 
-| _object%(field,record)_
-| Object field
+| _oper_
+| `0`-`255`
+| The test to do: see <<scan-struct-oper>>
+
+| _flags%(field, record)_
+|
+| The flags word of the first record to scan.
+The result bits are set here.
+
+| _object%(field, record)_
+|
+| The field to test in the first record to scan
 
 | _size_
-| Record size in bytes
+| `0`-`255`
+| Record size in bytes.
+After each record, both _flags_ and _object_ move on by this many bytes.
 
 | _bits_
-| The bits to set on `object%(a,b)` (?) if true?
+| `0`-`65535`
+| The bits to set in the flags word when the test is true
 
 | _test_
-| x
-
+| `0`-`65535`, or a date string
+| What to compare _object_ with: a number, or an 11-digit date string if _oper_ includes `64`
 |===
 
-.&,60,6 Example
+.Returns
+`a%`: the number of records where the test was true.
 
-.i.GF: Scan Struct
+==== The Operation Byte [[scan-struct-oper]]
+
+_oper_ is made of bit fields:
+
+[%autowidth]
+[%header]
+|===
+| Bit | Value | Meaning
+
+| 0
+| `1`
+| Invert the result
+
+| 1-2
+| `0` or `6`
+| How each byte is compared: `0` = `and` (_object_ `and` _test_); `6` = compare.
+(`4` = `and`, then compare with _test_: true if not all of _test_'s bits are set.)
+
+| 3
+| `8`
+| With compare: the result is "`less than`".
+Without it: "`not equal`", or a non-zero `and`.
+
+| 6
+| `64`
+| Date mode: compare a 6-byte date (stored by <<put-date,`&,60,4`>>) instead of a 2-byte integer
+
+| 7
+| `128`
+| Keep bits already set: don't clear _bits_ before testing
+|===
+
+.Useful _oper_ Values
+[%autowidth]
+[%header]
+|===
+| _oper_ | True when | Used in
+
+| `0`
+| _object_ `and` _test_ is not `0`
+| `i.GF`, `i/MM.load`, `i.UD`
+
+| `1`
+| _object_ `and` _test_ is `0`
+|
+
+| `5`
+| _object_ has all of _test_'s bits set
+| `i/MM.load`
+
+| `6` / `7`
+| _object_ is not equal to / equal to _test_
+| `i/MM.load` (`7`)
+
+| `14` / `15`
+| _object_ is less than / greater than or equal to _test_ (unsigned)
+|
+
+| `78` (`$4e`) / `79` (`$4f`)
+| The date is before / the same as or after _test_
+| `i.UD`
+|===
+
+Add `128` to any of these to keep the bits already set (`$80` is `128` on its own: `0` plus "`keep`").
+
+[NOTE]
+====
+The source code comment lists "`commands`" `0`-`5` (`and <>0`, `and =0`, `cmp <`, `cmp >=`, date `<`, date `>=`).
+That is the order of the list, not the values to pass: Image BBS passes `$4e` and `$4f` for the two date tests, for example.
+====
+
+==== What Happens for Each Record
+
+. Unless _oper_ includes `128`, the bits in _bits_ are cleared in the record's flags word.
+. _object_ is compared with _test_ byte by byte, starting with the first byte.
+For an integer, that is the high byte, so integers compare as unsigned numbers: `-1` in the array is `65535`.
+For a date, that is the year (see <<put-date>>), so dates compare in time order.
+. If the test is true (after inverting, if _oper_ includes `1`), the bits in _bits_ are set in the flags word, and `a%` goes up by `1`.
+. _flags_ and _object_ move on by _size_ bytes, to the next record.
+
+==== Tricks
+
+Clear a bit in every record::
+Use the flags word as _object_, _oper_ `0`, and the bit as both _bits_ and _test_.
+The bit is cleared before the test, so the test is never true:
++
 [source,basic]
-3166 a%=0:if s%(0,0) then:&,60,6, s%(0,0), 0, s%(0,1), s%(1,1), 80, 1, 2^ac%
-3168 rn=a%:if rn then:&,60,8, s%(0,0), 80, 1, s%(0,1), e%(1), 1
+&,60,6,rn,0,ud%(0,1),ud%(0,1),60,2,2
 
-[%header]
+Count the records with a bit set, without changing anything::
+The same, but with _oper_ `128` (`$80`), so nothing is cleared first.
+`a%` is the count:
++
+[source,basic]
+&,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
+
+==== Examples [[scan-struct-examples]]
+
+===== i.UD: New, Tagged and Unvalidated Files
+
+From Jack Followay's `i.UD` (`Jack Followay/i.UD-structs.lbl`, line `{:3940}` on).
+Each 60-byte record of `ud%()` is one file.
+`ud%(0,0)` holds the number of files, `rn`, and the files are records `1`-`rn`.
+The fields these calls use are:
+
 [%autowidth]
-[cols="1,2,3a"]
+[%header]
 |===
-| Statement | Variable | Purpose
+| Field | Contents
 
-// `&,60,6,` _num_, _comparison_, _flag%(a,b)_, _object%(a,b)_, _size_, _bits_, _test_
+| `ud%(0,_r_)`
+| Flags: `1` unvalidated, `2` tagged, `4` new since your last call, `8` downloaded since your last call, `16` uploaded before your last call
 
-| `3166 if s%(0,0) then...`
-| _n/a_
-| There is an implied `if s%(0,0)<>0` here, meaning "`if the record count is non-zero, then...`"
+| `ud%(3,_r_)`
+| Upload date
 
-| `&,60,6,`...
-| _n/a_
-| scan struct command
-
-| `s%(0,0),`...
-| _num_
-| for the record count
-
-| `0,`...
-| _comparison_
-| `0`: 2-byte `and` between bits in `s%(0,1)` and `s%(1,1)`? #FIXME#
-
-| `s%(0,1),`...
-| _flag_
-| flag struct name, record and field to get comparison data from (?)
-
-| `s%(1,1),`...
-| _object_
-| object struct name, record and field to add matching record numbers to
-
-| `80,`...
-| _size_
-| size of record in bytes
-
-| `1`...
-| _bits_
-| bits to set if _command_ is true
-
-| `2^ac%`
-| _test_
-| test object: here, the access level squared
-
+| `ud%(6,_r_)`
+| Last download date
 |===
 
-.i.MM.load: Scan Struct
+[source,basic]
+&,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
+&,60,6,rn,$4f,ud%(0,1),ud%(6,1),60,8,ld$
+&,60,6,rn,$4e,ud%(0,1),ud%(3,1),60,16,ld$
+if id<>ud%(1,0)then:&,60,6,rn,0,ud%(0,1),ud%(0,1),60,2,2
+&,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
+&,60,6,rn,$80,ud%(0,1),ud%(0,1),60,1,1:d%=a%*q
+
+[%autowidth]
+[%header]
+|===
+| Line | What it does
+
+| 1
+| Set bit `4` where the upload date is the same as or after `ld$` (your last call date).
+`b%`: the number of new files.
+
+| 2
+| Set bit `8` where the last download date is the same as or after `ld$`
+
+| 3
+| Set bit `16` where the upload date is before `ld$`
+
+| 4
+| If you aren't the user who tagged the files (`ud%(1,0)`), clear bit `2` (tagged) in every record
+
+| 5
+| `c%`: the number of tagged files (bit `2`)
+
+| 6
+| `d%`: the number of unvalidated files (bit `1`)
+|===
+
+The module then shows `b%`, `c%` and `d%` as "`New`", "`Tagged`" and "`Unvalidated`".
+
+===== i.GF: Files the User Can Access
+
+[source,basic]
+3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
+3168 rn=a%:if rn then:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1
+
+Line 3166 sets bit `1` in every 80-byte record whose access field (`s%(1,_r_)`) includes the user's access level bit, `2^ac%`.
+`a%` is the number of entries the user can access.
+Line 3168 then uses <<scan-numbers,`&,60,8`>> to list the records with bit `1` set.
+
+TIP: `2^ac%` is 2 to the power of the user's access level, not "`squared`": a level 5 user's bit is `32`.
+C64 BASIC's `^` can return a value slightly below a whole number; `&,60,6` rounds it down, so `int(2^ac%+.5)` is safer.
+
+===== i/MM.load: SIGs the User Can Use
+
+.i.MM.load: SIG list (as quoted)
 [source,basic]
  4006 dr=3:gosub3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto5
  4008 dr=3:gosub3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto5
@@ -808,85 +923,55 @@ The number of fields meeting the condition is returned in the variable `a%`.
  4126 sg=x2%(r):r=0:so%=x1%(2,sg):&,60,1,30,x1%(3,sg),s$
  4128 sg$=s$:gosub4008:bz=0:ife%then4144
 
-////
-&,60,6, num, command, a%(a,b), b%(a,b), size, bits, test
-
-The syntax has changed between the comments in the source code and i.UD line 3950
-updated:
-&,60,6, num, bits, a(a,b), b(a,b), size, command, test
-
-Example:
-&,60,6,rn,$80,x1%(0,1),x1%(0,1),60,2,2:c%=a%
-
-x1%(0,1),x1%(0,1) -> reads field 0, record 1 and sets bit 7 on a match?
-////
-
-`num`: # of fields in the struct to scan
-
-`bits`: the bits to set if _test_ is true
-
-`flag%(_field, record_)`: the struct name, record and field on which to set `bits` if `test` is true.
-
-====
-NOTE: _record_ may be a dummy parameter, more tests needed.
-====
-
-* `and` does a logical and with the bits #FIXME#
-
-* `cmp` compares values
-
-_Add If Result_:: Add this record (field?) to the #FIXME# only if _object_ meets the command's criteria
-
-_test_: the object to test for
-(apparently can be either a variable or a number, maybe the byte number?)
-
-.+.UD from Image 2.0
-====
-NOTE: This is still being researched.
-====
-
-The following code scans the U/D directory for entries which have an upload date older than `ld$`, setting bits `$4f` on `x1%(3,1)` (if the entry matches?):
-
-////
-Another version:
-     &,60,6,rn,$80,x1%(0,1),x1%(0,1),60,2,2:c%=a%
-////
-
-.i.UD: Scan For Older Upload Date than ld$
-[source,basic]
-3950 &,60,6,rn,$4f,x1%(0,1),x1%(3,1),60,4,ld$:b%=a%
-
+[%autowidth]
+[%header]
 |===
-| Parameter | Purpose
+| Line | What it does
 
-|`rn`
-| highest record number to scan in the directory struct
+| 4104
+| `f` is bit `4096`, plus `1`, `2` or `4` depending on `sy$` (`2^xx`)
 
-|`$4f`
-|(`%0100 1111` in binary) #FIXME# still researching the purpose of this
+| 4106
+| Set bit `4096` on every 36-byte SIG record whose access field (`x1%(1,_r_)`) includes the user's access level bit
 
-|`x1%(0,1)`
-| Status bits?
+| 4108
+| _oper_ `5`: set bit `8192` where the flags word has all of `f`'s bits set: the user can access the SIG, and it is the right type
 
-|`x1%(3,1)`
-| Upload date
+| 4110
+| _oper_ `7`: set bit `16384` where the flags word equals `id`
 
-|`60`
-| each record is 60 bytes wide
-
-|`4`
-| date comparison: `<` (less than)
-
-|`ld$`
-| the comparison object (last call date).
-Can apparently be a string name, or numeric: an array number?
+| 4112
+| <<scan-numbers,`&,60,8`>> lists the SIGs with bit `8192` or `16384` set
 |===
 
-.Returns
+#TODO#: As quoted, line 4110 compares the flags word (`x1%(0,1)`) with the user's ID number, which would rarely be true.
+Line 4126 shows that `x1%(2,_r_)` holds the SIG's sysop (`so%=x1%(2,sg)`), so `x1%(2,1)` ("`you are this SIG's sysop`") may be what was meant.
+Check the original `i/MM.load`.
 
-`a%`: count of fields the comparison returns as matching `test`.
+==== Source References [[scan-struct-source]]
 
-`b%(a,b)`: the array containing the comparisons matching `test` (?)
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,60,6` dispatch
+| `source/struct.s`: `entry2` and `functbl` (`&,60` sub-functions `4`-`13`)
+
+| `doscan` routine
+| `source/struct.s`: `doscan:` through `doscan15:`
+
+| How _oper_ picks the comparison
+| `source/struct.s`: `scanbits`, tables `opc1`, `opc2`, `opc3`, and the self-modified instructions `checkc0`-`checkc4`
+
+| Integer and date _test_ values
+| `source/struct.s`: `getword`, `evaldate`
+
+| Command list in the source comment
+| `source/struct.s`: header comment, `doscan - scan structures`
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3400}`.
 
 '''
 
@@ -912,7 +997,7 @@ _start_: Element to start sorting at?
 
 '''
 
-=== `&,60,8` Scan Numbers
+=== `&,60,8` Scan Numbers [[scan-numbers]]
 
 Scan through a specified field in a struct for non-zero values.
 `a%` returns how many non-zero values there are.
@@ -970,6 +1055,7 @@ The list of non-zero values are returned in the specified array.
 ====
 NOTE: More research needed.
 `8192+16384` exceeds the expected access levels of 0-9 (values 1-1023).
+These are the bits which lines 4108 and 4110 set using <<scan-struct,`&,60,6`>>, just before this line: see <<scan-struct-examples>>.
 ====
 
 .i.UD: Scan Numbers

@@ -370,24 +370,24 @@
 	l=0:h=6:q=1:m=1:gosub {:sub.input_range}:on q goto {:3950}:if m then return
 	on an+1 gosub {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:sub.todo}, {:15_5}, {:15_6}:goto {:amp_15_prompt}
 
-{:15_5}' &,15,5:
-' Old: d1$="19011038045"
-'      an$="Sun Nov  3, 2090 12:45 PM PST"
-' New: d1$="9011038045"
-'      an$="??? Oct 38, 2001  4:57 AM PST"
+{:15_5}' &,15,5: newdate
+' Drops the weekday digit, leaving a sortable 10-digit "yymmddhhmm";
+' also changes hour 12 -> 00 (12 AM) and 92 -> 80 (12 PM).
+' Result is shown as plain text: Ctrl-D always reads 11 digits.
 '
-' Old: d1$="11410288045"
-'      an$="Sun Oct 28, 2014 12:45 PM PST"
-' New: d1$="1410288045"
-'      an$="Sun Feb 88, 2041  4:57 AM PST"
+' "61112250412" -> "1112250412"  Fri Nov 25, 2011  4:12 AM (hour unchanged)
+' "61112251204" -> "1112250004"  hour 12 -> 00
+' "61112259204" -> "1112258004"  hour 92 -> 80
+' "2111225"     -> "2111225"     not 11 digits: unchanged
 
-	an$="19011038045":gosub {:sub.test_newdate} ' before: sun nov  3, 2090  8:45 pm
-	an$="11410288045":gosub {:sub.test_newdate} ' before: sun oct 28, 2014  8:45 pm
+	an$="61112250412":gosub {:sub.test_newdate}
+	an$="61112251204":gosub {:sub.test_newdate}
+	an$="61112259204":gosub {:sub.test_newdate}
+	an$="2111225":gosub {:sub.test_newdate}
 	return
 {:sub.test_newdate}
-	&"{f6}Old":gosub {:sub.show_newdate}:&,15,5:&"New"
-{:sub.show_newdate}
-	&": d1$={quotation}{pound}v7{quotation}{f6}{pound}{back arrow}05an$={quotation}{$04}"+an$+"{quotation}{f6}":return
+	&"{f6}Old: an$={quotation}{pound}v7{quotation}{f6}":&,15,5
+	&"New: an$={quotation}{pound}v7{quotation}{f6}":return
 
 {:15_6}
 ' from programmer's reference guide
@@ -471,8 +471,29 @@
 ' <repeat> = 255: infinite
 	gosub {:sub.todo}:return
 
-{:4500} ' &,26: ecschk
-	gosub {:sub.todo}:return
+{:4500} ' &,26: ecschk (find record by flags and name)
+' &,26,size,count,mask,array%(element),s$
+' a%=first record (1-count) whose flag word (bytes 2-3) shares a bit
+' with mask, and whose name (bytes 6-13, chr$(0)-padded) matches s$; 0=none
+' zt%(7,2): each record zt%(0-7,r) is 8 integers (16 bytes)
+' flags in zt%(1,r), name from zt%(3,r); search starts at record 1
+	if zt=0 then dim zt%(7,2):zt=1
+	zt%(1,1)=1:&,60,0,8,zt%(3,1),"FOO"
+	zt%(1,2)=2:&,60,0,8,zt%(3,2),"BAR"
+	&"&,26 Find Record by Flags and Name{f6:2}"
+	&,26,16,2,2,zt%(0,1),"BAR":&"mask 2, BAR:      {pound}%a (expect 2){f6}"
+	&,26,16,2,1,zt%(0,1),"BAR":&"mask 1, BAR:      {pound}%a (expect 0){f6}"
+	&,26,16,2,3,zt%(0,1),"FOO":&"mask 3, FOO:      {pound}%a (expect 1){f6}"
+	&,26,16,2,3,zt%(0,1),"":&"mask 3, empty:    {pound}%a (expect 0){f6}"
+	&,26,16,2,0,zt%(0,1),"BAR":&"mask 0, BAR:      {pound}%a (expect 0){f6}"
+' only 8 characters are compared:
+	&,26,16,2,3,zt%(0,1),"BARxxxxxZ":&"mask 3, BARxxxxxZ:{pound}%a (expect 0){f6}"
+	&,60,0,8,zt%(3,2),"BARxxxxx"
+	&,26,16,2,3,zt%(0,1),"BARxxxxxZ":&"mask 3, BARxxxxxZ:{pound}%a (expect 2){f6}"
+' bit 15: stored as -32768, passed in mask as 32768:
+	zt%(1,2)=-32768:&,26,16,2,32768,zt%(0,1),"BARxxxxx"
+	&"mask 32768:       {pound}%a (expect 2){f6}"
+	return
 
 {:4550} ' &,27: array pointer save
 ' TODO: protect against &,27,1 (erases working variables for BBS)
@@ -554,7 +575,23 @@
 	gosub {:sub.todo}:return
 
 {:5850} ' &,53: logoff, also see &,53,a
-	gosub {:sub.todo}:return
+' &,53[,idle]: stores idle in curdsp ($12e4, 4836): 0 = idle timer off,
+' anything else = on. Also clears the chat page flag (53256) and sound
+' repeat counter (962), re-links d1$ to the ML's live date string, and
+' blanks status line columns 30-32.
+' curdsp is restored afterwards. A pending chat page is cleared.
+	&"{f6}&,53 Logoff{f6:2}"
+	q=peek(4836):x=q:&"curdsp before:   {pound}!x{f6:2}"
+' d1$: give it a value of its own, then let &,53 point it back at the clock
+	d1$="test":&"d1$ set to:      {quotation}"+d1$+"{quotation}{f6}"
+	&,53:x=peek(4836):&"After &,53:     d1$={quotation}"+d1$+"{quotation} (expect date){f6}"
+	&"                curdsp={pound}!x (expect 0){f6}"
+	&,53,1:x=peek(4836):&"After &,53,1:   curdsp={pound}!x (expect 1){f6}"
+	&,53,255:x=peek(4836):&"After &,53,255: curdsp={pound}!x (expect 255){f6}"
+' idle timer: does I= count on the sysop screen while curdsp is not 0?
+' (only shown when the screen is in its normal mode)
+	&,53,1:lp=1:&"{f6}Idle timer on: watch for I= counting on the sysop screen, then hit a key: {pound}g1{f6}"
+	&,53,q:x=peek(4836):&"Restored:       curdsp={pound}!x{f6}":return
 
 {:5900} ' &,54: text editor interface
 	gosub {:sub.todo}:return
@@ -588,7 +625,35 @@
 	gosub {:sub.todo}:return
 
 {:6300} ' &,62: set time
-	gosub {:sub.todo}:return
+' &,62,hour,minute: hour as in d1$: 12, 1-11 = AM; 92, 81-91 = PM
+' The CIA hours register (BCD) should show the same two digits as the hour,
+' and d1$ (rebuilt by the ML on the next IRQ) should too.
+' 0 and 80 aren't valid CIA hours: see what happens.
+'
+' This changes the real BBS clock: d1$ is saved, and the time is restored
+' afterwards (seconds since the test started are lost).
+' Minute 30 is used so that 12 AM doesn't trigger the midnight date
+' rollover in irq2 (hours=$12 and minutes=0).
+' Each &,62 may take 1 minute off the user's time remaining.
+'
+' CIA #1 time of day: 56331 ($dc0b) hours, 56330 ($dc0a) minutes,
+' 56328 ($dc08) tenths. Reading hours freezes these registers until
+' tenths is read, so tenths is read last.
+	&"{f6}&,62 Set Time{f6:2}"
+	lp=1:&"This changes the BBS clock (it is restored afterwards). Continue? ":gosub 96:if a=. then return
+	s$=d1$:hx$="0123456789abcdef":h$="1201119281910080"
+	&"{f6}Before: d1$={quotation}{pound}$s{quotation}{f6:2}"
+	for i=0 to 7:h=val(mid$(h$,i*2+1,2)):e$=mid$(h$,i*2+1,2):if i>5 then e$="??"
+	c=30:gosub {:sub.test_settim}:next
+	h=val(mid$(s$,8,2)):c=val(mid$(s$,10,2)):&,62,h,c
+	&"{f6}Restored: d1$={quotation}"+d1$+"{quotation}{f6}":return
+{:sub.test_settim}
+' set the time, wait for the next IRQ, then read the CIA clock and d1$
+	&,62,h,c:for w=1 to 100:next
+	hv=peek(56331):mv=peek(56330):tv=peek(56328)
+	r$=mid$(hx$,int(hv/16)+1,1)+mid$(hx$,(hv and 15)+1,1)
+	&"&,62,{pound}!h,{pound}!c: CIA hours ${pound}$r (expect {pound}$e), d1$ hour "+mid$(d1$,8,2)+"{f6}"
+	return
 
 {:6350} ' &,63: inline1
 	gosub {:sub.todo}:return
