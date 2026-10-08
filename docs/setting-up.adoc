@@ -684,7 +684,7 @@ The remaining items in the `Base Editor` menu are sysop utilities for maintainin
 . Select kbd:[K] `Quit` to return to the main menu.
 . Select kbd:[Q] `Quit` to exit to the Main Prompt.
 
-Refer to <<_final_notes>> for further instructions.
+Refer to <<final-notes>> for further instructions.
 
 ////
 ### Configuration

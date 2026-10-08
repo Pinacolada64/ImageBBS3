@@ -15,3 +15,11 @@ Ryan Sherwood/*
 # exclude HTML or PDF documentation built from AsciiDoctor:
 **/*.html
 **/*.pdf
+
+# exclude JetBrains IDE settings and local history exports:
+.idea/
+local_history.patch
+
+# exclude DocBook XML built from AsciiDoctor, and editor backups:
+**/*.xml
+**/*.bak
