@@ -89,7 +89,7 @@ It has many functions:
 * Kernal replacement
 * SwiftLink emulation on the II+
 
-It is available for purchase from the https://ultimate64.com/[1541 Ultimate web site].
+It is available for purchase from the https://ultimate64.com/[1541 Ultimate website].
 
 icon:times-circle[role=red] This hardware is not emulated within VICE.
 
@@ -158,7 +158,7 @@ An RS-232 bridge (((RS232 bridge))) program does two major things:
 
 === RS-232 Interfaces
 
-An RS-232 interface (((RS232 interface))) is a module which plugs directly into the Commodore 64 and handles sending data to or receiving data from either a RS-232 bridge or a modem.
+An RS-232 interface (((RS232 interface))) is a module which plugs directly into the Commodore 64 and handles sending data to or receiving data from either an RS-232 bridge or a modem.
 Depending on the type, it can plug into either the user port, or cartridge (expansion) port.
 Only one type can be used at a time, due to the structure of the RS-232 machine language code in Image BBS.
 
