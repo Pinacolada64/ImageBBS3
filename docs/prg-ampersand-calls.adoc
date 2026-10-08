@@ -1056,10 +1056,13 @@ Outputting the date and time this way also outputs the user's time zone.
 
 '''
 
-==== `&,15,1` Title Case
+==== `&,15,1` Title Case [[_15_1]]
 
 Changes an all-uppercase string (such as a user's handle) to mixed case.
-Characters after a space are changed to uppercase, all other characters are changed to lowercase.
+The first letter of each word is changed to uppercase, and the other letters to lowercase.
+A word starts after any character that isn't a letter, except `'`: `O'MALLEY'S BAR` becomes `O'malley's Bar`.
+
+This is the same as <<convstr,`&,64,1`>>.
 
 [source,basic]
 .Example
@@ -1072,9 +1075,13 @@ an$="THE CHIEF":&,15,1:&an$
 
 '''
 
-==== `&,15,2` Decode Function Keys
+==== `&,15,2` Decode Function Keys [[_15_2]]
 
 Decodes quoted function key characters into readable equivalents.
+
+kbd:[f5] (`"`), kbd:[f6] (kbd:[Return]) and kbd:[f8] (`^`) are left encoded, since those characters would break a record in a SEQ file.
+To decode all eight, use <<_15_4,`&,15,4`>>.
+This is the same as <<convstr,`&,64,2`>>.
 
 Based on code from `i.t` (the Image terminal)::
 `an$="hostkbd:[f3]port":&,15,2:&"£v7kbd:[f6]"`
@@ -1084,9 +1091,31 @@ Based on code from `i.t` (the Image terminal)::
 
 '''
 
-==== ``&,15,3`` and ``&,15,4``
+==== `&,15,3` Make Filename Safe [[_15_3]]
 
-These point to, and are the same as, `&,15,2`.
+Replaces each of the characters `$ , * ? : = ;` in `an$` with `-`, so that `an$` can be used as part of a filename.
+
+[source,basic]
+an$="FILE: A*B?"+"":&,15,3:&an$
+
+.Result
+ FILE- A-B-
+
+This is the same as <<convstr,`&,64,3`>>.
+
+'''
+
+==== `&,15,4` Decode All Function Keys [[_15_4]]
+
+Like `&,15,2`, but decodes all eight encoded function keys, including kbd:[f5] (`"`), kbd:[f6] (kbd:[Return]) and kbd:[f8] (`^`).
+See <<encoded-function-keys>>.
+
+This is the same as <<convstr,`&,64,4`>>.
+
+====
+NOTE: `&,15,1` through `&,15,4` all go through the same entry in ``&,15``'s table, so they can look like the same call in the source.
+The sub-function number is passed along to <<convstr,`&,64`>>, which picks the conversion.
+====
 
 '''
 
@@ -2455,25 +2484,122 @@ include::includes/prg-ml-function-warning.adoc[]
 
 '''
 
-=== `&,64` convstr
+=== `&,64` Convert String [[convstr]]
+
+Convert the characters of `an$` in place, using one of four conversions.
+
+====
+NOTE: This description comes from reading the source code (see <<convstr-source>>), and has not been fully tested yet.
+====
+
+.Syntax
+`&,64,` _type_
+
+[%autowidth]
+[%header]
+|===
+| _type_ | Routine | Effect | Same as
+
+| `1`
+| `convnam`
+| Title case: the first letter of each word becomes uppercase, the other letters lowercase.
+A word starts after any character that isn't a letter, except `'`: `O'MALLEY'S BAR` becomes `O'malley's Bar`.
+| <<_15_1,`&,15,1`>>
+
+| `2`
+| `convdsk`
+| Decodes kbd:[f1], kbd:[f3], kbd:[f7], kbd:[f2] and kbd:[f4] to `,` `:` `*` `?` `=`.
+Leaves kbd:[f5] (`"`), kbd:[f6] (kbd:[Return]) and kbd:[f8] (`^`) encoded, since those would break a record in a SEQ file.
+| <<_15_2,`&,15,2`>>
+
+| `3`
+| `convimg`
+| Replaces each of `$ , * ? : = ;` with `-`, so the string can be used in a filename.
+| <<_15_3,`&,15,3`>>
+
+| `4`
+| `chkspcl`
+| Decodes all eight encoded function keys, including `"`, kbd:[Return] and `^`.
+| <<_15_4,`&,15,4`>>
+
+| other
+|
+| Nothing happens.
+|
+|===
+
+See <<encoded-function-keys>> for the function key encoding.
+
+.Example
+[source,basic]
+an$="host{f3}port"+"":&,64,2:&an$
+
+.Result
+ host:port
+
+====
+CAUTION: `an$` is changed _in place_: the conversion overwrites the characters wherever `an$`'s text is stored.
+If `an$` was assigned a string literal (`an$="THE CHIEF"`), its text is the literal inside your program, so the program line itself is changed.
+If it was assigned from another variable (`an$=a$`), that variable may share the same text.
+Adding `+""` (`an$="THE CHIEF"+""`) makes a separate copy first.
+====
+
+==== Source References [[convstr-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,64` jump table entry
+| `source/jmptb.s`: `.word $f809 //64-convstr`: `$f8xx` is the `swap2` module (`swap2_swap_address` in `source/equat.s`)
+
+| Entry point, and the sub-function dispatch
+| `source/swap2.s`: `hc009` (`jmp convert`), then `convert:` with tables `lotbl`/`hitbl`
+
+| Conversions
+| `source/swap2.s`: `convnam` (with `isalpha`), `convdsk` (with table `convd0`), `convimg` (with table `convi0`); `source/ml.s`: `chkspcl0` (with table `spchars`)
+
+| `&,15,1`-`&,15,4` using `&,64`
+| `source/strio.s`: `convtbl`/`convtbh`, which send sub-functions 1-4 to `convstr`; `source/calls.s`: `convstr:` (jump table entry 64)
+|===
+
+Test program: `core/tests/i.test-convert.lbl`.
 
 '''
 
-=== `&,65` convert [[convert]]
+=== `&,65` Build Long Date [[convert]]
+
+Builds the long date string used by <<convan,`&,15`>> and kbd:[Ctrl+d], from an 11-digit date.
+
+`&,65` does not use `an$`, or any other BASIC variable.
+It reads the 11-digit date from `datebuf`, and writes the long date to `date1`, both in the ML's memory.
+From BASIC, it is easier to use `&,15`, which does both steps for you.
+
+[%autowidth]
+[%header]
+|===
+| Memory | Address | Contents
+
+| `datebuf`
+| `$033f` (`831`)-`$0349` (`841`)
+| Input: an 11-digit date (see <<date-format>>)
+
+| `date1`
+| `$16e0` (`5856`)-`$16ff` (`5887`)
+| Output: _e.g._ `Tue Aug 17, 2004&#160;&#160;4:27 PM`, followed by the time zone.
+The hour is adjusted for the user`'s time zone.
+|===
+
+.Example
+[source,basic]
+d$="30408178427":for i=1 to 11:poke 830+i,asc(mid$(d$,i,1)):next
+&,65:for i=5856 to 5880:&chr$(peek(i)):next
 
 ====
-NOTE: These functions are undergoing discovery.
-====
-
-Another group of related string conversion functions, there seem to be sub-functions to convert:
-
-* names (?)--this function checks for `'` in a string
-* disk data
-* special characters to Image-encoded function keys, and
-* check for special characters.
-
-====
-TIP: Related string conversion functions can be found at <<convan>>.
+NOTE: Before Image BBS 3.0's source was available, `&,65` was believed to be a group of string conversion functions.
+Those are <<convstr,`&,64`>>.
+In the jump table, `&,64` is `$f809` (the `swap2` module) and `&,65` is `$fc09` (the `swap3` module, routine `convdate`); `&,15` calls entry 65 to build its long date.
 ====
 
 '''
