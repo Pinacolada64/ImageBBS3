@@ -11,22 +11,52 @@
 {alpha:alt}
 {crunch:on}
 
+' structs (see the Programmer's Reference Guide, "Structures"):
+' x1%(17,60): the SIG list, "e.Siglist". 18 integers = 36 bytes per record.
+'   x1%(0,0) = number of SIGs; SIGs are records 1 on
+'   x1%(0,r) = flags word; this module sets bits 4096, 8192 and 16384 here
+'   x1%(1,r) = access groups allowed (one bit per access level)
+'   x1%(2,r) = the SIG's sysop (user id)
+'   x1%(3,r) = the SIG's name, up to 30 bytes (read with &,60,1)
+' x2%(60): record numbers of the SIGs this user may pick (x2%(0) = how many)
+' x3%(60,2): the chosen SIG's list, "e.Siglist<n>"
 4000 dim ba$,bz,lm,oc$,r,sg,sg$,tz:&,27,2:dim x1%(17,60),x2%(60),x3%(60,2)
 4002 lm=1:gosub 4100:x=lm:y=sg:z=tz:&,28,2:return
 4004 &,15,6,133:r=abs(int(val(a$))):return
+' &,60,2,0,struct%(field,record),filename$,device: load a struct from disk
+'   0 = necessary but ignored; dr=3:gosub 3 sets dv% and dr$ first
 4006 dr=3:gosub 3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto 5
 4008 dr=3:gosub 3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto 5
 4010 lp=1:&"Sorry, that function is temporarily not available.":return
 4100 q=.:a=12:gosub 11:b=a:a=8:gosub 11:if a+bthen q=1
 4102 gosub 4006:if e%<>0 or x1%(0,0)=0 then 4146
+' build the list of SIGs to show, using flag bits in x1%(0,r):
+' f = 4096 (access bit, below) + the bit for this SIG type: 2^xx, xx=0..2
 4104 xx=-(sy$="U/D")-2*(sy$="U/X"):f=4096+2^xx
+' &,60,6,count,oper,flags%(f,r),object%(f,r),size,bits,test: Scan Struct
+'   for each record: unless oper has 128, clear bits in the flags word;
+'   compare object with test; if true, set bits and add 1 to a%
+'   oper bits: 1 invert, 0/6 and/compare, 8 less-than, 64 date, 128 keep bits
+' 4106: oper 0 = (object and test)<>0: set bit 4096 where the SIG's access
+'   groups, x1%(1,r), include the user's access level bit, 2^ac%
 4106 &,60,6,x1%(0,0),0,x1%(0,1),x1%(1,1),36,4096,2^ac%
+' 4108: oper 5 = object has all of test's bits: set bit 8192 where the flags
+'   word has all of f's bits (user may access it, and it's the right type)
 4108 &,60,6,x1%(0,0),5,x1%(0,1),x1%(0,1),36,8192,f
+' 4110: oper 7 = object equals test: set bit 16384 where the SIG's sysop,
+'   x1%(2,r), is this user. (released as x1%(0,1), the flags word: a bug)
 4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
+' &,60,8,number,size,access,struct%(f,r),result%(1),start: Scan Numbers
+'   number of records, record size, access (bits to look for?), field to
+'   scan, result array (the 1 seems to be ignored), record to start at
+'   a% = how many found; x2%() gets the record numbers, x2%(0)=a% saves the count
+' 4112: list the SIGs with bit 8192 or 16384 set (from 4108 and 4110)
 4112 &,60,8,x1%(0,0),36,8192+16384,x1%(0,1),x2%(1),1:x2%(0)=a%
 4114 a$=left$(an$,2):an$=mid$(an$,3):if a%=0 then 4146
 4116 if a$=">>" or a$="<<" then r=sg+1+2*(a$="<<"):on-(r<>0) goto 4124
 4118 tz=0:gosub 4004:on-(r<>0) goto 4124:if a%=1 then r=1:tz=1:goto 4124
+' &,60,1,length,struct%(field,record),string$: Get String
+'   copy up to length bytes from the struct into string$ (here, a SIG name)
 4120 &"{f6}{white} ##  SIG Name{f6:2}":for i=1 to x2%(0):a%=i:x=x2%(i):&,60,1,30,x1%(3,x),b$
 4122 &"{white}{pound}#3{pound}# {pound}%a  {cyan}{pound}$b{f6}":next:&"{white}{f6}":p$="Which SIG?":gosub 6:gosub 4004
 4124 if r<1 or r>x2%(0) then 4168
