@@ -1316,8 +1316,6 @@ Copy one record from one struct to a record in another struct.
 | loop from `x` (the current record) to the number of records in the struct fb%() -1...
 |===
 
-=== `&,60,11` Scan for String
-
 [%header]
 [%autowidth]
 |===
@@ -1340,52 +1338,134 @@ Copy one record from one struct to a record in another struct.
 
 '''
 
-=== `&,60,11` Scan for String
+=== `&,60,11` Scan for String [[scan-string]]
 
-Scan struct for a string present in a specified field and record.
-Put results (the indices of the fields the search results are found in) in the specified array.
+Find the records whose string field matches a search string, either exactly or as a pattern with wildcards.
+Their record numbers go into an array, and `a%` returns how many there are.
+
+====
+NOTE: This description comes from reading the source code (see <<scan-string-source>>).
+No Image BBS 3.0 BASIC code calls `&,60,11`; it is only used by the test program.
+====
 
 .Syntax
-
-`&,60,11,` _num_, _size_, _op_, _str_, _a1%(a,b)_, _a2%(b)_, _start_
+`&,60,11,` _count_, _size_, _op_, _string$_, _field%(field, record)_, _result%(element)_, _first_
 
 .Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
 
-`num`: number of records to scan
+| _count_
+| `0`-`255`
+| Number of records to scan
 
-`size`: size of record
+| _size_
+| `0`-`255`
+| Record size in bytes.
+After each record, _field_ moves on by this many bytes.
 
-`op`: operation:
+| _op_
+| `0`, `1`
+| `0`: exact match. `1`: pattern match, with wildcards (see below).
 
-* `0` specifies a regular compare (a string literal)
+| _string$_
+| `1`-`80` characters
+| The string to search for: a string variable or a literal string.
+_Must not be empty_: see <<scan-string-hazards>>.
 
-* `1` specifies a pattern to match.
-Here you can use two wildcard characters (like Commodore DOS):
+| _field%(field, record)_
+|
+| The string field to search, in the first record to scan.
+The string ends at its first `chr$(0)`, as stored by <<put-string,`&,60,0` Put String>>.
 
-** kbd:[f2] (in quote mode: kbd:[I]) is equal to kbd:[?], which specifies any character in its place
-** kbd:[f7] (in quote mode: kbd:[H]) is equal to kbd:[*], which specifies any characters from this point to the end of the string
+| _result%(element)_
+|
+| Where to store the first match.
+Usually element `1`, leaving element `0` free for the count.
 
-====
-NOTE: You may only use the wildcard ``*`` following the specified string: ``text*``, not ``*text``.
-====
-
-`str`: string variable or string literal to scan for
-
-`a1%(a,b)`: source struct _a1%()_, record _b_, field _a_, to scan
-
-`a2%(b)`: target 1-dimension array _a2%()_, dummy element _b_, to put results into
-
-`start`: record to start scanning from
+| _first_
+| `0`-`255`
+| The record number recorded for the first record scanned; each record after that is one more.
+This doesn't set where scanning starts: _field%(field, record)_ does.
+|===
 
 .Returns
+`a%`: how many records matched, `0` if none.
 
-`a%`: the count of results returned, `0` if none.
+_result%(element)_ on: the record numbers of the matching records, in order.
 
-`a2%(b)`: the array of results; each element is a search result
+==== Matching
 
-.Example
+Exact match (_op_ `0`)::
+The record's string must have the same characters as _string$_, and the same length.
+Upper and lower case are different characters.
 
-None yet.
+Pattern match (_op_ `1`)::
+Two function key characters work as wildcards, much like Commodore DOS:
++
+* kbd:[f2] (`chr$(137)`; kbd:[I] in quote mode) matches any one character.
+* kbd:[f7] (`chr$(136)`; kbd:[H] in quote mode) matches everything from that point to the end of the string.
++
+A typed `?` or `*` is matched literally.
+Nothing in `&,15` or `&,64` converts them into the function key characters (those only decode), so a program has to do this itself: the test program's `{:sub.encode_wildcards}` shows one way.
+
+====
+NOTE: The kbd:[f7] wildcard only works at the end of _string$_ (`text*`, not `*text`), and it needs at least one character to match: `cat*` matches `cats`, but not `cat`.
+====
+
+==== Limits
+
+* At most 127 matches are recorded: the position in _result%()_ is counted in bytes, 2 per match.
+* Record numbers are stored as `0`-`255`.
+* A record's string is read up to its first `chr$(0)`, and at most 255 characters.
+If a string fills its whole field with no `chr$(0)`, it runs on into the next field.
+
+==== Memory Hazards [[scan-string-hazards]]
+
+`&,60,11` copies _string$_ into an 80-byte buffer in the ML (`buffer`, `$ce77`-`$cec6`).
+The 6 bytes right after it, at `$cec7` (`52935`), hold the BBS's current date (`bootdate`): weekday, month, date, year, hour and minute.
+
+[WARNING]
+====
+* An *empty* _string$_ copies 256 bytes, not 0: the copy loop counts down from the length, and `0` counts down to `255` first.
+That's 176 bytes past the end of the buffer, `$cec7`-`$cf76`, starting with the date.
+* A _string$_ *longer than 80 characters* overwrites the date the same way.
+
+Check the length of _string$_ before calling `&,60,11`: `if len(s$)=0 or len(s$)>80 then ...`
+====
+
+==== Example
+
+From the test program, with animal names in field 11 of each record of `s%()`:
+
+[source,basic]
+fs$="okapi":&,60,11,t,(l%+1)*2,0,fs$,s%(11,1),f%(1),1:f%(0)=a%
+
+This searches `t` records, `(l%+1)*2` bytes each, for an exact match of `okapi`, putting the record numbers of any matches in `f%(1)` on.
+
+==== Source References [[scan-string-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `scanstr` routine
+| `source/struct.s`: `scanstr:` through `scanstr5:`
+
+| Exact and pattern comparisons
+| `source/struct.s`: `strcmp`, `strptn` (chosen through `stroplo`/`strophi`)
+
+| The copy into `buffer` (the empty-string hazard)
+| `source/struct.s`: `scanstr_loop1`
+
+| `buffer` and the date after it
+| `source/equat.s`: `buffer`; `source/ml.s`: `bootdate`
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3650}`.
 
 '''
 
