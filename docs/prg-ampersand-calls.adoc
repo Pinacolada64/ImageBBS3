@@ -594,10 +594,10 @@ The data is returned in `a$`.
 The data is returned in `a$`.
 `&`: output `a$`.
 
-// is it possible to continue getting data from there with &,2,2 again?
-
 <5> `close 2`: close disk file.
 `goto 300`: go to main prompt.
+
+// is it possible to continue getting data from there with &,2,2 again?
 
 .Details: BASIC Disk Data Pitfalls
 ****
@@ -1080,8 +1080,7 @@ Based on code from `i.t` (the Image terminal)::
 `an$="hostkbd:[f3]port":&,15,2:&"£v7kbd:[f6]"`
 
 .Result:
-[code, basic]
-host:port
+ host:port
 
 '''
 
