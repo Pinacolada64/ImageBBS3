@@ -326,7 +326,18 @@
 
 {step:2}
 {:3700} ' &,60,12: Game Scan
-	gosub {:sub.todo}:return
+' &,60,12,count,size,a$,field%(f,r),b$
+' b$ = one 2-character "tile" from a$ per record, chosen by the record's
+' field value v: mid$(a$,v*2+1,2). count must be 1-127 (0 overruns memory)
+' zg%(1,5): 5 records of 2 integers (4 bytes): zg%(0,r) = tile number
+' tiles: 0 = "  " open, 1 = "##" wall, 2 = "XX" rough, 3 = "**" treasure
+	if zg=0 then dim zg%(1,5):zg=1
+	a$="  ##XX**":for r=1 to 5:zg%(0,r)=(r-1) and 3:zg%(1,r)=0:next
+	&,60,12,5,4,a$,zg%(0,1),b$
+' the same thing in BASIC:
+	c$="":for r=1 to 5:c$=c$+mid$(a$,zg%(0,r)*2+1,2):next
+	&"{f6}&,60,12 Game Scan{f6}Tile numbers 0, 1, 2, 3, 0 from {quotation}{pound}$a{quotation}:{f6}"
+	&"&,60,12: {quotation}{pound}$b{quotation}{f6}BASIC:   {quotation}{pound}$c{quotation} (expect {quotation}  ##XX**  {quotation}){f6}":return
 
 {:3750} ' &,60,13: Text Read
 	gosub {:sub.todo}:return

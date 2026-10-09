@@ -1537,29 +1537,89 @@ Test program: `core/tests/i.test structs.lbl`, line `{:3650}`.
 
 '''
 
-=== `&,60,12` Game Scan
+=== `&,60,12` Game Scan [[game-scan]]
 
-Unknown purpose.
+Build a string from a table of 2-character "`tiles`": for each record, the value of an integer field picks one tile from _a$_, and the tiles are joined together into _b$_.
+
+====
+NOTE: This description comes from reading the source code (see <<game-scan-source>>).
+Nothing in Image BBS 3.0, or in the Image BBS 1.x and 2.0 files we have, calls `&,60,12`.
+The name suggests it was meant for drawing a game board: one row of map tiles per call.
+====
 
 .Syntax
-
-`&,60,12,` _count_, _size_, _a$_, _a%(a,b)_, _b$_
+`&,60,12,` _count_, _size_, _a$_, _field%(field, record)_, _b$_
 
 .Parameters
+[%autowidth]
+[%header]
+|===
+| Parameter | Range | Purpose
 
-`count`: how many records to scan?
+| _count_
+| `1`-`127`
+| Number of records, which is also the number of tiles in _b$_.
+_Must not be `0`_: see <<game-scan-limits>>.
 
-`size`: size of the record to scan
+| _size_
+| `0`-`255`
+| Record size in bytes.
+After each record, _field_ moves on by this many bytes.
 
-`a$`: a string to search for?
+| _a$_
+|
+| The tile table: tile `0` is its first 2 characters, tile `1` the next 2, and so on.
 
-`a%(a,b)`: `a%()`: struct name, `a`: field and `b`: record to scan
+| _field%(field, record)_
+|
+| The integer field holding the tile number, in the first record
 
-`b$`: ?
+| _b$_
+|
+| The string variable which receives the result: _count_ &#215; 2 characters
+|===
+
+In BASIC, `&,60,12` does the same as:
+
+[source,basic]
+b$="":for r=1 to count:v=field%(f,r):b$=b$+mid$(a$,v*2+1,2):next
 
 .Example
+[source,basic]
+dim gm%(1,5):for r=1 to 5:gm%(0,r)=(r-1) and 3:next
+a$="  ##XX**":&,60,12,5,4,a$,gm%(0,1),b$
 
-None yet.
+.Result
+`b$` is `"&#160;&#160;##XX**&#160;&#160;"`: tiles `0`, `1`, `2`, `3` and `0` (each record of `gm%(1,5)` is 2 integers, or 4 bytes long).
+
+==== Limits [[game-scan-limits]]
+
+* Only the low byte of the field is used, and it is doubled to find the tile, so tile numbers `0`-`127` work.
+From `128` on, the count wraps around to the start of _a$_.
+* There is no check against the length of _a$_: a tile number past its end copies whatever follows _a$_ in memory.
+
+[WARNING]
+====
+_count_ must be `1`-`127`.
+_b$_ is made _count_ &#215; 2 characters long, and a string can't be longer than 255.
+With _count_ `0`, `&,60,12` makes an empty string, but then copies 256 tiles (512 characters) into it, overwriting BASIC's string memory.
+====
+
+==== Source References [[game-scan-source]]
+
+[%autowidth]
+[%header]
+|===
+| What | Where
+
+| `&,60,12` dispatch
+| `source/struct.s`: `entry2` and `functbl`
+
+| `gamescan` routine
+| `source/struct.s`: `gamescan:` through `game3`; `game2` copies one character from _a$_
+|===
+
+Test program: `core/tests/i.test structs.lbl`, line `{:3700}`.
 
 '''
 
