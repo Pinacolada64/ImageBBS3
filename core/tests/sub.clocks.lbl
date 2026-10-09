@@ -1,0 +1,167 @@
+' sub.clocks
+{:60000}
+{step:2}
+' im=1: read CMD clock
+' im=2:  set CMD clock
+' im=3: read Lt. Kernal clock (swr.ml)
+' im=4:  set Lt. Kernal clock
+' im=5:  set clock manually
+' im=6: read last automaint timestamp
+' im=7: read ds12c887 clock (option available in VICE)
+'       ($d500? $d600? should have a choice of different base addresses
+'        depending on hardware combinations)
+' im=8:  set ds12c887 clock TODO: supported?
+' TODO: im=9: read TeensyROM clock
+' TODO: im=10: set TeensyROM clock
+
+' NOTE: &,66 (calcgoto) can't goto lines > 32767 due to integer variable parameter used
+
+	on im goto {:sub.read_cmd_clock}, {:sub.set_cmd_clock}, {:sub.read_ltk_clock}, {:sub.set_ltk_clock}, {:sub.read_automaint}, {:sub.set_manual}, {:sub.read_ds12c887}, {:sub.set_ds12c887}, :return
+
+{nice:100}
+{:sub.read_cmd_clock}
+' TODO: change y% to cm% ("using cmd device"), please: we have lk% for Lt. Kernal drives
+' TODO: check for DOS error if no CMD drive found
+' TODO: use t-rb (time-read binary?): shorter format to parse
+	close 15:open 15,y%,15:print#15,"t-ra":&,2,15
+' build d1$ based on returned cmd clock string:
+'                 1         2   2
+'        123456789012345678901234
+' e.g., "fri. 08/16/24 01:04:15 p"
+	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
+	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
+	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
+	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2)
+	gosub {:sub.console_time_flag.set}
+	gosub {:sub.set_d1$}
+
+{nice:100}
+{:sub.set_cmd_clock}
+	return
+
+{nice:100}
+{:sub.read_ltk_clock}
+	return
+
+{nice:100}
+{:sub.set_ltk_clock}
+' FIXME: is this supported?
+	return
+
+{nice:100}
+{:sub.read_automaint}
+	return
+
+{nice:100}
+{:sub.set_manual}
+	return
+
+{nice:100}
+{:sub.read_ds12c887}
+	rem 2014-09-19 18:46: enhanced by pinacolada for image bbs 1.2
+	rem 2019-05-28 12:34: and again for image bbs 1.3/2.0
+	rem 2024-08-16 11:16: and for image bbs 3.0
+	ba=$d500:rem base address of chip (54528)
+'	ba=$d600:rem base address of chip (54784)
+{ifdef:debug}
+	c=0
+{endif}
+' TODO: BASE+11 set DM (Data Mode) register to 0=BCD (register B, bit 2)
+'	m=ba+11:b=2:gosub {:sub.bit_clear}:rem set data mode to bcd
+
+' The Set bit (bit 7) in Register B should be cleared after the Data Mode bit
+' has been written to allow the real time clock to update the time and
+' calendar bytes.
+'	m=ba+11:b=7:gosub {:sub.bit_clear}
+
+' TODO: BASE+11 set 24/12 (Register B, bit 1) to 1=24 hour clock
+' spec says 12/24 bit can't be changed without rewriting hour
+'	m=ba+11:b=1:gosub {:sub.bit_set}:rem set 24-hour time
+
+	rem "set digits '{pound}#2', leading spaces '{pound}# '
+	& "Get time/date from DS12C887 RTC:{f6}"
+' choose register to read, read BCD values, convert to decimal
+	poke ba,4 :b=peek(ba+1):gosub {:sub.from_bcd}:hr=a:rem hour
+	if hr=. then:&"RTC not present at $d500.":goto 1811
+	poke ba,2 :b=peek(ba+1):gosub {:sub.from_bcd}:mi=a:rem minute
+	poke ba,0 :b=peek(ba+1):gosub {:sub.from_bcd}:sc=a:rem second
+	poke ba,6 :b=peek(ba+1):gosub {:sub.from_bcd}:dw=a:rem day of week (1=sun...7=sat)
+	poke ba,7 :b=peek(ba+1):gosub {:sub.from_bcd}:dt=a:rem day of month
+	poke ba,8 :b=peek(ba+1):gosub {:sub.from_bcd}:mo=a:rem month (1...12)
+	poke ba,9 :b=peek(ba+1):gosub {:sub.from_bcd}:yr=a:rem year
+	poke ba,50:b=peek(ba+1):gosub {:sub.from_bcd}:ce=a:rem century
+	rem show what we have got
+{ifdef:debug}
+	a%=hr:b%=mo:&"{pound}#2{pound}#01) hr: {pound}%a    5) mo: {pound}%b{f6}"
+	a%=mi:b%=dt:&"2) mi: {pound}%a    6) dt: {pound}%b{f6}"
+	a%=sc:b%=ce:&"3) sc: {pound}%a    7) ce: {pound}%b{f6}"
+	a%=dw:b%=yr:&"4) dw: {pound}%a    8) yr: {pound}%b{f6}"
+{endif}
+
+
+' e.g., "Tue May 28, 2019  2:24:44 PM"
+	&mid$("SunMonTueWedThuFriSat",dw*3-2,3)+" "
+	&mid$("JanFebMarAprMayJunJulAugSepOctNovDec",mo*3-2,3)+" "
+	d%=dt:c%=ce:y%=yr:m%=mi:s%=sc
+	h%=hr:if h%>12 then h%=h%-12:rem convert 24-hour to 12-hour time
+	&"{pound}#2{pound}#0{pound}%d, {pound}%c{pound}%y {pound}%h:{pound}%m:{pound}%s "
+	&mid$("AP",2+(hr<12),1)+"M{f6}":rem am or pm
+'	goto 1811
+
+	rem set image bbs clock and calendar
+' adapted from +/IM.time
+	a=dw:gosub {:sub.to_bcd}:poke 52935,b:rem $cec7: day of the week
+	a=mo:gosub {:sub.to_bcd}:poke 52936,b:rem $cec8: month
+	a=dt:gosub {:sub.to_bcd}:poke 52937,b:rem $cec9: date
+	a=yr:gosub {:sub.to_bcd}:poke 52938,b:rem $ceca: year
+
+' (line 981 in +/IM.time)
+' 56331	$DC0B	TODHRS
+' 56330 $DC0A	TODMIN
+' 56329	$DC09	TODSEC
+' 56328 $DC08	TODTEN 1/10ths of a second
+
+	return
+
+{nice:100}
+{:sub.set_ds12c887}
+	return
+
+{nice:100}
+{:sub.read_teensyrom}
+	return
+
+{nice:100}
+{:sub.set_teensyrom}
+	return
+
+' --- bbs clock functions: ---
+
+{nice:100}
+{:sub.set_d1$}
+' $cec7-$ceca?
+	a=val(left$(z$,01)):gosub {:sub.dec_to_bcd}:poke 52935,a
+	a=val(mid$(z$,2,2)):gosub {:sub.dec_to_bcd}:poke 52938,a
+	a=val(mid$(z$,4,2)):gosub {:sub.dec_to_bcd}:poke 52936,a
+	a=val(mid$(z$,6,2)):gosub {:sub.dec_to_bcd}:poke 52937,a
+	b=val(mid$(z$,8,2)):c=val(mid$(z$,10,2))
+	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93) or (b=13)):&,58,b,.:return
+
+{nice:100}
+{:sub.console_time_flag.set}
+    poke 1010,1:return
+
+{nice:100}
+{:sub.console_time_flag.clear}
+' in case of an error using time set method or setting clock
+    poke 1010,.:return
+
+{nice:100}
+{:sub.dec_to_bcd}
+' convert decimal to binary coded decinal
+	a=16*int(a/10)+a-int(a/10)*10:return
+
+{nice:100}
+{:sub.bcd_to_dec}
+' TODO: convert binary coded decimal to decimal
+	return
