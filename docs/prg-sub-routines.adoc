@@ -80,6 +80,15 @@ n2$:
 
 ==== sub.modem
 
+`sub.modem` sets up the modem, dials, answers, and hangs up.
+See <<im-configuration.adoc#im-modem,Modem Config>> in the `IM` chapter for the modem flags (`mt$`), init strings and result codes it uses.
+
+It checks the kbd:[C=] key (`peek(653)`, the shift-key flags at `$028d`) in two places:
+
+* while waiting for the modem to reply to a command (line 60340, `peek(653)=2`): holding kbd:[C=] alone stops waiting, so the modem setup finishes even if the modem never replies.
+Otherwise, a command with no reply restarts the setup from `ATZ`.
+* while dialing out (line 60210, `peek(653) and 2`): kbd:[C=] aborts the call.
+
 ==== sub.param1
 
 ==== sub.param2

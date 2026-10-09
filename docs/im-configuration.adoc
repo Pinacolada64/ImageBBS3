@@ -1,0 +1,349 @@
+:experimental:
+:icons: font
+
+== The `IM` Configuration Editor [[im-configuration]]
+
+`IM` is the sysop's configuration editor.
+Type kbd:[IM] at the main prompt while in local mode to use it.
+
+Each menu option loads its own module (`i/IM.access`, `i/IM.modem`, and so on), which saves its settings in the files listed in that option's section.
+
+.IM Main Menu
+[%autowidth]
+[%header]
+|===
+| Key | Option | Section
+
+| kbd:[A] | Macros Editor | <<im-macros>>
+| kbd:[B] | Command Set | <<im-command-set>>
+| kbd:[C] | Payroll Editor | <<im-payroll>>
+| kbd:[D] | Logon Editor | <<im-logon>>
+| kbd:[E] | Access Groups | <<im-access-groups>>
+| kbd:[F] | File Lists | <<im-file-lists>>
+| kbd:[G] | Function Keys | <<im-function-keys>>
+| kbd:[H] | Lightbar/Alarms | <<im-lightbar>>
+| kbd:[I] | Misc. Features | <<im-misc>>
+| kbd:[J] | Modem Config | <<im-modem>>
+| kbd:[K] | Set Time | <<im-set-time>>
+| kbd:[L] | System Drives | <<im-system-drives>>
+| kbd:[M] | Netmail Config | <<im-netmail>>
+| kbd:[N] | Base Editors | <<im-base-editors>>
+| kbd:[Q] | Quit |
+|===
+
+=== Macros Editor [[im-macros]]
+
+#TODO#
+
+=== Command Set [[im-command-set]]
+
+#TODO#
+
+=== Payroll Editor [[im-payroll]]
+
+#TODO#
+
+=== Logon Editor [[im-logon]]
+
+#TODO#
+
+=== Access Groups [[im-access-groups]]
+
+#TODO#
+
+=== File Lists [[im-file-lists]]
+
+#TODO#
+
+=== Function Keys [[im-function-keys]]
+
+#TODO#
+
+=== Lightbar/Alarms [[im-lightbar]]
+
+#TODO#
+
+=== Misc. Features [[im-misc]]
+
+#TODO#
+
+=== Modem Config [[im-modem]]
+
+`i/IM.modem` sets up the modem: how Image BBS talks to it (the modem flags), the commands it sends to it (the init strings), and how it understands the modem's replies (the result codes).
+
+====
+NOTE: This section was written from the module's source (`core/i_IM.modem.lbl`).
+The `nimodem.dat` options are new, and have not been tested on a running BBS yet.
+====
+
+The screen shows the modem's name and author, the 12 modem flags, the init strings, and this menu:
+
+[%autowidth]
+[%header]
+|===
+| Key | Action
+
+| kbd:[1]-kbd:[9], kbd:[0] then a digit
+| Change a modem flag (kbd:[0]: flags 10-12; see <<im-modem-flags>>)
+
+| kbd:[A]
+| Edit the custom init string, up to 35 characters (see <<im-modem-init>>)
+
+| kbd:[B]
+| Setup/Import Modem Config (see <<im-modem-setup>>)
+
+| kbd:[C]
+| Customize Current Result Code(s) (see <<im-modem-result-codes>>)
+
+| kbd:[R]
+| Re-select the port to configure (multi-port Lt. Kernal systems only)
+
+| kbd:[X]
+| Exit. If you changed a flag, you're asked "`Update Modem Flags?`"
+|===
+
+==== Modem Flags [[im-modem-flags]]
+
+The flags are stored as a string of characters, `mt$`, one per flag.
+
+[%autowidth]
+[%header]
+|===
+| Flag | Setting | Values
+
+| 1 | Maximum connection rate | `0` no modem, `1` 300, `2` 1200, `3` 2400, `4` 4800, `5` 9600, `6` 19.2k, `7` 38.4k bps
+| 2 | Hang-up method | `D` DTR, `E` escape code
+| 3 | Answer method | `A` auto-answer (`ATS0=1`), `M` manual answer (the BBS sends `ATA`)
+| 4 | `ATH` after escape codes | `H` yes, `N` no
+| 5 | Phone in local mode | `N` on the hook, `H` off the hook (callers get a busy signal)
+| 6 | `ATH0` instead of `ATH` | `0` yes (`ATH0`), space: no (`ATH`)
+| 7 | `ATH` in the init string | `H` yes, `N` no
+| 8 | `ATX` value | `1`-`4`
+| 9 | DTR | `N` normal, `R` reversed
+| 10 | Standard | `0` CCITT (`ATB0`, international), `1` Bell (`ATB1`, US/Canada)
+| 11 | RS-232 interface | `0` standard (user port), `1` SwiftLink cartridge (`$de00` only)
+| 12 | Caller ID | `0` not available, `1` available (on both the modem and the phone line)
+| 13-14 | (reserved) | `0`
+|===
+
+Flag 11 is also saved to record 32 of `e.data`, which is how the BBS knows which RS-232 driver to use.
+
+==== Init Strings [[im-modem-init]]
+
+Image BBS (`sub.modem`) resets the modem with `ATZ`, then sends it three strings.
+The first two are made from the flags:
+
+[%autowidth]
+[%header]
+|===
+| String | Made from
+
+| `e0v0` [`h`[`0`]] `x`_n_ `m`_n_ `b`_n_
+| No command echo, numeric result codes; `h` if flag 7 is `H` (`h0` if flag 6 is `0`); `x` from flag 8; `m` the speaker setting (`m1` on, `m0` off), switched from the waiting-for-call screen; `b` from flag 10
+
+| `s0=`_n_`s2=27s7=25`
+| `s0=1` (auto-answer) if flag 3 is `A`, otherwise `s0=0`; escape character 27 (kbd:[Esc]); wait 25 seconds for a carrier
+
+| _custom init string_
+| Edited with kbd:[A]: anything else the modem needs, _e.g._ `m0&c1&d2` (speaker off, real DCD, DTR hang-up)
+|===
+
+`v0` makes the modem send numeric result codes, which are what the BBS reads: see <<im-modem-result-codes>>.
+
+[TIP]
+.Skipping the modem setup: hold kbd:[C=]
+====
+After each command, `sub.modem` waits for the modem to reply.
+If no reply comes in time, it starts the whole setup again from `ATZ`, and keeps doing so: with no modem connected, or a modem (or `tcpser`) that isn't set up yet, the BBS never gets past this.
+
+Hold down the kbd:[C=] (Commodore) key, on its own, to stop waiting: each command is sent, but its reply isn't waited for, so the setup finishes.
+(`sub.modem` checks `peek(653)=2`: the shift-key flags at `$028d`, with only kbd:[C=] down.)
+
+kbd:[C=] also aborts dialing out (`peek(653) and 2`), which shows "`Aborted`".
+====
+
+==== Setup/Import Modem Config [[im-modem-setup]]
+
+kbd:[B] shows this menu.
+Options 1-3 replace the setup for this port, so you're asked to confirm first.
+
+[%autowidth]
+[%header]
+|===
+| Key | Action
+
+| kbd:[1]
+| Setup New Modem Config: enter the modem's name, its author and a custom init string, then go through the 12 flags.
+This creates a single result code, `1` "`CONNECT`" (flag `2`, 300 bps): add the rest with kbd:[C].
+
+| kbd:[2]
+| Import Setup From nimodem.dat File: choose one of the modem profiles in `nimodem.dat` (see <<im-modem-nimodem>>), and use its name, author, flags, init string and result codes.
+
+| kbd:[3]
+| Import Setup From 1.2 e.modrc File: use the init string, modem name, flags and result codes from an Image BBS 1.2 `e.modrc` file
+
+| kbd:[4]
+| Create/Edit nimodem.dat File (see <<im-modem-nimodem>>)
+
+| kbd:[X]
+| Back to the Modem Config screen
+|===
+
+==== Result Codes [[im-modem-result-codes]]
+
+With `v0` in its init string, a modem replies with a number followed by kbd:[Return], instead of words such as `CONNECT`.
+Image BBS looks the number up in its result code table, `e.modem`, and acts on the entry's _flag_:
+
+.Result Code Flags
+[%autowidth]
+[%header]
+|===
+| Flag | Meaning
+
+| `0` | Error: the call failed
+| `1` | Re-Loop: keep waiting, _e.g._ for `RING`
+| `2` | Connect, 300 bps
+| `3` | Connect, 1200 bps
+| `4` | Connect, 2400 bps
+| `5` | Connect, 4800 bps
+| `6` | Connect, 9600 bps
+| `7` | Connect, 19.2 kbps
+| `8` | Connect, 38.4 kbps
+|===
+
+kbd:[C] (Customize Current Result Code(s)) asks for a result code number:
+
+* kbd:[L] lists the table: number, flag, and text.
+* A number already in the table edits its text (up to 26 characters) and flag; type `DEL` as the text to delete it.
+* A new number adds it.
+
+The table holds up to 50 result codes.
+
+NOTE: The numbers are the modem's own: check its manual.
+Most Hayes-compatible modems send `1` CONNECT, `2` RING, `3` NO CARRIER, `4` ERROR, `5` CONNECT 1200, `6` NO DIALTONE, `7` BUSY, `8` NO ANSWER and `10` CONNECT 2400; faster speeds vary from one modem to another.
+Don't confuse a result code number with a flag: result code `2` is RING, while flag `2` means "`connect at 300 bps`".
+
+==== nimodem.dat: Modem Profiles [[im-modem-nimodem]]
+
+`nimodem.dat` is a library of modem profiles, kept on the Etcetera drive (Image drive 3).
+Option kbd:[2] of <<im-modem-setup>> imports a profile, and option kbd:[4] creates and edits the file:
+
+[%autowidth]
+[%header]
+|===
+| Key | Action
+
+| kbd:[1]
+| Save Current Setup to nimodem.dat: add this port's setup (name, author, flags, init string and result codes) as a profile.
+A profile with the same name is replaced.
+
+| kbd:[2]
+| Delete a Profile: choose one from the list
+
+| kbd:[3]
+| Add the Standard Profiles: add the profiles built into `i/IM.modem` (below), replacing any with the same names.
+This also creates `nimodem.dat` if it doesn't exist yet.
+
+| kbd:[X]
+| Back to the Setup/Import menu
+|===
+
+.Standard Profiles
+[%autowidth]
+[%header]
+|===
+| Profile | Flags | Init | Result codes
+
+| tcpser (VICE)
+| 38.4k, DTR hang-up, manual answer, `ATX4`, SwiftLink
+| (none)
+| `1` CONNECT (8), `2` RING (1), `3` NO CARRIER (0), `4` ERROR (0), `28` CONNECT 38400 (8)
+
+| Generic Hayes 2400
+| 2400, DTR hang-up, manual answer, `ATX4`, user port
+| `m0&c1&d2`
+| `1` CONNECT (2), `2` RING (1), `3` NO CARRIER (0), `4` ERROR (0), `5` CONNECT 1200 (3), `6` NO DIALTONE (0), `7` BUSY (0), `8` NO ANSWER (0), `10` CONNECT 2400 (4)
+|===
+
+===== File Format
+
+`nimodem.dat` is a sequential (SEQ) file, with each item on a line of its own.
+Each profile is:
+
+. the modem's name (up to 25 characters)
+. the author (up to 20 characters)
+. the 14 flag characters (see <<im-modem-flags>>)
+. the custom init string, or `^` for none
+. the number of result codes
+. then, for each result code: its number, its flag (`0`-`8`) and its text (up to 26 characters), each on a line of its own
+
+A line containing just `^` ends the file.
+
+.The tcpser (VICE) profile
+----
+tcpser (VICE)
+Jim Brain
+7DMNH0H4N11000
+^
+5
+1
+8
+CONNECT
+2
+1
+RING
+3
+0
+NO CARRIER
+4
+0
+ERROR
+28
+8
+CONNECT 38400
+^
+----
+
+==== Using tcpser With VICE [[im-modem-tcpser]]
+
+In VICE, `tcpser` can stand in for a Hayes modem: callers telnet to `tcpser`, which "`rings`" the BBS.
+
+. Start `tcpser` before VICE, _e.g._ `tcpser -s 38400 -v 127.0.0.1:25238 -p 6400`: 38400 bps, VICE connects on port 25238, and callers on port 6400.
+. Start VICE with a SwiftLink connected to it: `x64sc -acia1 -acia1mode 1 -acia1irq 1 -myaciadev 2 -rsdev3 127.0.0.1:25238 -rsdev3ip232 -rsdev3baud 38400`.
+`-rsdev3ip232` makes VICE and `tcpser` pass the modem's DCD and DTR lines, so the BBS sees calls arrive and can hang up.
+. In `IM`, choose kbd:[J] (Modem Config), kbd:[B], then kbd:[4] and kbd:[3] to add the standard profiles, then kbd:[2] to import "`tcpser (VICE)`".
+
+`tcpser` sends result code `28` (CONNECT 38400) when it answers at 38400 bps with its default `ATX4`, or `1` (CONNECT) with `ATX0`.
+
+==== Files
+
+[%autowidth]
+[%header]
+|===
+| File | Drive | Contents
+
+| `e.i.modem` | 3 (Etcetera) | A REL file with a record for each port: the flags, custom init string, modem name and author
+| `e.modem` | 3 | The result code table: a struct of up to 50 entries, each with a number, a flag and up to 26 characters of text.
+On multi-port systems, `e.modem` _n_ is the table for port _n_.
+| `e.data` | 3 | Record 32: the RS-232 interface (flag 11)
+| `nimodem.dat` | 3 | The modem profile library (see <<im-modem-nimodem>>)
+| `e.modrc` | 3 | Image BBS 1.2's modem file, read by option kbd:[3] of <<im-modem-setup>>
+|===
+
+=== Set Time [[im-set-time]]
+
+#TODO#
+
+=== System Drives [[im-system-drives]]
+
+#TODO#
+
+=== Netmail Config [[im-netmail]]
+
+#TODO#
+
+The Netmail Config option has its own menu: Local Info, Modem Specs, Calling Hours, Make nm.create, Connections, Fwd. List and Netwall/Grf.
+
+=== Base Editors [[im-base-editors]]
+
+#TODO#
