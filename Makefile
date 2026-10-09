@@ -5,6 +5,7 @@
 #   make tests    build core/tests/*.lbl with C64List       -> build/tests/
 #   make disk     copy the release boot disk (Disk 1) and replace the
 #                 files listed in disk.manifest              -> build/image30.d81
+#   make pdf      build the Programmer's Reference Guide PDF -> build/prg-master.pdf
 #   make clean    remove build/
 #
 # Override any of these on the command line, e.g. make KICKASS=/path/KickAss.jar
@@ -28,7 +29,7 @@ DISK  := $(BUILD)/image30.d81
 RUN_C64LIST = WINEDEBUG=-all $(WINE) $(C64LIST)
 winpath = Z:$(abspath $(1))
 
-.PHONY: all asm basic tests disk clean
+.PHONY: all asm basic tests disk pdf clean
 
 all: asm basic tests
 
@@ -115,6 +116,22 @@ disk:
 			|| { echo "  c1541 failed for $$file"; exit 1; }; \
 	done
 	@$(C1541) -attach $(DISK) -list 2>/dev/null | tail -1
+
+# ---------------------------------------------------------------------------
+# Programmer's Reference Guide as a PDF (Asciidoctor -> DocBook -> dblatex)
+#
+# Needs the asciidoctor-lists gem (prg-master.adoc uses list-of::) and
+# dblatex.
+
+pdf: $(BUILD)/prg-master.pdf
+
+$(BUILD)/prg-master.pdf: $(wildcard docs/prg-*.adoc docs/includes/*.adoc)
+	@echo '= t' | asciidoctor -r asciidoctor-lists -o /dev/null - 2>/dev/null \
+		|| { echo "asciidoctor-lists isn't installed: gem install asciidoctor-lists"; exit 1; }
+	@mkdir -p $(BUILD)
+	cd docs && asciidoctor -r asciidoctor-lists -b docbook5 \
+		-o $(abspath $(BUILD))/prg-master.xml prg-master.adoc
+	dblatex -o $(abspath $@) $(BUILD)/prg-master.xml
 
 clean:
 	rm -rf $(BUILD)
