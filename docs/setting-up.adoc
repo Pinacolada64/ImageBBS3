@@ -443,6 +443,66 @@ After AutoMaintenance is finished, the BBS returns to the System Idle screen.
 
 kbd:[N]o restarts the clock setting questions.
 
+=== The Status Line [[status-line]]
+
+The bottom row of the sysop screen is the _status line_.
+It is always visible, even when the screen mask is off (unless `New` right, _Enable Screen Blanking_, has blanked the screen):
+
+----
+✓Sun Dec  9, 2026  1:01:52 AM     00:00✓
+----
+
+[%autowidth]
+[%header]
+|===
+| Column(s) | Shows
+
+| 0
+| ✓ when ASCII translation is on for the caller (`Asc` left lightbar check)
+
+| 1-28
+| The weekday, date and time, from the C64's time-of-day clock.
+It flashes at boot until the time is set.
+
+| 29-33
+| Status indicators (see <<status-indicators>>)
+
+| 34-38
+| The caller's time remaining, in minutes and seconds (`--:--` when nobody is online)
+
+| 39
+| ✓ when a modem carrier is present: someone is connected.
+This is the `DCD` right lightbar check, _Carrier Present_.
+|===
+
+==== Status Indicators [[status-indicators]]
+
+Each indicator column shows a reverse letter while something is happening, and a reverse space otherwise:
+
+[%autowidth]
+[%header]
+|===
+| Column | Letter | Meaning
+
+| 29 | `O` | RS-232 receive overrun: a character arrived before the last one was read (SwiftLink)
+| 30 | `A` | The caller aborted output (kbd:[/], kbd:[Space] or kbd:[Ctrl+c])
+| 30 | `P` | Output is paused (kbd:[Ctrl+s])
+| 30 | `L` | Loading a file from disk (SwiftLink)
+| 31 | `G` | Garbage collection: BASIC is tidying up string memory
+| 31 | `L` | Waiting for the Lt. Kernal port lock (multi-port systems)
+| 31 | `S` | Swapping an ML module in or out
+| 32 | `F` | Flow control: the receive buffer is nearly full, so the BBS has asked the modem to pause (SwiftLink)
+| 33 | `I` | RS-232 interrupts are disabled (SwiftLink); the time remaining display also writes a space here, so this may only flash briefly
+|===
+
+[TIP]
+.The carrier check mark
+====
+If column 39 shows ✓ while nobody is connected, the BBS is reading the modem's Data Carrier Detect (DCD) signal the wrong way round.
+Press kbd:[T] on the idle screen, or set the `DCD` left lightbar check (_Invert DCD Signal_), to invert it: they are the same setting.
+(Image BBS 1.2 programs do this with `poke 53258,16-peek(53258)`.)
+====
+
 === Console Login
 
 A _console login_ is when you`'re sitting in front of the C64 at the Idle Screen.
@@ -452,7 +512,7 @@ Here`'s how to do that.
 _Optional:_ If the lightbar highlight is already positioned on `Loc`, you can press kbd:[f1] to go to full screen mode.
 
 The screen mask disappears, and only the bottom status line is visible.
-The time and date, status line indicators, and time remaining (which is shown as `--:--` for now since no one is connected yet) are always visible (unless `New` right, _Enable Screen Blanking_, has been selected).
+The time and date, status line indicators, and time remaining (which is shown as `--:--` for now since no one is connected yet) are always visible (see <<status-line>>) (unless `New` right, _Enable Screen Blanking_, has been selected).
 
 You can always press kbd:[f1] to toggle between these full and split-screen modes.
 ****

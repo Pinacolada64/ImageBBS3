@@ -2167,7 +2167,9 @@ These columns show:
 
 * column 30: `A` when the user aborts output (kbd:[/], kbd:[Space] or kbd:[Ctrl+c]), or `P` while output is paused (kbd:[Ctrl+s])
 * column 31: `G` during garbage collection, or `L` while waiting for the Lt.Kernal port lock (<<arbit,`&,13`>>)
-* column 32: nothing in the 3.0 source writes to this column
+* column 32: `F` while the SwiftLink driver has paused the modem for flow control (`rs232_swift.s`)
+
+See <<setting-up.adoc#status-line,The Status Line>> for the other columns.
 |===
 
 ==== The Idle Timer (`curdsp`) [[logoff-idle-timer]]
