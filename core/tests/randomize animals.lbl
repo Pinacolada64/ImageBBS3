@@ -1,0 +1,64 @@
+    print chr$(14)chr$(8)
+    read t:print t"total animals."
+' &,60,7 (Sort Array) sorts string arrays, not integer arrays: it sorts the
+' elements that are next to each other in memory, which in a 2-d array means
+' along the FIRST index (see i.test structs.lbl and the &,60,7 doc)
+    dim tt$(t)
+    for x=1 to t:read a$:tt$(x)=a$:next
+{nice:50}
+{:sub.randomize_animals}
+	db=1
+	if db then lp=1:print"Generating"t"unique random numbers..."
+' maybe ++ mix can help with this... it was for some game, need usage example
+
+' RL and RH are the low and high limits of the selection pool range.
+' RR is the random range; pick numbers from RL to RH
+' SR is the selection range - the number of random values to fetch.
+' The array r() will contain the results.
+' The array s() contains the digits 1-rr
+
+    rl = 1: rh = t: sr = t: rr = rh-rl+1
+    :
+    dim s(t),r(t)
+' 1) Create a pool of values.
+    for i=1 to rr: s(i) = i+rl:print s(i);:next:print
+' 5) Repeat from Step 2 until the desired amount of random values has been obtained.
+    :
+' p is the pointer to the highest value allowed
+    p=t
+' 2) Generate a random number in the range of the pool's minimum and maximum index.
+    for i = 1 to sr
+    : v = int(rnd(0) * p)+1 : print right$(str$(v),2)" ";:if v<rl or v>rh then print"out of bounds":stop
+
+' 3) Use the index to select a value from the pool and add it to the array of results.
+    : r(i) = s(v):     print "r("right$(str$(i),2)")"r(i),
+' 4) Replace (or swap) the value in the pool with the uppermost value of the pool and then lower the maximum index by one (this is a simple way to shrink the pool without destroying its content).
+    : s(v) = s(rh-i-1):print "s("right$(str$(v),2)")"s(v)
+' 34:
+'   : s(rh-i-1) = r(i)
+    p=p-1
+    next
+
+    if db then print"Randomized list:"
+' s%(8,n) = random number for &,60,9: ScanStruct
+' &,60,0: PutString: max length l animal name an$(1,n) in s%(11,x):
+' s%(8,x): random integer
+'	&,60,0,l,s%(11,x),tt$(n):if db then a%=s%(8,n):lp=1:&"{pound}#2{pound}# {pound}%a "
+' an$(1,x): scrambled list of animals to be sorted with &,60,7:
+    for x=1 to sr
+	print right$(str$(s(x)),2)"="tt$(s(x))
+	if x/24 = int(x/24) then print"Paused:":wait 198,1:poke 198,.
+	next:if db then print"Done."
+    end
+
+
+{nice:10}
+' animals to mix up and sort with &,60,7:
+' https://a-z-animals.com/animals/
+	data 30
+	data "anaconda","beaver","cat","dog","emu"
+	data "fox","goat","hippo","ibex","jackal"
+	data "king cobra","llama","mustang","narwhal","okapi"
+	data "penguin","quetzalcoatl","rhino","snake","tiger"
+	data "unicorn","vole","walrus","xerus","yak","zebra"
+	data "alpaca","boar","cassowary","deer"
