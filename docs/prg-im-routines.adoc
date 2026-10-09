@@ -1,5 +1,6 @@
 :icons: font
 :experimental:
+:autofit-option:  // for pdf generation
 
 === `im` Subroutines
 
@@ -24,9 +25,10 @@ Layout :
 ////
 
 .im routines
-[options="header,autowidth"]
+[%header]
+[%autowidth]
 [cols="1m,2m,3a"]
-[border="none"]
+[frame="none"]
 [grid="rows"]
 |===
 ^| v3.0 ^| v1.2,&#160;v2.0 <| Purpose
@@ -44,7 +46,7 @@ Layout :
 There is a 1/10^th^-second delay (`&,22,1`) between positioning commands.
 This is to give a physical disk drive`'s read/write head (or a slower filesystem, such as on a SD card) time to move to the correct spot within the file.
 
-Enter:
+_Enter:_
 
 `x`: record number desired
 
@@ -52,7 +54,7 @@ Enter:
 | gosub&#160;1009
 | Sets active system device/drive according to configured setup.
 
-Enter:
+_Enter:_
 
 `dr`: system drive (`1-6`) desired:
 
@@ -72,17 +74,23 @@ Enter:
 !===
 
 _Exit:_
-`dv%`: Active device
 
-`dr%`: Active drive + `:`
+[cols="1m,2", frame="none", grid="rows"]
+!===
+! dv%
+! Active device
 
-This routine exits via `return`.
+! dr$
+! Active drive + `:`
+!===
+
+include::includes/prg-im-return.adoc[]
 
 | [[line-3,Close/reopen command channel]]gosub&#160;3
 | gosub&#160;1010
 | Closes, then re-opens command channel (LFN 15) on the device/drive requested by setting the variable `dr` explained in <<line-2>>.
 
-include::includes/prg-im-return.adoc
+include::includes/prg-im-return.adoc[]
 
 | gosub&#160;4
 | gosub&#160;1011
@@ -91,21 +99,31 @@ include::includes/prg-im-return.adoc
 
 This routine continues to line 5.
 
-| `gosub&#160;5`
-| `gosub&#160;1012`
+| gosub&#160;5
+| gosub&#160;1012
 | Read error channel of currently active device/drive.
 
 _Exit_:
 
-* `e%`: error number
+[cols="1m,2", frame="none", grid="rows"]
+!===
+! Variable ! Value
 
-* `e$`: error message
+! e%
+! error number
 
-* `t%`: the track
+! e$
+! error message
 
-* `s%`: the sector
+! t%
+! track number the error occurred on
 
-* `a$`: complete error status message (`e%:e$:t%:s%`)
+! s%
+! the sector number the error occurred on
+
+! a$
+! complete error status message (`e%:e$:t%:s%`)
+!===
 
 include::includes/prg-im-return.adoc[]
 
@@ -129,7 +147,10 @@ _Exit:_
 
 `an$`: the string input by the user.
 
-This routine exits via `return` on either line `310` <<line-310>> or `314` <<line-314>>.
+This routine exits via `return` on either:
+
+. line `310` <<line-310>> or
+. line `314` <<line-314>>.
 
 | gosub&#160;7
 | gosub&#160;1007
@@ -144,7 +165,11 @@ include::includes/prg-im-return.adoc[]
 | gosub&#160;1360
 | Displays the contents of `cm$` to the `Area` line of the sysop screen mask, unless a network transfer is active (`nt=1`).
 
-This routine exits via either ``goto 999`` <<line-999>> (which ``return``s from there), or a regular `return` at the end of line 9.
+This routine exits via either:
+
+. ``goto 999`` <<line-999>> (which ``return``s from there), or
+
+. a regular `return` at the end of line 9.
 
 | [[line-10,Position REL pointer]]gosub&#160;10
 | gosub&#160;1002
@@ -153,12 +178,12 @@ However, it is suggested that you call this routine from line 1 for some systems
 
 include::includes/prg-im-return.adoc[]
 
-| [[line-11,Check user flag]]gosub&#160;11
+| [[line-11,Check user flag]] gosub&#160;11
 | gosub&#160;1004
 | Each user has a total of 19 flags stored in `fl$`, which determine if they have access to a particular function or area of the system.
 These flags are held in a twenty-digit string.
 
-Each digit represents a separate flag which can be checked by setting the variable `a` to the flag number 1-20 (with the exception of 19 since it is the second byte of the time allowed per day flag), and issuing a `gosub 11` command.
+Each digit represents a separate flag which can be checked by setting the variable `a` to the flag number 1-20 (except 19, since it is the second byte of the time allowed per day flag), and issuing a `gosub 11` <<line-11>> command.
 
 _Exit:_
 
@@ -245,6 +270,7 @@ _Enter:_
 
 [%autowidth]
 [%header]
+[frame="none", grid="rows"]
 [cols="<1,^2,^3,^4,^5"]
 !====================
 ! Description ! Last ! Log ! Current ! Total
@@ -261,7 +287,9 @@ _Enter:_
 ! Time Idle   !  11  !  22 !         !
 !====================
 
-2. Set `i` to the desired adjustment of the statistic.
+[start=2]
+. Set `i` to the desired adjustment of the statistic (again, it can be negative if you wish to subtract from the statistic).
+
 This routine continues to line 17.
 
 | [[line-17,Write statistic to e.stats]] gosub&#160;17
@@ -461,7 +489,7 @@ These are the equivalent of `+.MM.*` files from v1.2.
 
 These files replace 2.0`'s `im.*` files.
 
-| `gosub&#160;79`
+| gosub&#160;79
 |
 | Loads `i.` module from device/drive `dr`, then ``return``s.
 
@@ -469,45 +497,78 @@ Lines 70-75 fall through to lines 76-78 then to this line before returning and e
 
 | gosub&#160;80
 | _n/a_
-| Similar to , except uses `p1$` as a reference to the currently loaded file, rather than `pr$`.
+| Similar to #FIXME#, except uses `p1$` as a reference to the currently loaded file, rather than `pr$`.
+
+// ^| 0 | `tt$()` | Text editor: lines entered
+// ^| 1 |  |
+// ^| 2 | `dt$()` |
+// ^| 3 | `ed$()` |
+// ^| 4 | `nn$()` |
+// ^
 
 | gosub&#160;82
 | _n/a_
-| Clear arrays `1`-`4` in the <<table-array-numbers>>.
+| Clear arrays `1`-`4` [`bb$()`, `dt$()`, `ed$()`, and `nn$()`] in the xref:prg-ampersand-calls.adoc#table-array-numbers[array table].
+
+This routine falls through to line 83.
 
 | gosub&#160;83
 | _n/a_
-| Clear array `0` in the <<table-array-numbers>>.
+| Clear array `0` [`tt$()`] in the xref:prg-ampersand-calls.adoc#table-array-numbers[array table].
 
-| [[line-93,Display "Are You Sure? "]]
+| [[line-93,Display "Are You Sure? "]]gosub&#160;93
 | gosub 1902
-| Display `Are You Sure?: ` and fall through to line 93.
+| Display ``Are You Sure?: ``, and fall through to line 94.
 
-| [[line-94,Wait for Yes/No hotkey, default No]]gosub&#160;96
+| [[line-94,Wait for Yes/No hotkey, default No]]gosub&#160;94
 | gosub&#160;1902
-| Display `[No]`.
-Wait for yes/no hotkey, the answer defaulting to `No` if anything but kbd:[Y] is typed.
+| Display `[No]`, then wait for Yes/No hotkey.
+The answer defaults to `No` if kbd:[Y] is not typed.
 
 _Exit:_
 
-`a=0`: If kbd:[Y] is typed.
-Display `Yes`.
-`a=1`: If anything else is typed.
-Display `No`.
+[cols="1m,2"]
+[frame="none", grid="rows"]
+[%header]
+!===
+! Variable ! Purpose
 
-| [[line-95,Wait for Yes/No hotkey, default Yes]]gosub&#160;96
+! a=0
+! If kbd:[Y] is typed.
+
+! a=1
+! If kbd:[Y] is not typed.
+
+! a$/an$
+! the key typed.
+!===
+
+| [[line-95,Display "Are You Sure? "]]gosub&#160;95
+| gosub 1902
+| Display ``Are You Sure?: ``, and fall through to line 96.
+
+| [[line-96,Wait for Yes/No hotkey, default Yes]]gosub&#160;96
 | gosub&#160;1902
-| Wait for yes/no hotkey, the answer defaulting to `Yes`.
+| Display `[Yes]`, then wait for Yes/No hotkey.
+The answer defaults to `Yes` if kbd:[N] is not typed.
 
 _Exit:_
 
-`a=1`: kbd:[Y] is typed.
-Display `Yes`.
+[cols="1m,2"]
+[frame="none", grid="rows"]
+[%header]
+!===
+! Variable ! Purpose
 
-`a=0`: Anything else kbd:[Y] is typed.
-Display `No`.
+! a=0
+! If kbd:[Y] is not typed.
 
-#FIXME# line 96
+! a=1
+! If kbd:[Y] is typed.
+
+! a$/an$
+! the key typed.
+!===
 
 | [[line-100]]gosub&#160;100
 | gosub&#160;1013
@@ -542,12 +603,13 @@ The subroutine filename is added to a "`module stack`" so that if a ``sub.\*`` f
 27: Loads i. "mini-module" in `a$` from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded `lm$`, then this routine exits without actually re-loading the file.  (none)
 ////
 
-| [[line-300,Main prompt]]300
+| [[line-200,Prompt routine]]200
 | _n/a_
-| Main prompt routine.
-Not to be confused with line 1812 of 1.2's `im` file.
+| Prompt routine.
+Not to be confused with line 1812 of 1.2's `im` file (that is line 300 <<line-300>>).
 This routine is used for all system prompts.
-It prints the prompt in `p$`, the time, and stack free if in local mode.
+It prints the time, the minutes left (if fewer than 100) and, in local mode, the stack free, then the prompt in `p$` (`gosub 6`).
+It then checks what was typed (line 220 on).
 
 The routine checks the command stack `uu$`, #FIXME#
 
@@ -587,9 +649,10 @@ NOTE: If an ECS command is detected, the routine at line 304 is called.  If noth
 | goto&#160;234
 |
 | . Set `f1=2` for "`Immediate logoff`" (kbd:[O!], kbd:[O%!]), otherwise `f1=1`.
-. Set `cd%` ("`carrier drop`") flag if necessary.
+. Clear the `cd%` ("`carrier drop`") flag.
 
-. If the 2^nd^ character is a `%` (__i.e.__, kbd:[O%] or kbd:[O%!]), `gosub 302` (load `i.lo`, the logoff module).
+. If the 2^nd^ character is a `%` (__i.e.__, kbd:[O%] or kbd:[O%!]), `goto 302` (load `i.lo`, the logoff module).
+. Otherwise, ask "`Update Message/File Scan Date?`" (line 235), then `goto 302`.
 
 | goto 250
 |
@@ -635,7 +698,7 @@ Action is dependent on the value of `f1`:
 ! `f1` ! Action
 !  `0` ! connection established
 !  `1` ! normal logoff
-!  `2` ! fast logoff (kbd:[O!], or out of time)
+!  `2` ! fast logoff (kbd:[O\!], or out of time)
 !  `3` ! normal entry (when loading `i.lo` for "`Wait For Call`" screen)
 !====================
 
@@ -652,104 +715,24 @@ Action is dependent on the value of `f1`:
 
 "`Emulating`" 1.2 is not the only use--this routine is helpful to save space and quickly ``dim``ension common variables to be used in a program.
 
-| gosub&#160;310
+| [[line-310,Check for command history]]gosub&#160;310
 | _n/a_
 | Check for `^?`, the command history.
 If so, `goto 315` <<line-315>>.
 
-| gosub&#160;311
-| _n/a_
-| Check for `^` and a digit `0-9`.
-This executes the specified command history`'s entry.
-
 | [[line-311,Execute command in command history]]gosub&#160;311
 | _n/a_
-| Check whether the command begins with the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,Image encoded function key>> kbd:[?], and if so, get the command history index number following the kbd:[?].
-// Execute command #`_x_`
-
-| gosub&#160;315
-| _n/a_
-| Prints up to the last 10 commands [stored in the history stack, `hs$(10)`] typed via kbd:[^?].
-
-| gosub&#160;320
-| #FIXME#
-| Update access level of user online.
-(Called by prompt routine at line 200).
-
-| gosub&#160;321
-| _n/a_
-
-_Exit_
-This routine will `goto 3000` when `mm` is set as follows:
-
-[%header]
-[%autowidth]
-!====
-! mm ! Action
-!  0
-! "`Init.`"
-Use this as an entry point.
-
-!  1
-! Not a Global (ECS) Command.
-
-!  2
-! Preparation for a prompt display.
-(Set up `p$` and any pre-prompt text, then `return`.)
-This action is called before actually displaying the time/prompt in `p$`.
-
-!  3
-! Global (ECS) Command issued.
-Clean up and exit.
-(This could be a `gosub` or `goto` ECS command.
-The purpose is to quickly perform a clean-up [close files, etc.] before proceeding.
-In most cases, nothing is done.
-
-_Exit:_
-
-`return`
-
-NOTE: This is also the setting for `mm` that is used if the time limit is exceeded.
-
-!  4-?
-! *Internal usage by modules.*
-Not related to prompt routine.
-!====
-NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (<CR>), the local `lc` menu is shown to the user.
-
-| Set `f1=2` for "Immediate logoff" (O!, O%!), otherwise `f1=1`.
-`cd%` ("`carrier drop`") flag.
-If the 2^nd^ character is a `%` (__i.e.__, `O%` or `O%!`), gosub 302 (load `i.lo`, the logoff module).
-| `goto 250`
-!====================
-! `lc` ! Menu
-!  `1` ! Main menu
-!  `2` ! Message Base Menu (`SB`)
-!  `3` ! Editor Menu/Help
-!  `4` ! Local Mode Menu (`zz`)
-!  `5` ! File Transfer Menu (`UD`)
-!  `6` ! E-mail Menu (`EM`)
-!  `7` ! General Files Menu (`GF`)
-!  `8` ! End of Bulletin Menu (`SB`)
-!  `9` ! Disk Transfer Menu (`UD`/`UX`)
-!====================
-| `gosub&#160;280`
-| `goto&#160;300`
-| `goto&#160;1812`
-!  `2` ! fast logoff (``O\!`` or out of time)
-| `gosub&#160;310`
-If so, `goto 315`.
-| `gosub&#160;311`
+| Check for `^` and a digit `0-9`.
+This executes the specified command history`'s entry, by putting it in `an$` and going to line 314 <<line-314>>.
 
 | gosub&#160;312
-| _none_
-| Scan `an$` for the PetSCII value of the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,Image encoded function key>> kbd:[,] using <<xref:prg-ampersand-calls.adoc#scan-string>> kbd:[?], and if so, #FIXME#.
+| _n/a_
+| Split off the first of several stacked commands.
+`&,15,6,140` splits `an$` at the first `^` (the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
+Line 313 then adds `an$` to the command history, `hs$()`, and ``return``s.
 
-| [[line-314]]gosub&#160;314
+| [[line-314,Echo command]]gosub&#160;314
 |
-| Line 314 #TODO#
-
-| gosub&#160;314
 | Prints the prompt contained in `p$` and `an$`, then `return`.
 
 | [[line-315,Display command history]]gosub&#160;315
@@ -758,16 +741,19 @@ If so, `goto 315`.
 
 | gosub&#160;320
 | _n/a_
-| This block of lines from 320-325 update access group information (`ag$`) and access flags (`fl$`) of the user online.
+| This block of lines from 320-325 update access group information (`ag$`) and access flags (`fl$`) of the user online, from `e.access`.
+It is called by the prompt routine (line 220) when the user's access level has changed (`ac%<>ao%`).
 
-| `gosub&#160;321`
+Line 324 also gets three settings from the user flags: the lines allowed in the editor (`le`), the maximum idle time, and the downloads allowed (`da%`).
+
+| gosub&#160;321
 | _n/a_
 | If `fl$` is not as long as the record in `e.access`, append the additional flags.
 This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3.0, since newer versions have more user flags per account.
 
-| gosub&#160;325
-| _none_
-| `return` from  `sub.protos`, and executes at line 60000.
+| gosub&#160;330
+| gosub&#160;1096
+| Outputs a random macro from file `e.macros`.
 
 | gosub&#160;442
 |
@@ -775,7 +761,8 @@ This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3
 
 _Enter:_
 
-Set `im` according to reason for calling:
+Set `im` according to reason for calling.
+`b%` is set to 1 if in Local mode.
 
 [%autowidth]
 [%header]
@@ -784,17 +771,7 @@ Set `im` according to reason for calling:
 
 ! 0
 ! Load the file `s.m.protos` into `tt$()`.
-
-_Enter:_
-
-`b%` is set to 1 if in Local mode.
-
-| `gosub&#160;330`
-| `gosub&#160;1096`
-| Outputs a random macro from file `e.macros`.
-
-`x` is set to the total number of protocols in `tt$()`.
-(20 max)
+`x` is set to the total number of protocols in `tt$()` (20 max).
 
 ! 1
 ! Load and display protocol list.
