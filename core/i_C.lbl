@@ -1,3 +1,4 @@
+{alpha:alt}
 {:4000}
 ' don't think cc will be preserved between runs (saves # of chat requests)
 ' 53256/$d008 (chatpage): 1=page is on, why not increment this?

@@ -1,3 +1,4 @@
+{alpha:alt}
 	gosub{:4480}:onlmgoto{:4100},{:4200},{:4010}:mm=.:f1=3:goto[3000]
 {:4006}
 	cm$="Connected":gosub[9]:&,69,5,21,cm$,$85
@@ -107,7 +108,7 @@
 {:4290}
 	&"{lt. blue}{$bc}{blue}{rvrs on}{pound}o{$a2}{pound}o{$a2}{pound}h1{rvrs off}{$be}{f6}":poke53248,.:poke2042,.:k=50:return
 {:4300}
-	a$="":goto{:4270}:rem"ÇÍ ×ill be here"
+	a$="":goto{:4270}:rem"GM Will be here"
 {:4400}
 	f3=1:poke53248,1:poke2042,1:x%=st(20):y%=st(24):z%=st(23):w%=st(29)
 	&"{clear}{f6}{pound}{back arrow}22{lt. red}{rvrs on} Feedback   {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}22{rvrs on} SysOp Mail {pound}#3{pound}# {pound}%y {gray1} {f6}"

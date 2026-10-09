@@ -1,4 +1,5 @@
 {uses:3_0-preface.lbl}
+{alpha:alt}
 {step:2}
 ' TODO: word-wrap "Write a few words..."
 ' TODO: use more variables in "Sorry, This sy$ Already Has a SubOp."

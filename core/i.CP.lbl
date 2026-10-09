@@ -1,3 +1,4 @@
+{alpha:alt}
 	&"{clear}{f6}{cyan} *IMAGE Copy-All 3.0*{f6:2} Special Thanks To Jim Butterfield!"
 	&"{f6} Mods by {blue}Wa{lt. blue}nd{cyan}er{white}er{f6}":a$="copier":gosub[28]
 '	&,5:v=1.2

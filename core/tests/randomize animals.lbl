@@ -1,3 +1,4 @@
+{alpha:alt}
     print chr$(14)chr$(8)
     read t:print t"total animals."
 ' &,60,7 (Sort Array) sorts string arrays, not integer arrays: it sorts the

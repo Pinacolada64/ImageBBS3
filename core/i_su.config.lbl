@@ -1,5 +1,6 @@
 {uses:3_0-preface.lbl}
 ' i/su.config calls lines in 'im':
+{alpha:alt}
 {assign:3080	=3080	} '
 {assign:3404	=3404	} '
 {assign:3414	=3414	} '

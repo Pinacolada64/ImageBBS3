@@ -1,3 +1,4 @@
+{alpha:alt}
 {assign:3	=3	} ' open command channel
 {assign:5	=5	} ' get DOS error status
 {assign:92	=92	} ' >>>Canceled!

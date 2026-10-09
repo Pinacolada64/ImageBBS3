@@ -1,3 +1,4 @@
+{alpha:alt}
 {:60000}
 	gosub{:60035}:ife%=0thenonimgoto{:60010},{:60015}
 {:60005}

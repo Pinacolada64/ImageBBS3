@@ -1,4 +1,5 @@
 {uses:3_0-preface.lbl}
+{alpha:alt}
 {:1000}
 	poke 829,0:goto {:2004}
 {:1001}
