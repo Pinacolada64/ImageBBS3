@@ -12,7 +12,8 @@
 # again (the Makefile passes -crunch for files using {crunch:on}).
 #
 # Afterwards, the listing is built again and compared with the original: the
-# script fails unless the two are byte-for-byte identical.
+# script fails unless the two are byte-for-byte identical, or differ only by
+# trailing ":"s, which C64List's -crunch removes.
 #
 # Environment (defaults as in the Makefile): C64LIST, WINE, C1541, RELEASE_ZIP,
 # RELEASE_D81
@@ -96,10 +97,21 @@ c64list orig.prg -txt:orig.txt -autospace -keycase -varcase -alpha:alt > "$tmp/d
 cp "$repo/core/3_0-preface.lbl" "$tmp/"
 c64list new.lbl -prg:new.prg -crunch > "$tmp/build.log" 2>&1 \
 	|| { cat "$tmp/build.log" >&2; exit 1; }
+# C64List's -crunch drops a line's trailing ":" (an empty statement), which
+# shifts every later byte. If that is the only difference (compared as
+# listings, with trailing colons ignored), the program still behaves the same.
+same="rebuilds byte-for-byte identical"
 if ! cmp -s "$tmp/orig.prg" "$tmp/new.prg"; then
-	echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/orig.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
-	exit 1
+	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
+	if ! command -v petcat > /dev/null \
+		|| ! diff -q <(listing "$tmp/orig.prg" | sed 's/:*$//') \
+			<(listing "$tmp/new.prg" | sed 's/:*$//') > /dev/null; then
+		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/orig.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
+		exit 1
+	fi
+	n=$(diff <(listing "$tmp/orig.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
+	same="rebuilds identically except for $n trailing \":\" removed by -crunch"
 fi
 
 cp "$tmp/new.lbl" "$out"
-echo "$out: $(grep -c '' "$out") lines; rebuilds byte-for-byte identical"
+echo "$out: $(grep -c '' "$out") lines; $same"
