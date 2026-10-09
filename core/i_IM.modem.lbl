@@ -1,0 +1,209 @@
+' i/IM.modem: IM modem configuration (flags, init strings, result codes)
+' imported from the release disk (MASTER D1 231231.d81), "i/IM.modem" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
+' identical to the original.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 rem modem/rs232 config
+4002 &,27,3:dim mr%(15,51)
+4003 gosub 4012:goto 4030
+4004 &"{white}-=>"
+4006 &"{pound}g1":if a$<>"" and an$=chr$(13) then:&"{pound}$a{f6}":return
+4008 for i=1 to len(b$):if an$=mid$(b$,i,1) then a$=an$:&"{pound}$a{f6}":i=len(b$)+1:next:return
+4010 next:on-(tr%<1) goto 999:goto 4006
+4012 jf=.:mt$="0":dr=3:a$="e.i.modem":gosub 4:if e%then gosub 4022
+4014 p=.:on 1+lk%goto 4020:p=(peek(57092) and 15):&"{f6:2}{lt. blue}Edit Modem Config for Which"
+4016 &" Port?{f6}{yellow}({cyan}RETURN = {pound}!p){white}: {pound}i1"
+4018 if (val(an$)>1 and val(an$)<15) or an$="0" then p=val(an$)
+4020 x=p+1:gosub 1:&,2,2:mt$=a$:&,2,2:in$=a$:&,2,2:m$=a$:&,2,2:au$=a$
+4021 close 2:return
+4022 dr=3:gosub 61:gosub 60:if a<>0 or bf<15 then:&"{f6}Disk Full!{pound}w2":return
+4023 dr=3:a$="e.i.modem,l,"+chr$(100):gosub 4:x=17::gosub 1:print# 2:gosub 1
+4024 for x=1 to 16:gosub 1:print# 2,"0"+r$+"{^}"+r$+"{^}"+r$+"{^}":if lk%=.then x=17
+4025 next:return
+4026 &"{f6} {cyan}Update Modem Flags?{white}: ":gosub 96:on a+1 goto 999:dr=3:a$="e.i.modem"
+4027 gosub 4:x=p+1:gosub 1:print# 2,mt$r$in$r$m$r$au$:close 2
+4028 gosub 33:a$=mid$(mt$,11,1):x=32:gosub 1:print# 2,a$:close 2:return
+4030 &"{clear}{white}":&"Modem: {gray3}"+m$+"{f6}{white}By   : {gray3}"+au$+"{f6}"
+4032 &"{f6}{rvrs on}{cyan} Modem Config Flags ":if lk%then:&"For Port #{pound}!p {rvrs off}"
+4034 a%=val(mid$(mt$,1,1)):if a%=0 then:&"{f6} {yellow}- {lt. blue}No Modem Configured.":goto 4090
+4036 &"{f6} {yellow}1:{lt. blue}Max. Baud ":&mid$("300 120024004800960019.238.4",(4*a%)-3,4)
+4038 if a%>5 then:&"k"
+4040 a$="DTR":if mid$(mt$,2,1)="E" then a$="ESC Code"
+4042 &"{pound}{back arrow}21{yellow}2:{lt. blue}{pound}$a Hang-Up"
+4044 a$="Auto-":if mid$(mt$,3,1)="M" then a$="Manual "
+4046 &"{f6} {yellow}3:{lt. blue}{pound}$aAnswer"
+4048 &"{pound}{back arrow}21{yellow}4:{lt. blue}":a$="No ":if mid$(mt$,4,1)="H" then a$=""
+4050 &"{pound}$aATH Aft/ ESC"
+4052 a$="n":if mid$(mt$,5,1)="H" then a$="ff"
+4054 &"{f6}{yellow} 5:{lt. blue}Local O{pound}$a Hook"
+4056 a$="w/o ":b$="":if mid$(mt$,6,1)="0" then a$="w/":b$="0"
+4058 &"{pound}{back arrow}21{yellow}6:{lt. blue}ATH {pound}$a0 (ATH{pound}$b)"
+4060 a$="No ":if mid$(mt$,7,1)="H" then a$=""
+4062 &"{f6}{yellow} 7:{lt. blue}{pound}$aATH in Init$"
+4064 &"{pound}{back arrow}21{yellow}8:{lt. blue}ATX Value = "+mid$(mt$,8,1)
+4066 a$="Normal":if mid$(mt$,9,1)="R" then a$="Reversed"
+4068 &"{f6}{yellow} 9:{lt. blue}{pound}$a DTR"
+4070 a$="CCITT (ATB0)":if mid$(mt$,10,1)="1" then a$="Bell (ATB1)"
+4072 &"{pound}{back arrow}20{yellow}10:{lt. blue}{pound}$a"
+4074 a$=" Normal":if mid$(mt$,11,1)="1" then a$="SwiftLink"
+4076 &"{f6}{yellow}11:{lt. blue}RS232:{pound}$a"
+4078 a$="No ":if mid$(mt$,12,1)="1" then a$=""
+4080 &"{pound}{back arrow}20{yellow}12:{lt. blue}{pound}$aCaller ID"
+4082 rem"∆lag 13"
+4084 rem"∆lag 13"
+4086 rem"∆lag 14"
+4088 rem"∆lag 14"
+4090 &"{f6:2}{cyan}{rvrs on} Modem Init. Strings ":if lk%then:&"For Port #{pound}!p {rvrs off}"
+4092 a%=val(mid$(mt$,1,1)):if a%=0 then:&"{f6} {yellow}- {lt. blue}No Modem Configured.":goto 4104
+4094 a$="e0v0":if mid$(mt$,7,1)="H" then a$=a$+"h":if mid$(mt$,6,1)="0" then a$=a$+"0"
+4096 a$=a$+"x"+mid$(mt$,8,1)+"b"+mid$(mt$,10,1)
+4098 a=49:if mid$(mt$,3,1)<>"A" then a=48
+4100 b$="s0="+chr$(a)+"s2=27s7=25"
+4102 &"{f6} {yellow}-:{lt. blue}{pound}$a{f6} {yellow}-:{lt. blue}{pound}$b{f6} {yellow}A:{lt. blue}"+in$
+4104 &"{f6:2}{cyan}{rvrs on}Modem Config Utilities{rvrs off}"
+4106 &"{f6} {yellow}B:{lt. blue}Setup/Import Modem Config{f6} {yellow}C:{lt. blue}Customize Current Result Code(s)"
+4108 if lk%then:&"{f6} {yellow}R:{lt. blue}Re-Select Port#"
+4110 &"{f6} {yellow}X:{lt. blue}Exit Modem Config{f6}{white}-=>"
+4112 &"{pound}g1":a=val(an$):on-(tr%<1) goto 999:on a+1 goto 4124,4114:goto 4116
+4114 &"{pound}v7{pound}g1":on-(an$=chr$(13)) goto 4116:a=10+val(an$):&mid$(str$(val(an$)),2)
+4116 if len(mt$)=1 then:&"{f6:2}{yellow}You Must First Setup a Modem!{f6:2}  {white}>Any Key<{pound}g1":goto 4030
+4118 on-(a>12) goto 4124:a$=mid$(mt$,a,1)
+4120 on agosub 4134,4142,4146,4152,4158,4164,4170,4176,4180,4186,4192,4198
+4122 mt$=left$(mt$,a-1)+a$+mid$(mt$,a+1):jf=1:goto 4030
+4124 on-(an$<>"X" and tr%>0) goto 4130:&" {gray3}Exit{f6}":on jfgoto 4026:&,28,3:return
+4130 on-(an$="A")-2*(an$="B")-3*(an$="C")-4*(an$="D") goto 4216,4238,4380,4030
+4131 if an$="R" and lk%>0 then:&"{gray3} Re-Select{f6}":on jfgosub 4026:&,28,3:goto 4000
+4132 an$="X":goto 4124
+4134 &" {gray3}(Flag 1){f6:2}{cyan}What is the Max. Connection Rate For{f6}This Modem?{f6}"
+4136 &"{yellow}0: {lt. blue}No Modem{f6}{yellow}1: {lt. blue}300 bps{f6}{yellow}2: {lt. blue}1200 bps{f6}{yellow}3: {lt. blue}2400 bps{f6}{yellow}4: {lt. blue}4800 bps"
+4138 &"{f6}{yellow}5: {lt. blue}9600 bps{f6}{yellow}6: {lt. blue}19.2 kbps{f6}{yellow}7: {lt. blue}38.4 kbps{f6}"
+4140 b$="01234567":goto 4004
+4142 &" {gray3}(Flag 2){f6:2}{cyan}Select Hang-Up Method For This Modem:{f6}"
+4144 &"{yellow}D: {lt. blue}DTR Hang-Up{f6}{yellow}E: {lt. blue}ESCape Code Hang-Up{f6}":b$="DE":goto 4004
+4146 &" {gray3}(Flag 3){f6:2}{cyan}Select Answer Method For This Modem:{f6}"
+4148 &"{yellow}A: {lt. blue}Auto-Answer (ATS0=1){f6}{yellow}M: {lt. blue}Manual Answer (ATA){f6}"
+4150 b$="AM":goto 4004
+4152 &" {gray3}(Flag 4){f6:2}{cyan}Use an ATH After ESCape Codes?{f6}"
+4154 &"{yellow}H: {lt. blue}Yes; Use ATH After ESCape Codes{f6}{yellow}N: {lt. blue}No; Not Needed{f6}"
+4156 b$="HN":goto 4004
+4158 &" {gray3}(Flag 5){f6:2}{cyan}When In Local Mode, Should Phone be:{f6}"
+4160 &"{yellow}N: {lt. blue}On The Hook{f6}{yellow}H: {lt. blue}Off The Hook (Busy Signal){f6}"
+4162 b$="NH":goto 4004
+4164 &" {gray3}(Flag 6){f6:2}{cyan}Does This Modem Need a 0 After ATH?{f6}"
+4166 &"{yellow} 0 : {lt. blue}Yes (ATH0){f6}{yellow}{f5} {f5}: {lt. blue}No (ATH){f6}"
+4168 b$="0 ":goto 4004
+4170 &" {gray3}(Flag 7){f6:2}{cyan}Should ATH be in the Modem Reset/Init{f6}  String?{f6}"
+4172 &"{yellow}H: {lt. blue}Yes{f6}{yellow}N: {lt. blue}No{f6}"
+4174 b$="HN":goto 4004
+4176 &" {gray3}(Flag 8){f6:2}{cyan}Select Value For ATX Setting{f6}{yellow}(1-4)"
+4178 b$="1234":goto 4004
+4180 &" {gray3}(Flag 9){f6:2}{cyan}Is DTR on This Modem Normal or Reverse?{f6}"
+4182 &"{yellow}N: {lt. blue}Normal DTR{f6}{yellow}R: {lt. blue}Reverse DTR{f6}"
+4184 b$="NR":goto 4004
+4186 &" {gray3}(Flag 10){f6:2}{cyan}Select CCITT or Bell Labs Standard{f6}"
+4188 &"{yellow}0: {lt. blue}CCITT (ATB0; International){f6}{yellow}1: {lt. blue}Bell (ATB1; US/Canada){f6}"
+4190 b$="01":goto 4004
+4192 &" {gray3}(Flag 11){f6:2}{cyan}Select RS232 Interface Type:{f6}"
+4194 &"{yellow}0: {lt. blue}Standard (User Port) RS232{f6}{yellow}1: {lt. blue}SwiftLink Cartridge ($de00 Only){f6}"
+4196 b$="01":goto 4004
+4198 &" {gray3}(Flag 12){f6:2}{cyan}Is Caller ID Available (Both Modem AND{f6}Phone Line){f6}"
+4200 &"{yellow}0: {lt. blue}No; Caller ID Not Available{f6}{yellow}1: {lt. blue}Yes; Caller ID is Available{f6}"
+4202 b$="01":goto 4004
+4204 rem"∆lag 13"
+4206 rem   "  "
+4208 return
+4210 rem"∆lag 14"
+4212 rem   "  "
+4214 return
+4216 &" {gray3}(Edit Init){f6:2}":if len(mt$)=1 then
+4218 if len(mt$)=1 then:&"{f6:2}{yellow}You Must First Setup a Modem!{f6:2}  {white}>Any Key<{pound}g1":goto 4030
+4220 &"{cyan}Current (Customizable) Init String:{f6}":a$=in$:if in$="{^}" then a$="<None>"
+4222 &"{pound}$a{f6}{cyan}Enter New Init String (35 Char. Max.):{f6}RETURN{shft space}to Keep The Same.{f6}"
+4224 p$="":w$=in$:pl=.:poke 53249,pl:poke 53252,35:&,1,40
+4226 on-(an$<>"") goto 4228:gosub 92:goto 4030
+4228 in$=an$:dr=3:a$="e.i.modem":gosub 4:x=p+1:gosub 1
+4230 print# 2,mt$r$in$r$m$r$au$:close 2:goto 4030
+4232 &"{f6}{lt. red}WARNING: {yellow}Continuing will overwrite any{f6}         previous setup"
+4234 if lk%then:&" on this port"
+4236 &"!{f6:2}":goto 93
+4238 &" {gray3}(Setup){f6}"
+4240 &"{f6:2}{yellow} 1) {lt. blue}Setup New Modem Config{f6}{yellow} 2) {lt. blue}Import Setup From nimodem.dat File{f6}"
+4242 &"{yellow} 3) {lt. blue}Import Setup From 1.2 e.modrc File{f6}"
+4243 &"{yellow} 4) {lt. blue}Create/Edit nimodem.dat File{f6}{yellow} 5) {lt. blue}GNDN{f6}"
+4244 &"{yellow} X) {lt. blue}Exit Sub-Menu{f6:2}":a$="Exit":b$="123X":gosub 4004:a=val(an$)
+4246 on agoto 4248,4030,4350:goto 4030
+4248 &"{f6} {yellow}NOTE: {white}This option will setup the basic{f6}files needed to configure a"
+4250 &" modem setup{f6}from scratch.  It is recommended that{f6}you IMPORT from an "
+4252 &"nimodem.dat file since importing will add the base result codes needed."
+4254 &"{f6:2}Continue? :":gosub 94:if a=.then 4240
+4256 gosub 4232:if a=.then 4240
+4258 poke 53252,25:&"{f6:2}{cyan}Enter Modem Brand/Name{white}:{f6}:{pound}i1":if an$="" then 4240
+4260 &,15,1:m$=an$:poke 53252,20:&"{up}{white}:{gray3}{pound}$m{f6:2}{cyan}Enter Author (RETURN=New Image){f6}{white}:{pound}i1"
+4262 if an$="" then an$="New Image Software"
+4264 &,15,1:au$=an$:poke 53252,35:&"{up}{white}:{gray3}{pound}v7{f6:2}{cyan}Enter Custom Init String{white}:{f6}:{pound}i0"
+4266 in$=an$:mt$="1EMYH0H1N10000":for a=1 to 12
+4268 a$=mid$(mt$,a,1):if tr%<1 then a=15:next:goto 4240
+4270 on agosub 4134,4142,4146,4152,4158,4164,4170,4176,4180,4186,4192,4198
+4272 &"{f6}":mt$=left$(mt$,a-1)+a$+mid$(mt$,a+1):next
+4273 dr=3:gosub 61:gosub 60:if a<>0 or bf<15 then:&"{f6}Disk Full!{pound}w2":goto 4240
+4275 dr=3:a$="e.i.modem":gosub 4:x=p+1:gosub 1:print# 2,mt$r$in$r$m$r$au$:close 2
+4277 mr%(0,0)=1:t=1:mr%(1,1)=1:mr%(2,1)=2:&,60,0,26,mr%(3,1),"CONNECT"
+4279 a$="e.modem":if lk%then a$=a$+str$(p)
+4281 gosub 19:&,60,3,0,mr%(0,0),32,dr$+a$,dv%:jf=.:&"{f6:2}{white}Setup Completed!{f6}"
+4282 &"{f6}{lt. blue} Be sure to (C)ustomize Result Codes to{f6}add all needed result codes"
+4284 &" for this{f6}modem or it will not operate correctly!{f6:2}"
+4286 &"{white}>Hit a Key<{pound}g1{f6}":goto 4030
+4300 rem"…mport ∆rom nimodem.dat ∆ile"
+4350 &"{f6}Import Setup From 1.2 e.modrc File:{f6:2}":gosub 4232:if a=.then 4240
+4352 dr=3:a$="e.modrc":gosub 4:if e%then:&"File Not Found!{f6}":goto 4240
+4354 &"{cyan}Importing{white}..":&,2,2:in$=left$(a$,35)
+4356 &,2,2:m$=left$(a$,25):au$="Imported From v1.2":close 2
+4358 gosub 33:x=32:gosub 1:&,2,2:mt$=left$(a$+"00000",14):close 2
+4360 a$="e.i.modem":gosub 4:x=p+1:gosub 1:print# 2,mt$r$in$r$m$r$au$:close 2
+4362 a$="e.modrc":gosub 4:x=2:t=.
+4364 gosub 1:&,2,2:b$=a$:if (st<>0) or (len(b$)<2) or (tr%<1) then 4372
+4366 &,2,2:on-(val(a$)=0) goto 4370:t=t+1:&".":mr%(1,t)=x-1
+4368 mr%(2,t)=val(a$):&,60,0,26,mr%(3,t),left$(b$,26)
+4370 x=x+1:goto 4364
+4372 a%=t:mr%(0,0)=a%
+4374 a$="e.modem":if lk%then a$=a$+str$(p)
+4376 gosub 19:&,60,3,0,mr%(0,0),(t+1)*32,dr$+a$,dv%
+4378 &"{f6} {lt. blue}Import Complete!{f6:2} {white}>Hit A Key<{pound}g1{f6}":goto 4240
+4380 &"{gray3}Edit RC{f6:2}":a$="e.modem":if lk%then a$=a$+str$(p)
+4381 dr=3:gosub 3:&,60,2,0,mr%(0,0),dr$+a$,dv%:t=mr%(0,0)
+4382 poke 53252,3:&"{lt. blue}Enter Result Code # To Edit/Add{f6}(L for List){yellow}:{white} {pound}i1"
+4384 poke 53252,38:on-(an$="L") goto 4440:c=val(an$):if c<1 or tr%<1 then goto 4030
+4390 &"{f6}{cyan}Scanning{white}..":f=.:for i=1 to t:&".":if mr%(1,i)=cthen f=i:i=t+1
+4392 next:&"{f6:2}":c$="":c%=.:d=.:on-(f>.) goto 4394:d=1:on-(t<49) goto 4398:goto 4426
+4394 &,60,1,26,mr%(3,f),c$:c%=mr%(2,f)
+4396 &"{yellow}RC#{white}{pound}!c{yellow}: {lt. blue}{pound}$c{f6}  {gray3}(Flag = {white}{pound}%c{gray3}){f6:2}"
+4398 &"{cyan}Enter New Result Code Text {yellow}(26 Char.){f6}{cyan} RETURN to Keep The Same"
+4400 if d=.then:&";{f6} Enter {f5}DEL{f5} To Delete"
+4402 &".{f6}{white}":p$="":w$=c$:pl=1:poke 53249,pl:poke 53252,26:&,1,40
+4404 if an$<>"" then:on-(an$="DEL" and d=.) goto 4428:c$=an$
+4406 &"{f6}{cyan}Select Flag for This Result Code{white}:{f6}"
+4408 a$="Error     Re-Loop   Con. 300 {f6}Con. 1200 Con. 2400 Con. 4800{f6}Con. 9600 "
+4410 a$=a$+"Con. 19.2kCon. 38.4k":for i=0 to 8:b$="":if i=c%then b$="{rvrs on}"
+4412 &" {pound}$b{yellow}{pound}!i{rvrs off}-{lt. blue}"+mid$(a$,(i*10)+1,10):next:&"{f6}"
+4414 a$=mid$(str$(c%),2,1):b$="012345678":gosub 4004:c%=val(a$)
+4416 &"{f6}{yellow}RC#{white}{pound}!c{yellow}: {lt. blue}{pound}$c{f6}{gray3}Flag = {white}{pound}%c{f6:2}  {cyan}Correct? ":gosub 94:&"{f6}":if a=.then 4382
+4418 on d+1 goto 4420:t=t+1:f=t:mr%(0,0)=t
+4420 mr%(1,f)=c:mr%(2,f)=c%:&,60,0,26,mr%(3,f),c$
+4422 dr=3:a$="e.modem":if lk%then a$=a$+str$(p)
+4424 gosub 19:&,60,3,0,mr%(0,0),(t+1)*32,dr$+a$,dv%:&"{f6}{white}{rvrs on}Updated!{rvrs off}{f6:2}":goto 4382
+4426 &"{f6:2}{white}Can Not Add: Max=50!{f6:2}Hit a Key{pound}g1{f6}":goto 4382
+4428 &"{f6}{lt. red}Delete {lt. green}{f5}{pound}$c{f5}{lt. red}; Are You Sure?{white} :":gosub 94:if a=.then 4396
+4430 for i=f+1 to t:mr%(1,i-1)=mr%(1,i):mr%(2,i-1)=mr%(2,i):&,60,1,26,mr%(3,i),a$
+4432 &,60,0,26,mr%(3,i-1),a$:next:t=t-1:m%(0,0)=t:goto 4422
+4440 sh=.:rc=.:&"{f6}{white} RC#  {lt. green}Fl  {cyan}Text{f6}{blue}{pound}vj":for i=1 to t:a%=mr%(1,i):b%=mr%(2,i):c%=i
+4442 &,60,1,26,mr%(3,i),a$:&"{white} {pound}#3{pound}# {pound}%a{pound}{back arrow}06{pound}#2{pound}# {lt. green}{pound}%b{pound}{back arrow}11{cyan}{pound}$a{f6}"
+4443 if sh+rc>0 then i=t+1
+4444 next:&"{blue}{pound}vj {purple}({lt. blue}{pound}!t Total{purple}){f6:2}":goto 4382
+4998 rem"√opyright 1995, Œew …mage               ** 06 Õ¡“ 95 -  Ã∆ **    "
+4999 rem:"i/…Õ.modem (c)nissa 200904 lh"
