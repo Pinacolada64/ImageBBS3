@@ -22,7 +22,7 @@ v0.5, {docdate}
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
 
 // PDF generation config
-:pdf-theme: default-sans
+:pdf-theme: default
 
 // Enable asciidoctor-lists to display lists of tables and code snippets
 == List of tables
