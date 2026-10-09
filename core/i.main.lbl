@@ -1,22 +1,23 @@
-{def:}
 {uses:3_0-preface.lbl}
 {alpha:alt}
+{step:2}
 ' original: 863 bytes
 ' modified: 851 bytes
 {number:3000}
-	gosub 90:on mm goto {:3010},{:3004},{:3006}
+{:3000}
+	on mm goto {:3010},{:3004},{:3006}
 {:3002}
 	&,28,1:&,11:lc=1:&,27,1:sy$="":goto 200
 {:3004}
 '	p$=po$:return
-	p$=po$
+	p$=po$:cm$=p$:gosub 9
 {:3006}
 	return
 {:3010}
-	if zz and an$="R" then {:3030}
+	if zz then on -(an$="R")-2*(an$="RL") goto {:3030},{:reload_module}
 	if val(an$) then gosub {:3020}:if a$<>"" then uu$=a$:goto {:3002}
-	rem if an$="NORM"then mm=.:goto 2006
-	gosub 90:&"{f6}{lt. red}{pound}vj{pound}$q{lt. blue} {rvrs on} Unknown Command. Enter {f5}?{f5} For Help. {f6}{lt. red}{pound}vj":goto {:3002}
+'	rem if an$="NORM"then mm=.:goto 2006
+	&"{f6}{lt. red}{pound}vj{pound}$q{lt. blue} {rvrs on} Unknown Command. Enter {f5}?{f5} For Help. {f6}{lt. red}{pound}vj":goto {:3002}
 {:3020}
 '	a%=val(an$):a$="{^}":if a%<1ora%>4then return
 	a%=val(an$):if a%<1 or a%>4 then return
@@ -24,19 +25,33 @@
 	close 2:return
 {:3030}
 '	&,52,$30,3:on a%+1 goto {:3032}
-	&,52,$30,3:if a%=. then {:3032}
+	&,52,$30,3:if a%=. then {:3034}
 	poke 53252,14:gosub 304:&"{f6}Run: +.{pound}i0":a$=an$:on -(a$="") goto {:3002}:goto 70
-{:3032}
-	&"{f6}{lt. blue}Which Class{cyan}? ({lt. blue}3{cyan},{lt. blue}4{cyan},{lt. blue}5{cyan}): {white}{pound}g1":a=val(an$):c=a-2:if a<3 or a>5 then {:3032}
-	&"{pound}!a{f6:2}{lt. blue}Run{cyan}: {white}":a$="i"+mid$("./",c,1):l=14
-	if c=3 then a$="sub.":l=12
-	poke 53252,l:&:&"{pound}i0":c$=an$:on -(c$="")-2*(c=3) goto {:3002},{:3046}
+{:3034}
+	&"[3=i.*, 4=i/*, 5=sub.*]{f6}"
+	&"{lt. blue}Which Class {cyan}(3, 4, 5): {white}{pound}i1":a=val(an$):c=a-2:if a<3 or a>5 then {:3034}
+	&"{lt. blue}Run{cyan}: {white}":a$="i"+mid$("./",c,1):if c=3 then a$="sub."
+	poke 53252,16-len(a$):&:&"{pound}i0":c$=an$:on -(c$="")-2*(c=3) goto {:3002},{:3046}
 	gosub 349:gosub 350:if a then x=6:gosub 390:goto {:3002}
 {:3046}
-	&"{f6}{lt. blue}Enter Value for "+mid$("mmlmim",c*2-1,2)+"{cyan}: {white}{pound}i1"
-	a$=c$:on c-1 goto {:3048},{:3050}:mm=val(an$):goto 71
-{:3048}
-	lm=val(an$):gosub 73:goto {:3002}
+	&"{f6}{lt. blue}Enter Value for {cyan}"+mid$("mmlmim",c*2-1,2)+"{lt. blue}: {white}{pound}i1"
+	a$=c$:on c-1 goto {:3050},{:3052}:mm=val(an$):goto 71
 {:3050}
+	lm=val(an$):gosub 73:goto {:3002}
+{:3052}
 	im=val(an$):gosub 74:goto {:3002}
-	rem i.main (c)nissa 200802 lh, 2022-10-06 rs
+{nice:10}
+{:reload_module}
+'	if an$="RL" then a%=-3000*(pr$<>"")-4000*(p1$<>"")-60000*(p2$<>""):&,66,1:goto {:3000}
+	a=-(pr$<>"")-2*(p1$<>"")-3*(p2$<>""):on a goto {:i.module}, {:i/module}, {:sub.module}
+	&"RL: Undefined module name.{f6}":goto 300
+{:i.module}
+' strip "i." prefix:
+	a$=mid$(pr$,3):goto 70
+{:i/module}
+' strip "i/" prefix:
+	a$=mid$(p1$,3):goto 72
+{:sub.module}
+' strip "sub." prefix:
+	a$=mid$(p2$,5):goto 74
+	rem i.main (c)nissa 2020-08-02 lh, 2024-07-24 rs
