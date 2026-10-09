@@ -88,7 +88,7 @@
 	poke 53252,78:an$="O'MALLEY'S BAR":w$=an$:p$="String with ' in it"
 	&"[{quotation}Q{quotation} quits]{f6:2}":&,1,32
 	if an$="Q" then:&"Quitting.{f6}":goto {:menu}
-	if an$="" then an$=w$:&"Return sets an$={quotation}{pound}$w{quotation}{f6}"
+	if an$="" then an$=w$:lp=1:&"(Set an$={quotation}{pound}v7{quotation}){f6}"
 ' &,64 changes an$ in place: +"" makes a copy, so w$ and the literal above
 ' (in this program's text) aren't changed too
 	an$=an$+"":w$=an$+""
