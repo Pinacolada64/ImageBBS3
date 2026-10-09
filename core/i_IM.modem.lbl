@@ -135,9 +135,9 @@
 4238 &" {gray3}(Setup){f6}"
 4240 &"{f6:2}{yellow} 1) {lt. blue}Setup New Modem Config{f6}{yellow} 2) {lt. blue}Import Setup From nimodem.dat File{f6}"
 4242 &"{yellow} 3) {lt. blue}Import Setup From 1.2 e.modrc File{f6}"
-4243 &"{yellow} 4) {lt. blue}Create/Edit nimodem.dat File{f6}{yellow} 5) {lt. blue}GNDN{f6}"
-4244 &"{yellow} X) {lt. blue}Exit Sub-Menu{f6:2}":a$="Exit":b$="123X":gosub 4004:a=val(an$)
-4246 on agoto 4248,4030,4350:goto 4030
+4243 &"{yellow} 4) {lt. blue}Create/Edit nimodem.dat File{f6}"
+4244 &"{yellow} X) {lt. blue}Exit Sub-Menu{f6:2}":a$="Exit":b$="1234X":gosub 4004:a=val(an$)
+4246 on agoto 4248,4500,4350,4700:goto 4030
 4248 &"{f6} {yellow}NOTE: {white}This option will setup the basic{f6}files needed to configure a"
 4250 &" modem setup{f6}from scratch.  It is recommended that{f6}you IMPORT from an "
 4252 &"nimodem.dat file since importing will add the base result codes needed."
@@ -205,5 +205,89 @@
 4442 &,60,1,26,mr%(3,i),a$:&"{white} {pound}#3{pound}# {pound}%a{pound}{back arrow}06{pound}#2{pound}# {lt. green}{pound}%b{pound}{back arrow}11{cyan}{pound}$a{f6}"
 4443 if sh+rc>0 then i=t+1
 4444 next:&"{blue}{pound}vj {purple}({lt. blue}{pound}!t Total{purple}){f6:2}":goto 4382
+' --- nimodem.dat: a library of modem profiles (SEQ file on drive 3) ---
+' each profile, one item per line:
+'   name, author, mt$ (14 flags), init string ({^} = none), number of result
+'   codes, then for each result code: RC#, flag (0-8), text. ends with {^}
+
+' 2) import a profile into this port's setup (e.i.modem, e.modem, e.data)
+4500 &" {gray3}(Import){f6}":gosub 4232:if a=. then 4240
+4502 &"{f6}":gosub 4600:if k=. then:&"{f6}{yellow}No profiles: use option 4 to create nimodem.dat.{f6}":goto 4240
+4504 poke 53252,2:&"{f6}{cyan}Import which? (1-{pound}!k): {white}{pound}i1":v=val(an$):if v<1 or v>k then 4240
+4506 gosub 4620:m$=g$:au$=h$:mt$=u$:in$=v$:t=n:if t>50 then t=50
+4508 mr%(0,0)=t:for u=1 to n:&,2,2:j=val(a$):&,2,2:f=val(a$):&,2,2:if u<=t then mr%(1,u)=j:mr%(2,u)=f:&,60,0,26,mr%(3,u),a$
+4510 next:close 2:dr=3:a$="e.i.modem":gosub 4:x=p+1:gosub 1:print# 2,mt$r$in$r$m$r$au$:close 2
+4512 a$="e.modem":if lk% then a$=a$+str$(p)
+4514 gosub 19:&,60,3,0,mr%(0,0),(t+1)*32,dr$+a$,dv%:gosub 33:a$=mid$(mt$,11,1):x=32:gosub 1:print# 2,a$:close 2:jf=.
+4516 &"{f6}{white}Imported {pound}$m.{f6:2}>Hit a Key<{pound}g1":goto 4030
+
+' list the profiles in nimodem.dat; k = how many
+4600 k=.:dr=3:a$="nimodem.dat":gosub 4:if e% then close 2:return
+4602 &,2,2:g$=a$:if g$="{^}" or g$="" then close 2:return
+4604 k=k+1:&" {yellow}"+mid$(str$(k),2)+"{white}) {lt. blue}"+g$+"{f6}"
+4606 for u=1 to 3:&,2,2:next:&,2,2:n=val(a$):for u=1 to 3*n:&,2,2:next:goto 4602
+' open nimodem.dat at profile v: g$ name, h$ author, u$ flags, v$ init,
+' n result codes (still to be read)
+4620 dr=3:a$="nimodem.dat":gosub 4:k=.
+4622 &,2,2:g$=a$:&,2,2:h$=a$:&,2,2:u$=a$:&,2,2:v$=a$:&,2,2:n=val(a$):k=k+1:if k=v then return
+4624 for u=1 to 3*n:&,2,2:next:goto 4622
+
+' 4) create/edit nimodem.dat
+4700 &" {gray3}(nimodem.dat){f6:2}{yellow} 1) {lt. blue}Save Current Setup to nimodem.dat{f6}{yellow} 2) {lt. blue}Delete a Profile{f6}"
+4702 &"{yellow} 3) {lt. blue}Add the Standard Profiles{f6}{yellow} X) {lt. blue}Exit Sub-Menu{f6:2}":a$="Exit":b$="123X":gosub 4004:a=val(an$)
+4704 on a goto 4710,4740,4760:goto 4240
+' 1) save: replaces a profile with the same name, or adds it
+4710 if len(mt$)=1 then:&"{f6:2}{yellow}You Must First Setup a Modem!{f6}":goto 4700
+4712 k$=m$:w=1:gosub 4800:&"{f6}{white}Saved {pound}$m to nimodem.dat.{f6}":goto 4700
+' 2) delete
+4740 &"{f6}":gosub 4600:if k=. then:&"{f6}{yellow}nimodem.dat has no profiles.{f6}":goto 4700
+4742 poke 53252,2:&"{f6}{cyan}Delete which? (1-{pound}!k): {white}{pound}i1":v=val(an$):if v<1 or v>k then 4700
+4744 gosub 4620:close 2:k$=g$:&"{f6}{lt. red}Delete {pound}$k; ":gosub 93:if a=. then 4700
+4746 w=2:gosub 4800:&"{f6}{white}Deleted.{f6}":goto 4700
+' 3) standard profiles (from the DATA below): replaces any with the same names
+4760 w=3:gosub 4800:&"{f6}{white}Standard profiles added.{f6}":goto 4700
+
+' rewrite nimodem.dat through nimodem.tmp. w=1: save the current setup
+' (replacing k$), w=2: delete profile k$, w=3: add the standard profiles
+4800 j=.:if w=1 then a$="e.modem":if lk% then a$=a$+str$(p)
+4801 if w=1 then dr=3:gosub 3:&,60,2,0,mr%(0,0),dr$+a$,dv%:gosub 5:t=mr%(0,0):if e% then t=.
+4802 dr=3:gosub 3:print# 15,"s"dr$"nimodem.tmp":open 3,dv%,3,dr$+"nimodem.tmp,s,w"
+4804 a$="nimodem.dat":gosub 4:o=e%:if o then close 2:goto 4830
+4808 &,2,2:g$=a$:if g$="{^}" or g$="" then close 2:goto 4830
+4810 &,2,2:h$=a$:&,2,2:u$=a$:&,2,2:v$=a$:&,2,2:n=val(a$):f=.:if w<3 then f=-(g$=k$)
+4812 if w=3 then gosub 4880
+4814 if f then j=j+1:for u=1 to 3*n:&,2,2:next:goto 4808
+4816 print# 3,g$r$h$r$u$r$v$r$mid$(str$(n),2):for u=1 to 3*n:&,2,2:print# 3,a$:next:goto 4808
+4830 if w=1 then print# 3,m$r$au$r$mt$r$in$r$mid$(str$(t),2):for u=1 to t:&,60,1,26,mr%(3,u),a$:print# 3,mid$(str$(mr%(1,u)),2)r$mid$(str$(mr%(2,u)),2)r$a$:next
+4832 if w=3 then gosub 4860
+4834 print# 3,"{^}":close 3:print# 15,"s"dr$"nimodem.dat":print# 15,"r"dr$"nimodem.dat="dr$"nimodem.tmp":return
+' write the standard profiles to LFN 3
+4860 gosub 4870
+4862 read g$:if g$="{^}" then return
+4864 read h$,u$,v$,n:print# 3,g$r$h$r$u$r$v$r$mid$(str$(n),2)
+4866 for u=1 to n:read k,f,a$:print# 3,mid$(str$(k),2)r$mid$(str$(f),2)r$a$:next:goto 4862
+' move the DATA pointer to the standard profiles
+4870 restore
+4872 read a$:if a$<>"nimodem.dat" then 4872
+4874 return
+' f=1 if g$ is the name of a standard profile
+4880 f=.:gosub 4870
+4882 read a$:if a$="{^}" then return
+4884 if a$=g$ then f=1:return
+4886 read a$,a$,a$,k:for u=1 to k:read a$,a$,a$:next:goto 4882
+
+' standard profiles: name, author, mt$, init ({^} = none), number of result
+' codes, then RC#, flag, text for each. mt$ flags (see the IM chapter):
+' max baud, hang-up D/E, answer A/M, ATH after esc H/N, local mode N/H,
+' ATH0 0/space, ATH in init H/N, ATX, DTR N/R, B0/B1, RS232 0/1, caller ID
+4900 data "nimodem.dat"
+' tcpser (VICE's ip232 modem), 38400, SwiftLink: result codes from its source
+4902 data "tcpser (VICE)","Jim Brain","7DMNH0H4N11000","{^}",5
+4904 data 1,8,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",28,8,"CONNECT 38400"
+' standard Hayes 2400 codes; m0&c1&d2: speaker off, real DCD, DTR hang-up
+4906 data "Generic Hayes 2400","Image BBS docs","3DMNH0H4N10000","m0&c1&d2",9
+4908 data 1,2,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",5,3,"CONNECT 1200"
+4910 data 6,0,"NO DIALTONE",7,0,"BUSY",8,0,"NO ANSWER",10,4,"CONNECT 2400"
+4990 data "{^}"
 4998 rem"Copyright 1995, New Image               ** 06 MAR 95 - JLF **    "
 4999 rem:"i/IM.modem (c)nissa 200904 lh"
