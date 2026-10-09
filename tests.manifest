@@ -1,0 +1,7 @@
+# tests.manifest: test programs added to the unchanged release boot disk
+# by "make test-disk" (build/image30-tests.d81). Same format as disk.manifest.
+
+tests/i.test calls.prg	i.test calls
+tests/i.test structs.prg	i.test structs
+tests/i.test-convert.prg	i.test-convert
+tests/i.test date.prg	i.test date

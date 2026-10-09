@@ -5,6 +5,8 @@
 #   make tests    build core/tests/*.lbl with C64List       -> build/tests/
 #   make disk     copy the release boot disk (Disk 1) and replace the
 #                 files listed in disk.manifest              -> build/image30.d81
+#   make test-disk the release boot disk, unchanged except for the test
+#                 programs in tests.manifest           -> build/image30-tests.d81
 #   make pdf      build the Programmer's Reference Guide PDF -> build/prg-master.pdf
 #   make clean    remove build/
 #
@@ -24,12 +26,13 @@ LOGO_DIR    ?= source
 
 BUILD := build
 DISK  := $(BUILD)/image30.d81
+TEST_DISK := $(BUILD)/image30-tests.d81
 
 # wine prints a lot of debug noise; C64List needs Windows-style paths for output
 RUN_C64LIST = WINEDEBUG=-all $(WINE) $(C64LIST)
 winpath = Z:$(abspath $(1))
 
-.PHONY: all asm basic tests disk pdf clean
+.PHONY: all asm basic tests disk test-disk pdf clean
 
 all: asm basic tests
 
@@ -98,24 +101,35 @@ tests:
 	$(call build_lbl_dir,core/tests,$(BUILD)/tests)
 
 # ---------------------------------------------------------------------------
-# Boot disk (VICE c1541)
+# Boot disks (VICE c1541)
 #
-# disk.manifest lists, one per line, separated by tabs:
+# A manifest lists, one per line, separated by tabs:
 #   <file under build/>   <C64 filename on the disk>
 # Each file replaces the release disk's file of that name (or is added).
+#
+#   disk.manifest   your builds: ML, BASIC modules and test programs
+#   tests.manifest  only the test programs, so the rest stays as released
 
-disk:
+# $(call make_disk,<manifest>,<output .d81>)
+define make_disk
 	@test -f "$(RELEASE_ZIP)" || { echo "Release zip not found: $(RELEASE_ZIP)"; exit 1; }
 	@mkdir -p $(BUILD)
-	unzip -p "$(RELEASE_ZIP)" "$(RELEASE_D81)" > $(DISK)
-	@grep -v -e '^#' -e '^[[:space:]]*$$' disk.manifest | \
+	unzip -p "$(RELEASE_ZIP)" "$(RELEASE_D81)" > $(2)
+	@grep -v -e '^#' -e '^[[:space:]]*$$' $(1) | \
 	while IFS='	' read -r file name; do \
 		if [ ! -f "$(BUILD)/$$file" ]; then echo "  skipped (not built): $$file"; continue; fi; \
 		echo "  $$file -> \"$$name\""; \
-		$(C1541) -attach $(DISK) -delete "$$name" -write "$(BUILD)/$$file" "$$name" > /dev/null 2>&1 \
+		$(C1541) -attach $(2) -delete "$$name" -write "$(BUILD)/$$file" "$$name" > /dev/null 2>&1 \
 			|| { echo "  c1541 failed for $$file"; exit 1; }; \
 	done
-	@$(C1541) -attach $(DISK) -list 2>/dev/null | tail -1
+	@$(C1541) -attach $(2) -list 2>/dev/null | tail -1
+endef
+
+disk:
+	$(call make_disk,disk.manifest,$(DISK))
+
+test-disk: tests
+	$(call make_disk,tests.manifest,$(TEST_DISK))
 
 # ---------------------------------------------------------------------------
 # Programmer's Reference Guide as a PDF (asciidoctor-pdf)
