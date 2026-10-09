@@ -2,8 +2,8 @@
 ' imported from the release disk (MASTER D1 231231.d81), "i/IM.modem" with:
 '   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
 ' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
-' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
-' identical to the original.
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
 
 {uses:3_0-preface.lbl}
 {alpha:alt}
@@ -55,10 +55,10 @@
 4076 &"{f6}{yellow}11:{lt. blue}RS232:{pound}$a"
 4078 a$="No ":if mid$(mt$,12,1)="1" then a$=""
 4080 &"{pound}{back arrow}20{yellow}12:{lt. blue}{pound}$aCaller ID"
-4082 rem"∆lag 13"
-4084 rem"∆lag 13"
-4086 rem"∆lag 14"
-4088 rem"∆lag 14"
+4082 rem"Flag 13"
+4084 rem"Flag 13"
+4086 rem"Flag 14"
+4088 rem"Flag 14"
 4090 &"{f6:2}{cyan}{rvrs on} Modem Init. Strings ":if lk%then:&"For Port #{pound}!p {rvrs off}"
 4092 a%=val(mid$(mt$,1,1)):if a%=0 then:&"{f6} {yellow}- {lt. blue}No Modem Configured.":goto 4104
 4094 a$="e0v0":if mid$(mt$,7,1)="H" then a$=a$+"h":if mid$(mt$,6,1)="0" then a$=a$+"0"
@@ -115,10 +115,10 @@
 4198 &" {gray3}(Flag 12){f6:2}{cyan}Is Caller ID Available (Both Modem AND{f6}Phone Line){f6}"
 4200 &"{yellow}0: {lt. blue}No; Caller ID Not Available{f6}{yellow}1: {lt. blue}Yes; Caller ID is Available{f6}"
 4202 b$="01":goto 4004
-4204 rem"∆lag 13"
+4204 rem"Flag 13"
 4206 rem   "  "
 4208 return
-4210 rem"∆lag 14"
+4210 rem"Flag 14"
 4212 rem   "  "
 4214 return
 4216 &" {gray3}(Edit Init){f6:2}":if len(mt$)=1 then
@@ -159,7 +159,7 @@
 4282 &"{f6}{lt. blue} Be sure to (C)ustomize Result Codes to{f6}add all needed result codes"
 4284 &" for this{f6}modem or it will not operate correctly!{f6:2}"
 4286 &"{white}>Hit a Key<{pound}g1{f6}":goto 4030
-4300 rem"…mport ∆rom nimodem.dat ∆ile"
+4300 rem"Import From nimodem.dat File"
 4350 &"{f6}Import Setup From 1.2 e.modrc File:{f6:2}":gosub 4232:if a=.then 4240
 4352 dr=3:a$="e.modrc":gosub 4:if e%then:&"File Not Found!{f6}":goto 4240
 4354 &"{cyan}Importing{white}..":&,2,2:in$=left$(a$,35)
@@ -205,5 +205,5 @@
 4442 &,60,1,26,mr%(3,i),a$:&"{white} {pound}#3{pound}# {pound}%a{pound}{back arrow}06{pound}#2{pound}# {lt. green}{pound}%b{pound}{back arrow}11{cyan}{pound}$a{f6}"
 4443 if sh+rc>0 then i=t+1
 4444 next:&"{blue}{pound}vj {purple}({lt. blue}{pound}!t Total{purple}){f6:2}":goto 4382
-4998 rem"√opyright 1995, Œew …mage               ** 06 Õ¡“ 95 -  Ã∆ **    "
-4999 rem:"i/…Õ.modem (c)nissa 200904 lh"
+4998 rem"Copyright 1995, New Image               ** 06 MAR 95 - JLF **    "
+4999 rem:"i/IM.modem (c)nissa 200904 lh"

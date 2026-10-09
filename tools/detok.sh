@@ -11,9 +11,15 @@
 # resolve, {alpha:alt}, and {crunch:on} so the build removes the added spaces
 # again (the Makefile passes -crunch for files using {crunch:on}).
 #
-# Afterwards, the listing is built again and compared with the original: the
-# script fails unless the two are byte-for-byte identical, or differ only by
-# trailing ":"s, which C64List's -crunch removes.
+# Shifted PETSCII capitals ($c1-$da) in rem text are copied by C64List as raw
+# bytes, which editors can't show; they're converted to ASCII A-Z. C64List
+# builds those as $61-$7a, which also look like capitals in lower/upper case
+# mode, so the rebuilt rems differ from the original in those bytes only.
+#
+# Afterwards, the listing is built again and compared with the original (with
+# the same rem capitals changed to $61-$7a): the script fails unless the two
+# are byte-for-byte identical, or differ only by trailing ":"s, which C64List's
+# -crunch removes.
 #
 # Environment (defaults as in the Makefile): C64LIST, WINE, C1541, RELEASE_ZIP,
 # RELEASE_D81
@@ -41,8 +47,9 @@ trap 'rm -rf "$tmp"' EXIT
 c64list() { (cd "$tmp" && WINEDEBUG=-all "$WINE" "$C64LIST" "$@" -ovr); }
 
 # -autospace puts a space before each ":"; turn " :" into ":" in program code,
-# but not inside "quoted strings" or after rem, where it would change the text
-tidy_colons() {
+# but not inside "quoted strings" or after rem, where it would change the text.
+# In rem text, also turn PETSCII capitals ($c1-$da) into ASCII A-Z.
+tidy_listing() {
 	python3 -I -c '
 import sys
 for line in sys.stdin.buffer:
@@ -50,7 +57,7 @@ for line in sys.stdin.buffer:
     while i < len(line):
         c = line[i]
         if not quoted and line[i:i+3].lower() == b"rem":
-            out += line[i:]; break
+            out += bytes(b - 0x80 if 0xc1 <= b <= 0xda else b for b in line[i:]); break
         if c == 0x22:
             quoted = not quoted
         if not quoted and c == 0x20 and line[i+1:i+2] == b":":
@@ -83,15 +90,39 @@ c64list orig.prg -txt:orig.txt -autospace -keycase -varcase -alpha:alt > "$tmp/d
 		"' imported from $origin with:" \
 		"'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)" \
 		"' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)" \
-		"' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte" \
-		"' identical to the original." \
+		"' resolve through 3_0-preface.lbl. unchanged, this builds a program identical" \
+		"' to the original, except that capitals in rem text are \$61-\$7a, not \$c1-\$da." \
 		"" \
 		"{uses:3_0-preface.lbl}" \
 		"{alpha:alt}" \
 		"{crunch:on}" \
 		""
-	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_colons
+	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
 } > "$tmp/new.lbl"
+
+# the original, with capitals in rem text changed the way C64List builds them
+# ($c1-$da -> $61-$7a); prints how many were changed
+remcaps() {
+	python3 -I -c '
+import sys
+src, dst = sys.argv[1], sys.argv[2]
+p = bytearray(open(src, "rb").read()); i = 2; n = 0
+while i + 4 <= len(p) and (p[i] or p[i+1]):
+    i += 4; quoted = rem = False
+    while p[i]:
+        c = p[i]
+        if rem:
+            if 0xc1 <= c <= 0xda:
+                p[i] = c - 0x60; n += 1
+        elif c == 0x22:
+            quoted = not quoted
+        elif c == 0x8f and not quoted:
+            rem = True
+        i += 1
+    i += 1
+open(dst, "wb").write(p); print(n)
+' "$1" "$2"
+}
 
 # 3. build it again and compare
 cp "$repo/core/3_0-preface.lbl" "$tmp/"
@@ -100,18 +131,20 @@ c64list new.lbl -prg:new.prg -crunch > "$tmp/build.log" 2>&1 \
 # C64List's -crunch drops a line's trailing ":" (an empty statement), which
 # shifts every later byte. If that is the only difference (compared as
 # listings, with trailing colons ignored), the program still behaves the same.
+caps=$(remcaps "$tmp/orig.prg" "$tmp/want.prg")
 same="rebuilds byte-for-byte identical"
-if ! cmp -s "$tmp/orig.prg" "$tmp/new.prg"; then
+if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
 	if ! command -v petcat > /dev/null \
-		|| ! diff -q <(listing "$tmp/orig.prg" | sed 's/:*$//') \
+		|| ! diff -q <(listing "$tmp/want.prg" | sed 's/:*$//') \
 			<(listing "$tmp/new.prg" | sed 's/:*$//') > /dev/null; then
-		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/orig.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
+		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/want.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
 		exit 1
 	fi
-	n=$(diff <(listing "$tmp/orig.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
+	n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
 	same="rebuilds identically except for $n trailing \":\" removed by -crunch"
 fi
+[ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
 
 cp "$tmp/new.lbl" "$out"
 echo "$out: $(grep -c '' "$out") lines; $same"

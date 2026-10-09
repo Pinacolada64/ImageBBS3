@@ -2,8 +2,8 @@
 ' imported from the release disk (MASTER D1 231231.d81), "i.GF" with:
 '   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
 ' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
-' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
-' identical to the original.
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
 
 {uses:3_0-preface.lbl}
 {alpha:alt}
@@ -209,7 +209,7 @@
 3554 &"{right:3}{rvrs on} Cursor Keys Move Highlight    {rvrs off} {f6}"
 3556 &"{right:3}{rvrs on} '/'{shft space}Keys are 'Hot' Keys       {rvrs off} {f6}"
 3558 &"{right:3}{rvrs on} Use RETURN to Select an Item  {rvrs off} {f6}"
-3560 rem:&" Ðress ‡Ò‡ to Òeprint the Íenu ’ ‹"
+3560 rem:&" Press ‡R‡ to Reprint the Menu ’ ‹"
 3562 &"{right:3}{rvrs on}{pound}{back arrow}34{rvrs off} {f6}"
 3564 &"{right:3}{rvrs on} Press any key to continue     {rvrs off} {f6}"
 3566 &"{right:3}{rvrs on}{pound}{back arrow}34{rvrs off} {f6}"
@@ -217,4 +217,4 @@
 3570 d2$=mid$(p$,4):if left$(p$,3)="(M)" then d2$=mid$(p$,8)
 ' 3572: &,60,0: the short title (d2$, 10 bytes) into the header, then save
 3572 &,60,0,10,s%(15,0),d2$:goto 3074
-3600 rem:"i.ÇÆ (c)nissa 230526 lh"
+3600 rem:"i.GF (c)nissa 230526 lh"

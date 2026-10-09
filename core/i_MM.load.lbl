@@ -2,8 +2,8 @@
 ' imported from the release disk (MASTER D1 231231.d81), "i/MM.load" with:
 '   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
 ' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
-' resolve through 3_0-preface.lbl. unchanged, this builds byte-for-byte
-' identical to the original.
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
 ' changed since then: line 4110 tests x1%(2,1), the SIG's sysop, instead of
 ' x1%(0,1), the flags word, so SIG sysops always see their own SIGs
 
@@ -66,7 +66,7 @@
 4130 bz=x3%(0,xx):if bz<1 then 4144
 4132 if bz>60 then bz=60
 4134 for b=1 to bz:e%(b)=x3%(b,xx):next
-4136 rem:b$=sg$:&"‹×elcome to the \$b ÓÉÇ!‹"
+4136 rem:b$=sg$:&"‹Welcome to the \$b SIG!‹"
 4138 dr=1:a$="s.Sig"+str$(sg)+str$(nl):if ll%=80 then a$=a$+" 80"
 4139 gosub 14
 4140 gosub 35:x=so%:gosub 1:&,2,2:close 2
@@ -85,4 +85,4 @@
 4166 next:close 2:bz=b:on-(bz=0 and sg>0) goto 4144:lm=0:return
 4168 if sgthen lm=1:return
 4170 lm=2:return
-4172 rem:"i/ÍÍ.load (c)nissa 200504 lh"
+4172 rem:"i/MM.load (c)nissa 200504 lh"
