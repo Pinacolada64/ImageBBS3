@@ -295,7 +295,8 @@ They are documented below.
 === Numeric Values and Structs
 
 The array used with structs is either an integer or floating point type.
-To put numeric values into--or get numeric values from--a struct requires no special struct calls.
+To put numeric values into (or get numeric values from) a struct requires no special struct calls.
+You can use assignments just like in regular BASIC.
 
 // Is this supported?
 // If you are using string arrays,
@@ -304,8 +305,10 @@ You may use code similar to the following examples:
 .Get Number From and Put Number Into Struct
 [%header]
 [%autowidth]
+[cols="1,2", frame="none", grid="rows"]
 |===
 | Get value | Put value
+
 | `f=a%(3,3)` | `a%(3,3)=20`
 
 //| `f` | `a$(3,3)=str$(20)`
@@ -325,43 +328,53 @@ Copies a specified string variable (up to a specified length) into a field of a 
 .Syntax
 `&,60,0,` _length_, _struct%(field, record)_, _string$_
 
-.Parameters
+// .Parameters
 
-_length_: the maximum string length to put into the record.
+[%header]
+[cols="1,2", frame="none", grid="rows"]
+|===
+| Parameter | Purpose
 
-_struct%(field, record)_: the struct name, field and record you`'re putting the string into.
+| _length_
+| The maximum string length to put into the record.
+Should not exceed the length allocated when the struct was created: a larger _length_ writes into the fields after it.
+If _string$_ is longer than _length_, it is cut off; if shorter, the rest of the field is padded with `chr$(0)`.
 
-_string$_: the string variable name to assign the struct data to.
+| _struct%(field, record)_
+| `struct%()`: The struct name, `field` and `record` you`'re putting the string into.
+
+| _string$_
+| The string to put into the struct: a string variable, a literal string, or any string expression.
+|===
 
 .Put String Into Struct
 [source,basic]
+----
 &,60,0,20,u%(1,1),na$
+----
 
-[start=1]
-. Put a string:
+[cols="1m,2", frame="none", grid="rows"]
 
-`**&,60,0**,20,u%(1,1),na$`
+|===
+| Statement | Purpose
 
-[start=2]
-. of up to 20 bytes:
+| &,60,0
+| The _PutString_ call
 
-`&,60,0,**20**,u%(1,1),na$`
+| ,20
+| maximum length of the string to be put into the record
 
-[start=3]
-. from the `u%()` array (field 1, record 1):
+| ,u%(1,1)
+| The struct name, record and field number to put the string into
 
-`&,60,0,20,**u%(1,1)**,na$`
+| na$
+| The string variable to put into the struct record.
 
-[start=4]
-. into the string variable `na$`:
-
-`&,60,0,20,u%(1,1),**na$**`
-
-#TODO#: test if putting string longer than _length_ into struct is truncated--it should be.
+|===
 
 .Returns
 
-`?type mismatch&#160;&#160;error`: if the parameter _string$_ is not a string variable #FIXME#
+`?type mismatch&#160;&#160;error`: if _string$_ isn't a string, _e.g._ a number
 
 '''
 
@@ -392,18 +405,19 @@ TIP: Remember, the first record starts at `0`, but generally this holds configur
 
 [%autowidth]
 [%header]
+[cols="1m,2", frame="none", grid="rows"]
 |===
 | Parameter | Purpose
-| `&,60,1,`...
+| &,60,1,...
 | Get a string...
 
-| `20,`...
+| 20,...
 | ...of at most 20 bytes...
 
-| `u%(11,3),`...
+| u%(11,3),...
 | ...from the array `u%()`, record `3`, field `11`...
 
-| `a$`
+| a$
 | ...into the string variable `a$`.
 |===
 
@@ -419,18 +433,33 @@ Loads the specified struct on disk into an array.
 
 ``&,60,2,0,`` _struct%(field, record)_, _filename$_, _device_
 
-.Parameters
+====
+NOTE: The `0,` is a necessary but ignored parameter.
+====
 
-``&,60,2,0,``: Required parameters to perform the call.
+// ==== Parameters
 
-_struct%(field, record)_,: The struct name `struct%()` to hold the ``load``ed data, plus the `record` and `field` to start ``load``ing to.
+[cols="1m,2", frame="none", grid="rows"]
 
-_filename$_,: the filename (either a string literal or string variable) to ``load``.
+|===
+| Parameter | Purpose
 
-_device_: the device number to ``load`` the struct data from.
+| &,60,2,0,
+| Required parameters to perform the call.
+
+| struct%(field, record),
+| The struct name `struct%()` to hold the ``load``ed data, plus the `record` and `field` to start ``load``ing to.
+
+| filename$,
+| the filename (either a string literal or string variable) to ``load``.
+
+| device
+| the device number to ``load`` the struct data from.
+
+|===
 
 .Setup
-Assign the variable `dr` to the Image drive number desired, and `gosub 3`.
+Assign the variable `dr` to the Image drive number desired, and `gosub 3`, <<prg-im-routines.adoc#line-3>>.
 This returns _device_ (`dv%`).
 This also returns the drive prefix, `dr$`.
 
@@ -451,10 +480,6 @@ dr=6:gosub 3
 . Load a struct:
 
 `**&,60,2,0**,u%(0,0),dr$+"u.handles",dv%`
-
-====
-NOTE: The `0` is believed to be a necessary but ignored parameter.
-====
 
 [start=2]
 . Use the `u%()` array (load to record `0`, field `0`):
@@ -554,20 +579,51 @@ Put an 11-digit date string into a struct (which is stored in 6 bytes as Binary 
 .Syntax
 `&,60,4,0,` _struct%(field, record)_, _string$_
 
-_struct%(field, record)_: struct name, record and field to store date in
-
 .Parameters
 
-_string$_: the 11-digit date string (either a literal string or string variable?) #FIXME#
+[cols="1,2", frame="none", grid="rows"]
+// , stripes=even
+|===
+| _struct%(field, record)_
+| struct name, record and field to store date in
 
-.Returns
-`?illegal quantity&#160;&#160;error` if the date string is not 11 digits
+| _string$_
+| The 11-digit date string: a string variable or a literal string
+
+|===
+
+[WARNING]
+====
+Put Date doesn't check the length of _string$_: it always reads 11 characters.
+If _string$_ is shorter, it reads on past the end of the string, and stores whatever it finds there as part of the date.
+Make sure _string$_ is an 11-digit date, _e.g._ `if len(an$)=11 then...`
+====
 
 .Put Date Into Struct
 [source,basic]
 an$="20412208234":&,60,4,0,u%(3,0),an$
 
-#TODO#: Explain example.
+[%autowidth]
+[cols="1m,2"]
+|===
+| Statement | Purpose
+
+| an$="..."
+| Assign `an$` an 11-digit Image BBS date string
+
+| &,60,4...
+| Call _PutDate_
+
+| ...0...
+| An ignored but necessary parameter
+
+| ...u%(3,0)...
+| The struct name `u%()`, field `3`, record `0`
+
+| an$
+| store the date contained in `an$`
+
+|===
 
 .Details: How Put Date Stores a Date
 ****
