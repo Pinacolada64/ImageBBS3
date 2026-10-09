@@ -251,8 +251,10 @@
 ' (replacing k$), w=2: delete profile k$, w=3: add the standard profiles
 4800 j=.:if w=1 then a$="e.modem":if lk% then a$=a$+str$(p)
 4801 if w=1 then dr=3:gosub 3:&,60,2,0,mr%(0,0),dr$+a$,dv%:gosub 5:t=mr%(0,0):if e% then t=.
-4802 dr=3:gosub 3:print# 15,"s"dr$"nimodem.tmp":open 3,dv%,3,dr$+"nimodem.tmp,s,w"
-4804 a$="nimodem.dat":gosub 4:o=e%:if o then close 2:goto 4830
+' open nimodem.dat first: gosub 4 (through gosub 3) closes and reopens the
+' command channel, which would also close nimodem.tmp if it were open already
+4802 dr=3:a$="nimodem.dat":gosub 4:o=e%:print# 15,"s"dr$"nimodem.tmp"
+4804 open 3,dv%,3,dr$+"nimodem.tmp,s,w":if o then close 2:goto 4830
 4808 &,2,2:g$=a$:if g$="{^}" or g$="" then close 2:goto 4830
 4810 &,2,2:h$=a$:&,2,2:u$=a$:&,2,2:v$=a$:&,2,2:n=val(a$):f=.:if w<3 then f=-(g$=k$)
 4812 if w=3 then gosub 4880
