@@ -255,15 +255,23 @@ This also creates `nimodem.dat` if it doesn't exist yet.
 | Profile | Flags | Init | Result codes
 
 | tcpser (VICE)
-| 38.4k, DTR hang-up, manual answer, `ATX4`, SwiftLink
+| 19.2k, DTR hang-up, manual answer, `ATX4`, SwiftLink
 | (none)
-| `1` CONNECT (8), `2` RING (1), `3` NO CARRIER (0), `4` ERROR (0), `28` CONNECT 38400 (8)
+| `1` CONNECT (7), `2` RING (1), `3` NO CARRIER (0), `4` ERROR (0), `14` CONNECT 19200 (7)
 
 | Generic Hayes 2400
 | 2400, DTR hang-up, manual answer, `ATX4`, user port
 | `m0&c1&d2`
 | `1` CONNECT (2), `2` RING (1), `3` NO CARRIER (0), `4` ERROR (0), `5` CONNECT 1200 (3), `6` NO DIALTONE (0), `7` BUSY (0), `8` NO ANSWER (0), `10` CONNECT 2400 (4)
+
+| Generic Hayes 19.2k
+| 19.2k, DTR hang-up, manual answer, `ATX4`, SwiftLink
+| `m0&c1&d2`
+| As Generic Hayes 2400, plus `11` CONNECT 4800 (5), `12` CONNECT 9600 (6), `16` CONNECT 19200 (7)
 |===
+
+The numbers above 10 vary from one modem to another: tcpser sends `14` for CONNECT 19200, while many modems send `16`.
+Some also send speeds Image BBS has no flag for, such as `9` CONNECT 600, `13` CONNECT 7200, `14` CONNECT 12000 and `15` CONNECT 14400; check your modem's manual, and add or change result codes with kbd:[C].
 
 ===== File Format
 
@@ -283,11 +291,11 @@ A line containing just `^` ends the file.
 ----
 tcpser (VICE)
 Jim Brain
-7DMNH0H4N11000
+6DMNH0H4N11000
 ^
 5
 1
-8
+7
 CONNECT
 2
 1
@@ -298,9 +306,9 @@ NO CARRIER
 4
 0
 ERROR
-28
-8
-CONNECT 38400
+14
+7
+CONNECT 19200
 ^
 ----
 
@@ -308,12 +316,15 @@ CONNECT 38400
 
 In VICE, `tcpser` can stand in for a Hayes modem: callers telnet to `tcpser`, which "`rings`" the BBS.
 
-. Start `tcpser` before VICE, _e.g._ `tcpser -s 38400 -v 127.0.0.1:25238 -p 6400`: 38400 bps, VICE connects on port 25238, and callers on port 6400.
-. Start VICE with a SwiftLink connected to it: `x64sc -acia1 -acia1mode 1 -acia1irq 1 -myaciadev 2 -rsdev3 127.0.0.1:25238 -rsdev3ip232 -rsdev3baud 38400`.
+NOTE: The Image BBS 3.0 RS-232 routines handle up to 19200 bps, so run `tcpser` and VICE's RS-232 device at 19200.
+
+. Start `tcpser` before VICE, _e.g._ `tcpser -s 19200 -v 127.0.0.1:25238 -p 6400`: 19200 bps, VICE connects on port 25238, and callers on port 6400.
+. Start VICE with a SwiftLink connected to it: `x64sc -acia1 -acia1mode 1 -acia1irq 1 -myaciadev 2 -rsdev3 127.0.0.1:25238 -rsdev3ip232 -rsdev3baud 19200`.
 `-rsdev3ip232` makes VICE and `tcpser` pass the modem's DCD and DTR lines, so the BBS sees calls arrive and can hang up.
 . In `IM`, choose kbd:[J] (Modem Config), kbd:[B], then kbd:[4] and kbd:[3] to add the standard profiles, then kbd:[2] to import "`tcpser (VICE)`".
 
-`tcpser` sends result code `28` (CONNECT 38400) when it answers at 38400 bps with its default `ATX4`, or `1` (CONNECT) with `ATX0`.
+`tcpser` sends result code `14` (CONNECT 19200) when it answers at 19200 bps with its default `ATX4`, or `1` (CONNECT) with `ATX0`.
+To see the commands the BBS sends and `tcpser`'s replies, start `tcpser` with `-t sS` (trace the serial data in both directions).
 
 ==== Files
 

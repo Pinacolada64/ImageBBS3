@@ -30,6 +30,7 @@
 4027 gosub 4:x=p+1:gosub 1:print# 2,mt$r$in$r$m$r$au$:close 2
 4028 gosub 33:a$=mid$(mt$,11,1):x=32:gosub 1:print# 2,a$:close 2:return
 4030 &"{clear}{white}":&"Modem: {gray3}"+m$+"{f6}{white}By   : {gray3}"+au$+"{f6}"
+4031 &"{gray3}i/IM.modem built "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 4032 &"{f6}{rvrs on}{cyan} Modem Config Flags ":if lk%then:&"For Port #{pound}!p {rvrs off}"
 4034 a%=val(mid$(mt$,1,1)):if a%=0 then:&"{f6} {yellow}- {lt. blue}No Modem Configured.":goto 4090
 4036 &"{f6} {yellow}1:{lt. blue}Max. Baud ":&mid$("300 120024004800960019.238.4",(4*a%)-3,4)
@@ -66,7 +67,7 @@
 4098 a=49:if mid$(mt$,3,1)<>"A" then a=48
 4100 b$="s0="+chr$(a)+"s2=27s7=25"
 4102 &"{f6} {yellow}-:{lt. blue}{pound}$a{f6} {yellow}-:{lt. blue}{pound}$b{f6} {yellow}A:{lt. blue}"+in$
-4104 &"{f6:2}{cyan}{rvrs on}Modem Config Utilities{rvrs off}"
+4104 &"{f6:2}{cyan}{rvrs on} Modem Config Utilities {rvrs off}"
 4106 &"{f6} {yellow}B:{lt. blue}Setup/Import Modem Config{f6} {yellow}C:{lt. blue}Customize Current Result Code(s)"
 4108 if lk%then:&"{f6} {yellow}R:{lt. blue}Re-Select Port#"
 4110 &"{f6} {yellow}X:{lt. blue}Exit Modem Config{f6}{white}-=>"
@@ -283,13 +284,20 @@
 ' max baud, hang-up D/E, answer A/M, ATH after esc H/N, local mode N/H,
 ' ATH0 0/space, ATH in init H/N, ATX, DTR N/R, B0/B1, RS232 0/1, caller ID
 4900 data "nimodem.dat"
-' tcpser (VICE's ip232 modem), 38400, SwiftLink: result codes from its source
-4902 data "tcpser (VICE)","Jim Brain","7DMNH0H4N11000","{^}",5
-4904 data 1,8,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",28,8,"CONNECT 38400"
+' tcpser (VICE's ip232 modem), 19200 (the fastest the current RS-232 ML
+' handles), SwiftLink: result codes from tcpser's source (modem_core.h)
+4902 data "tcpser (VICE)","Jim Brain","6DMNH0H4N11000","{^}",5
+4904 data 1,7,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",14,7,"CONNECT 19200"
 ' standard Hayes 2400 codes; m0&c1&d2: speaker off, real DCD, DTR hang-up
 4906 data "Generic Hayes 2400","Image BBS docs","3DMNH0H4N10000","m0&c1&d2",9
 4908 data 1,2,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",5,3,"CONNECT 1200"
 4910 data 6,0,"NO DIALTONE",7,0,"BUSY",8,0,"NO ANSWER",10,4,"CONNECT 2400"
+' result codes 11, 12 and 16 as in many Hayes-compatible manuals; their
+' 9 (600), 13 (7200), 14 (12000) and 15 (14400) have no matching flag
+4912 data "Generic Hayes 19.2k","Image BBS docs","6DMNH0H4N11000","m0&c1&d2",12
+4914 data 1,2,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",5,3,"CONNECT 1200"
+4916 data 6,0,"NO DIALTONE",7,0,"BUSY",8,0,"NO ANSWER",10,4,"CONNECT 2400"
+4918 data 11,5,"CONNECT 4800",12,6,"CONNECT 9600",16,7,"CONNECT 19200"
 4990 data "{^}"
 4998 rem"Copyright 1995, New Image               ** 06 MAR 95 - JLF **    "
 4999 rem:"i/IM.modem (c)nissa 200904 lh"
