@@ -27,8 +27,7 @@ Layout :
 
 .im routines
 [%header]
-[%autowidth]
-[cols="1m,2m,3a"]
+[cols="16m,16m,68a"]
 [frame="none"]
 [grid="rows"]
 |===
@@ -59,7 +58,8 @@ _Enter:_
 
 `dr`: system drive (`1-6`) desired:
 
-.Drive Assignments [[drive-assignments]]
+[[drive-assignments]]
+.Drive Assignments
 [%autowidth]
 [%header]
 [cols="^1,2,3"]
@@ -192,7 +192,8 @@ If `a` returns with a value of zero, access is denied, or the flag's value is ze
 The values of each flag are as follows:
 
 // [caption=,title="{table-caption} {counter:table-number}"]
-.User Flags [[user-flags]]
+[[user-flags]]
+.User Flags
 
 // Giving nested menus titles disrupts the outer menu numbering
 [%autowidth]
@@ -267,7 +268,8 @@ _Enter:_
 
 1. set `x` = the desired statistic to be updated:
 
-.e.stats records [[e-stats-records]]
+[[e-stats-records]]
+.e.stats records
 
 [%autowidth]
 [%header]

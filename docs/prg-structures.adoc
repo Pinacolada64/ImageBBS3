@@ -139,7 +139,8 @@ Here is a byte-by-byte map of the struct we designed.
 
 // Representation of user data struct
 
-."`User Data`" Struct Data Storage [[user-data-storage]]
+[[user-data-storage]]
+."`User Data`" Struct Data Storage
 [cols="12"]
 [%autowidth]
 |===
@@ -821,7 +822,7 @@ Without it: "`not equal`", or a non-zero `and`.
 | Keep bits already set: don't clear _bits_ before testing
 |===
 
-.Useful _oper_ Values
+.Useful Values for oper
 [%autowidth]
 [%header]
 |===
@@ -946,7 +947,7 @@ The module then shows `b%`, `c%` and `d%` as "`New`", "`Tagged`" and "`Unvalidat
 
 ===== i.GF: Files the User Can Access
 
-.i.GF (release 231231; `core/i.GF.lbl`)
+.i.GF (release 231231; core/i.GF.lbl)
 [source,basic]
 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
 3168 rn=a%:if rn then:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1
@@ -960,7 +961,7 @@ C64 BASIC's `^` can return a value slightly below a whole number; `&,60,6` round
 
 ===== i/MM.load: SIGs the User Can Use
 
-.i/MM.load: SIG list (release 231231; `core/i_MM.load.lbl`)
+.i/MM.load: SIG list (release 231231; core/i_MM.load.lbl)
 [source,basic]
  4006 dr=3:gosub3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto5
  4008 dr=3:gosub3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto5
