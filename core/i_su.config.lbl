@@ -57,54 +57,93 @@
 	&"{up:3}{lt. blue}Chat Exit{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
 	c2$=an$:w$="100":b$=w$:p$="New User Credits":&"{f6}{back arrow}38 {f6}{up}":&,1,32:if an$=""then an$=b$
 	nc=val(an$):&"{up:3}{lt. blue}NEW Credits{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}{yellow}{f6}Is the above information correct? ":gosub 96:if a=.then gosub{:3414}:goto {:4044}
-	gosub {:3414}:z3$="Creating Image 3.0 System Files...":gosub {:3404}:&"{f6}{lt. blue}Creating {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}...."
+' TODO: log setup messages to "e.log <day>"
+	gosub {:3414}:z3$="Creating Image 3.0 System Files...":gosub {:3404}:&"{f6}{lt. blue}Creating {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}..."
 ' 4064
-	open2,dv%,2,bd$+"bd.data,s,w":print#2,dv%(3)r$dr%(3)r$po$
-' TODO: subroutine this so date is changed only once
-	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close2:close15
-	&"{white}Done!{f6}{lt. blue}Creating {blue}{f5}{cyan}u.config{blue}{f5}{lt. blue}...."
+	open 2,dv%,2,bd$+"bd.data,s,w":print#2,dv%(3)r$dr%(3)r$po$
+' TODO: subroutine this so copyright date is changed in only one place
+	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close 2:close 15
+	&"{white}Done!{f6}{lt. blue}Creating {blue}{f5}{cyan}u.config{blue}{f5}{lt. blue}..."
 	dr=6:a$="u.config,l,"+chr$(254):gosub 4
 	x=1:gosub 1:print#2,tt$:x=2:gosub 1:print#2,"{^}":ur=1:close2:&"{white}Done!{f6}"
-	&"{lt. blue}Creating {blue}{f5}{cyan}u.index{blue}{f5}{lt. blue}....":dr=6:gosub 3:a$=dr$+"u.index":print#15,"s"a$
+	&"{lt. blue}Creating {blue}{f5}{cyan}u.index{blue}{f5}{lt. blue}...":dr=6:gosub 3:a$=dr$+"u.index":print#15,"s"a$
 	a%(0)=1:a%(1)=1:&,60,3,0,a%(0),4,a$,dv%:close15:&"{white}Done!{f6}"
-	close2:&"{lt. blue}Creating {blue}{f5}{cyan}e.stats{blue}{f5}{lt. blue}...."
+	close2:&"{lt. blue}Creating {blue}{f5}{cyan}e.stats{blue}{f5}{lt. blue}..."
 	dr=3:a$="e.stats,l,"+chr$(10):gosub 4
 	forx=1to40:gosub 1:print#2,"0":next:close2:&"{white}Done!{f6}"
-	&"{lt. blue}Creating {blue}{f5}{cyan}e.data{blue}{f5}{lt. blue}...."
+	&"{lt. blue}Creating {blue}{f5}{cyan}e.data{blue}{f5}{lt. blue}..."
 	dr=3:a$="e.data,l,"+chr$(31):gosub 4:x=1:gosub 1:print#2,"0"
 	forx=2to11:gosub 1:print#2,"{^}":next:x=12:gosub 1:print#2,"2"
 	forx=13to16:gosub 1:print#2,"{^}":next:x=17:gosub 1:print#2,"NOBODY"
 	x=18:gosub 1:print#2,"PASS":x=19:gosub 1:print#2,d1$
 	x=20:gosub 1:print#2," 0 , 0 , 0":forx=21to30:gosub 1:print#2,"{^}":next
 	x=31:gosub 1:print#2,"2"
-	forx=32to34:gosub 1:print#2,"{^}":next:x=35:gosub 1:print#2,d1$
+	for x=32 to 34:gosub 1:print#2,"{^}":next:x=35:gosub 1:print#2,d1$
+' record #37: y%=clock set method
 	x=36:gosub 1:print#2,"0":x=37:gosub 1:print#2,mid$(str$(y%),2,2)
-	x=38:gosub 1:print#2,"0":forx=39to42:gosub 1:print#2,"{^}":next
-	x=43:gosub 1:print#2,"X":forx=44to46:gosub 1:print#2,"{^}":next
+	x=38:gosub 1:print#2,"0":for x=39 to 42:gosub 1:print#2,"{^}":next
+	x=43:gosub 1:print#2,"X":for x=44 to 46:gosub 1:print#2,"{^}":next
 	x=47:gosub 1:print#2,bn$:x=48:gosub 1:print#2,c1$
+' x=50: NetSub transfer index: don't overwrite existing value
 	x=49:gosub 1:print#2,c2$:b$="0":x=50:gosub 1:&,2,2
 	if asc(a$+nl$)<>32then b$=a$
 	gosub 1:print#2,b$:x=51:gosub 1:print#2,cc$
 	fori=1to6:x=51+i:gosub 1:print#2,dv%(i);r$;dr%(i):next
 	x=58:gosub 1:print#2,nc:close2:&"{white}Done!{f6}"
-	&"{lt. blue}Creating {blue}{f5}{cyan}e.access{blue}{f5}{lt. blue}....":dr=3:a$="e.access,l,"+chr$(127):gosub 4
-	fori=.to8:x=i+1:gosub 1
+' TODO: subroutine 'Creating "<xxx>" file...' and "Done!"
+	&"{lt. blue}Creating {blue}{f5}{cyan}e.access{blue}{f5}{lt. blue}...":dr=3:a$="e.access,l,"+chr$(127):gosub 4
+	for i=. to 8:x=i+1:gosub 1
 	print#2,"Group"+str$(i)+r$+"01001100000000021151":next
 ' FIXME: group 10? changed to group 9
 	print#2,"Group"+str$(i)+r$+"19111911111111190000"
 ' gosub 3300 was 3210
-	close2:&"{white}Done!{f6}":z3$="Starting Daily Log...":gosub {:3404}:gosub {:3300}
-	gosub {:3414}:&"{f6:2}Be sure to enter {f5}IM{f5} once online to{f6}complete the setup/configuration of{f6}"
-	&"your BBS. Message bases, U/D and U/X{f6}libraries can be configured by using{f6}"
-	&"the {f5}Base Editors{f5} option.{f6:2}(c)2020 NISSA BBS Software.{f6:2}<Hit any key> {pound}g1"
-	lp=1:return
+	close 2:&"{white}Done!{f6}":z3$="Starting Daily Log...":gosub {:3404}:gosub {:3300}
+
+' 40 columns:
+' ----+----+----+----+----+----+----+----+
+' You may now log in to your new BBS. To
+' complete its configuration, type "IM"
+' and Return at its main prompt, which is:
+'
+' po$:
+'
+' Message bases, U/D and U/X libraries,
+' and most other BBS features can be
+' configured here by using the "Base
+' Editors" option.
+'
+' For more information, refer to either:
+'
+' * The printed manual, titled <hard break>
+' <MCI left margin 3>
+'   "Image BBS 128 Sysop Guide."
+'
+' * The online documentation, located at:
+' <MCI left margin 3>
+'   https://www.imagebbs.net
+
+' 80 columns:
+' ----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+
+' Be sure to enter "IM" once online to complete the configuration of your BBS.
+' Message bases, U/D and U/X libraries can be configured by using the "Base
+' Editors" option.
+
+' (C) 2024 NISSA BBS Software
+'
+' Hit any key to continue: _
+
+	gosub {:3414}:lp=1:&"{f6:2}Be sure to enter {f5}IM{f5} once online to complete the configuration of "
+	lp=1:&"your BBS. Message bases, U/D and U/X libraries can be configured by using "
+	lp=1:&"the {f5}Base Editors{f5} option.{f6:2}(c)2020 NISSA BBS Software.{f6:2}"
+	lp=1:&"Hit any key to continue: {pound}g1":return
+' TODO: move "get time from cmd device" to sub.clocks
 	print#15,"t-ra":&,2,15
 	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
 	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
 	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
 	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1:return
-	gosub {:4146}:sys49155 ':goto {:4144}
-'	rem:gosub 1063:x=35:gosub 1001:&,2,2:d1$=a$:close2:poke 1010,1:return
+	gosub {:4146}:sys 49155 ':goto {:4144}
+'	gosub 1063:x=35:gosub 1001:&,2,2:d1$=a$:close2:poke 1010,1:return
 {:4144}
 	z$="":fora=49159to49169:z$=z$+chr$(peek(a)):next:poke 1010,1:return
 {:4146}
@@ -113,6 +152,7 @@
 {:4200}
 '	rem:close15:open15,dv%,15,"r"+bd$+"d.data=bd.data"
 	fl=.:z3$="Reading old configuration...":gosub {:3404}:close2:open2,dv%,2,bd$+"d.data,s,r":gosub 5
+' TODO: Hit [Esc] to retry
 	if e%then close2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key to Configure New System:{pound}g1":return
 	fori=1to6:input#2,dv%(i),dr%(i):next
 	&,2,2:cc$=a$:&,2,2:nc=val(a$):&,2,2:&,2,2:&,2,2:bn$=a$:&,2,2:po$=a$:close2
@@ -141,7 +181,7 @@
 	&"{f6:2}{white}Updating of 'e.data' {yellow}SUCCESSFUL{white}!":return
 {:4250}
 	z3$="Creating 'e.access' file...":gosub {:3404}
-	close2:dr=3:a$="e.access,l,"+chr$(127):gosub 4:fori=.to9:x=i+1:gosub 1
+	close 2:dr=3:a$="e.access,l,"+chr$(127):gosub 4:for i=. to 9:x=i+1:gosub 1
 	print#2,tt$(x+1)+r$+tt$(x+20):next:close2
 	&"{f6:3}{white}Creating of 'e.access' {yellow}SUCCESSFUL{white}!":return
 {:4258}
