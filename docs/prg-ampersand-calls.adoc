@@ -1,4 +1,5 @@
-:experimental: // enable kbd:[] macro
+// enable kbd:[] macro
+:experimental:
 :icons: font
 :source-highlighter: pygments
 :toc:

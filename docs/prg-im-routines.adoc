@@ -1,6 +1,7 @@
 :icons: font
 :experimental:
-:autofit-option:  // for pdf generation
+// for pdf generation
+:autofit-option:
 
 === `im` Subroutines
 
@@ -588,7 +589,7 @@ The subroutine filename is added to a "`module stack`" so that if a ``sub.\*`` f
 
 | gosub&#160;110
 | _n/a_
-| load ``sub.*`` module in ``a$`` (minus the ``sub.*`` prefix) from the Plus File drive (``dr=5``), but don`'t reload the previous module when ``return`` is executed.
+| load `+sub.*+` module in `a$` (minus the `+sub.*+` prefix) from the Plus File drive (``dr=5``), but don`'t reload the previous module when ``return`` is executed.
 ////
 21: Loads i. module in `a$` (minus the i.).  Same as 20, except device, drive is determined by current value of `dr`. (none)
 

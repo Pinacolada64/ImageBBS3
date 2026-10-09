@@ -1476,7 +1476,7 @@ There is no `&` call to encode a string you build yourself: xref:prg-ampersand-c
 ====
 
 ====
-NOTE: The kbd:[f7] wildcard only works at the end of _string$_ (`text*`, not `*text`), and it needs at least one character to match: `cat*` matches `cats`, but not `cat`.
+NOTE: The kbd:[f7] wildcard only works at the end of _string$_ (`+text*+`, not `+*text+`), and it needs at least one character to match: `+cat*+` matches `cats`, but not `cat`.
 ====
 
 ==== Limits

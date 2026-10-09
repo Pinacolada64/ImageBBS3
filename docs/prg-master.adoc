@@ -1,16 +1,21 @@
 = Image BBS 3.0 Programmer`'s Reference Guide
 Jack Followay, Jr.; Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
 v0.5, {docdate}
-:experimental: // enable kbd:[] macro
+// enable kbd:[] macro
+:experimental:
 :toc: left
 :toclevels: 4
 :icons: font
 :showtitle:
 
-:source-highlighter: pygments // enable source code highlighting
-:source-language: basic // set default source language to generic basic
-:pygments-style: manni // choose syntax highlighting stylesheet
-:pygments-css: styles // [styles | css] for html output, embed stylesheet in html file
+// enable source code highlighting
+:source-highlighter: pygments
+// set default source language to generic basic
+:source-language: basic
+// choose syntax highlighting stylesheet
+:pygments-style: manni
+// [styles | css] for html output, embed stylesheet in html file
+:pygments-css: styles
 :pygments-linenums-mode: inline
 
 // GitHub Flavored AsciiDoc
