@@ -118,20 +118,22 @@ disk:
 	@$(C1541) -attach $(DISK) -list 2>/dev/null | tail -1
 
 # ---------------------------------------------------------------------------
-# Programmer's Reference Guide as a PDF (Asciidoctor -> DocBook -> dblatex)
+# Programmer's Reference Guide as a PDF (asciidoctor-pdf)
 #
-# Needs the asciidoctor-lists gem (prg-master.adoc uses list-of::) and
-# dblatex.
+# Needs the asciidoctor-pdf and asciidoctor-lists gems (prg-master.adoc
+# uses list-of::). They're loaded as libraries through asciidoctor, so the
+# asciidoctor-pdf command doesn't need to be on the PATH.
 
 pdf: $(BUILD)/prg-master.pdf
 
 $(BUILD)/prg-master.pdf: $(wildcard docs/prg-*.adoc docs/includes/*.adoc)
-	@echo '= t' | asciidoctor -r asciidoctor-lists -o /dev/null - 2>/dev/null \
-		|| { echo "asciidoctor-lists isn't installed: gem install asciidoctor-lists"; exit 1; }
+	@for gem in asciidoctor-pdf asciidoctor-lists; do \
+		echo '= t' | asciidoctor -r $$gem -o /dev/null - 2>/dev/null \
+			|| { echo "$$gem isn't installed: gem install $$gem"; exit 1; }; \
+	done
 	@mkdir -p $(BUILD)
-	cd docs && asciidoctor -r asciidoctor-lists -b docbook5 \
-		-o $(abspath $(BUILD))/prg-master.xml prg-master.adoc
-	dblatex -o $(abspath $@) $(BUILD)/prg-master.xml
+	cd docs && asciidoctor -r asciidoctor-pdf -r asciidoctor-lists -b pdf \
+		-o $(abspath $@) prg-master.adoc
 
 clean:
 	rm -rf $(BUILD)
