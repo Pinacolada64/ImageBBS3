@@ -228,6 +228,25 @@ only items not already here are listed from it. Locations are
     `s.m.protos` (`:280`, `:383`);
   - [ ] update the alphabetical handle index when a handle changes
     (`:514`, `:516`).
+- [ ] **A visual (full-screen) editor: `++ visual`.** Started in Image 2.0
+  and never finished ("code for a visual editor, unfinished",
+  `v2/docs/sorted-ml-files.txt` in the 1.2 repo).
+  - Source: `visual.s` on the 2.0 ML source disk (`20ml-src.d81`); a text
+    version is in the 1.2 repo as `v2/asm/tests/visual.asm` (368 lines).
+    It assembles to `ml.visual` at `$c000`, run with `&,16`.
+  - Test program: `+.test visual ed` (1.2 repo:
+    `v2/tests/plus_test visual ed.lbl`, 27/Nov/2017). Ctrl-V shows the
+    colour and character of each position typed, Ctrl-X exits; the line
+    count is in `$03fe` (not `kk`), the text maybe in `tt$()`. `s.visual`,
+    which it reads, is just spaces.
+  - Idea: make the existing line-editing keys work visually, _e.g._ Ctrl-D
+    deletes the character under the cursor on screen (the keys are listed
+    in the 1.2 repo's `v1.2/docs/command-appendix.md`: Ctrl-B, D, I, N, O,
+    U, V, W, X).
+  - It would also allow putting the cursor on the first line, _e.g._ to
+    quote a reply above it (a note in `TODO.txt`).
+  - First steps: convert `visual.asm` to KickAssembler for `source/`, add
+    it to `make asm`, and bring the test program into `core/tests/`.
 - [ ] Login: only allow the options the user has access to
   (`core/i_lo.login.lbl:84`); re-add the `e.idlecmds` feature, and a
   lightbar check to turn off the extra login questions
