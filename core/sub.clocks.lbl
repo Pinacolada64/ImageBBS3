@@ -31,7 +31,7 @@
 '   "4,t"        TeensyROM              ck=6
 '   "4,a"        last AutoMaint date    ck=7
 '
-' TODO (see TODO.txt): call sub.clocks from im at boot, from i.IM's Set
+' TODO (see TODO.md): call sub.clocks from im at boot, from i.IM's Set
 '   Time, and from the Trc right lightbar function (Time: Reset Clock),
 '   which re-reads the CMD RTC itself every few hours (alarm trigger At1)
 '

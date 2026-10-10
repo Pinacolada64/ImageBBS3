@@ -1,5 +1,8 @@
 TODO
 
+(Planned work, including the i/su.config redesign and the sub.clocks
+follow-ups, is in TODO.md.)
+
 ?38911-(fre(0)+65535)
 How much RAM a program takes
 
@@ -289,9 +292,6 @@ And by the way, this was existing code as I received it. All I did was add the g
 Manual:
 [x] Shorten "1.2/1.3" to "1.x"
 
-i.su/config:
-level 9 access group: Change to "Sysop"
-
 200905 s.menu 1:
 [Ryan]	EM "Elecronic Mail"
 [Ryan]	PS "Pesonal Signatures"
@@ -330,7 +330,6 @@ I'm using tcpser with winvice 3.4 in Image 3.0 with Ray's updated ml files and h
 
 10/24/2020:
 Add Yes/No confirmation:
-i/su.config: convert option, option 4
 i/lo.login: login menu, ! option
 
 Fix i.main...
@@ -494,13 +493,6 @@ i.IM/access:
 8> Group 8         01001100000000021151
 9> Group 10        19111911111111190000
  ......................................
-
-Fix "Group 10" (Should be "Group 9" or "Sysop") access group name in i/su.config
-(Should be "Group 9" [loop variable+1 causes this] or "Sysop")
-
-i.su/config:
-~4266: (c) 2019 NISSA BBS Software
-	update (c) year
 
 Dir listing:
  xxxxx files total.
@@ -705,15 +697,3 @@ s: Yr Commented RKK\q0":return
 3499 copr.1990 new image 10/28/90
 3500 rem:"i.UD (c)nissa 200625 lh"
 ready.
-
-
-10/09/2026: sub.clocks follow-ups
-- Trc right ("Time: Reset Clock"), run every few hours by the default alarm
-  trigger At1, re-reads the CMD RTC itself. Find where that's done and have
-  it call sub.clocks (im=0: the method saved in e.data record 37) instead,
-  so it works with every clock method (DS12C887 in VICE, Ultimate, etc.).
-- im: set the clock at boot with sub.clocks (im=0) instead of lines
-  3155-3156/3348-3366 (needs core/im.lbl to build first).
-- i.IM K (Set Time): use sub.clocks (im=1 manual, or "set from clock now").
-- Remove the old CMD/Lt. Kernal clock code left in i/su.config (the lines
-  after "TODO: move get time from cmd device to sub.clocks") and in im.
