@@ -13,7 +13,12 @@
 // - Ctrl-X's line count is fixed (2.0 stored the key code, 24, not 23), and
 //   Ctrl-X puts the number of lines used (the last one that isn't blank) in
 //   "lines" ($03fe);
-// - Ctrl-H shows a help screen of the keys.
+// - Ctrl-H shows a help screen of the keys;
+// - lines are packed (pack) for saving and for the screen: a reverse or
+//   colour code only where it changes, no colour code for plain spaces,
+//   and no blanks after the last visible column;
+// - the cursor is tracked (xchrout keeps curx/cury), and crsrpos moves it
+//   the cheaper way: from where it is with cursor keys, or from Home.
 //
 // Load it as an ML module, then start it with &,16 (sys 49152): see
 // core/tests/i.test visual.lbl. Lines are 3 bytes per column (reverse,
@@ -44,6 +49,9 @@
 		sta savecase	// save it, and turn it off while editing
 		lda #0
 		sta case
+		lda #$ff	// where the cursor is isn't known (++ visual stays
+		sta curx	// in memory between runs); the Clear below sets it
+		sta cury
 		jmp visual
 // (the 2.0 source had "jsr visual31:jmp visual2" here, commented out;
 // visual31 doesn't exist, and visual2 re-prints the lines)
@@ -87,11 +95,20 @@ visual1:
 visual2:
 		lda #$93	// {clear}
 		jsr xchrout
+		lda #$ff	// the colour isn't known yet; it carries on from
+		sta lastc	// line to line
 		ldx #1
 		stx numx
 visual3:
 		ldx numx
-		jsr prtln
+		jsr getdes
+		jsr lastcol
+		sta pend
+		lda #$92	// {rvrs off}: a carriage return turns reverse off
+		sta lastr
+		lda #1
+		jsr pack
+		jsr outbuf
 		lda #13
 		jsr xchrout
 		inc numx
@@ -242,6 +259,7 @@ krvsoff:
 
 // Delete: delete the character to the left of the cursor
 kdelete:
+		jsr markold
 		lda crsrx
 		cmp #1
 		beq kignore
@@ -249,18 +267,21 @@ kdelete:
 		// fall through
 // Ctrl-D: delete the character under the cursor
 kctrld:
+		jsr markold
 		lda crsrx
 		jsr delcell
 		jmp kredraw
 
 // Insert, Ctrl-I: insert a space at the cursor (column 39 is lost)
 kinsert:
+		jsr markold
 		lda crsrx
 		jsr inscell
 		jmp kredraw
 
 // Ctrl-B: delete from the start of the line to the cursor
 kctrlb:
+		jsr markold
 		lda crsrx
 		cmp #1
 		beq kignore
@@ -298,6 +319,7 @@ kctrln3:
 
 // Ctrl-W: delete the previous word (and any spaces after it)
 kctrlw:
+		jsr markold
 		lda crsrx
 		cmp #1
 		beq kctrlw3
@@ -411,67 +433,34 @@ visual24:
 		stx crsrr
 		jmp visual22
 
-// Ctrl-X: pack each line's 3-byte columns into buffer, keeping only the
-// reverse/colour codes that change, and store it with putln
+// Ctrl-X: store each line packed (pack), and put the number of lines used
+// (the last one that isn't blank) in "lines"
 visual25:
 		ldx #23
 		stx numx	// was "sta numx" in 2.0, which stored the Ctrl-X code (24)
 		lda #0
-		sta crsrc
-		sta lines	// the last line that isn't blank, found below
+		sta lines
 visual26:
-		lda #0
-		sta nonblank
 		ldx numx
 		jsr getdes
-		ldy #0
-		ldx #0
-		lda #$92	// {rvrs off}
-		sta crsrr
-visual27:
-		lda (varbuf+1),y
-		iny
-		cmp crsrr
-		beq visual28
-		sta crsrr
-		sta buffer,x
-		inx
-		cpx #80
-		beq visual30
-visual28:
-		lda (varbuf+1),y
-		iny
-		cmp crsrc
-		beq visual29
-		sta crsrc
-		sta buffer,x
-		inx
-		cpx #80
-		beq visual30
-visual29:
-		lda (varbuf+1),y
-		iny
-		sta buffer,x
-		cmp #' '
-		beq visual29a
-		sta nonblank	// this line has something on it
-visual29a:
-		inx
-		cpx #80
-		beq visual30
-		cpy #3*39
-		bcc visual27
-visual30:
-		stx index
-		ldx numx
-		jsr putln
+		jsr lastcol
+		sta pend
+		beq visual27	// a blank line
 		lda lines	// lines go from 23 down: the first that isn't
-		bne visual30a	// blank is the line count
-		lda nonblank
-		beq visual30a
+		bne visual27	// blank is the line count
 		lda numx
 		sta lines
-visual30a:
+visual27:
+		lda #$92	// {rvrs off}: a line starts with reverse off
+		sta lastr
+		lda #$ff	// and with no colour known: the first one is sent
+		sta lastc
+		lda #1
+		jsr pack
+		lda plen
+		sta index
+		ldx numx
+		jsr putln
 		dec numx
 		bne visual26
 		lda savecase	// put the line editor's case setting back
@@ -503,35 +492,131 @@ xchrout:
 		pha
 		jsr xchrout1
 		pla
+		// fall through: keep track of where this leaves the cursor
+
+// track the cursor (curx, cury: 1 = left/top, $ff = not known) after
+// sending the character in A; A is kept
+track:
+		pha
+		txa
+		pha
+		ldx curx
+		cpx #$ff
+		beq track9	// not known: only Home/Clear make it known
+		cmp #13
+		beq trackcr
+		cmp #$8d	// shifted Return
+		beq trackcr
+		cmp #$11	// {down}
+		beq trackdn
+		cmp #$91	// {up}
+		beq trackup
+		cmp #$1d	// {right}
+		beq trackrt
+		cmp #$9d	// {left}
+		beq tracklt
+		cmp #$13	// {home}
+		beq trackhm
+		cmp #$93	// {clear}
+		beq trackhm
+		and #$7f
+		cmp #32
+		bcc track10	// another control code: doesn't move
+trackrt:
+		inc curx	// a character, or {right}
+		jmp track10
+tracklt:
+		dec curx
+		jmp track10
+trackup:
+		dec cury
+		jmp track10
+trackdn:
+		inc cury
+		jmp track10
+trackcr:
+		lda #1
+		sta curx
+		inc cury
+		jmp track10
+track9:
+		cmp #$13	// {home}
+		beq trackhm
+		cmp #$93	// {clear}
+		bne track10
+trackhm:
+		lda #1
+		sta curx
+		sta cury
+track10:
+		pla
+		tax
+		pla
 		rts
 
 revers:
 		.byte 18+128, 18	// {rvrs off}, {rvrs on}
 
-// put the cursor at crsrx, crsry (both from 1)
+// put the cursor at crsrx, crsry (both from 1), the cheaper way: from where
+// it is (curx, cury) with cursor keys, or from Home. Where it is isn't known
+// ($ff): from Home.
 crsrpos:
-		lda #$13	// {home}
-		jsr xchrout
-		ldx crsry
-		cpx #1
-		beq crsrpos2
+		lda curx
+		cmp #$ff
+		beq crsrpos4	// not known
+		lda crsry	// |crsry-cury| + |crsrx-curx|: cursor keys from here
+		sec
+		sbc cury
+		bcs crsrpos1
+		eor #$ff
+		adc #1
 crsrpos1:
+		sta vtemp
+		lda crsrx
+		sec
+		sbc curx
+		bcs crsrpos2
+		eor #$ff
+		adc #1
+crsrpos2:
+		clc
+		adc vtemp
+		sta vtemp
+		lda crsry	// Home, then crsry-1 downs and crsrx-1 rights
+		clc
+		adc crsrx
+		sec
+		sbc #1
+		cmp vtemp
+		bcs crsrpos5	// from here is no dearer
+crsrpos4:
+		lda #$13	// {home}
+		jsr xchrout	// (makes curx/cury 1,1)
+crsrpos5:
+		lda cury	// up or down to the line
+		cmp crsry
+		beq crsrpos7
+		bcc crsrpos6
+		lda #$91	// {up}
+		jsr xchrout
+		jmp crsrpos5
+crsrpos6:
 		lda #$11	// {down}
 		jsr xchrout
-		dex
-		cpx #1
-		bne crsrpos1
-crsrpos2:
-		ldx crsrx
-		cpx #1
-		beq crsrpos4
-crsrpos3:
+		jmp crsrpos5
+crsrpos7:
+		lda curx	// then left or right to the column
+		cmp crsrx
+		beq crsrpos9
+		bcc crsrpos8
+		lda #$9d	// {left}
+		jsr xchrout
+		jmp crsrpos7
+crsrpos8:
 		lda #$1d	// {right}
 		jsr xchrout
-		dex
-		cpx #1
-		bne crsrpos3
-crsrpos4:
+		jmp crsrpos7
+crsrpos9:
 		rts
 
 // --- line editing: each column of a line is 3 bytes at (varbuf+1),y:
@@ -618,37 +703,34 @@ inscell2:
 		sta (varbuf+1),y
 		rts
 
-// redraw columns A..39 of the line on screen, each in its own reverse and
-// colour; then go back to the current reverse/colour and to the cursor
+// redraw the line from column A to its end (or its old end, so characters
+// left over from before an edit are overwritten), packed; then go back to
+// the current reverse/colour and to the cursor
 redraw:
-		pha
+		sta rstart
+		jsr lastcol
+		cmp oldend
+		bcs redraw1
+		lda oldend
+redraw1:
+		sta pend
+		lda pend
+		cmp rstart
+		bcc redraw2	// nothing to print from column A on
 		ldx crsrx
 		stx vtemp2
+		lda rstart
 		sta crsrx
 		jsr crsrpos	// to column A
 		lda vtemp2
 		sta crsrx
-		pla
-		jsr colofs
-redraw1:
-		sty vtemp
-		lda (varbuf+1),y	// reverse
-		jsr xchrout
-		ldy vtemp
-		iny
-		lda (varbuf+1),y	// colour
-		jsr xchrout
-		ldy vtemp
-		iny
-		iny
-		lda (varbuf+1),y	// character
-		jsr xchrout
-		ldy vtemp
-		iny
-		iny
-		iny
-		cpy #3*39
-		bcc redraw1
+		lda #$ff	// what's on screen here isn't known: send both
+		sta lastr
+		sta lastc
+		lda rstart
+		jsr pack
+		jsr outbuf
+redraw2:
 		ldx crsrr
 		lda revers,x
 		jsr xchrout
@@ -656,6 +738,98 @@ redraw1:
 		lda colors,x
 		jsr xchrout
 		jmp crsrpos
+
+// before an edit: remember where the line's text ends (redraw uses it)
+markold:
+		jsr lastcol
+		sta oldend
+		rts
+
+// the last visible column of the line (1-39): a character other than a
+// space, or a reverse space; 0 if the line is blank
+lastcol:
+		ldx #39
+		ldy #3*39-1	// the character of column 39
+lastcol1:
+		lda (varbuf+1),y
+		cmp #' '
+		bne lastcol2
+		dey
+		dey
+		lda (varbuf+1),y	// a space: its reverse byte
+		cmp #$12	// {rvrs on}: a reverse space shows
+		beq lastcol2
+		dey		// the character of the column before
+		dex
+		bne lastcol1
+lastcol2:
+		txa
+		rts
+
+// pack columns A..pend into buffer, length in plen (at most 80 bytes):
+// a reverse code only when it differs from lastr, a colour code only when
+// it differs from lastc (and not for a space with reverse off, whose colour
+// doesn't show), then the character. The caller sets lastr and lastc to
+// what's already in effect, or $ff for "not known".
+pack:
+		sta pcol
+		jsr colofs
+		ldx #0
+pack1:
+		lda pend
+		cmp pcol
+		bcc pack9	// past the last column
+		cpx #80-3
+		bcs pack9	// full
+		lda (varbuf+1),y	// reverse
+		cmp lastr
+		beq pack2
+		sta lastr
+		sta buffer,x
+		inx
+pack2:
+		iny		// colour
+		iny
+		lda (varbuf+1),y	// (the character)
+		dey
+		cmp #' '
+		bne pack3
+		lda lastr
+		cmp #$92	// a space with reverse off: its colour doesn't show
+		beq pack4
+pack3:
+		lda (varbuf+1),y
+		cmp lastc
+		beq pack4
+		sta lastc
+		sta buffer,x
+		inx
+pack4:
+		iny		// the character
+		lda (varbuf+1),y
+		sta buffer,x
+		inx
+		iny		// the next column
+		inc pcol
+		jmp pack1
+pack9:
+		stx plen
+		rts
+
+// send buffer (plen bytes) to the screen and modem
+outbuf:
+		ldx #0
+outbuf1:
+		cpx plen
+		beq outbuf2
+		stx outx
+		lda buffer,x
+		jsr xchrout
+		ldx outx
+		inx
+		jmp outbuf1
+outbuf2:
+		rts
 
 // put and store string: line X = buf2 (index bytes)
 vputlnx:
@@ -696,5 +870,23 @@ vtemp:
 		.byte 0
 vtemp2:
 		.byte 0
-nonblank:
-		.byte 0		// non-zero: the line being saved isn't blank
+pcol:
+		.byte 0		// pack: the column being packed
+pend:
+		.byte 0		// pack: the last column to pack
+plen:
+		.byte 0		// pack: the length of the packed text in buffer
+lastr:
+		.byte 0		// pack: the reverse code in effect ($ff: not known)
+lastc:
+		.byte 0		// pack: the colour code in effect ($ff: not known)
+outx:
+		.byte 0		// outbuf: index into buffer
+rstart:
+		.byte 0		// redraw: the first column to redraw
+oldend:
+		.byte 0		// the line's last visible column before an edit
+curx:
+		.byte $ff	// where the cursor is (1 = left; $ff: not known)
+cury:
+		.byte $ff	// (1 = top)

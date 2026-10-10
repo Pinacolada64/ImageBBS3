@@ -257,6 +257,13 @@ only items not already here are listed from it. Locations are
     is saved and cleared while editing).
   - [x] A key table like the line editor's, with Delete, Insert/Ctrl-I,
     Ctrl-D, Ctrl-B, Ctrl-N, Ctrl-W, and Ctrl-H for a help screen.
+  - [x] Pack lines (`pack`): a reverse/colour code only where it changes, no
+    colour code for plain spaces, no blanks after the last visible column.
+    Used for saving (Ctrl-X), re-showing (Ctrl-V, after Ctrl-H) and
+    redrawing after an edit.
+  - [ ] Unpack: turn normal strings back into the 3-bytes-per-column form, so
+    existing text can be edited. (What about lines longer than 39 columns,
+    or with more codes than fit?)
   - [ ] Maybe keep a one-line key reminder on screen (would leave 22 lines).
   - [ ] Home can't be used: `xgetin` swallows it.
 - [ ] Login: only allow the options the user has access to
