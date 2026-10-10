@@ -28,9 +28,11 @@ basic/i.SB.prg	i.SB
 basic/i_su.config.prg	i/su.config
 basic/sub.display.prg	sub.display
 basic/i_MM.load.prg	i/MM.load
+basic/sub.clocks.prg	sub.clocks
 
 # --- test programs (make tests); run from the BBS as modules ---
 tests/i.test calls.prg	i.test calls
 tests/i.test structs.prg	i.test structs
 tests/i.test-convert.prg	i.test-convert
 tests/i.test date.prg	i.test date
+tests/i.test clocks.prg	i.test clocks

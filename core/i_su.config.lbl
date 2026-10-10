@@ -81,7 +81,7 @@
 	x=31:gosub 1:print#2,"2"
 	for x=32 to 34:gosub 1:print#2,"{^}":next:x=35:gosub 1:print#2,d1$
 ' record #37: y%=clock set method
-	x=36:gosub 1:print#2,"0":x=37:gosub 1:print#2,mid$(str$(y%),2,2)
+	x=36:gosub 1:print#2,"0":x=37:gosub 1:print#2,ck$
 	x=38:gosub 1:print#2,"0":for x=39 to 42:gosub 1:print#2,"{^}":next
 	x=43:gosub 1:print#2,"X":for x=44 to 46:gosub 1:print#2,"{^}":next
 	x=47:gosub 1:print#2,bn$:x=48:gosub 1:print#2,c1$
@@ -175,7 +175,7 @@
 	fori=.to9:fl$(i)=tt$(i+21):next:&"{f6}{white}Converting of access info {yellow}SUCCESSFUL{white}!":return
 {:4238}
 	z3$="Updating 'e.data' file...":gosub {:3404}:d1$="72006131201":gosub 33
-	x=35:gosub 1:print#2,d1$:x=36:gosub 1:print#2,.:x=37:gosub 1:print#2,str$(y%)
+	x=35:gosub 1:print#2,d1$:x=36:gosub 1:print#2,.:x=37:gosub 1:print#2,ck$
 	print#2,.:print#2,.:print#2,"3"
 	print#2,"7"
 	fori=1to6:x=51+i:gosub 1:print#2,dv%(i);r$;dr%(i):next:close2
@@ -194,19 +194,30 @@
 	print#2,"3.0 Image V3.0 Copyright 2020 NISSA BBS Software":close2:close15
 {:4268}
 	&"{f6:4}{white}...{lt. red}{rvrs on} Conversion Complete! {rvrs off}{white}...":return
+' choose how the clock is set at boot; ck$ is saved to e.data record 37.
+' The methods themselves are in sub.clocks (see its notes for the format).
 {:4270}
 	&"{f6}{lt. blue}Set the Image 3.0 System Clock:{f6:2}{blue}({lt. blue}1{blue}) {cyan}Manually{f6}{blue}({lt. blue}2{blue}) {cyan}CMD Device w/RTC Option{f6}"
-	&"{blue}({lt. blue}3{blue}){cyan} Lt. Kernal Port 1{f6}{blue}({lt. blue}4{blue}){cyan} Lt. Kernal Port 2{f6:2}{lt. blue}]> {white}{pound}g1{f6:2}":y%=val(an$)-1:if y%<.ory%>3then y%=.
-' TODO: y% instead?
-	if val(an$)=2then {:4274}
-	dv%(8)=0:return
-{:4274}
-	lp=1:&"{lt. blue}Which Device has the CMD RTC Option Installed?{f6:2}":gosub {:4282}
-	y%=b:return
-{:4282}
+	&"{blue}({lt. blue}3{blue}){cyan} Lt. Kernal Port 1{f6}{blue}({lt. blue}4{blue}){cyan} Lt. Kernal Port 2{f6}{blue}({lt. blue}5{blue}){cyan} DS12C887 RTC Chip{f6}"
+	&"{blue}({lt. blue}6{blue}){cyan} 1541 Ultimate/Ultimate 64{f6}{blue}({lt. blue}7{blue}){cyan} TeensyROM (Time Only){f6}{blue}({lt. blue}8{blue}){cyan} Last AutoMaint Date{f6:2}"
+	&"{lt. blue}]> {white}{pound}g1{f6:2}":a=val(an$):if a<1 or a>8 then a=1
+	ck$="0":if a=3 then ck$="2"
+	if a=4 then ck$="3"
+	if a>5 then ck$="4,"+mid$("uta",a-5,1)
+	dv%(8)=.:if a=2 then gosub {:sub.clock_cmd}
+	if a=5 then gosub {:sub.clock_ds12c887}
+	y%=val(ck$):return
+{:sub.clock_cmd}
+	lp=1:&"{lt. blue}Which Device has the CMD RTC Option Installed?{f6:2}":gosub {:sub.clock_device}
+	ck$=mid$(str$(b),2):return
+{:sub.clock_ds12c887}
+	&"{lt. blue}DS12C887 Base Address: {blue}({lt. blue}1{blue}) {cyan}$D500 {blue}({lt. blue}2{blue}) {cyan}$D600{f6}"
+	&"{blue}({lt. blue}3{blue}) {cyan}$D700 {blue}({lt. blue}4{blue}) {cyan}$DF00{f6:2}{lt. blue}]> {white}{pound}g1{f6:2}":a=val(an$):if a<1 or a>4 then a=1
+	ck$="4,d,"+mid$(str$(54272+256*a-(a=4)*1792),2):return
+{:sub.clock_device}
 	poke 53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}":&,1,32:b=val(an$)
 	if an$=""then b=val(w$)
-	&"{cyan}Is {pound}!b Correct? ":gosub 96:if a=.then {:4282}
+	&"{cyan}Is {pound}!b Correct? ":gosub 96:if a=.then {:sub.clock_device}
 	return
 {:4300}
 '	fl=.:z3$="Reading 2.0 configuration...":gosub {:3404}:&"{f6:9}"
