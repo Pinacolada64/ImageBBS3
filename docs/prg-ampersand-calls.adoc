@@ -2411,25 +2411,32 @@ See the xref:prg-structures.adoc#structures[Structures] chapter for more informa
 
 '''
 
-===	`&,61` poscrsr
+===	`&,61` poscrsr [[poscrsr]]
 
-Move the terminal cursor to a specified column and row on the screen.
+Move the cursor on the _local_ (sysop's) screen to a column and row.
+Nothing is sent to the caller: to move the caller's cursor too, use <<position-cursor,`&,70`>>.
 
 _Parameters:_
 
 `&,61,_column_,_row_`
 
+`column`: 0-39
+
+`row`: 0-24
+
 ====
 NOTE: `0,0` is the top left corner of the screen.
 ====
+
+`poscrsr` (`source/shdlr.s`) swaps the two values (it gets _column_ in the X register and _row_ in Y) and calls the KERNAL's `PLOT` routine (`$fff0`, with the carry clear), which wants the row in X and the column in Y.
+So it only changes where the next character printed on the local screen appears.
 
 .im: Position Terminal Cursor
 [source,basic]
 4004 &,38:&,61,.,8:print"&,37:goto300:":end
 
-`&,61,0,8`: position the cursor at column 0, row 9. `print` recovery information if the BBS crashes.
-
-// what is the difference between &,61 and &,70?
+`&,61,0,8`: position the cursor at column 0, row 8 (the ninth line), then `print` recovery information if the BBS crashes.
+Since this is printed with BASIC's `print` after `&,38` (trap off), it only needs the local cursor.
 
 '''
 
@@ -2898,21 +2905,44 @@ TIP: The module `sub.display` is a good example of using `&,69`.
 
 === `&,70` Position Terminal Cursor [[position-cursor]]
 
+Move the cursor to a column and row, on both the local screen and the caller's terminal.
+
 _Parameters_:
 
 `&,70,_column_,_row_`
+
+`column`: 0-39
+
+`row`: 0-24
 
 ====
 TIP: Upper left corner of the screen is `0,0`.
 ====
 
-// FIXME: or 0-79?
-`column`: 0-39
+`cursposn` (`source/miscl.s`) gets _column_ in the X register and _row_ in Y.
+It sends kbd:[Home], then _row_ cursor-downs, then _column_ cursor-rights, through the normal output routine, so they go to the screen and the modem: 1 + _row_ + _column_ bytes.
+It doesn't know where the cursor already is, so moving one column on line 20 still costs over 20 bytes.
 
-`row`: 0-24
+Before moving, it checks the caller's terminal (`cursmode`):
+
+[%autowidth]
+[%header]
+|===
+| `Asc` left (ASCII translation, lightbar flag 16) | `Ans` left (ANSI colour, flag 18) | Result
+
+| off | | Commodore: the cursor is moved
+| on | on | ANSI: the cursor is moved (the same Commodore codes are sent)
+| on | off | plain ASCII, which has no cursor movement: nothing is sent
+|===
 
 .i.IM: Position Terminal Cursor
 [source,basic]
 3350 ... &,70,.,n/2+8.5:&"{white}"
 
-// What is the difference between `&,61 (poscrsr)` and `&,70 (cursposn)`?
+==== `&,61` or `&,70`?
+
+`&,61` moves only the local cursor, using the KERNAL; `&,70` moves the caller's cursor as well, by sending cursor codes.
+
+NOTE: The visual editor (`source/visual.s`) has its own `crsrpos`, which keeps track of where the caller's cursor is and uses whichever is cheaper: cursor keys from where it is, or kbd:[Home] first.
+`&,70` could do the same by reading the local cursor position from the KERNAL (`$d3`, `$d6`), which follows what has been sent, though that needs checking with the screen mask on.
+
