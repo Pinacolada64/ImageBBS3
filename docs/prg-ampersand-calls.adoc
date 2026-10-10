@@ -1430,12 +1430,80 @@ If no character is received from the connected user, `peek(780)=0`.
 
 '''
 
-=== `&,24` xchrout1
+=== `&,24` xchrout1 [[xchrout1]]
 
 :function_count: 1
 include::includes/prg-ml-function-warning.adoc[]
 
-This is an output character routine that should be used when writing ML routines which need to output a character to the user.
+Output one character to the user, through Image BBS's output routine: to the local screen, the modem and the printer, in the current output mode.
+This is the routine to use when writing ML that needs to output a character.
+
+_Enter:_
+
+`$fe` (254): the character to output.
+`xchrout1` doesn't take the character from the accumulator.
+
+_Exit:_
+
+The X and Y registers are preserved; the accumulator holds the character (from `$fe`).
+
+==== Calling It
+
+* In the main ML (`source/chrio.s`), `xchrout` stores the accumulator in `$fe` and falls through into `xchrout1`.
+* An ML module (`++` file) calls it by number, through the interface page at `$cd03` (`usetbl1`), as `source/struct.s` and `source/visual.s` do:
++
+[source,asm]
+----
+xchrout:
+		sta $fe		// the character
+xchrout1:
+		lda #24		// &,24
+		jmp usetbl1	// $cd03: run & call 24
+----
++
+`usetbl1` also saves A, X and Y in 780-782 for the call.
+`source/swap1.s` has a variant, `xchrout0`, which outputs nothing at all when the password "`no output`" mode is on (`passmode` bit 1).
+
+* From BASIC, `&"`...`"` is the usual way to output text.
+A single character could be sent with `poke 254,`_c_`:&,24`, though this hasn't been tested.
+
+==== What It Does
+
+`xchrout1` saves X and Y and calls `outchr` (`source/chrio.s`), which:
+
+. turns the encoded input characters `$85`-`$8c` back into what was typed (`,` `:` `"` `*` `?` `=` `^`: see <<input-encoding>>), with `chkspcl` (`$cd0f`);
+. picks the output mode (`setoutmd`), checked again for every character:
++
+[%autowidth]
+[%header]
+|===
+| When | Output
+
+| Password mask on (`passmode` bit 0, `$12fa`)
+| Control codes are sent as they are; any other character is replaced by the mask character (`mask`, `$12f2`), as when a password is typed.
+
+| Bit 7 of `mci` (`$07ef`, 2031) set: "`show control codes`" (see below)
+| Control codes (except kbd:[Return] and kbd:[Delete]) are shown instead of acted on: as the character plus 64, in reverse, so `{white}` (5) shows as a reverse `E`.
+
+| Word wrap on (`wrapflg`, 950)
+| Characters are collected in `wrapbuf` (870, up to 80) until a space or control code ends the word.
+If the word won't fit on the screen, printer or modem line, a kbd:[Return] goes first; then the word is sent.
+
+| Otherwise
+| The character goes to the screen (`outscn0`), the modem (`outmdm0`) and the printer (`outptr`).
+|===
+
+==== `mci` (2031)
+
+`mci` controls MCI and control codes in output:
+
+* bit 0 set: MCI commands aren't interpreted (Image BBS 1.2's `poke 2031,1`);
+* bit 7 set: control codes are shown, as above.
+
+The message editor sets `mci` to `$81` (both) for its `.L` List, `.R` Read, `.E` Edit, `.F` Find and `.K` Replace commands, so the text appears exactly as stored, with its codes visible; and to `0` for `.M` MCI Read, which shows the text as it will look (`source/editor.s`, `comlist`).
+The source doesn't name bit 7: "`show control codes`" is a description.
+
+The visual editor (`source/visual.s`) outputs everything through its own `xchrout`, which also keeps track of where this leaves the caller's cursor (see <<position-cursor>>).
 
 '''
 
