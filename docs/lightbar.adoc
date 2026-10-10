@@ -656,7 +656,7 @@ Pages 5-7 are undefined and are available for your own use.
 
 `At8` right: _Default Alarm 8 Trigger_
 
-=== Alarm Triggers
+=== Alarm Triggers [[alarm-triggers]]
 
 _Alarm Triggers_ are used to modify other checkmarks on the lightbar.
 Using them, you can enable or disable BBS features at specific times of the day or night.

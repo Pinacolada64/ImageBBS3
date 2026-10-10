@@ -2341,10 +2341,23 @@ _Example:_
 
 After setting the clock to `b`:`c`, this swaps hours `12` and `92` in `b`, then sets the alarm to `b`:`00`.
 
-#TODO#: The expression also changes `13` to `1` and `93` to `81`, though neither can come from `d1$`.
+The expression also changes `13` to `1` and `93` to `81`, though neither can come from `d1$`.
 This suggests the alarm was meant to be set to the top of the _next_ hour (`b+1`).
 As written, the alarm is set to the current hour at `:00`, which has already passed.
-It is not yet known what the CIA alarm triggers in Image BBS.
+
+In Image BBS 3.0, the CIA alarm doesn't trigger anything:
+
+* `setirq` (`source/intro.s`) writes `$1f` to CIA #1's interrupt control register (`$dc0d`).
+With bit 7 clear, this turns _off_ all five CIA #1 interrupt sources, the alarm included: Image BBS runs from the VIC-II raster interrupt instead.
+* Nothing checks the alarm's flag in `$dc0d` either.
+The only other code that reads `$dc0d` is `tdelay` (`source/miscl.s`), which waits for Timer B, and clears all the flags as it reads them.
+
+So `&,58` is probably left over from an earlier version, which would also explain why setting the alarm to an hour that has already passed went unnoticed.
+
+NOTE: The lightbar's alarms (see <<lightbar.adoc#alarm-triggers,Alarm Triggers>>) don't use the CIA alarm.
+They are a table of 16 entries at `alarmtb` (`$1660`, 8 bytes each: see `source/equat.s`), loaded at boot.
+Once a minute, after updating the date, the IRQ handler calls `alarm` (`source/irqhn.s`), which works out the minute of the day (`cminute`, also copied to `mn%`) and, for each enabled entry, sets its lightbar check mark at its "`set`" minute and clears it at its "`clear`" minute.
+The NetMail alarm times (`netalrm`) are checked the same way, and set the `Net` right check mark.
 
 '''
 
