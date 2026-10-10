@@ -7,3 +7,5 @@ tests/i.test-convert.prg	i.test-convert
 tests/i.test date.prg	i.test date
 tests/i.test clocks.prg	i.test clocks
 basic/sub.clocks.prg	sub.clocks
+asm/visual.prg	++ visual
+tests/i.test visual.prg	i.test visual

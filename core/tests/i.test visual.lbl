@@ -1,0 +1,24 @@
+{uses:../3_0-preface.lbl}
+' i.test visual: try the unfinished visual editor ("++ visual",
+' source/visual.s)
+'
+' From Image 2.0's "+.test visual ed" (Pinacolada, 27/Nov/2017).
+' gosub 28 loads "++ visual" from the Plus-File drive; &,16 (sys 49152)
+' starts it. In the editor, Ctrl-H shows the keys, Ctrl-V re-prints the
+' lines typed so far, and Ctrl-X stores them and exits, with the number of
+' lines used in $03fe ("lines"), not kk.
+{alpha:alt}
+{:3000}
+	rem "i.test visual" {usedef:__BuildDate} {usedef:__BuildTime}
+	cm$="Visual Editor Test":gosub 9
+	&"{clear}{f6}{yellow}Visual editor test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+	&"{white}{pound}r1Ctrl-H{pound}r0 shows the editor's keys{f6}"
+	&"{pound}r1Ctrl-V{pound}r0 re-prints the lines typed so far{f6}"
+	&"{pound}r1Ctrl-X{pound}r0 saves the lines and exits{f6:2}Press any key to begin: {pound}g1{f6}"
+	a$="visual":gosub 28:if e% then:&:goto {:finish}
+	&,18,0:&,16:&,18,1
+	kk=peek(1022):&"{f6}{lt. blue}$03fe (lines):{white}"+str$(kk)+"{f6}"
+	if kk then for x=1 to kk:&"{pound}#3{pound}!x: "+tt$(x)+"{f6}":next
+{:finish}
+	&"{f6}{yellow}>Hit a Key<{pound}g1":goto 300
+	rem "i.test visual (c)nissa 2026-10-09 rs"

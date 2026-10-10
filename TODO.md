@@ -245,8 +245,20 @@ only items not already here are listed from it. Locations are
     U, V, W, X).
   - It would also allow putting the cursor on the first line, _e.g._ to
     quote a reply above it (a note in `TODO.txt`).
-  - First steps: convert `visual.asm` to KickAssembler for `source/`, add
-    it to `make asm`, and bring the test program into `core/tests/`.
+  - [x] Converted to KickAssembler as `source/visual.s` (built by `make asm`;
+    the same bytes as `ml.visual` on `20ml-src.d81`). The `++ visual` on the
+    2.0 boot disks is a slightly different build (no `cpx #1` in `crsrpos`).
+  - [x] Test program: `core/tests/i.test visual.lbl` (on the test disk, with
+    `++ visual`).
+  - [x] Fix `visual25`: `ldx #23` then `sta numx` stored the Ctrl-X code (24)
+    as the first line number.
+  - [x] Set `lines` (`$03fe`) on Ctrl-X: the last line that isn't blank.
+  - [x] Letters no longer forced to capitals (the line editor's `case` flag
+    is saved and cleared while editing).
+  - [x] A key table like the line editor's, with Delete, Insert/Ctrl-I,
+    Ctrl-D, Ctrl-B, Ctrl-N, Ctrl-W, and Ctrl-H for a help screen.
+  - [ ] Maybe keep a one-line key reminder on screen (would leave 22 lines).
+  - [ ] Home can't be used: `xgetin` swallows it.
 - [ ] Login: only allow the options the user has access to
   (`core/i_lo.login.lbl:84`); re-add the `e.idlecmds` feature, and a
   lightbar check to turn off the extra login questions

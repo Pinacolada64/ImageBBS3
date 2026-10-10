@@ -19,6 +19,7 @@ asm/copier.prg	++ copier
 asm/clock.prg	++ clock
 asm/menu2.prg	++ menu2
 asm/sort.prg	++ sort
+asm/visual.prg	++ visual
 
 # --- BASIC modules (make basic) ---
 basic/i.main.prg	i.main
@@ -36,3 +37,4 @@ tests/i.test structs.prg	i.test structs
 tests/i.test-convert.prg	i.test-convert
 tests/i.test date.prg	i.test date
 tests/i.test clocks.prg	i.test clocks
+tests/i.test visual.prg	i.test visual
