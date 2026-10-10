@@ -40,7 +40,7 @@ all: asm basic tests
 # Assembly (KickAssembler)
 
 ASM_TARGETS := ml boot image rs232 post path tagscan net punter xmodem \
-               copier clock menu2 sort
+               copier clock menu2 sort visual
 ASM_PRGS    := $(ASM_TARGETS:%=$(BUILD)/asm/%.prg)
 
 ML_PARTS := wedge editor gc ecs struct swap1 swap2 swap3 jmptb strio mcicm \
