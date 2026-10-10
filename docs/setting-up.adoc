@@ -26,6 +26,10 @@ Handle, First/Last Names, E-mail Address, Password
 * Manual
 * CMD RTC
 * Lt. Kernal
+* DS12C887 RTC chip
+* 1541 Ultimate/Ultimate 64
+* TeensyROM (time only)
+* Last AutoMaint date
 
 ==== Device/Drive Settings
 
@@ -340,6 +344,33 @@ kbd:[3] `Lt. Kernal Port 1`
 kbd:[4] `Lt. Kernal Port 2`
 
 These are for use with Lloyd Sponenburgh’s Real-Time Clock module attached to the Lt. Kernal hard drive.
+
+kbd:[5] `DS12C887 RTC Chip`
+
+A Dallas DS12C887 real-time clock chip on a cartridge.
+You are asked for its base address: `$D500`, `$D600`, `$D700` or `$DF00`.
+
+TIP: VICE emulates this cartridge, using the host computer's clock: start `x64sc` with `-ds12c887rtc -ds12c887rtcbase 0xd500`.
+Don't use `$DE00` if you have a SwiftLink, which uses that address.
+
+kbd:[6] `1541 Ultimate/Ultimate 64`
+
+The Ultimate's real-time clock, read through its Command Interface.
+Enable _Command Interface_ in the Ultimate's settings.
+
+kbd:[7] `TeensyROM (Time Only)`
+
+The TeensyROM's real-time clock (kept by its battery, or set over Ethernet).
+It only gives the time: the date is the last date saved by the BBS.
+
+kbd:[8] `Last AutoMaint Date`
+
+The date and time of the last AutoMaintenance.
+This is not a real clock: check the time, and set it in `IM` if it is wrong.
+
+NOTE: Options 5-8 are read by `sub.clocks`, which the boot program `im` doesn't call yet.
+Until it does, the BBS treats them like option 1 (Manually) at boot.
+You can try each method with the `i.test clocks` test program.
 
 [start=7]
 . Part III: Device/Drive Settings

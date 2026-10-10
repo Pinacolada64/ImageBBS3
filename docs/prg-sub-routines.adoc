@@ -60,6 +60,47 @@ n1$:
 n2$: 
 |===
 
+==== sub.clocks
+
+`sub.clocks` reads the date and time from a clock and sets the BBS clock.
+Call it with `im=`_n_`:a$="clocks":gosub 74`.
+
+[%autowidth]
+[%header]
+|===
+| `im` | Method | `cp`
+
+| `0` | The method saved in `e.data` record 37 (sets `ck` and `cp`) |
+| `1` | Ask the sysop |
+| `2` | CMD device real-time clock (`t-ra`) | device number
+| `3` | Lt. Kernal clock (`swr.ml`) | port, `1` or `2`
+| `4` | DS12C887 RTC chip | base address, _e.g._ `54528` (`$D500`)
+| `5` | 1541 Ultimate/Ultimate 64 (Command Interface `GET_TIME`) |
+| `6` | TeensyROM (time only; the date is `e.data` record 19) |
+| `7` | Last AutoMaint date (`e.data` record 35) |
+| `8` | Save method `ck` and parameter `cp` to `e.data` record 37 |
+|===
+
+On return from `im=0`-`7`, `e%` is `0` if the BBS clock was set (from `z$`, an 11-digit <<prg-ampersand-calls.adoc#date-format,date string>>), and non-zero if not.
+They also set the "`time set`" flag (`poke 1010,1`).
+
+.`e.data` Record 37 (Clock Set Method)
+Image BBS 3.0's `im` reads this record with `val()`, and treats `4` like `0` (manual), so the methods added in `sub.clocks` are stored after `4,`:
+
+[%autowidth]
+[%header]
+|===
+| Record 37 | Method
+
+| `0` | Manual
+| `2`, `3` | Lt. Kernal port 1, 2
+| `8`-`30` | CMD device number
+| `4,d,`_base_ | DS12C887 at _base_
+| `4,u` | Ultimate
+| `4,t` | TeensyROM
+| `4,a` | Last AutoMaint date
+|===
+
 ==== sub.display
 
 ==== sub.editor

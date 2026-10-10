@@ -27,6 +27,7 @@
 #   TCPSER_TRACE       data to trace, any of: s = from the C64, S = to the C64,
 #                      m/M = modem in/out, i/I = IP (caller) in/out
 #   TCPSER_INVERT_DCD  1 (default) inverts DCD (tcpser -I), 0 doesn't
+#   RTC                1 (default) adds a DS12C887 RTC cartridge at $d500, 0 doesn't
 
 set -euo pipefail
 
@@ -60,6 +61,13 @@ KERNAL="$JIFFYDOS/JDOS64.rom"
 DOS1581="$JIFFYDOS/Jiffy1581.rom"
 BASIC="$VICE_ROMS/basic-901226-01.bin"
 CHARGEN="$VICE_ROMS/chargen-901225-01.bin"
+
+# --- real-time clock ---
+# A DS12C887 RTC cartridge, which reads the host's clock; sub.clocks reads it
+# (method 5 in i/su.config). Not at $de00: the SwiftLink is there.
+# RTC=0 start-image-bbs.sh leaves it out.
+RTC=${RTC:-1}
+RTC_BASE=0xd500
 
 LOG_DIR="$RUN_DIR/logs"
 
@@ -120,6 +128,7 @@ x64sc \
 	-rsdev3 "127.0.0.1:$MODEM_PORT" \
 	-rsdev3ip232 \
 	-rsdev3baud "$BAUD" \
+	$( [ "$RTC" = 1 ] && echo -ds12c887rtc -ds12c887rtcbase "$RTC_BASE" ) \
 	-drive8type 0 \
 	-drive10type 1581 \
 	-drive11type 1581 \
