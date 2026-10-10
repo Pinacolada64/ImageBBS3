@@ -18,7 +18,9 @@
 //   colour code only where it changes, no colour code for plain spaces,
 //   and no blanks after the last visible column;
 // - the cursor is tracked (xchrout keeps curx/cury), and crsrpos moves it
-//   the cheaper way: from where it is with cursor keys, or from Home.
+//   the cheaper way: from where it is with cursor keys, or from Home;
+// - a lost carrier or expired time saves the lines and leaves (xgetin then
+//   returns Return forever, which 2.0 obeyed), and the chat key starts chat.
 //
 // Load it as an ML module, then start it with &,16 (sys 49152): see
 // core/tests/i.test visual.lbl. Lines are 3 bytes per column (reverse,
@@ -130,6 +132,24 @@ visual4:
 // main loop: get a key
 visual5:
 		jsr xgetin
+		pha
+// xgetin returns Return (13) on every call once the carrier is lost, time
+// runs out or the sysop's chat key is hit, so check those first (as the
+// line editor does in swap1.s)
+		jsr carchk	// 0: OK, 1: carrier lost, 2: time up
+		cmp #0
+		beq visual5a
+		pla
+		jmp visual25	// save the lines and leave, as Ctrl-X does
+visual5a:
+		jsr chatchk
+		cmp #0
+		beq visual5b
+		pla
+		jsr chatmode	// the sysop wants to chat: do that, then
+		jmp visual2	// show the lines again
+visual5b:
+		pla
 		pha
 		and #$7f
 		cmp #32
@@ -485,6 +505,15 @@ putln:
 		jmp usetbl1
 prtln:
 		lda #39		// &,39 prtln
+		jmp usetbl1
+chatchk:
+		lda #43		// &,43 chatchk: non-zero if the chat key was hit
+		jmp usetbl1
+carchk:
+		lda #47		// &,47 carchk: 0 OK, 1 carrier lost, 2 time up
+		jmp usetbl1
+chatmode:
+		lda #56		// &,56 chatmode
 		jmp usetbl1
 
 xchrout:
