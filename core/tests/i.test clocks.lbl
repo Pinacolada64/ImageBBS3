@@ -1,0 +1,31 @@
+{uses:../3_0-preface.lbl}
+' i.test clocks: try each sub.clocks method on a running BBS
+'
+' Each choice calls sub.clocks (im=<n>:a$="clocks":gosub 74), then shows
+' e% (0 = the BBS clock was set), z$ (the date string it used), ck and cp.
+' VICE: DS12C887 with -ds12c887rtc -ds12c887rtcbase 0xd500
+{alpha:alt}
+{:3000}
+	rem "i.test clocks" {usedef:__BuildDate} {usedef:__BuildTime}
+	&"{clear}{f6}{yellow}sub.clocks test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+	&"{cyan}0{white} Saved method (e.data record 37){f6}{cyan}1{white} Manual{f6}{cyan}2{white} CMD device{f6}"
+	&"{cyan}3{white} Lt. Kernal{f6}{cyan}4{white} DS12C887{f6}{cyan}5{white} 1541 Ultimate{f6}{cyan}6{white} TeensyROM{f6}"
+	&"{cyan}7{white} Last AutoMaint date{f6}{cyan}S{white} Save a method to record 37{f6}{cyan}Q{white} Quit{f6:2}Which? {pound}g1{f6}"
+	if an$="Q" or an$="q" then 300
+	t=-1:if an$>="0" and an$<="7" then t=val(an$)
+	if an$="S" or an$="s" then t=8
+	if t<. then {:3000}
+	if t=8 then poke 53252,1:pl=1:w$="4":p$="Method (1-7)":&,1,32:ck=val(an$):if an$="" then ck=4
+	if t=8 and (ck<1 or ck>7) then {:3000}
+	z=t:if t=8 then z=ck
+	cp=.:if z=2 then w$="8":p$="Device":gosub {:ask}
+	if z=3 then w$="1":p$="Port (1-2)":gosub {:ask}
+	if z=4 then w$="54528":p$="Base (54528=$D500)":gosub {:ask}
+	im=t:a$="clocks":gosub 74
+	&"{f6}{lt. blue}e%={white}"+str$(e%)+"{lt. blue}  z$={white}"+z$+"{f6}{lt. blue}ck={white}"+str$(ck)+"{lt. blue}  cp={white}"+str$(cp)
+	&"{f6:2}{yellow}>Hit a Key<{pound}g1":goto {:3000}
+
+{:ask}
+	v=val(w$):poke 53252,5:pl=1:&,1,32:cp=val(an$):if an$="" then cp=v
+	return
+	rem "i.test clocks (c)nissa 2026-10-09 rs"
