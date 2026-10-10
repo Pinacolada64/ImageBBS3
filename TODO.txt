@@ -706,3 +706,14 @@ s: Yr Commented RKK\q0":return
 3500 rem:"i.UD (c)nissa 200625 lh"
 ready.
 
+
+10/09/2026: sub.clocks follow-ups
+- Trc right ("Time: Reset Clock"), run every few hours by the default alarm
+  trigger At1, re-reads the CMD RTC itself. Find where that's done and have
+  it call sub.clocks (im=0: the method saved in e.data record 37) instead,
+  so it works with every clock method (DS12C887 in VICE, Ultimate, etc.).
+- im: set the clock at boot with sub.clocks (im=0) instead of lines
+  3155-3156/3348-3366 (needs core/im.lbl to build first).
+- i.IM K (Set Time): use sub.clocks (im=1 manual, or "set from clock now").
+- Remove the old CMD/Lt. Kernal clock code left in i/su.config (the lines
+  after "TODO: move get time from cmd device to sub.clocks") and in im.
