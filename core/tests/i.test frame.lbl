@@ -6,7 +6,7 @@
 {assign:70=70} ' im.prep_load_i.file
 ' C64List4_04.exe "i.test frame.lbl" -prg -alpha:alt -crunch -ovr
 {:3000}
-	rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
+	pr$="i."+"test frame":rem "i.test frame" efficiency/madness strikes again - pinacolada 2021-07-06
 ' NOTE: &,27,2 at startup / &,28,2 at quit not needed, we don't create any new arrays
 	&"{clear}":s$="{space:36}"
 {:menu}

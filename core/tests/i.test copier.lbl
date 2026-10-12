@@ -13,7 +13,7 @@
 {number:3002}
 {step:2}
 ' set program name for e.errlog, get debug status (checked means *disabled*):
-	pr$="test copier"+"":&,52,56,3:db=1-a%
+	pr$="i."+"test copier":&,52,56,3:db=1-a%
 	&,18,1:lp=1:&"Test {f5}++ copier{f5} &{comma}16{comma}x params{f6:2}"
 	if db then:&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 '	f$="copier":a$=f$:gosub {:im.loadProtocol}:if e% then:&:goto {:quit}

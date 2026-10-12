@@ -5,12 +5,12 @@
 ' modified: 851 bytes
 {number:3000}
 {:3000}
-	on mm goto {:3010},{:3004},{:3006}
+	pr$="i."+"main":on mm goto {:3010},{:3004},{:3006}
 {:3002}
 	&,28,1:&,11:lc=1:&,27,1:sy$="":goto 200
 {:3004}
 '	p$=po$:return
-	p$=po$:cm$=p$:gosub 9
+	p$=po$:cm$=p$+"":gosub 9
 {:3006}
 	return
 {:3010}

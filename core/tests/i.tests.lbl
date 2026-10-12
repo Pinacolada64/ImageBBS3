@@ -11,7 +11,7 @@
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
-	rem "i.tests" {usedef:__BuildDate} {usedef:__BuildTime}
+	pr$="i."+"tests":rem "i.tests" {usedef:__BuildDate} {usedef:__BuildTime}
 	&,18,0:a$="menu2":gosub 28:if e% then:&:goto {:quit}
 	&,28,1:restore:n=.
 {:count}

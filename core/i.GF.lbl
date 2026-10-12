@@ -29,7 +29,7 @@
 '   s%(13,r) = description, up to 28 bytes
 '   s%(27,r) = filename, 16 bytes
 ' e%(60): record numbers of the entries this user may see (rn = how many)
-3000 &,18,0:&,28,1:gosub 3003:lm$="":dim s%(39,60),e%(60),m%(3,25),q%(20,25):gosub 3010
+3000 pr$="i."+"GF":&,18,0:&,28,1:gosub 3003:lm$="":dim s%(39,60),e%(60),m%(3,25),q%(20,25):gosub 3010
 3001 a$="menu2":gosub 28
 3002 cp=1:f%=10:&,52,$27,3:on a%goto 3234:goto 3180
 3003 &,52,$2 c,3:mm=a%:&,52,$2 d,3:mm=mmand a%and nl:return

@@ -26,7 +26,7 @@
 {alpha:alt}
 {include:quoters.lbl}
 {:3000}
-	rem "i.UU" {usedef:__BuildDate} {usedef:__BuildTime}
+	pr$="i."+"UU":rem "i.UU" {usedef:__BuildDate} {usedef:__BuildTime}
 	r=int(val(mid$(an$,3,3))):dr=5:gosub 3:a$="menu2":gosub 28:if e% then:&:goto {:quit}
 	&,18,0:&,28,1:dim m%(22,25,6),u$(50,3),ac$(15,1),yn$(1),t%(50),l%(50),fp%(50),fx%(50),f%(25,6),pn$(5)
 	yn$(0)="No":yn$(1)="Yes"
@@ -259,7 +259,7 @@
 ' list users (from i.UU)
 {:list}
 	a$="index":gosub 28:dr=6:gosub 3:a$=dr$+"u.index":&,16,1:uh=a%
-	p$="{lt. green}User List{lt. blue}":cm$=p$:gosub 9:a=10:gosub 11
+	p$="{lt. green}User List{lt. blue}":cm$=p$+"":gosub 9:a=10:gosub 11
 	if a=. then x=4:gosub 390:close 2:return
 	close 2
 	kk=1:dt$(1)="":gosub 35:rc=.:sh=.

@@ -730,7 +730,7 @@
 ' in e.errlog (im line 4024)
 ' since this module spans 3000-4000, define pr$ and p1$ as the same
 	pr$="i."+"test calls":p1$=pr$
-	cm$="Test & Calls":gosub 9
+	cm$="Test & Calls"+"":gosub 9
 	return
 
 {nice:10}

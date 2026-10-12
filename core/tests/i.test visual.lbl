@@ -10,8 +10,8 @@
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
-	rem "i.test visual" {usedef:__BuildDate} {usedef:__BuildTime}
-	cm$="Visual Editor Test":gosub 9
+	pr$="i."+"test visual":rem "i.test visual" {usedef:__BuildDate} {usedef:__BuildTime}
+	cm$="Visual Editor Test"+"":gosub 9
 	&"{clear}{f6}{yellow}Visual editor test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
 	&"{white}{pound}r1Ctrl-H{pound}r0 shows the editor's keys{f6}"
 	&"{pound}r1Ctrl-V{pound}r0 re-prints the lines typed so far{f6}"

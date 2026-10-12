@@ -18,9 +18,9 @@
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
-	rem "i.test tagscan" {usedef:__BuildDate} {usedef:__BuildTime}
+	pr$="i."+"test tagscan":rem "i.test tagscan" {usedef:__BuildDate} {usedef:__BuildTime}
 	&,28,1:dim li%(11),ob%(2,10),od%(4,3),tn$(10)
-	cm$="Tagscan Test":gosub 9
+	cm$="Tagscan Test"+"":gosub 9
 	&"{clear}{f6}{yellow}Tagscan test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
 	a$="tagscan":gosub 28:if e% then:&:goto {:finish}
 	tn$(1)="lamp oil":tn$(2)="wick":tn$(3)="glass jar":tn$(4)="oil lamp"

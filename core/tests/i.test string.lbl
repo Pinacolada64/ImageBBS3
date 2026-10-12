@@ -6,7 +6,7 @@
 {step:2}
 {alpha:alt}
 {include:../quoters.lbl}
-    rem jay's struct/putstring/getstring test
+    pr$="i."+"test string":rem jay's struct/putstring/getstring test
     &"Return quits.{f6:2}Enter string to PutString{colon} {pound}i0":if an$="" then {:quit}
 ' &,27,2: save array pointers, level 2
     c=len(an$):&,27,2:dim hb%(1,c+2)

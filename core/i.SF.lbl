@@ -2,7 +2,7 @@
 {alpha:alt}
 {:3000}
 {step:2}
-	&"{clear}{blue}{pound}vj{lt. blue}{rvrs off} {rvrs on} Sysop File Maintenance{pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{green}":gosub {:3176}:goto {:3012}
+	pr$="i."+"SF":&"{clear}{blue}{pound}vj{lt. blue}{rvrs off} {rvrs on} Sysop File Maintenance{pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{green}":gosub {:3176}:goto {:3012}
 {:3002}
 	dr=3:a$="e.sysop,l,"+chr$(250):goto 4
 {:3004}

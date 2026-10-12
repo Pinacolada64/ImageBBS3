@@ -9,7 +9,7 @@
 {quoter:137=question}	' f2
 
 {:3000} ' &,9
-	&"&,9: btmvar{f6}"
+	pr$="i."+"btmvar table":&"&,9: btmvar{f6}"
 ' enumerate variables that can be displayed, from &,9,x table:
 ' 0-9:
 	:::v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"

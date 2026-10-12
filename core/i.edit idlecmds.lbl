@@ -22,7 +22,7 @@
 ' x is the "record" in struct
 
 {number:3000}
-	rem "i.edit idle cmds", by pinacolada 11/2020
+	pr$="i."+"edit idlecmds":rem "i.edit idle cmds", by pinacolada 11/2020
 	&"{pound}{back arrow}06{purple}{pound}o{192}{192:8}{f6}"
 	&"{pound}{back arrow}07{rvrs on}{lt blue} Edit Idle Commands v0.1 {rvrs off}{f6}"
 	&"{pound}{back arrow}06{purple}{pound}o{192}{192:8}{f6:2}{pound}q0"

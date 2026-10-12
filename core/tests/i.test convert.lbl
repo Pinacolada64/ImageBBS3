@@ -33,7 +33,7 @@
 {include:../quoters.lbl}
 
 {:3000}
-	pr$="i.test convert":&pr$+"{f6}{pound}vj"
+	pr$="i."+"test convert":&pr$+"{f6}{pound}vj"
 	&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
 	s1$=qt$+"Well,"+qt$+" she said, "+qt$+"the * and ? are used as wildcards."+qt$+r$
 	s2$="{quotation}Well{comma}{quotation} she said{comma} {quotation}the {asterisk} and {question} are used as wildcards.{quotation}{f6}"
