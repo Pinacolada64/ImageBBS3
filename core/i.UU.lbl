@@ -24,27 +24,28 @@
 ' m%(.,x,p) menu items of page p: 1 to m%(0,0,p) are fields, then the
 '          other pages and "Quit"
 {alpha:alt}
-{assign:546	=546	} ' im: find user by handle (an$), i = ID or 0
 {include:quoters.lbl}
 {:3000}
+	rem "i.UU" {usedef:__BuildDate} {usedef:__BuildTime}
 	r=int(val(mid$(an$,3,3))):dr=5:gosub 3:a$="menu2":gosub 28:if e% then:&:goto {:quit}
-	&,18,0:&,28,1:dim m%(22,25,6),u$(50,3),ac$(15,1),yn$(1),t%(50),l%(50),fp%(50),fx%(50),f%(25,6)
+	&,18,0:&,28,1:dim m%(22,25,6),u$(50,3),ac$(15,1),yn$(1),t%(50),l%(50),fp%(50),fx%(50),f%(25,6),pn$(5)
 	yn$(0)="No":yn$(1)="Yes"
 	restore:for i=1 to 50:read t%(i),fp%(i),fx%(i),l%(i),u$(i,3):p=fp%(i):px=fx%(i)
 	if p then f%(px,p)=i:if m%(0,0,p)<px then m%(0,0,p)=px
-	next
+	next:for i=1 to 5:read pn$(i):next:sp$="{space:37}"
 ' access group names and flags from e.access
 	gosub 31:for i=0 to 9:x=i+1:gosub 1:&,2,2:ac$(i,0)=a$:&,2,2:ac$(i,1)=a$:next
 	close 2:if r then an$="":x=r:goto {:find}
 
 {:prompt}
-	&"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{cyan}":p$="User Edit"
+	&"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{gray3} Built "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}{cyan}":p$="User Edit"
 	a%=ur:&"{f6} Users{colon} {pound}%a{f6:2}Enter ID# or handle of user to edit{comma}{f6}or L for a list.{f6}"
 	&"Hit RETURN to exit.{f6:2}":gosub 6:if an$="L" then gosub {:list}:goto {:prompt}
 	on -(an$="" or tr%<1) goto {:quit}:x=abs(int(val(left$(an$,4))))
 {:find}
 	if x<=ur and x>. then {:read}
-	i=.:if an$<>"" then gosub 546
+' im=10 (sub.misc): find handle an$, i = ID or 0 (as i.ED does)
+	i=.:if an$<>"" then im=10:gosub 445
 	x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{f6}{pound}w2":goto {:prompt}
 
 {:read}
@@ -67,11 +68,8 @@
 ' draw page pg and act on the item chosen
 	if tr%<1 then return
 	gosub {:header}:kk=m%(0,0,pg):n=kk
-	if pg<>1 then b$="/I":a$="User Information":gosub {:nav}
-	if pg<>2 then b$="/S":a$="User Statistics":gosub {:nav}
-	if pg<>3 then b$="/T":a$="Terminal Parameters":gosub {:nav}
-	if pg<>4 then b$="/F":a$="User Flags":gosub {:nav}
-	if pg<>5 then b$="/M":a$="User Maint Flags":gosub {:nav}
+	for j=1 to 5:if j<>pg then b$="/"+mid$("ISTFM",j,1):a$=pn$(j):gosub {:nav}
+	next
 	b$="/Q":a$="Quit":gosub {:nav}
 	&,16,2,46,m%(0,1,pg),n,36,1,n,3,5,cp:lm=a%+1:&,70,0,23
 	if tr%<1 then return
@@ -85,10 +83,13 @@
 	n=n+1:&,16,0,46,m%(0,n,pg),b$,"",a$:return
 
 {:header}
-	a$=mid$("    User Information        User Statistics       Terminal Parameters          User Flags           User Maint Flags    ",pg*24-23,24)
-	b$=u$(1,0):a%=x
-	&"{clear}{blue}{rvrs on} {white}#{pound}%a {pound}$b{pound}{back arrow}39{f6}{rvrs on} {cyan}      "+a$+"{pound}{back arrow}37{rvrs on}{blue}  {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
-	return
+' 39 columns, as wide as menu2's frame: a blue border around reverse cyan
+	&"{clear}{blue}{rvrs on}  "+sp$+"{f6}"
+	a$="Editing "+u$(1,0)+" (#"+mid$(str$(x),2)+")":gosub {:center}:a$=pn$(pg)
+' print a$ centered between the borders
+{:center}
+	a$=left$(a$,37):a=int((37-len(a$))/2)
+	&"{blue}{rvrs on} {cyan}"+left$(sp$,a)+a$+left$(sp$,37-a-len(a$))+"{blue} {f6}":return
 
 ' (re)make the menu items of all fields shown
 {:items}
@@ -134,7 +135,7 @@
 	if i<>1 then u$(i,0)=an$:return
 ' handle: not a deleted or reserved mark, and not someone else's
 	if an$="{f8}" or an$="RES" then:&"{f6}Use ED to delete or reserve accounts.{pound}w2":return
-	nh$=an$:h=x:gosub 546:x=h:a=i:i=1
+	nh$=an$:h=x:im=10:gosub 445:x=h:a=i:i=1
 	if a and a<>x then a%=a:&"{f6}Handle already used by {pound}vn{pound}%a{pound}w2":return
 	u$(1,0)=nh$:return
 {:edit_group}
@@ -325,5 +326,8 @@
 	data 5,4,8,2,"Time/Call"
 	data 0,0,0,0,"Time/Call"
 	data 5,4,9,1,"DLs/Call"
+' page names
+	data "User Information","User Statistics","Terminal Parameters"
+	data "User Flags","User Maint Flags"
 	rem "i.UU (c)nissa 200619 lh"
 	rem "i.UU editor 2026-10-12 rs"
