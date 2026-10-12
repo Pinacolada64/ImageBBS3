@@ -1,0 +1,329 @@
+{uses:3_0-preface.lbl}
+' i.UU: user account editor with cursor menus ("++ menu2")
+'
+' From the unfinished "IMAGE User Account Viewer" in the 2023-12-31 master
+' release (Larry Hedman, 2020), which showed a user's record on five menu
+' pages but couldn't change anything. Editing, saving and handle changes
+' follow i.ED. Deleting or reserving an account is still i.ED's job.
+'
+' Run as "UU" or "UUx" (x = user ID to edit).
+'
+' u$(i,0)  field i's value; u$(i,1) its value when read; u$(i,2) the menu
+'          prefix ("*" once changed); u$(i,3) its label
+' Fields 1-23 are the u.config record (see sub.misc); 24-50 are pieces of
+' fields 11, 13 and 23, put back together by {:pack} when saving:
+'   11     line length (29) + 256 * screen lines (30)
+'   13     user flags: linefeeds (13), more prompt (24), cursor menus (25),
+'          two unused flags (26, 27), time zone (28)
+'   23     access flags, one character each (31-50); time/call (48) is two
+' t%(i)    how field i is edited: 0 not shown, 1 text, 2 access group,
+'          3 computer type, 4 yes/no, 5 number, 6 date, 7 password,
+'          8 editor lines
+' l%(i)    longest input for field i
+' fp%(i), fx%(i): menu page and position of field i; f%(x,p): the reverse
+' m%(.,x,p) menu items of page p: 1 to m%(0,0,p) are fields, then the
+'          other pages and "Quit"
+{alpha:alt}
+{assign:546	=546	} ' im: find user by handle (an$), i = ID or 0
+{include:quoters.lbl}
+{:3000}
+	r=int(val(mid$(an$,3,3))):dr=5:gosub 3:a$="menu2":gosub 28:if e% then:&:goto {:quit}
+	&,18,0:&,28,1:dim m%(22,25,6),u$(50,3),ac$(15,1),yn$(1),t%(50),l%(50),fp%(50),fx%(50),f%(25,6)
+	yn$(0)="No":yn$(1)="Yes"
+	restore:for i=1 to 50:read t%(i),fp%(i),fx%(i),l%(i),u$(i,3):p=fp%(i):px=fx%(i)
+	if p then f%(px,p)=i:if m%(0,0,p)<px then m%(0,0,p)=px
+	next
+' access group names and flags from e.access
+	gosub 31:for i=0 to 9:x=i+1:gosub 1:&,2,2:ac$(i,0)=a$:&,2,2:ac$(i,1)=a$:next
+	close 2:if r then an$="":x=r:goto {:find}
+
+{:prompt}
+	&"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{cyan}":p$="User Edit"
+	a%=ur:&"{f6} Users{colon} {pound}%a{f6:2}Enter ID# or handle of user to edit{comma}{f6}or L for a list.{f6}"
+	&"Hit RETURN to exit.{f6:2}":gosub 6:if an$="L" then gosub {:list}:goto {:prompt}
+	on -(an$="" or tr%<1) goto {:quit}:x=abs(int(val(left$(an$,4))))
+{:find}
+	if x<=ur and x>. then {:read}
+	i=.:if an$<>"" then gosub 546
+	x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{f6}{pound}w2":goto {:prompt}
+
+{:read}
+' menu2 again, in case the user list or a handle change loaded another module
+	a$="menu2":gosub 28:if e% then:&:goto {:quit}
+	gosub 35:gosub 1:for i=1 to 23:&,2,2:if asc(a$+nl$)=32 then a$=mid$(a$,2)
+	u$(i,0)=a$:next:close 2
+	a$=u$(1,0):if a$="{^}" or a$="RES" then:&"{f6}Deleted or reserved account{colon} use ED.{f6}{pound}w2":goto {:prompt}
+' access group (hex digit) and its default flags, as i.ED does
+	g=asc(u$(7,0)+nl$)-48:g=g+7*(g>9):if g<. or g>15 then g=.
+	a$=u$(23,0):if len(a$)<len(ac$(g,1)) then u$(23,0)=a$+mid$(ac$(g,1),len(a$)+1)
+' split fields 11, 13 and 23 into 24-50
+	a$=u$(13,0):if len(a$)<5 then a$=left$(a$+"0",1)+"1000"
+	u$(13,0)=left$(a$,1):for i=2 to 5:u$(22+i,0)=mid$(a$,i,1):next:u$(28,0)=mid$(a$,6)
+	a=val(u$(11,0)):u$(30,0)=mid$(str$(int(a/256)),2):u$(29,0)=mid$(str$(a and 255),2)
+	gosub {:split_flags}
+	for i=1 to 50:u$(i,1)=u$(i,0):next:gosub {:items}:pg=1:cp=.
+
+{:page}
+' draw page pg and act on the item chosen
+	if tr%<1 then return
+	gosub {:header}:kk=m%(0,0,pg):n=kk
+	if pg<>1 then b$="/I":a$="User Information":gosub {:nav}
+	if pg<>2 then b$="/S":a$="User Statistics":gosub {:nav}
+	if pg<>3 then b$="/T":a$="Terminal Parameters":gosub {:nav}
+	if pg<>4 then b$="/F":a$="User Flags":gosub {:nav}
+	if pg<>5 then b$="/M":a$="User Maint Flags":gosub {:nav}
+	b$="/Q":a$="Quit":gosub {:nav}
+	&,16,2,46,m%(0,1,pg),n,36,1,n,3,5,cp:lm=a%+1:&,70,0,23
+	if tr%<1 then return
+	if lm=n then {:done}
+	if lm>kk then a=lm-kk:pg=a-(a>=pg):cp=.:goto {:page}
+	cp=lm-1:i=f%(lm,pg):if i then gosub {:edit}:gosub {:items}
+	goto {:page}
+
+' add page-change or quit item n+1 (b$ = hotkey, a$ = title)
+{:nav}
+	n=n+1:&,16,0,46,m%(0,n,pg),b$,"",a$:return
+
+{:header}
+	a$=mid$("    User Information        User Statistics       Terminal Parameters          User Flags           User Maint Flags    ",pg*24-23,24)
+	b$=u$(1,0):a%=x
+	&"{clear}{blue}{rvrs on} {white}#{pound}%a {pound}$b{pound}{back arrow}39{f6}{rvrs on} {cyan}      "+a$+"{pound}{back arrow}37{rvrs on}{blue}  {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+	return
+
+' (re)make the menu items of all fields shown
+{:items}
+	for i=1 to 50:if t%(i) then gosub {:item}
+	next:return
+
+' make field i's menu item: label, then its value as shown
+{:item}
+	c$=u$(i,0):k=t%(i):on k-1 gosub {:show_group},{:show_computer},{:show_yesno},{:show_number},{:show_date},{:show_password},{:show_lines}
+	u$(i,2)=mid$(" *",1-(u$(i,0)<>u$(i,1)),1):p=fp%(i):px=fx%(i):a$=chr$(192+px)
+	b$=left$(u$(i,3)+":              ",15)+c$
+	&,16,0,46,m%(0,px,p),a$,u$(i,2),b$:return
+{:show_group}
+	c$=left$(c$,1)+" "+ac$(g,0):return
+{:show_computer}
+	a=val(c$):if a>. and a<10 then c$=co$(a)
+	return
+{:show_yesno}
+	c$=yn$(-(val(c$)<>.)):return
+{:show_number}
+	return
+{:show_date}
+' DYYMMDDHHMM (hour 80-91 = PM) as MM/DD/YY HH:MMa
+	b$=c$:if len(b$)<11 then return
+	a=val(mid$(b$,8,2)):a$="a":if a>79 then a=a-80:a$="p"
+	if a=. then a=12
+	c$=mid$(b$,4,2)+"/"+mid$(b$,6,2)+"/"+mid$(b$,2,2)+" "+right$(" "+mid$(str$(a),2),2)+":"+mid$(b$,10,2)+a$
+	return
+{:show_password}
+	if id<>1 then c$="(Private)"
+	return
+{:show_lines}
+	c$=mid$(str$((val(c$)+1)*10),2):return
+
+' edit field i; the page is redrawn afterward
+{:edit}
+	k=t%(i):p$=u$(i,3):w$=u$(i,0):pl=1:poke 53252,l%(i)
+	on k gosub {:edit_text},{:edit_group},{:edit_computer},{:edit_yesno},{:edit_number},{:edit_date},{:edit_password},{:edit_lines}
+	poke 53252,ll%:return
+{:edit_text}
+	if i=5 then pl=.
+	&,1,32:if an$="" or tr%<1 then return
+	if i<>1 then u$(i,0)=an$:return
+' handle: not a deleted or reserved mark, and not someone else's
+	if an$="{f8}" or an$="RES" then:&"{f6}Use ED to delete or reserve accounts.{pound}w2":return
+	nh$=an$:h=x:gosub 546:x=h:a=i:i=1
+	if a and a<>x then a%=a:&"{f6}Handle already used by {pound}vn{pound}%a{pound}w2":return
+	u$(1,0)=nh$:return
+{:edit_group}
+	&"{clear}{f6}":for a=0 to 9:a%=a:b$=ac$(a,0):&"{pound}#2{pound}# {pound}%a) {pound}$b{f6}":next
+	p$="Access Group":w$=mid$(str$(g),2):poke 53252,2:&"{f6}":&,1,32:if an$="" or tr%<1 then return
+	a=val(an$):if a<. or a>9 or a=g then return
+' new group: its default access flags, as i.ED does
+	g=a:u$(7,0)=mid$(hx$,g+1,1)+mid$(u$(7,0),2):u$(23,0)=ac$(g,1):goto {:split_flags}
+{:edit_computer}
+	&"{clear}{f6}":for a=1 to 9:a%=a:b$=co$(a):&"{pound}%a) {pound}$b{f6}":next
+	p$="Computer Type":poke 53252,1:&"{f6}":&,1,32:if an$="" or tr%<1 then return
+	a=val(an$):if a>. and a<10 then u$(i,0)=mid$(str$(a),2)
+	return
+{:edit_yesno}
+	u$(i,0)=mid$(str$(-(val(u$(i,0))=.)),2):return
+{:edit_number}
+	&,1,32:if an$="" or tr%<1 then return
+	a=int(val(an$)):if a<. or a>=10^l%(i) then:&"{f6}Out of range.{pound}w2":return
+	u$(i,0)=mid$(str$(a),2):if i=48 then u$(i,0)=right$("0"+u$(i,0),2)
+	return
+{:edit_date}
+' asks for each part; Return keeps it. The record holds DYYMMDDHHMM:
+' D = day of the week (1 = Sunday, worked out here), hour 00-11 AM, 80-91 PM
+	b$=u$(i,0):if len(b$)<11 then b$=d1$
+	mo=val(mid$(b$,4,2)):dy=val(mid$(b$,6,2)):yr=val(mid$(b$,2,2)):mn=val(mid$(b$,10,2))
+	hr=val(mid$(b$,8,2)):ap=-(hr>79):hr=hr-80*ap:if hr=. then hr=12
+	&"{clear}{f6}{cyan}"+u$(i,3)+"{colon} Return keeps a value.{f6}"
+{:date_month}
+	a=mo:a$="Month (1-12)":c$="":gosub {:date_input}:if tr%<1 then return
+	if a<1 or a>12 then gosub {:date_bad}:goto {:date_month}
+	mo=a
+{:date_day}
+' days in each month as character codes: {blue} 31, {red} 28, {green} 30
+	d=asc(mid$("{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}",mo))-(mo=2)
+	a=dy:a$="Day (1-"+mid$(str$(d),2)+")":c$="":gosub {:date_input}:if tr%<1 then return
+	if a<1 or a>d then gosub {:date_bad}:goto {:date_day}
+	dy=a
+{:date_year}
+	a=yr:a$="Year":c$="20":gosub {:date_input}:if tr%<1 then return
+	if a<. or a>99 then gosub {:date_bad}:goto {:date_year}
+	yr=a:if mo=2 and dy=29 and yr-int(yr/4)*4 then a%=2000+yr:&"{f6}{pound}%a isn't a leap year.":goto {:date_day}
+{:date_hour}
+	a=hr:a$="Hour (1-12)":c$="":gosub {:date_input}:if tr%<1 then return
+	if a<1 or a>12 then gosub {:date_bad}:goto {:date_hour}
+	hr=a
+{:date_minute}
+	a=mn:a$="Minute (0-59)":gosub {:date_input}:if tr%<1 then return
+	if a<. or a>59 then gosub {:date_bad}:goto {:date_minute}
+	mn=a
+{:date_ampm}
+	&"{f6}{white}AM or PM ["+mid$("AP",ap+1,1)+"]{colon} ":poke 53252,1:&"{pound}i1":poke 53252,ll%
+	if tr%<1 then return
+	if an$<>"" then on -(an$<>"A" and an$<>"P") goto {:date_ampm}:ap=-(an$="P")
+' day of the week (Sakamoto's method), then the new value
+	y=2000+yr+(mo<3):a=y+int(y/4)-int(y/100)+int(y/400)+val(mid$("032503514624",mo,1))+dy
+	b$=chr$(49+a-int(a/7)*7):a=yr:gosub {:date_digits}:a=mo:gosub {:date_digits}:a=dy:gosub {:date_digits}
+	a=hr+80*ap:if hr=12 then a=80*ap
+	gosub {:date_digits}:a=mn:gosub {:date_digits}
+	u$(i,0)=b$+mid$(u$(i,0),12):return
+
+' print a$ [a], then c$, and take two digits; a = new value (same on Return)
+{:date_input}
+	d$=mid$(str$(a),2):if c$<>"" then d$=c$+right$("0"+d$,2)
+	&"{f6}{white}"+a$+" ["+d$+"]{colon} "+c$
+	poke 53252,2:&"{pound}i1":poke 53252,ll%:if an$<>"" then a=val(an$)
+	return
+{:date_bad}
+	&"{f6}Out of range.":return
+' add a as two digits to b$
+{:date_digits}
+	b$=b$+right$("0"+mid$(str$(a),2),2):return
+{:edit_password}
+	if id<>1 then h=x:x=3:gosub 390:&"{pound}w2":x=h:return
+	goto {:edit_text}
+{:edit_lines}
+	w$=mid$(str$((val(w$)+1)*10),2):&,1,32:if an$="" or tr%<1 then return
+	a=int(val(an$)/10)-1:if a<. or a>9 then:&"{f6}10-100 lines.{pound}w2":return
+	u$(i,0)=mid$(str$(a),2):return
+
+' split access flags (field 23) into fields 31-50
+{:split_flags}
+	a$=u$(23,0):for i=1 to 20:u$(30+i,0)=mid$(a$,i,1):next:u$(48,0)=mid$(a$,18,2):return
+
+' put fields 11, 13 and 23 back together from 24-50
+{:pack}
+	u$(11,0)=mid$(str$(val(u$(29,0))+256*val(u$(30,0))),2)
+	a$=u$(13,0):for i=24 to 28:a$=a$+u$(i,0):next:b$=a$
+	a$="":for i=31 to 47:a$=a$+left$(u$(i,0)+"0",1):next
+	u$(23,0)=a$+right$("00"+u$(48,0),2)+left$(u$(50,0)+"0",1):return
+
+' quit this user: save if anything changed
+{:done}
+	c=.:for i=1 to 50:if u$(i,0)<>u$(i,1) then c=1
+	next:if c=. then {:prompt}
+	&"{f6}Save changes{question} ":gosub 96:if a=. or tr%<1 then {:prompt}
+	&"{clear}{f6}Writing to user data files..."
+	gosub {:pack}:u$(13,0)=b$
+	if u$(1,0)<>u$(1,1) then gosub {:rename}
+	gosub 35:a$="":for i=1 to 23:a$=a$+u$(i,0)+r$:next:gosub 1
+	print#2,a$;:close 2:if x=id then im=2:gosub 445
+	goto {:prompt}
+
+' handle changed: rename mail files, update u.index and u.weedinfo
+' (from i.ED)
+{:rename}
+	h=x:tt$=u$(1,1):dr=2:gosub 3:a$="f.":for i=1 to 2
+	print#15,"r"dr$a$left$(u$(1,0),13)"="dr$a$left$(tt$,13):a$="m.":next
+	gosub 5:an$=tt$:kk=id:id=x:im=7:gosub 445:an$=u$(1,0):gosub {:weedinfo}
+	an$=u$(1,0):im=8:gosub 445
+	id=kk:x=h:return
+{:weedinfo}
+	a$="4":gosub 28:dr=6:gosub 3:a$=dr$+"u.weedinfo":&,16,1
+	gosub 5:if e% then return
+{:weedinfo_next}
+	a%=id:&,16,8:if a% then:&,16,5:goto {:weedinfo_next}
+	a$=dr$+"u.weedinfo":print#15,"s" a$:&,16,2:return
+
+{:quit}
+	&,18,1:goto 300
+
+' list users (from i.UU)
+{:list}
+	a$="index":gosub 28:dr=6:gosub 3:a$=dr$+"u.index":&,16,1:uh=a%
+	p$="{lt. green}User List{lt. blue}":cm$=p$:gosub 9:a=10:gosub 11
+	if a=. then x=4:gosub 390:close 2:return
+	close 2
+	kk=1:dt$(1)="":gosub 35:rc=.:sh=.
+	a%=ur:&"{f6:2}{yellow}Out of {pound}%a users{comma} where should{f6}the list begin{question} (1){f6:2}{lt. blue}"
+	gosub 6:if tr%<1 then 300
+	x=val(an$):if x<1 or x>ur then x=1
+	&"{f6:2}":for x=x to ur:gosub 1:&,2,2:if a$="{^}" then a$="{orange}(Deleted Account)":goto {:list_line}
+	if a$="RES" then a$="{purple}(Reserved Account)":goto {:list_line}
+	an$=a$:&,15,1:a$=an$
+{:list_line}
+	d$=mid$(str$(x),2):d$=left$(d$+"{white}----",6)
+	&"{lt. red}{pound}$d{yellow}{pound}$a{f6}":if rc then x=ur
+	next:close 2
+	&"{f6}{white}Listing finished.{f6}Hit any key{pound}g1":return
+
+' fields: how edited (t%), page, position, longest input, label
+	data 1,1,1,20,"Handle"
+	data 7,1,2,15,"Password"
+	data 1,1,3,15,"First Name"
+	data 1,1,4,15,"Last Name"
+	data 1,1,5,38,"Email Addr."
+	data 6,1,7,11,"Message Date"
+	data 2,1,6,2,"Access Group"
+	data 5,2,8,3,"Calls Today"
+	data 5,2,9,5,"Total Calls"
+	data 3,3,1,1,"Computer"
+	data 0,0,0,0,"Linelen/Screen"
+	data 5,3,4,1,"Upper/Lower"
+	data 4,3,9,1,"Linefeeds"
+	data 4,3,5,1,"Expert Mode"
+	data 5,2,1,5,"Downloads"
+	data 5,2,2,5,"Uploads"
+	data 5,2,3,5,"Blocks DL'ed"
+	data 5,2,4,5,"Blocks UL'ed"
+	data 5,2,7,5,"Credits"
+	data 5,2,5,5,"Posts"
+	data 5,2,6,5,"Responses"
+	data 6,1,8,11,"Last Call"
+	data 0,0,0,0,"Access Flags"
+	data 4,3,6,1,"More Prompt"
+	data 4,3,7,1,"Cursor Menus"
+	data 0,0,0,0,"Some Flag"
+	data 0,0,0,0,"Some Flag"
+	data 1,3,8,10,"Time Zone"
+	data 5,3,2,2,"Line Length"
+	data 5,3,3,2,"Screen Lines"
+	data 4,5,1,1,"Non-Weed"
+	data 5,4,10,1,"Credit Ratio"
+	data 4,5,2,1,"Local Maint"
+	data 4,4,1,1,"Post/Respond"
+	data 4,4,2,1,"U/D Access"
+	data 8,4,5,3,"Editor Lines"
+	data 4,5,3,1,"Unlimited DLs"
+	data 4,5,4,1,"Remote Maint"
+	data 4,4,3,1,"E-Mail"
+	data 4,4,4,1,"User List"
+	data 4,5,9,1,"BAR/Log View"
+	data 4,5,5,1,"Submaint"
+	data 4,5,6,1,"Files Maint"
+	data 4,5,8,1,"MCI Access"
+	data 4,5,7,1,"Primetime UDs"
+	data 5,4,6,1,"Max Idle Time"
+	data 5,4,7,1,"Calls/Day"
+	data 5,4,8,2,"Time/Call"
+	data 0,0,0,0,"Time/Call"
+	data 5,4,9,1,"DLs/Call"
+	rem "i.UU (c)nissa 200619 lh"
+	rem "i.UU editor 2026-10-12 rs"

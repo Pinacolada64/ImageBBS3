@@ -24,6 +24,7 @@ asm/visual.prg	++ visual
 # --- BASIC modules (make basic) ---
 basic/i.main.prg	i.main
 basic/i.IM.prg	i.IM
+basic/i.UU.prg	i.UU
 basic/i_IM.misc.prg	i/IM.misc
 basic/i.SB.prg	i.SB
 basic/i_su.config.prg	i/su.config
