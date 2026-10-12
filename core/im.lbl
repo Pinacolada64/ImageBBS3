@@ -59,7 +59,9 @@
 ' {:25}
 ' 	return
 {:28}
-	cm$=a$:gosub {:9}:dr=5:gosub {:3}:if "++ "+a$=ml$ then e%=.:return
+' 10/12/2026: cm$=a$+"", a copy: cm$=a$ pointed into the calling module's
+' text (e.g. a$="menu2"), which shows as junk in e.errlog once it's replaced
+	cm$=a$+"":gosub {:9}:dr=5:gosub {:3}:if "++ "+a$=ml$ then e%=.:return
 {:29}
 	ml$="++ "+a$:a$=dr$+ml$:&,7,dv%,2:goto {:5}
 {:30}
