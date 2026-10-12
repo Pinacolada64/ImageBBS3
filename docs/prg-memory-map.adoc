@@ -52,7 +52,8 @@ While running:
 | `$1719`-`$1731` | `hibytes`
 | `$1732`-`$174A` | `lobytec`
 | `$174B`-`$1763` | `hibytec`
-| `$1764`-`$177F` | unused
+| `$1764` | `i.tests`: 165 while a test it started is running (otherwise unused)
+| `$1765`-`$177F` | unused
 | `$1780`-`$17FF` | `pmodetbl`
 | `$1800`-`$27FF` | editor execution location (swapped in when needed)
 // verify this:

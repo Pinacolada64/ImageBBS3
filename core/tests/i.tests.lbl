@@ -1,0 +1,33 @@
+{uses:../3_0-preface.lbl}
+' i.tests: a cursor menu ("++ menu2") of the i.test programs. The one
+' chosen is loaded as an i. module, which replaces this one, so first
+' $1764 (5988, unused by Image) is set to 165. Each test's exit checks it
+' and loads i.tests again instead of going to the main prompt:
+'   a$="tests":on -(peek(5988)=165) goto 70:goto 300
+' Quitting the menu clears it.
+'
+' To add a test: a DATA line with its name (without "i.test "), and the
+' exit above in the test.
+{alpha:alt}
+{include:../quoters.lbl}
+{:3000}
+	rem "i.tests" {usedef:__BuildDate} {usedef:__BuildTime}
+	&,18,0:a$="menu2":gosub 28:if e% then:&:goto {:quit}
+	&,28,1:restore:n=.
+{:count}
+	read a$:if a$<>"" then n=n+1:goto {:count}
+	n=n+1:dim m%(16,n),t$(n):restore:for i=1 to n-1:read t$(i)
+	&,16,.,34,m%(.,i),chr$(192+i),"",t$(i):next
+	&,16,.,34,m%(.,n),"Q","","Quit"
+	&"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS v3.0{pound}{back arrow}37{blue}  {f6}"
+	&"{rvrs on} {cyan}          Test Programs{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+	&,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}"
+	if tr%<1 or lm=n then {:quit}
+	poke 5988,165:a$="test "+t$(lm):goto 70
+{:quit}
+	poke 5988,.:&,18,1:goto 300
+
+' the tests, without "i.test "; "" ends the list
+	data "calls","clocks","convert","copier","date","frame","string","structs"
+	data "tagscan","visual",""
+	rem "i.tests 2026-10-12 rs"

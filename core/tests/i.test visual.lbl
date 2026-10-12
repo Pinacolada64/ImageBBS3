@@ -21,5 +21,5 @@
 	kk=peek(1022):&"{f6}{lt. blue}$03fe (lines){colon}{white}"+str$(kk)+"{f6}"
 	if kk then for x=1 to kk:&"{pound}#3{pound}!x{colon} "+tt$(x)+"{f6}":next
 {:finish}
-	&"{f6}{yellow}>Hit a Key<{pound}g1":goto 300
+	&"{f6}{yellow}>Hit a Key<{pound}g1":a$="tests":on -(peek(5988)=165) goto 70:goto 300
 	rem "i.test visual (c)nissa 2026-10-09 rs"

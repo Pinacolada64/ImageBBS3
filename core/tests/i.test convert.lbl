@@ -28,6 +28,7 @@
 {step:2}
 {assign:96	=96	} ' yes/no prompt
 {assign:300	=300	} ' main prompt
+{assign:70=70} ' im.prep_load_i.file
 
 {include:../quoters.lbl}
 
@@ -41,7 +42,7 @@
 	fs$="{pound}#3{pound}# "
 {:menu}
 	lp=1:&"[Return{equal}Quit{comma} 1{equal}convnam{comma} 2{equal}convdsk{comma} 3{equal}convimg{comma} 4{equal}chkspcl]{f6}"
-	&"Sub-Function{colon} &{comma}64{comma}{pound}i1":if an$="" then:&"Quitting.{f6}":goto 300
+	&"Sub-Function{colon} &{comma}64{comma}{pound}i1":if an$="" then:&"Quitting.{f6}":a$="tests":on -(peek(5988)=165) goto 70:goto 300
 	op=int(val(an$)):if op<1 or op>4 then:&"Out of range.{f6}":goto {:menu}
 	if op=1 then {:test_convnam}
 ' 2=convdsk and 4=chkspcl decode f-keys, so convert the encoded string s2$;
@@ -72,7 +73,7 @@
 	x$=s1$:gosub {:sub.test_conversion}
 
 	&"Run again{question}{colon} ":gosub 96:if a then {:menu}
-	goto 300
+	a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 {:test_convnam}
 	poke 53252,78:an$="O'MALLEY'S BAR":w$=an$:p$="String with ' in it"

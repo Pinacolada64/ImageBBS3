@@ -4,6 +4,7 @@
 {step:2}
 {assign:92	=92		} ' >>>Canceled!
 {assign:300	=300	} ' main prompt
+{assign:70=70} ' im.prep_load_i.file
 {assign:370	=370	} ' b$ mode: a
 
 {include:../quoters.lbl}
@@ -333,7 +334,7 @@
 	gosub {:sub.todo}:return
 
 {:quit}
-	&,28,2:goto 300
+	&,28,2:a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 {:sub.make_random_date}
 ' not calendar-accurate (i.e., Sept. 19th may not fall on a Tuesday of the given year, but too lazy to code it properly)

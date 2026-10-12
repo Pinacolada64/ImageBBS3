@@ -33,7 +33,7 @@
 '	im=1:gosub {:im.subDisplay}
 	im=1:gosub 443
 '	&,18,1:goto {:im.mainPrompt}
-	&,18,1:goto 300
+	&,18,1:a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 {nice:100}
 ' 3100

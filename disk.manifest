@@ -40,3 +40,7 @@ tests/i.test date.prg	i.test date
 tests/i.test clocks.prg	i.test clocks
 tests/i.test visual.prg	i.test visual
 tests/i.test tagscan.prg	i.test tagscan
+tests/i.test copier.prg	i.test copier
+tests/i.test frame.prg	i.test frame
+tests/i.test string.prg	i.test string
+tests/i.tests.prg	i.tests

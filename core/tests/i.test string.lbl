@@ -1,6 +1,7 @@
 ' i.test string.2/ => .prg binary
 
 {assign:300	=300}	' main prompt
+{assign:70=70} ' im.prep_load_i.file
 {:3000}
 {step:2}
 {alpha:alt}
@@ -17,7 +18,7 @@
 ' &,28,2: restore array pointers, level 2
     &,28,2:goto {:3000}
 {:quit}
-    &"Quitting.{f6}":&,40:goto 300
+    &"Quitting.{f6}":&,40:a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 ' after quit:
 ' M=23026 bytes free
