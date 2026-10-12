@@ -125,6 +125,9 @@ included below.
 - [ ] Log the setup messages to `e.log` (code TODO).
 - [ ] Clear whole screen lines: can `&,69,0,<line>,"{40 spaces}"` do it? The
   screen line link needs clearing too.
+- [ ] AutoMaint: Log more actions to disk, capture elapsed time of tasks using mn%
+- [ ] 'PRIME' display should be in column 39, not 26, IMHO.
+- [ ] Trim e-mail address to 20 characters so it doesn't overflow its place in the screen mask.
 
 ### 8. Image 128
 
