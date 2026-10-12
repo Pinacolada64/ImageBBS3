@@ -112,72 +112,136 @@ This module can display PRG files.
 | `&,16,0,_ll%_` | Detokenize BASIC file, use column width `ll%` | 
 |===
 
-==== Graphic Menu
+==== `++ menu2`: Graphic Menu
 
-The ML module `++ menu2` handles adding menu items, hotkeys, displaying the menu and passing the menu item selected back to BASIC.
+The ML module `++ menu2` draws a framed menu of items, then lets the user move a highlight with the cursor keys and choose an item with kbd:[Return] or the item's hotkey.
+`i.IM` (the configuration editor), `i.GF` and `i.UU` use it.
 
-`&,16,0`: 
-Add menu item
+Every call starts with the same three parameters:
 
-_Parameters:_
+`&,16,_function_,_size_,_menu%(field,item)_`
 
-`&,16,0,_?_,_menu%(field, record)_,_"hotkey(s)"_,_"prefix_text?"_,_"menu_item_text"_`
+`function`: 0-3, below.
 
-`?`: `42`: draw two-column menu
+`size`: the number of bytes in one menu item: 2 × (the array's first dimension + 1).
+For example, `34` for `dim m%(16,n)`, `42` for `m%(20,n)`, `46` for `m%(22,n)`.
+The longer the item, the longer the title it can hold (`size` − 14 characters).
 
-`menu%(_field,record_)`: struct to put menu text in
+`menu%(field,item)`: the integer array of menu items.
+Functions 0 and 1 name the item to fill in; functions 2 and 3 name the first item of the menu.
 
-`hotkey(s)`: One (kbd:[B]) or two (kbd:[/B]) keys to type to select this menu item
+[%header]
+[%autowidth]
+|===
+| Function | Purpose | Returns
+| `&,16,0` | Add one menu item | _n/a_
+| `&,16,1` | Add menu items from a struct array | `a%`=records checked, `b%`=items added
+| `&,16,2` | Draw the menu, then let the user choose | `a%`=item chosen (0 for the first)
+| `&,16,3` | Let the user choose from a menu already drawn | `a%`=item chosen (0 for the first)
+|===
 
-`prefix_text`:
+===== Menu Items
 
-`menu_item_text`: Text the user sees for this menu item.
+Each item is one record of the array.
+`m%(3,i)` holds the hotkey, so `chr$(m%(3,i) and 255)` is the key of item `i` (as `i.GF` does).
 
-_Example:_
+[%header]
+[%autowidth]
+|===
+| Field | Bytes | Contents
+| `m%(0,i)` | 0-1 | screen column, row (filled in by `&,16,2`)
+| `m%(1,i)`, `m%(2,i)` | 2-5 | the item to move to on kbd:[↑], kbd:[↓], kbd:[→], kbd:[←] (filled in by `&,16,2`)
+| `m%(3,i)` | 6-7 | hotkey prefix (0 for none, or e.g. kbd:[/]), hotkey
+| `m%(4,i)` | 8-9 | value: 0, or a record number (`&,16,1`)
+| `m%(5,i)`-`m%(6,i)` | 10-13 | up to 4 characters printed before the hotkey
+| `m%(7,i)`... | 14- | the item's title
+|===
 
-.i.GF: add menu item
+===== `&,16,0`: Add Menu Item
+
+`&,16,0,_size_,_menu%(0,item)_,_"hotkey"_,_"prefix"_,_"title"_`
+
+`hotkey`: one key (kbd:[B]), or a prefix and a key (kbd:[/B]) typed one after the other.
+
+`prefix`: up to 4 characters printed before the hotkey, often `""`.
+
+`title`: the text of the menu item.
+
+.i.IM: add menu items
 [source]
+----
+&,16,.,34,m%(.,1),"A","","Macros Editor"
+&,16,.,34,m%(.,2),"B","","Command Set"
+----
+
+.i.GF: add a menu item with a two-key hotkey
+[source]
+----
 3518 if pf>1 then:&,16,0,42,q%(0,n),"/B","Op ","Return to Previous Menu":n=n+1
+----
 
-.i.IM: add menu item
+===== `&,16,1`: Add Menu Items from a Struct Array
+
+`&,16,1,_size_,_menu%(0,item)_,_"hotkey"_,_types$_,_recsize_,_flags_,_mask_,_type_,_title_,_titlelen_,_count_,_most_,_value_`
+
+This makes menu items from records of a struct array: for example, the subboards a user may enter.
+`flags`, `type` and `title` name those fields of the first record to look at.
+Of the next `count` records, each one with any bit of `mask` set in its `flags` field becomes a menu item, up to `most` items.
+
+`hotkey`: the hotkey of the first item added; the next gets the next character, and so on (kbd:[1], kbd:[2], kbd:[3]...).
+
+`types$`: a table of 4-character prefixes. Each item's prefix is the 4 characters starting at position (`type` and 255) × 4.
+
+`recsize`: the number of bytes in one record of the struct array.
+
+`titlelen`: the number of bytes of the `title` field to copy (at most `size` − 14).
+
+`value`: the value stored with the first record checked; each record after that adds 1.
+
+_Returns:_ `a%`=records checked, `b%`=items added.
+
+.i.GF: add up to 9 items for the subboards whose flags have bit 0 set
 [source]
-3008 &,16,.,34,m%(.,1),"A","","Macros Editor"
+----
+3513 &,16,1,42,q%(0,n),"1",ct$,80,s%(0,1),1,s%(2,1),s%(13,1),28,rn,9,1:n=b%
+----
 
-_Returns:_
+===== `&,16,2`: Draw Menu and Choose
 
-`a%`: which item was selected
+`&,16,2,_size_,_menu%(0,first)_,_items_,_width_,_columns_,_rows_,_x_,_y_,_start_`
 
-'''
+This prints the menu in a blue frame, from wherever the cursor is, and fills in each item's screen position and cursor links.
+Items fill each column from top to bottom.
+Then it waits for the user to choose, as `&,16,3` does.
 
-`&,16,1`: Add string
+`items`: the number of menu items.
 
-_Parameters:_
+`width`: the width of a column, in characters.
+Each column takes `width` + 2 characters on the screen.
 
-Unknown.
+`columns`, `rows`: the size of the menu. For two columns, `rows` is `items`/2 rounded up (`n/2+.5`).
 
-'''
+`x`, `y`: the screen column and row where the first item's hotkey is printed.
+The menu is printed from the cursor's position, so these have to match it; they tell `&,16,3` where to put the cursor on each item.
 
-`&,16,2`: Use menu
+`start`: the item the cursor starts on (0 for the first).
 
-_Parameters:_
+_Returns:_ `a%`=the item chosen, 0 for the first.
 
- &,16,2, _?_, _menu%(field,record)_, _item_count?_, _?_, _?_, _menu_height?_, _?_, _?_, _?_
-
-// #FIXME#
-
-_Examples:_
-
-.i.IM: Use menu
+.i.IM: a two-column menu under a 4-line header
 [source]
-3350 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
+----
+&,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
+----
 
- xxxx &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.
+===== `&,16,3`: Choose from Menu
 
-_Returns:_
+`&,16,3,_size_,_menu%(0,first)_,_items_,_start_`
 
-`a%`: item number selected
+This lets the user choose from a menu already on the screen:
 
-'''
+* the cursor keys (or the ANSI sequences `ESC [ A` to `ESC [ D` from a remote terminal) move between items, wrapping around at the edges
+* kbd:[Return] chooses the item the cursor is on
+* a hotkey chooses its item at once. A two-key hotkey works only right after its prefix. If several single-key items share a hotkey, the last one is chosen.
 
-`&,16,3`: ?
-
+_Returns:_ `a%`=the item chosen, 0 for the first.

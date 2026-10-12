@@ -4,6 +4,58 @@
 
 * = protostart "menu2.prg"
 
+// menu2: cursor-driven ("graphic") menus, loaded at $c000 and called with
+// &,16. Used by i.IM, i.GF, i.UU, i.DE, i.SM and i_lo.on.
+//
+// Every call starts &,16,f,size,m%(...):
+//   f       function (0-3, below), passed in X
+//   size    bytes per menu item: 2*(first dim+1), e.g. 34 for dim m%(16,n),
+//           42 for m%(20,n), 46 for m%(22,n). Passed in Y.
+//   m%()    integer array of menu items, one per record; functions 0 and 1
+//           name the item to fill, functions 2 and 3 the first item
+//
+// One item (byte offsets; integers are high byte first):
+//   0-1    m%(0,i)    screen column, row (set by function 2)
+//   2-5    m%(1-2,i)  item to go to on up, down, right, left (function 2)
+//   6-7    m%(3,i)    hotkey prefix (0 for none, e.g. "/"), hotkey;
+//                     the key is chr$(m%(3,i) and 255)
+//   8-9    m%(4,i)    value: 0, or the record number (function 1)
+//   10-13  m%(5-6,i)  up to 4 characters shown before the hotkey (0 = end)
+//   14-    m%(7-,i)   title, up to size-14 characters (0 = end)
+//
+// &,16,0,size,m%(.,i),key$,prefix$,title$
+//   add one item. key$: one key ("A") or a prefix and a key ("/B").
+//   prefix$: up to 4 characters, e.g. "Op " in i.GF.
+//
+// &,16,1,size,m%(.,i),key$,types$,recsize,flags,mask,type,title,titlelen,
+//        count,most,value
+//   add items from a struct array (records of recsize bytes; flags, type
+//   and title name fields of its first record). Of the next count records,
+//   those whose flags have any bit of mask set become items, up to most of
+//   them. The first gets hotkey key$, the next key$+1 and so on; the prefix
+//   is 4 characters of types$ starting at (type and 255)*4; the title is
+//   titlelen bytes of the title field; the item's value is value plus the
+//   record's position in the scan.
+//   Returns a% = records checked, b% = items added.
+//   i.GF: &,16,1,42,q%(0,n),"1",ct$,80,s%(0,1),1,s%(2,1),s%(13,1),28,rn,9,1
+//
+// &,16,2,size,m%(.,first),n,width,columns,rows,x,y,start
+//   draw n items in a blue frame, filling each column top to bottom, then
+//   let the user choose (as function 3). The frame is printed from the
+//   cursor's current place: x,y is where the cursor goes on the first item
+//   (its hotkey), and must match what is printed. Each column is width+2
+//   characters wide. start = item the cursor starts on (0 = first).
+//   i.IM: &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.  (2 columns, under a
+//   4-line header)
+//
+// &,16,3,size,m%(.,first),n,start
+//   choose from a menu that is already on the screen.
+//   Keys: cursor keys or ANSI ESC [ A-D move (wrapping around); Return
+//   chooses the item under the cursor; a hotkey chooses its item at once
+//   (a prefixed one only right after its prefix; of several single-key
+//   items with the same key, the last wins).
+//   Returns a% = the item chosen, 0 for the first (callers use lm=a%+1).
+
 ml:
 		stx ml1+1
 		sty stsize
@@ -95,6 +147,9 @@ stsize:
 stcount:
 		.byte 0
 
+// function 0: fill item ($14) from key$, prefix$ ("type$") and title$
+// note: an empty key$ isn't checked for, so its bytes are whatever
+// ($22) points at
 addstr:
 		jsr evalstrx //key$
 		ldx #0
@@ -186,6 +241,11 @@ maxadd:
 arrvalue:
 		.word 0
 
+// function 1: add items from a struct array (see the top of the file)
+// notes: types$ isn't checked for length; the title copy stops at titlelen
+// or when the character count reaches size (not the end of the item), so a
+// titlelen over size-14 runs into the next item; a shorter title leaves
+// whatever was in the rest of the item
 addarr:
 		lda $14
 		pha
@@ -334,6 +394,7 @@ addarrd:
 		ldx #var_b_integer
 		jmp putvar
 
+// $14/$15 = address of item X
 calcbase:
 		lda menubase
 		ldy menubase+1
@@ -352,6 +413,9 @@ calcb3:
 		sty $15
 		rts
 
+// store in the item the item to go to for each direction (Y = offset,
+// 2-5), wrapping at the edges. a = this item, x/y = its column/row,
+// items run down each column (r per column)
 linkleft:
 		lda a
 		sec
@@ -421,30 +485,32 @@ putl1:
 menubase:
 		.word 0
 n:
-		.byte 0
+		.byte 0 // number of items
 w:
-		.byte 0
+		.byte 0 // column width
 r:
-		.byte 0
+		.byte 0 // rows
 c:
-		.byte 0
+		.byte 0 // columns
 a:
-		.byte 0
+		.byte 0 // item being drawn
 x:
-		.byte 0
+		.byte 0 // its column
 y:
-		.byte 0
+		.byte 0 // its row
 px:
-		.byte 0
+		.byte 0 // its screen column
 py:
-		.byte 0
+		.byte 0 // its screen row
 sx:
-		.byte 0
+		.byte 0 // screen column of the first item
 sy:
-		.byte 0
+		.byte 0 // screen row of the first item
 cp:
-		.byte 0
+		.byte 0 // item under the cursor
 
+// function 2: draw the menu, fill in each item's position and links,
+// then fall into the cursor loop (cursm0)
 usemenu:
 		jsr evalbytx
 		stx n
@@ -649,6 +715,7 @@ put1:
 		lda #' '
 		jmp xchrout
 
+// print an item: prefix text, hotkey (white), title (cyan), padded to w
 putitem:
 		jsr put0
 		ldx #1
@@ -697,12 +764,13 @@ puti9:
 		jmp put1
 
 findflag:
-		.byte 0
+		.byte 0 // a single-key hotkey matched
 key1:
-		.byte 0
+		.byte 0 // last key typed
 key2:
-		.byte 0
+		.byte 0 // the key before it (ESC [ sequence or hotkey prefix)
 
+// function 3: let the user choose; a% = item chosen
 cursmenu:
 		jsr evalbytx
 		stx n
@@ -753,6 +821,7 @@ cursm5:
 		iny
 		cmp #cursor_left
 		beq cursm4
+// not a cursor key: look for an item with this hotkey
 		ldx #0
 		jsr calcbase
 		ldx #0
@@ -797,6 +866,7 @@ cursm3:
 		sta varbuf
 		ldx #var_a_integer
 		jmp putvar
+// cursor key: move to the item linked at offset Y (255 = stay)
 cursm4:
 		lda ($14),y
 		cmp #255
@@ -805,6 +875,7 @@ cursm4:
 cursm9:
 		jmp cursm1
 
+// put the cursor on item X (&,70 with its column and row)
 curscalc:
 		jsr calcbase
 		ldy #0
