@@ -1,11 +1,18 @@
 ' encoded f-keys:
-{quoter:133=comma	} ' f1
-{quoter:134=colon	} ' f3
+' Typing a function key in quote mode puts its code in the string, which
+' shows as a reversed letter: f1 [E], f3 [F], f5 [G], f7 [H], f2 [I], f4 [J],
+' f6 [K], f8 [L] ([x] = reversed x). That's how these tokens look in a .prg
+' or on the C64 screen; e.g. {f6} shows as [K]. Image's & output prints them as
+' the symbols below (f6 as a carriage return).
+' Don't put one right after {pound}: MCI masks the byte after the pound with
+' and #63, so it would run MCI command E-L instead.
+{quoter:133=comma	} ' f1 [E]
+{quoter:134=colon	} ' f3 [F]
 ' can't use "quote", that puts a literal quote mark in the string and breaks things:
-{quoter:135=quotation	} ' f5
-{quoter:136=asterisk	} ' f7
+{quoter:135=quotation	} ' f5 [G]
+{quoter:136=asterisk	} ' f7 [H]
 
-{quoter:137=question	} ' f2
-{quoter:138=equal	} ' f4
-' f6 is excluded since {return} in quotes puts a literal chr$(13) in the string
-{quoter:140=up_arrow	} ' f8
+{quoter:137=question	} ' f2 [I]
+{quoter:138=equal	} ' f4 [J]
+' f6 [K] is excluded since {return} in quotes puts a literal chr$(13) in the string
+{quoter:140=up_arrow	} ' f8 [L]

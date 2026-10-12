@@ -31,3 +31,34 @@ but those bytes no longer match the original, so a converted file is no longer
 "byte-for-byte identical" to the release. Say so when reporting a rebuild.
 
 Use `{pound}`, not `£`, in BASIC code.
+
+### Symbols in `&"..."` output strings: use the quoter tokens
+
+For readability, write these symbols in strings printed with `&` as the
+tokens defined in `core/quoters.lbl`, and include that file after
+`{alpha:alt}` (`{include:quoters.lbl}`, or `{include:../quoters.lbl}` from
+`core/tests/`):
+
+| Symbol | Token |
+|---|---|
+| `,` | `{comma}` |
+| `:` | `{colon}` |
+| `"` | `{quotation}` |
+| `*` | `{asterisk}` |
+| `?` | `{question}` |
+| `=` | `{equal}` |
+| `^` | `{up_arrow}` |
+
+Each token builds as an encoded f-key byte (`$85`-`$8C`), which `&` output
+turns back into the symbol. That also goes for text assigned to a variable
+that is only ever printed with `&` (e.g. `a$=a$+"{comma} hidden"`). Leave the
+plain symbol in strings that are compared, used as filenames, sent to the disk,
+or printed some other way, because the bytes differ.
+
+### Variables in `&"..."` output strings: use MCI
+
+To print a single-letter variable in an `&` string, use MCI instead of
+`str$()`: `{pound}%u` for `u%`, `{pound}!x` for `x`, `{pound}$z` for `z$`
+(e.g. `&"User {pound}%u's list"`, not `&"User"+str$(u%)+"'s list"`). MCI
+reads just one letter after the command, so this only works for one-letter
+names, and it prints no leading space as `str$()` does.

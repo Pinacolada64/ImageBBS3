@@ -2715,7 +2715,7 @@ Adding `+""` (`an$="THE CHIEF"+""`) makes a separate copy first.
 | `source/strio.s`: `convtbl`/`convtbh`, which send sub-functions 1-4 to `convstr`; `source/calls.s`: `convstr:` (jump table entry 64)
 |===
 
-Test program: `core/tests/i.test-convert.lbl`.
+Test program: `core/tests/i.test convert.lbl`.
 
 '''
 

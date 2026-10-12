@@ -1,6 +1,7 @@
 {step:2}
 {crunch:on}
 {alpha:alt}
+{include:../quoters.lbl}
 {assign:300	=300	}
 ' C64List4_04.exe "i.test frame.lbl" -prg -alpha:alt -crunch -ovr
 {:3000}
@@ -11,9 +12,9 @@
 '	&"{home}{pound}n7"
 	gosub {:sub.clear_lines}
 	d$={usedef:__BuildDate}:t$={usedef:__BuildTime}
-	&,70,0,7:&"i.test frame{f6}{pound}vjBuild date:  {pound}$d {pound}$t{f6:2}"
+	&,70,0,7:&"i.test frame{f6}{pound}vjBuild date{colon}  {pound}$d {pound}$t{f6:2}"
 	&"0) Quit{f6}1) Draw frame{f6}"
-	&"2) Scroll header{f6}3) Flash header, get keyboard input{f6:2}"
+	&"2) Scroll header{f6}3) Flash header{comma} get keyboard input{f6:2}"
 {:prompt}
 	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":goto 300
 	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
@@ -90,7 +91,7 @@
 ' 'i=not i' does not work
 {:3406}
 ' i=color index (0=gray, 1=yellow)
-	gosub {:sub.clear_lines}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option: "
+	gosub {:sub.clear_lines}:i=1:&"1) Option 1{f6}2) Option 2{f6}3) Option 3{f6}{back arrow}) Abort{f6:2}Option{colon} "
 {:3408}
 ' NOTE: Immutable line number
 ' flash frame contents:

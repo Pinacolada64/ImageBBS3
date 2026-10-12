@@ -6,24 +6,14 @@
 {assign:300	=300	} ' main prompt
 {assign:370	=370	} ' b$ mode: a
 
-' encoded f-keys
-' can't use "quote", that puts a literal quote mark in the string and breaks tokenization
-{quoter:133=comma	} ' f1
-{quoter:134=colon	} ' f3
-{quoter:135=quotation	} ' f5
-{quoter:136=asterisk	} ' f7
-{quoter:137=question	} ' f2
-{quoter:138=equal	} ' f4
-' don't use this
-' {quoter:139=return	} ' f6
-{quoter:140=up_arrow	} ' f8
+{include:../quoters.lbl}
 
 {:3000}
 	rem "i.test structs" {usedef:__BuildDate} {usedef:__BuildTime}
 	gosub {:sub.setup}:goto {:display_page_6}
 
 {:sub.todo}
-	&"TODO: Finish this.{f6}":return
+	&"TODO{colon} Finish this.{f6}":return
 
 {:sub.debug_done}
 	if db then:&"Done{f6}"
@@ -34,20 +24,20 @@
 {:header_page_6}
 ' ln=line number of routine, a%=calc goto line (l+61=3141), n%=menu option chosen
 	ln=3011:a%=ln+n%:&,66
-	&"&,60,0  Put String{f6}":return
-	&"&,60,1  Get String{f6}":return
-	&"&,60,2  Load {pound}$s from Disk{f6}":return
-	&"&,60,3  Save {pound}$s to Disk{f6}":return
-	&"&,60,4  Put Date{f6}":return
-	&"&,60,5  Get Date{f6}":return
-	&"&,60,6  Scan {pound}$s{f6}":return
-	&"&,60,7  Sort Array{f6}":return
-	&"&,60,8  Scan Numbers{f6}":return
-	&"&,60,9  Scan Sum{f6}":return
-	&"&,60,10 Copy Record{f6}":return
-	&"&,60,11 Scan for String{f6}":return
-	&"&,60,12 Game Scan{f6}":return
-	&"&,60,13 Text Read{f6}":return
+	&"&{comma}60{comma}0  Put String{f6}":return
+	&"&{comma}60{comma}1  Get String{f6}":return
+	&"&{comma}60{comma}2  Load {pound}$s from Disk{f6}":return
+	&"&{comma}60{comma}3  Save {pound}$s to Disk{f6}":return
+	&"&{comma}60{comma}4  Put Date{f6}":return
+	&"&{comma}60{comma}5  Get Date{f6}":return
+	&"&{comma}60{comma}6  Scan {pound}$s{f6}":return
+	&"&{comma}60{comma}7  Sort Array{f6}":return
+	&"&{comma}60{comma}8  Scan Numbers{f6}":return
+	&"&{comma}60{comma}9  Scan Sum{f6}":return
+	&"&{comma}60{comma}10 Copy Record{f6}":return
+	&"&{comma}60{comma}11 Scan for String{f6}":return
+	&"&{comma}60{comma}12 Game Scan{f6}":return
+	&"&{comma}60{comma}13 Text Read{f6}":return
 
 {:display_page_6}
 ' when menu pages are displayed, show option number and header text, e.g.:
@@ -55,7 +45,7 @@
 '  1) &,1  Input an$
 ' (etc.)
 	poke 970,.:for n=0 to 13:n%=n:&"{pound}#2{pound}# {pound}%n) ":gosub {:header_page_6}:next
-	&"[0-13, Q)uit, {question} List]{f6}"
+	&"[0-13{comma} Q)uit{comma} {question} List]{f6}"
 {:prompt}
 ' TODO: add "Px" for page selection
 	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
@@ -121,7 +111,7 @@
 {:3356}
 	an$=b$:&"Random":gosub {:3358}:an$=c$:&" Today":gosub {:3358}:goto {:3350}
 {:3358}
-	&" (Raw): {pound}v7{f6}":&,15:&"{pound}{back arrow}06(Long): {pound}v7M{f6}"
+	&" (Raw){colon} {pound}v7{f6}":&,15:&"{pound}{back arrow}06(Long){colon} {pound}v7M{f6}"
 	return
 
 {:3400} ' &,60,6: Scan Structure
@@ -136,8 +126,8 @@
 	zs%(1,1)=5:zs%(1,2)=300:zs%(1,3)=1000:zs%(1,4)=32767:zs%(1,5)=-1
 	d$="2041220823422105178944123010112005261008103012301010130"
 	for r=1 to 5:zs%(0,r)=0:a$=mid$(d$,r*11-10,11):&,60,4,0,zs%(2,r),a$:next
-	&"{f6}&,60,6 Scan Struct{f6}Numbers: 5, 300, 1000, 32767, -1 (65535){f6}"
-	lp=1:&"Dates: 2004-12-20, 2021-05-17, 2023-01-01 12:00 AM, 2026-10-08, 2023-01-01 1:30 AM{f6:2}"
+	&"{f6}&{comma}60{comma}6 Scan Struct{f6}Numbers{colon} 5{comma} 300{comma} 1000{comma} 32767{comma} -1 (65535){f6}"
+	lp=1:&"Dates{colon} 2004-12-20{comma} 2021-05-17{comma} 2023-01-01 12{colon}00 AM{comma} 2026-10-08{comma} 2023-01-01 1{colon}30 AM{f6:2}"
 	o=0:tt=4:e=4:gosub {:sub.scan_num}:o=1:e=1:gosub {:sub.scan_num}
 	o=14:tt=1000:e=2:gosub {:sub.scan_num}:o=15:e=3:gosub {:sub.scan_num}
 	o=6:tt=300:e=4:gosub {:sub.scan_num}:o=7:e=1:gosub {:sub.scan_num}
@@ -156,12 +146,12 @@
 {:sub.scan_num}
 	&,60,6,5,o,zs%(0,1),zs%(1,1),10,1,tt
 {:sub.scan_show}
-	x=a%:&"oper {pound}!o: a%={pound}!x (expect {pound}!e), flags":for r=1 to 5:x=zs%(0,r):&" {pound}!x":next:&"{f6}":return
+	x=a%:&"oper {pound}!o{colon} a%{equal}{pound}!x (expect {pound}!e){comma} flags":for r=1 to 5:x=zs%(0,r):&" {pound}!x":next:&"{f6}":return
 
 {:3450} ' &,60,7: Sort Array
 ' TODO: call {:sub.sort_animals} somewhere
 ' TODO: check what happens after a sorted array is sorted again
-	poke 970,.:lp=1:&"Current an$() array state (possibly unsorted):{f6}":gosub {:sub.display_animals}
+	poke 970,.:lp=1:&"Current an$() array state (possibly unsorted){colon}{f6}":gosub {:sub.display_animals}
 ' only example of this being used is:
 ' i/lo/tt maint:
 ' 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next
@@ -178,7 +168,7 @@
 ' so the names run down an$(0..t-1,1). count must be 2 or more: it used to be
 ' 0 here, which the sort takes as 65535 (and with an$(1,x) it also mixed in
 ' the empty an$(0,x) column)
-	poke 970,.:&,60,7,0,an$(0,1),t:&"Sorted array:{f6}"
+	poke 970,.:&,60,7,0,an$(0,1),t:&"Sorted array{colon}{f6}"
 {:sub.display_animals}
 ' display string array:
 	poke 970,.:for x=0 to t-1:n%=x:&f$+"{pound}%n) "+an$(x,1)+"{f6}"
@@ -195,24 +185,24 @@
 ' 16384 = $4000 = %01000000 00000000
 
 ' record size: dim s%(l%,t%) gives l%+1 integers = (l%+1)*2 bytes per record
-	&,60,8,s%(0,0),(l%+1)*2,1023,s%(8,1),f%(1),1:&"Total: {pound}%a{f6}"
-	poke 970,.:if a% then for n=1 to a%:&f$+"{pound}!n: "+str$(f%(n))+"{f6}"
+	&,60,8,s%(0,0),(l%+1)*2,1023,s%(8,1),f%(1),1:&"Total{colon} {pound}%a{f6}"
+	poke 970,.:if a% then for n=1 to a%:&f$+"{pound}!n{colon} "+str$(f%(n))+"{f6}"
 	return
 
 {:3550} ' &,60,9: Scan Sum
 ' &,60,9, record_count, record_size, struct%(field, record)
 	gosub {:sub.scansum_carry}
 {:scansum_prompt}
-	&"# of records to sum together (1-{pound}!t): {pound}i1":if an$="" then return
+	&"# of records to sum together (1-{pound}!t){colon} {pound}i1":if an$="" then return
 	an=int(val(an$)):if an<1 or an>t then return
-	poke 970,0:&"Summing:{f6}BASIC loop addition:{f6}"
-	x=.:for n=1 to an:y=s%(8,n):&"{pound}#2{pound}!n: {pound}!y{f6}":x=x+y:next:&"Total: {pound}!x{f6}"
-	poke 970,.:&"ScanSum:{f6}"
+	poke 970,0:&"Summing{colon}{f6}BASIC loop addition{colon}{f6}"
+	x=.:for n=1 to an:y=s%(8,n):&"{pound}#2{pound}!n{colon} {pound}!y{f6}":x=x+y:next:&"Total{colon} {pound}!x{f6}"
+	poke 970,.:&"ScanSum{colon}{f6}"
 ' FIXME: illegal quantity error
 ' &,60,9, number, record_size, struct%(field, record)
 ' (record size was 2 here, which summed fields 8, 9, 10... of record 1;
 ' check whether the illegal quantity error is still there)
-	n%=9:gosub {:header_page_6}:&,60,9,an,(l%+1)*2,s%(8,1):&"ScanSum Total: {pound}%a{f6}"
+	n%=9:gosub {:header_page_6}:&,60,9,an,(l%+1)*2,s%(8,1):&"ScanSum Total{colon} {pound}%a{f6}"
 	if x<>a% then:&"Does not match.{f6}"
 	if x=a% then:&"Matches.{f6}"
 	goto {:scansum_prompt}
@@ -224,9 +214,9 @@
 ' 30000*3 = 90000 passes 65535 on record 3; record 4 is 100
 	if zu=0 then dim zu%(1,4):zu=1
 	for r=1 to 3:zu%(0,r)=30000:zu%(1,r)=0:next:zu%(0,4)=100:zu%(1,4)=0
-	&,60,9,4,4,zu%(0,1):x=a%:&"{f6}Scan Sum carry check: 30000+30000+30000+100{f6}"
-	&"a%={pound}!x: 24564 = correct (90100 wrapped past 65535),{f6}"
-	&"-15472 = record 4 read one byte off (the bug){f6:2}":return
+	&,60,9,4,4,zu%(0,1):x=a%:&"{f6}Scan Sum carry check{colon} 30000+30000+30000+100{f6}"
+	&"a%{equal}{pound}!x{colon} 24564 {equal} correct (90100 wrapped past 65535){comma}{f6}"
+	&"-15472 {equal} record 4 read one byte off (the bug){f6:2}":return
 
 {:3600} ' &,60,10: Copy Record
 	gosub {:sub.todo}:return
@@ -261,12 +251,12 @@
 {:reset_defaults}
 	sr=1:nr=t:op=.:fs$="okapi"
 {:struct_11_menu}
-	b$=fs$:&"F)ind string......: {quotation}{pound}$b{quotation}{f6}"
-	a%=op:&"O)peration........: {pound}%a (":if op=. then:&"literal"
+	b$=fs$:&"F)ind string......{colon} {quotation}{pound}$b{quotation}{f6}"
+	a%=op:&"O)peration........{colon} {pound}%a (":if op=. then:&"literal"
 	if op=1 then:&"wildcard"
-	a%=sr:&" search){f6}S)tarting record..: {pound}%a{f6}"
-	a%=nr:&"N)umber of records: {pound}%a{f6:2}"
-	&"G)o{f6}R)eset defaults{f6:2}[F, O, S, N, R, G, ?) Menu, M)ain Menu]{f6}"
+	a%=sr:&" search){f6}S)tarting record..{colon} {pound}%a{f6}"
+	a%=nr:&"N)umber of records{colon} {pound}%a{f6:2}"
+	&"G)o{f6}R)eset defaults{f6:2}[F{comma} O{comma} S{comma} N{comma} R{comma} G{comma} {question}) Menu{comma} M)ain Menu]{f6}"
 	pl=1:p$="Option":&,1:if an$="" or an$="M" then return
 	if an$="{question}" then {:struct_11_menu}
 	if an$="R" then:&"Resetting defaults.{f6}":goto {:reset_defaults}
@@ -297,7 +287,7 @@
 
 {nice:5}
 {:struct_11_starting_record}
-	p$="Starting Record":&p$+": ":gosub {:sub.which_record}:if q=. then sr=a:&p$+"{pound}!a{f6}"
+	p$="Starting Record":&p$+"{colon} ":gosub {:sub.which_record}:if q=. then sr=a:&p$+"{pound}!a{f6}"
 	return
 
 {nice:5}
@@ -309,13 +299,13 @@
 ' s%(11,1)=field/record in struct to search
 ' f%(1)=array and starting element to put search results in (assuming it puts record numbers here)
 ' sr=starting record
-	if db then:&"&,60,11,"+str$(nr)+","+mid$(str$((l%+1)*2),2)+","+str$(op)+",{quotation}"+fs$+"{quotation},s%(11,1),f%(1),"+str$(sr)+"{f6}"
+	if db then:&"&{comma}60{comma}11{comma}"+str$(nr)+"{comma}"+mid$(str$((l%+1)*2),2)+"{comma}"+str$(op)+"{comma}{quotation}"+fs$+"{quotation}{comma}s%(11{comma}1){comma}f%(1){comma}"+str$(sr)+"{f6}"
 ' record size: dim s%(l%,t%) gives (l%+1)*2 bytes per record (this used to
 ' pass t, the number of records, which skipped through the names)
 	&,60,11,nr,(l%+1)*2,op,fs$,s%(11,1),f%(1),sr
 	if a%=. then lp=1:&"(No records matching those search parameters found.){f6}":return
 ' do GetString on each element of f%()
-	poke 970,.:&"Results ({pound}%a):{f6}"
+	poke 970,.:&"Results ({pound}%a){colon}{f6}"
 ' r%=element in result array
 	for x=1 to a%:x%=x:r%=f%(x):&,60,1,l,s%(11,r%),an$:&f$+"{pound}%x) {pound}%r {quotation}{pound}v7{quotation}{f6}":if rc or sh then x=a%:gosub 92:sh=.
 	next:return
@@ -336,8 +326,8 @@
 	&,60,12,5,4,a$,zg%(0,1),b$
 ' the same thing in BASIC:
 	c$="":for r=1 to 5:c$=c$+mid$(a$,zg%(0,r)*2+1,2):next
-	&"{f6}&,60,12 Game Scan{f6}Tile numbers 0, 1, 2, 3, 0 from {quotation}{pound}$a{quotation}:{f6}"
-	&"&,60,12: {quotation}{pound}$b{quotation}{f6}BASIC:   {quotation}{pound}$c{quotation} (expect {quotation}  ##XX**  {quotation}){f6}":return
+	&"{f6}&{comma}60{comma}12 Game Scan{f6}Tile numbers 0{comma} 1{comma} 2{comma} 3{comma} 0 from {quotation}{pound}$a{quotation}{colon}{f6}"
+	&"&{comma}60{comma}12{colon} {quotation}{pound}$b{quotation}{f6}BASIC{colon}   {quotation}{pound}$c{quotation} (expect {quotation}  ##XX{asterisk}{asterisk}  {quotation}){f6}":return
 
 {:3750} ' &,60,13: Text Read
 	gosub {:sub.todo}:return
@@ -373,7 +363,7 @@
 
 ' FIXME: &,15 is dropping the weekday
 '	if db then l=len(dt$):an$=dt$:&,15:&"dt$={f5}"+dt$+"{f5}, len={pound}!l{f6}{pound}v7M{f6}"
-	if db then an$=dt$:l%=len(an$):&,15:&"dt$={quotation}"+dt$+"{quotation}, len={pound}%l{f6}{pound}v7M{f6}"
+	if db then an$=dt$:l%=len(an$):&,15:&"dt${equal}{quotation}"+dt$+"{quotation}{comma} len{equal}{pound}%l{f6}{pound}v7M{f6}"
 	return
 {:sub.pad_number}
 ' add to dt$ the digit 'd%'. w=1: 'd', w=2: '0d'
@@ -382,7 +372,7 @@
 {nice:100}
 {:sub.setup}
 ' ln=starting line # for menu items
-	&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
+	&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}
 	pr$="i.test struct"+"s"
 ' get Trb-L status (db=debug mode):
 ' 370 inverts a, so pre-inverting it reports true status
@@ -390,13 +380,13 @@
 ' DATA pointer does need to be RESTOREd (to not read error strings in "im", I guess)
 	&,27,3:restore:read t:&"{pound}!t animals.{f6}"
 ' TODO: expand to power of 2 (32)
-	if db then:&"Longest animal name:"
+	if db then:&"Longest animal name{colon}"
 ' tt$(): sorted array of animals
 ' l=length of longest animal name (to create proper size struct, assuming 2 chars fits in 1 element)
 	l=.:for n=1 to t:read a$:tt$(n)=a$:x=len(a$):if x>l then l=x:if db then:&" {pound}!l"
-	next:t%=t+1:dim an$(t%,1)::if db then:&"{f6}dim an$({pound}%t,1),"
+	next:t%=t+1:dim an$(t%,1)::if db then:&"{f6}dim an$({pound}%t{comma}1){comma}"
 ' 11 elements of storage, plus +.5 rounds up to next whole number
-	l%=l/2+11.5:dim s%(l%,t%):if db then:&"s%({pound}%l,{pound}%t){f6}"
+	l%=l/2+11.5:dim s%(l%,t%):if db then:&"s%({pound}%l{comma}{pound}%t){f6}"
 ' s$=string variable, saves a few bytes; f$=format string for integer variables
 	s$="Structure":f$="{pound}#2{pound}# "
 
@@ -438,12 +428,12 @@
 ' The array so%() contains the sorted numbers in order from 1-rr.
 ' The array ra%() contains the random results.
 	&,27,2:dim ra%(sr-1) ' ,so%(rr) ' already dimensioned [so%(31)]
-	poke 970,.:if db then:&"Sorted list:{f6}"
+	poke 970,.:if db then:&"Sorted list{colon}{f6}"
 ' 1) Create a pool of values.
 	for i=0 to rr:so%(i)=i+rl:if db then t%=so%(i):&f$+"{pound}%t  "
 	next:if db then:&"{f6:2}"
 
-	if db then:&"Randomized list:{f6}"
+	if db then:&"Randomized list{colon}{f6}"
 	for i=0 to sr-1:v%=rnd(0)*(rh-i)
 	ra%(i)=so%(v%):so%(v%)=so%(rh-i-1):if db then v%=ra%(i):&f$+"{pound}%v  "
 ' s%(8,i) = random number for &,60,9: ScanStruct
@@ -492,8 +482,8 @@
 ' an: value of option chosen
 ' er=1: an is not within the range of l-h
 ' er=0: it is within the range
-	&"[{pound}%l-{pound}%h":if q then:&", {question}) List"
-	if m then:&", M)ain Menu"
+	&"[{pound}%l-{pound}%h":if q then:&"{comma} {question}) List"
+	if m then:&"{comma} M)ain Menu"
 ' q: quick way of checking for menu/help...
 	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
 ' ...or main menu input: 'if [q|m] then <whatever>'

@@ -7,23 +7,24 @@
 {assign:im.subDisplay=443}
 
 {alpha:alt}
+{include:../quoters.lbl}
 {number:3000}
 	rem i.test copier, image 3.0
 {number:3002}
 {step:2}
 ' set program name for e.errlog, get debug status (checked means *disabled*):
 	pr$="test copier"+"":&,52,56,3:db=1-a%
-	&,18,1:lp=1:&"Test {f5}++ copier{f5} &,16,x params{f6:2}"
-	if db then:&"Build date: "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
+	&,18,1:lp=1:&"Test {f5}++ copier{f5} &{comma}16{comma}x params{f6:2}"
+	if db then:&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
 '	f$="copier":a$=f$:gosub {:im.loadProtocol}:if e% then:&:goto {:quit}
 	a$="copier":gosub 28:if e% then:&:goto {:quit}
 ' report name of protocol:
 	&"{quotation}{pound}vl{quotation} loaded.{f6}"
 {:menu}
-	lp=1:&"0=copy, 1=count bytes, 2=copy some, 255=report protocol #{f6}"
-	&"&,16,{pound}i1":if an$="" then:&"Quitting.{f6}":goto {:quit}
+	lp=1:&"0{equal}copy{comma} 1{equal}count bytes{comma} 2{equal}copy some{comma} 255{equal}report protocol #{f6}"
+	&"&{comma}16{comma}{pound}i1":if an$="" then:&"Quitting.{f6}":goto {:quit}
 	an=int(val(an$)):op=-1*(an=0)-2*(an=1)-3*(an=2)-4*(an=255)
-	if op<1 or op>4 then:&"Invalid selection: 0-2 or 255.{f6}":goto {:menu}
+	if op<1 or op>4 then:&"Invalid selection{colon} 0-2 or 255.{f6}":goto {:menu}
 ' a% is line # for calculated gosub (&,66,1):
 	a%=3000+op*100:&,66,1:goto {:menu}
 

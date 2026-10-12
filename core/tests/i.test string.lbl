@@ -4,13 +4,14 @@
 {:3000}
 {step:2}
 {alpha:alt}
+{include:../quoters.lbl}
     rem jay's struct/putstring/getstring test
-    &"Return quits.{f6:2}Enter string to PutString: {pound}i0":if an$="" then {:quit}
+    &"Return quits.{f6:2}Enter string to PutString{colon} {pound}i0":if an$="" then {:quit}
 ' &,27,2: save array pointers, level 2
     c=len(an$):&,27,2:dim hb%(1,c+2)
-    &"Writing {f5}{pound}v7{f5} into hb%(0,1)..."
+    &"Writing {f5}{pound}v7{f5} into hb%(0{comma}1)..."
     &,60,0,c,hb%(0,1),an$
-    &"{f6}Still alive. Now clearing an$ and using b$ instead:":an$=""
+    &"{f6}Still alive. Now clearing an$ and using b$ instead{colon}":an$=""
     &,60,1,c,hb%(0,1),b$
     &"{f6}Reading b$ as {f5}{pound}$b{f5}.{f6}"
 ' &,28,2: restore array pointers, level 2
