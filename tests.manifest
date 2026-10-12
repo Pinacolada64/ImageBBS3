@@ -9,3 +9,4 @@ tests/i.test clocks.prg	i.test clocks
 basic/sub.clocks.prg	sub.clocks
 asm/visual.prg	++ visual
 tests/i.test visual.prg	i.test visual
+tests/i.test tagscan.prg	i.test tagscan

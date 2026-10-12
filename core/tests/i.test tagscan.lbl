@@ -1,0 +1,109 @@
+{uses:../3_0-preface.lbl}
+' i.test tagscan: try "++ tagscan" (source/tagscan.s) as the inventory and
+' crafting engine of a small adventure game
+'
+' No program that used tagscan has been found, so the game here is made up to
+' fit the theory in tagscan.s's comments: objects have flag bits, a type and a
+' location (a user number, 0 = not in play), and "definitions" build one type
+' from up to three piece types.
+'
+' Arrays (element 0 of each holds the count):
+'   li%(n)    list of object numbers (an inventory)
+'   ob%(f,n)  objects: f=0 bits (1 = hidden), 1 type, 2 location; 6 bytes each
+'   od%(f,n)  definitions: f=1 type built, 2-4 piece types; 10 bytes each
+'   tn$(t)    type names, for display only
+'
+' The & calls pass only constants and variables that already exist: a new
+' simple variable moves the arrays after tagscan has found them.
+{alpha:alt}
+{include:../quoters.lbl}
+{:3000}
+	rem "i.test tagscan" {usedef:__BuildDate} {usedef:__BuildTime}
+	&,28,1:dim li%(11),ob%(2,10),od%(4,3),tn$(10)
+	cm$="Tagscan Test":gosub 9
+	&"{clear}{f6}{yellow}Tagscan test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+	a$="tagscan":gosub 28:if e% then:&:goto {:finish}
+	tn$(1)="lamp oil":tn$(2)="wick":tn$(3)="glass jar":tn$(4)="oil lamp"
+	tn$(5)="matches":tn$(6)="lit lamp":tn$(7)="rope":tn$(8)="hook"
+	tn$(9)="grapple":tn$(10)="gold coin"
+' objects: x% = type, y% = location, z% = bits
+' user 1 holds oil, wick, jar, matches, a hook and a hidden coin
+	k%=.:y%=1:z%=.
+	x%=1:gosub {:sub.add_obj}:x%=2:gosub {:sub.add_obj}:x%=3:gosub {:sub.add_obj}
+	x%=5:gosub {:sub.add_obj}:x%=8:gosub {:sub.add_obj}
+	z%=1:x%=10:gosub {:sub.add_obj}
+' user 2 holds the rope
+	z%=.:y%=2:x%=7:gosub {:sub.add_obj}
+' one of each object that can be built, not in play yet
+	y%=.:x%=4:gosub {:sub.add_obj}:x%=6:gosub {:sub.add_obj}:x%=9:gosub {:sub.add_obj}
+' definitions: oil lamp = oil + wick + jar; lit lamp = oil lamp + matches;
+' grapple = rope + hook
+	od%(1,1)=4:od%(2,1)=1:od%(3,1)=2:od%(4,1)=3
+	od%(1,2)=6:od%(2,2)=4:od%(3,2)=5
+	od%(1,3)=9:od%(2,3)=7:od%(3,3)=8:od%(.,.)=3
+	&"{lt. blue}Definitions{colon}{white}"
+	for i=1 to od%(.,.):a$=tn$(od%(2,i)):for x=3 to 4:if od%(x,i) then a$=a$+" + "+tn$(od%(x,i))
+	next:&"{f6}"+str$(i)+"{colon} "+tn$(od%(1,i))+" {equal} "+a$:next
+	&"{f6:2}":gosub {:sub.show_objs}:gosub {:sub.pause}
+
+' makelist: user 1's objects, leaving out hidden ones (bit 1)
+	u%=1:&"{clear}{yellow}&{comma}16{comma}3{colon} user 1's objects{comma} not hidden{f6:2}"
+	&,16,3,.,li%(.),ob%(.,.),6,od%(.,.),10,u%,1:gosub {:sub.show_list}
+
+' haveobjt: position in the list of an object of a type, or 0
+	&"{f6}{yellow}&{comma}16{comma}2{colon} does user 1 have...{f6}"
+	&,16,2,.,li%(.),ob%(.,.),6,od%(.,.),10,4:&"{white}an oil lamp{question}   a% {equal} {pound}%a{f6}"
+	&,16,2,.,li%(.),ob%(.,.),6,od%(.,.),10,2:&"{white}a wick{question}        a% {equal} {pound}%a{f6}"
+
+' findobjd: which definition builds each object in the list
+	gosub {:sub.show_defs}:gosub {:sub.pause}
+
+' scanvirt: oil + wick + jar make the oil lamp, which with the matches makes
+' the lit lamp (a second pass); the hook stays, as the rope is user 2's
+	&"{clear}{yellow}&{comma}16{comma}0{colon} build what user 1 can{f6:2}"
+	&,16,.,.,li%(.),ob%(.,.),6,od%(.,.),10:gosub {:sub.show_list}
+	gosub {:sub.save}:&"{f6}":gosub {:sub.show_objs}:gosub {:sub.show_defs}:gosub {:sub.pause}
+
+' user 1 gives the hook to user 2, who can now build the grapple
+	&"{clear}{yellow}User 1 gives user 2 the hook{f6:2}"
+	ob%(2,5)=2:u%=2:&,16,3,.,li%(.),ob%(.,.),6,od%(.,.),10,u%,1:gosub {:sub.show_list}
+	&"{f6}{yellow}&{comma}16{comma}0{colon} build what user 2 can{f6:2}"
+	&,16,.,.,li%(.),ob%(.,.),6,od%(.,.),10:gosub {:sub.show_list}
+	gosub {:sub.save}:&"{f6}":gosub {:sub.show_objs}
+{:finish}
+	&"{f6}{yellow}>Hit a Key<{pound}g1":goto 300
+
+' add object k%+1: type x%, location y%, bits z%
+{:sub.add_obj}
+	k%=k%+1:ob%(.,k%)=z%:ob%(1,k%)=x%:ob%(2,k%)=y%:ob%(.,.)=k%:return
+
+' tagscan only changes li%(): take the objects user u% had out of play,
+' then put the ones in the list back in u%'s hands
+{:sub.save}
+	for x=1 to ob%(.,.):if ob%(2,x)=u% then if (ob%(.,x) and 1)=. then ob%(2,x)=.
+	next:if li%(.) then for x=1 to li%(.):ob%(2,li%(x))=u%:next
+	return
+
+{:sub.show_list}
+	&"{lt. blue}User {pound}%u's list{colon}{white}":if li%(.)=. then:&" (empty)"
+	if li%(.) then for x=1 to li%(.):&"{f6}"+str$(x)+"{colon} "+tn$(ob%(1,li%(x)))+" (object"+str$(li%(x))+")":next
+	&"{f6}":return
+
+' &,16,1 with li%(x): a% = definition that builds that object's type, or 0
+{:sub.show_defs}
+	&"{f6}{yellow}&{comma}16{comma}1{colon} how was each one made{question}{f6}"
+	if li%(.)=. then return
+	for x=1 to li%(.):&,16,1,.,li%(x),ob%(.,.),6,od%(.,.),10
+	a$="not built from pieces":if a% then a$="definition {pound}%a"
+	&"{white}"+tn$(ob%(1,li%(x)))+"{colon} a% {equal} {pound}%a ("+a$+"){f6}":next:return
+
+{:sub.show_objs}
+	&"{lt. blue}Objects{colon}{white}"
+	for x=1 to ob%(.,.):a$="out of play":if ob%(2,x) then a$="user"+str$(ob%(2,x))
+	if ob%(.,x) and 1 then a$=a$+"{comma} hidden"
+	&"{f6}"+right$(" "+str$(x),3)+" "+left$(tn$(ob%(1,x))+"          ",10)+" "+a$:next
+	&"{f6}":return
+
+{:sub.pause}
+	&"{f6}{yellow}>Hit a Key<{pound}g1":return
+	rem "i.test tagscan (c)nissa 2026-10-12 rs"
