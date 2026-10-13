@@ -192,13 +192,14 @@ This module can display PRG files.
 ==== `++ menu2`: Graphic Menu
 
 The ML module `++ menu2` draws a framed menu of items, then lets the user move a highlight with the cursor keys and choose an item with kbd:[Return] or the item's hotkey.
-`i.IM` (the configuration editor), `i.GF` and `i.UU` use it.
+`i.IM` (the configuration editor), `i.GF` and `i.UU` (the user editor) use it, and so do `i.DE`, `i.SM` and `i_lo.on` in the 12/31/2023 release.
 
 Every call starts with the same three parameters:
 
 `&,16,_function_,_size_,_menu%(field,item)_`
 
 `function`: 0-3, below.
+`function` and `size` are the `&` call's _x_ and _y_ values, so they reach the module in the X and Y registers.
 
 `size`: the number of bytes in one menu item: 2 × (the array's first dimension + 1).
 For example, `34` for `dim m%(16,n)`, `42` for `m%(20,n)`, `46` for `m%(22,n)`.
@@ -244,6 +245,8 @@ Each item is one record of the array.
 
 `title`: the text of the menu item.
 
+CAUTION: `hotkey` mustn't be empty: `++ menu2` doesn't check, and the item gets whatever two bytes happen to be where the string would be.
+
 .i.IM: add menu items
 [source]
 ----
@@ -276,6 +279,15 @@ Of the next `count` records, each one with any bit of `mask` set in its `flags` 
 `value`: the value stored with the first record checked; each record after that adds 1.
 
 _Returns:_ `a%`=records checked, `b%`=items added.
+
+[CAUTION]
+====
+`++ menu2` doesn't check these, so:
+
+* `types$` must be long enough for every type: 4 characters for each, up to the highest `type`. A shorter one gives prefixes from whatever follows the string in memory.
+* `titlelen` must be at most `size` − 14. A longer title runs on into the next menu item.
+* A title shorter than the item's title field doesn't clear the rest of it, so the end of an earlier, longer title can show. Start from a freshly ``dim``ensioned array.
+====
 
 .i.GF: add up to 9 items for the subboards whose flags have bit 0 set
 [source]

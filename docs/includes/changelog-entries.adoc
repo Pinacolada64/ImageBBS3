@@ -11,7 +11,7 @@ The four calls (copy all, count bytes, copy some, protocol number), and the new 
 How count and copy some pack a file behind its length and unpack it.
 The protocol screen's counters.
 Closing a drive's command channel closes every file it has open.
-* `++ menu2` (cursor menus): its parameters worked out.
+* `++ menu2` (cursor menus): its parameters worked out, and what it doesn't check (empty hotkeys, short `types$`, long titles).
 The menu item record, adding items one at a time or from a struct array, drawing a menu and choosing from it.
 * `&,9`: number variables are now shown as digits (they showed garbage).
 Variable 31 is `b%`, not `b$`.
