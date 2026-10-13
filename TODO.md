@@ -108,7 +108,7 @@ included below.
 - [ ] Access group 9 is named "Group 10" (the loop variable + 1): it should
   be "Sysop" (code FIXME).
 - [ ] Keep the copyright year in one place (code TODOs; "(c) 2019 NISSA BBS
-  Software" around line 4266).
+  Software" [which is redundant] around line 4266).
 - [ ] Remove the old CMD/Lt. Kernal clock code (after `TODO: move "get time
   from cmd device" to sub.clocks`).
 - [ ] **The sysop's screen height is wrong after setup:** on the first login
@@ -126,10 +126,24 @@ included below.
 - [ ] Clear whole screen lines: can `&,69,0,<line>,"{40 spaces}"` do it? The
   screen line link needs clearing too.
 - [ ] AutoMaint: Log more actions to disk, capture elapsed time of tasks using mn%
+
+sub.display:
+
 - [ ] 'PRIME' display should be in column 39, not 26, IMHO.
 - [ ] Trim e-mail address to 20 characters so it doesn't overflow its place in the screen mask.
 
-### 8. Image 128
+### 8. Random Fixes
+
+IM/lightbar:
+
+- [ ] "NN" (typo of "N", "next page") quits unceremoniously.
+- [ ] If lightbar defaults have *changed*, apply checkmarks to lightbar after saving them.
+Applying Left "Alt" and not seeing the last 10 callers color change after quitting is frustrating.
+
+- [ ] Right "Trb": checked: enable border color changes on errors. unchecked: don't.
+- [ ] i.lo.im loads a *copy* of IM, when it could (probably) load i.IM instead. Waste of disk space.
+
+### 9. Image 128
 
 - [ ] Keep the bus scan and the `$`/`@` handling in `sub.*` modules, not in
   `i/su.config`, so a 128 version can share them.
