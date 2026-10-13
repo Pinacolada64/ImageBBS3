@@ -2,6 +2,11 @@
 // Reference Guide (prg-appendix-changelog.adoc) and by CHANGELOG.adoc.
 // Add new entries at the top, under a === YYYY-MM-DD heading.
 
+=== 2026-10-13
+
+* `&,1` Input Line: the editor flags for bits 0, 3 and 7 were backwards (they allow graphics and the MCI character, and make Delete on column one exit); the password flags are confirmed, with examples, and a test in `i.test calls`.
+* The password mask character is at 4850 (`$12f2`), not 17138; `&,6` sets an input length of 15, not 14.
+
 === 2026-10-12
 
 * New appendix: Test Programs: what each `i.test` program tries, and how to run them from the `i.tests` menu.

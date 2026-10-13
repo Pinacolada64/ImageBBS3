@@ -40,11 +40,11 @@ Line output count can be reset with `poke 970,0`.
 | Time set flag.
 `0`=Clock has been set, stop flashing bottom status line.
 
-| `17138`
+| `4850`
 | _n/a_
-| `$42f2`
-| _n/a_
-| Password mask character.
+| `$12f2`
+| `mask`
+| Password mask character, shown for each character typed by `&,6` and `&,1,_x_,1` (`X` when Image starts).
 
 | `53252`
 | _n/a_

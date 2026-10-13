@@ -227,37 +227,44 @@
 	gosub {:sub.todo}:return
 
 {:3250} ' &,1,x,y: input an$
-' TODO: implement testing &,1,x,<password_mode> flags
-' TODO: implement bitwise display of &,1 options
-' if (op and 1)=1 then:&"Disable typing graphics characters{f6}"
-' ...etc.
+' &,1,x,y: x = editor flags, y = password flags (source/swap1.s, inline)
 
-' &,1,x:
+' x: Binary | Decimal | Purpose (if set)
+' %00000001 | 1   | allow graphics, color and cursor characters
+' %00000010 | 2   | "." or "/" on column one exits input
+' %00000100 | 4   | don't show the prompt (p$)
+' %00001000 | 8   | allow typing the MCI character (pound)
+' %00010000 | 16  | word wrap
+' %00100000 | 32  | edit mode (shows w$ to edit)
+' %01000000 | 64  | ignore time remaining
+' %10000000 | 128 | Delete on column one exits input
 
-' Binary    | Decimal | Purpose (if set)
-' %00000001 | 1       | disable typing graphics characters
-' %00000010 | 2       | "." or "/" on column one exits input
-' %00000100 | 4       | disable prompt (p$)
-' %00001000 | 8       | disable typing £ (the MCI command character)
-' %00010000 | 16      | enable word-wrap
-' %00100000 | 32      | enable edit mode
-' %01000000 | 64      | ignore time remaining
-' %10000000 | 128     | disable typing Delete on column one to exit input
+' y: Binary | Decimal | Purpose (if set)
+' %00000001 | 1   | show the mask character, peek(4850) ($12f2, "X" at
+'                   boot), for each character typed
+' %00000010 | 2   | no output: nothing typed is shown
 
-' &,1,x,y:
+' returns an$, and peek(53254) ($d006):
+' 0 = normal, 1 = Delete or dot on column one, 2 = chat key, 3 = carrier
+' lost or time up
 
-' Binary    | Decimal | Purpose (if set)
-' %00000001 | 1       | password mask enabled for output [uses mask character in `peek(17138)`]
-' %00000010 | 2       | no output
-
-' returns:
-' location chat ($d006/53254) holds:
-' 0 = normal
-' 1 = delete or dot on column one
-' 2 = chat check hit
-' 3 = carrier/time loss
-
-	gosub {:sub.todo}:return
+' password input: masked (&,1,0,1) or not echoed at all (&,1,0,2)
+	l=peek(53252):pl=.
+{:amp_1_menu}
+	&"{f6}Mask character (peek(4850)){colon} "+chr$(peek(4850))+"{f6:2}"
+	&"1) &{comma}1{comma}0{comma}1{colon} password{comma} shown masked{f6}"
+	&"2) &{comma}1{comma}0{comma}2{colon} password{comma} not shown{f6}"
+	&"3) Change the mask character{f6}"
+	poke 53252,1:p$="Which":&,1,0,0:op=val(an$):if op<1 or op>3 or tr%<1 then poke 53252,l:return
+	if op=3 then p$="Mask":&,1,0,0:if an$<>"" then poke 4850,asc(an$)
+	if op=3 then {:amp_1_menu}
+	poke 53252,15:p$="Password":on op goto {:amp_1_masked},{:amp_1_hidden}
+{:amp_1_masked}
+	&,1,0,1:goto {:amp_1_result}
+{:amp_1_hidden}
+	&,1,0,2
+{:amp_1_result}
+	b=peek(53254):&"{f6}an${equal}{quotation}{pound}v7{quotation}{comma} peek(53254){equal}{pound}!b{f6}":goto {:amp_1_menu}
 
 {:3300} ' &,2: dskin
 	gosub {:sub.todo}:return

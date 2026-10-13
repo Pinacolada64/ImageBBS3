@@ -56,7 +56,9 @@
 	&,28,1:&,52,34,.:poke970,.:poke971,.:poke2042,.:poke53248,1:&"{lt. red}{clear}":gosub 12
 	poke53248,.:b$="connect":x=11:gosub{:3080}:&,52,5,zz:&,25:gosub 33:x=43:gosub 1
 {:3103}
-	&,2,2:an$=mid$(a$,cn-int(cn/len(a$))*len(a$)+1,1):&,15,2:poke17138,asc(an$)
+' the password mask character is at 4850 ($12f2), not 17138 ($42f2, an
+' older address)
+	&,2,2:an$=mid$(a$,cn-int(cn/len(a$))*len(a$)+1,1):&,15,2:poke4850,asc(an$)
 {:3104}
 	close2:&,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:ifathen:&,52,4,4
 	tr%=4:on-(zz=.)goto{:3114}:qb$="Local Console":nl=1:ll%=40:gosub 90:&,52,16,.:&"{f6}"

@@ -420,9 +420,7 @@ _Parameters:_
 
 `&,1,_editor_[,_password_]`
 
-====
-NOTE: Not all of these parameters are currently understood.
-====
+`editor` and `password` are the `&` call's _x_ and _y_ values: the input routine (`inline`, in `source/swap1.s`) gets them in the X and Y registers.
 
 `editor`: editor flags:
 
@@ -437,21 +435,21 @@ Bits may be combined to perform multiple functions.
 
 |=====
 | Binary | Decimal | Purpose (if set)
-| %00000001 | 1 | disable typing graphics characters
+| %00000001 | 1 | allow typing graphics, color and cursor characters
 
 | %00000010 | 2 | kbd:[.] or kbd:[/] on column one exits input
 
-| %00000100 | 4 | disable prompt (`p$`)
+| %00000100 | 4 | don't show the prompt (`p$`)
 
-| %00001000 | 8 | disable typing kbd:[&#163;] (the MCI command character)
+| %00001000 | 8 | allow typing kbd:[&#163;] (the MCI command character)
 
 | %00010000 | 16 | enable word-wrap
 
 | %00100000 | 32 | enable edit mode
 
-| %01000000 | 64 | ignore time remaining
+| %01000000 | 64 | ignore time remaining (input isn't cut off when time runs out)
 
-| %10000000 | 128 | disable typing kbd:[Delete] on column one to exit input
+| %10000000 | 128 | kbd:[Delete] on column one exits input
 |=====
 
 _Exit:_
@@ -492,7 +490,7 @@ If the user did not type anything and just hit kbd:[Return] or kbd:[Enter], `an$
 
 _Explanations:_
 
-#TODO#: demonstrations of each mode in `i.test calls`
+Test program: `core/tests/i.test calls.lbl`, line `{:3250}`: password input, masked and not shown.
 
 Edit mode::
 The prompt (`p$`) is displayed, and the default response (`w$`) is displayed.
@@ -504,19 +502,16 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 
 `password`: password flags:
 
-// NOTE: These haven't been tested, just going by what Ray said
-
 .Input Line: Password Entry Control Bits
 [%header]
 [%autowidth]
 |=====
 | Binary | Decimal | Purpose
-| `%00000001` | 1| password mask enabled for output
-
-[uses mask character in `peek(17138)`]
-
-| `%00000010` | 2| no output
+| `%00000001` | 1 | show the mask character, `peek(4850)` (`$12f2`; `X` when Image starts), for each character typed
+| `%00000010` | 2 | no output: nothing typed is shown
 |=====
+
+`an$` holds what was actually typed either way.
 
 _Exit:_
 
@@ -524,7 +519,17 @@ _Exit:_
 
 _Examples:_
 
-#TODO#: write examples for each option.
+.Input Line: Password, Masked
+[source,imagebasic]
+poke 53252,15:p$="Password":&,1,0,1
+
+`&,1,0,1`: no editor flags; password flag 1 shows the mask character (`X` unless changed with `poke 4850,_char_`) for each character typed.
+
+.Input Line: Password, Not Shown
+[source,imagebasic]
+poke 53252,15:p$="Password":&,1,0,2
+
+`&,1,0,2`: password flag 2 shows nothing as the user types.
 
 .Input Line: Set Line Length and Prompt
 [source,imagebasic]
@@ -712,14 +717,16 @@ _Exit:_
 
 === `&,6` Password Input
 
-Sets the input length to 14, and displays a definable mask character rather than the actual characters typed.
+Sets the input length to 15, converts what's typed to upper case, and shows a mask character for each character typed instead of the character itself; it doesn't show `p$`.
 The text typed is returned in plain (non-masked) text.
+It's <<amp-1-input-line,`&,1` Input Line>> with password flag 1 set.
 
 _Parameters:_
 
-`poke 17138,_mask_`: display _mask_ character instead of the user's input
+`&,6[,_x_]`: _x_ is more password flags, as for `&,1`: `&,6,2` shows nothing at all.
 
-You could do `poke 17138,asc("X")` to set the mask character to `X`.
+`poke 4850,_mask_`: show _mask_ (a character code) instead of each character typed.
+Image sets it to `X` when it starts; `poke 4850,asc("*")` changes it to `*`.
 
 _Exit:_
 
