@@ -101,6 +101,12 @@ inline:
 		lda varbuf //case lock
 		and #1
 		sta case
+// 10/13/2026: clear the password flags when input ends, as password (&,6)
+// does: left set, &,1,x,1 masked all output after it, until the next &,1
+		jsr inline0
+		lda #passmode_off
+		sta passmode
+		rts
 inline0:
 		ldy #$00
 		sty index

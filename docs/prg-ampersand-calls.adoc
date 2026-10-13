@@ -513,6 +513,8 @@ Then, the prompt (`p$`) is displayed again, and one of three choices can be made
 
 `an$` holds what was actually typed either way.
 
+NOTE: Before October 2026, `&,1` left the password flags set when it returned, so after `&,1,_x_,1` everything Image printed came out as the mask character until the next `&,1`. `&,1` now clears them when input ends, as <<_6_password_input,`&,6` Password Input>> always did.
+
 _Exit:_
 
 `an$`: text typed at the prompt.

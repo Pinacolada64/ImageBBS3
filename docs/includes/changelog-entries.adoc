@@ -5,6 +5,7 @@
 === 2026-10-13
 
 * `&,1` Input Line: the editor flags for bits 0, 3 and 7 were backwards (they allow graphics and the MCI character, and make Delete on column one exit); the password flags are confirmed, with examples, and a test in `i.test calls`.
+* `&,1` now clears its password flags when input ends (`source/swap1.s`); after `&,1,x,1`, all output was masked until the next `&,1`.
 * The password mask character is at 4850 (`$12f2`), not 17138; `&,6` sets an input length of 15, not 14.
 
 === 2026-10-12
