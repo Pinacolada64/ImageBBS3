@@ -7,7 +7,7 @@
 == Structures [[structures]]
 
 ////
-[source, basic]
+[source,imagebasic]
 10 rem hello **is this bold?** it is not
 ////
 
@@ -236,7 +236,7 @@ TIP: Because the unused byte 37 is _not_ on an even element boundary (the previo
 Since the ID# is an integer anyway, it would be best to use an integer array.
 The definition would look like this:
 
-[source,basic]
+[source,imagebasic]
 dim u%(18)
 
 TIP: Remember that arrays start at element 0!
@@ -247,7 +247,7 @@ To do so, you would need a 2-dimensional array.
 (Suppose that _x_ is the number of records you want.)
 This would change the `dim` statement to:
 
-[source,basic]
+[source,imagebasic]
 dim u%(18,x-1)
 
 ====
@@ -349,7 +349,7 @@ If _string$_ is longer than _length_, it is cut off; if shorter, the rest of the
 |===
 
 .Put String Into Struct
-[source,basic]
+[source,imagebasic]
 ----
 &,60,0,20,u%(1,1),na$
 ----
@@ -392,7 +392,7 @@ This copies data from a field in a struct into a specified string variable.
 The parameters _length_, _struct%(field, record)_, and _string$_ are the same as those used by <<put-string>>.
 
 .Get String From Struct
-[source,basic]
+[source,imagebasic]
 &,60,1,20,u%(11,2),a$
 
 .User Data, Part 2
@@ -468,11 +468,11 @@ This also returns the drive prefix, `dr$`.
 TIP: For our example, we`'ll set `dr=6`, since `u.` files are stored on Image drive 6.
 ====
 
-[source,basic]
+[source,imagebasic]
 dr=6:gosub 3
 
 .Load Struct from Disk
-[source,basic]
+[source,imagebasic]
 &,60,2,0,u%(0,0),dr$+"u.handles",dv%
 
 .&,60,2 Parameters
@@ -528,7 +528,7 @@ The parameters _struct%(field, record)_, _bytes_, _filename$_, and _device_ and 
 The starting record and field numbers to save are specified by the numbers in the array notation.
 
 .Save Struct to Disk
-[source,basic]
+[source,imagebasic]
 &,60,3,0,u%(0,0),3*38,dr$+"u.handles",dv%
 
 .Calculating the Size of the Struct to Save
@@ -601,7 +601,7 @@ Make sure _string$_ is an 11-digit date, _e.g._ `if len(an$)=11 then...`
 ====
 
 .Put Date Into Struct
-[source,basic]
+[source,imagebasic]
 an$="20412208234":&,60,4,0,u%(3,0),an$
 
 [%autowidth]
@@ -635,7 +635,7 @@ The 6th byte is the weekday digit, as a character.
 The digits are not stored in the order they appear in the string: the weekday goes last, so the year comes first.
 That way, comparing the bytes in order compares the dates in time order, which is how <<scan-struct,`&,60,6`>> tests whether one date is before another.
 
-[source,basic]
+[source,imagebasic]
 an$="20412208234":&,60,4,0,u%(1,0),an$
 
 [%autowidth]
@@ -709,7 +709,7 @@ Convert a 6-byte Binary Coded Decimal (BCD) date string (as shown above) to the 
 |===
 
 .Get Date From Struct
-[source,basic]
+[source,imagebasic]
 &,60,5,0,u%(0,1),an$:&,15:&an$
 
 [%header]
@@ -876,14 +876,14 @@ Clear a bit in every record::
 Use the flags word as _object_, _oper_ `0`, and the bit as both _bits_ and _test_.
 The bit is cleared before the test, so the test is never true:
 +
-[source,basic]
+[source,imagebasic]
 &,60,6,rn,0,ud%(0,1),ud%(0,1),60,2,2
 
 Count the records with a bit set, without changing anything::
 The same, but with _oper_ `128` (`$80`), so nothing is cleared first.
 `a%` is the count:
 +
-[source,basic]
+[source,imagebasic]
 &,60,6,rn,$80,ud%(0,1),ud%(0,1),60,2,2:c%=a%
 
 ==== Examples [[scan-struct-examples]]
@@ -910,7 +910,7 @@ The fields these calls use are:
 | Last download date
 |===
 
-[source,basic]
+[source,imagebasic]
 &,60,6,rn,$4f,ud%(0,1),ud%(3,1),60,4,ld$:b%=a%
 &,60,6,rn,$4f,ud%(0,1),ud%(6,1),60,8,ld$
 &,60,6,rn,$4e,ud%(0,1),ud%(3,1),60,16,ld$
@@ -948,7 +948,7 @@ The module then shows `b%`, `c%` and `d%` as "`New`", "`Tagged`" and "`Unvalidat
 ===== i.GF: Files the User Can Access
 
 .i.GF (release 231231; core/i.GF.lbl)
-[source,basic]
+[source,imagebasic]
 3166 a%=0:if s%(0,0) then:&,60,6,s%(0,0),0,s%(0,1),s%(1,1),80,1,2^ac%
 3168 rn=a%:if rn then:&,60,8,s%(0,0),80,1,s%(0,1),e%(1),1
 
@@ -962,7 +962,7 @@ C64 BASIC's `^` can return a value slightly below a whole number; `&,60,6` round
 ===== i/MM.load: SIGs the User Can Use
 
 .i/MM.load: SIG list (release 231231; core/i_MM.load.lbl)
-[source,basic]
+[source,imagebasic]
  4006 dr=3:gosub3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto5
  4008 dr=3:gosub3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(sg),dv%:goto5
  4100 q=.:a=12:gosub11:b=a:a=8:gosub11:ifa+bthenq=1
@@ -1011,7 +1011,7 @@ This is how the line appears in release 231231 (checked against `i/MM.load` on D
 Line 4126 shows that `x1%(2,_r_)` holds the SIG's sysop (`so%=x1%(2,sg)`).
 Testing that field instead would make line 4110 mean "`also list the SIGs you are sysop of`", which fits what line 4112 collects:
 
-[source,basic]
+[source,imagebasic]
 4110 &,60,6,x1%(0,0),7,x1%(0,1),x1%(2,1),36,16384,id
 
 As released, a SIG's sysop who doesn't have the access level for their own SIG doesn't see it in this list.
@@ -1114,7 +1114,7 @@ Check _count_ before calling `&,60,7`.
 ==== Example
 
 .i/lo/tt maint: Sort the Top Ten Lists
-[source,basic]
+[source,imagebasic]
 4002 &,11:n=20:dim a$(n,8):gosub 35:x=0:p=n:m=mn%
 4016 for i=1 to 8:&".":&,60,7,0,a$(p+1,i),n-p:next:p=n-10
 
@@ -1301,7 +1301,7 @@ After each record, _field_ moves on by this many bytes.
 . _field_ moves on by _size_ bytes, to the next record.
 
 .Example
-[source,basic]
+[source,imagebasic]
 dim u%(1,3):u%(0,1)=10:u%(0,2)=20:u%(0,3)=30
 &,60,9,3,4,u%(0,1):&"{pound}%a"
 
@@ -1358,7 +1358,7 @@ Copy one record from one struct to a record in another struct.
 
 .i/IM.logon: Copy Record
 ====
-[source,basic]
+[source,imagebasic]
 4694 if x<>fb%(.,.) then for a=x to fb%(.,.)-1:&,60,10,60,fb%(.,a+1),fb%(.,a):next
 ====
 
@@ -1505,7 +1505,7 @@ Check the length of _string$_ before calling `&,60,11`: `if len(s$)=0 or len(s$)
 
 From the test program, with animal names in field 11 of each record of `s%()`:
 
-[source,basic]
+[source,imagebasic]
 fs$="okapi":&,60,11,t,(l%+1)*2,0,fs$,s%(11,1),f%(1),1:f%(0)=a%
 
 This searches `t` records, `(l%+1)*2` bytes each, for an exact match of `okapi`, putting the record numbers of any matches in `f%(1)` on.
@@ -1581,11 +1581,11 @@ After each record, _field_ moves on by this many bytes.
 
 In BASIC, `&,60,12` does the same as:
 
-[source,basic]
+[source,imagebasic]
 b$="":for r=1 to count:v=field%(f,r):b$=b$+mid$(a$,v*2+1,2):next
 
 .Example
-[source,basic]
+[source,imagebasic]
 dim gm%(1,5):for r=1 to 5:gm%(0,r)=(r-1) and 3:next
 a$="  ##XX**":&,60,12,5,4,a$,gm%(0,1),b$
 

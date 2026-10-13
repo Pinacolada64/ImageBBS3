@@ -12,7 +12,20 @@ I plan on using sections from the Image 1.2b and 2.0 documentation to save some 
 
 ## Building
 
-`asciidoctor-pdf prg-master.adoc`
+From the top of the repository, `make pdf` builds the Programmer's Reference Guide as `build/prg-master.pdf`.
+It needs the `asciidoctor-pdf` and `asciidoctor-lists` gems.
+
+Or, from `docs/`: `asciidoctor-pdf prg-master.adoc`
+
+### Syntax highlighting
+
+BASIC listings are colored by Pygments, through the `pygments.rb` gem (`gem install --user-install pygments.rb`; Python Pygments must be installed too).
+Without the gem the guide still builds, just without colors.
+
+Listings use `[source,imagebasic]` (the default in `prg-master.adoc`): `tools/pygments/imagebbs_lexer.py`, Pygments' CBM BASIC V2 lexer plus `&` calls, `$hex` and `%binary` numbers, and C64List's `{...}` tokens and `'` comments.
+`make pdf` finds it by setting `PYTHONPATH` to `tools/pygments`; building by hand, do the same:
+
+`PYTHONPATH=../tools/pygments asciidoctor-pdf prg-master.adoc`
 
 ### Theming the PDF
 

@@ -27,3 +27,6 @@ local_history.patch
 # build output
 build/
 source/stamp.s
+
+# Python bytecode (e.g. tools/pygments)
+__pycache__/

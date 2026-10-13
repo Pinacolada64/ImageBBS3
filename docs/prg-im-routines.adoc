@@ -834,7 +834,7 @@ x$="Send":if x>1then x$="Receiv":if x>2then x$="Copy":if x>3then x$="Scann"
 If an `on-goto` or `on-gosub` statement needs to exit a subroutine on the same line as the rest of some code, you can write:
 
 .im,
-[source, basic]
+[source,imagebasic]
 // nt=net transfer
 9 on nt goto 999:&,69,4,21,left$(" "+cm$+"{space:21}",22),$8c:return
 
@@ -846,7 +846,7 @@ This acts like an `if-then-else` statement found in other BASICs, like that of t
 ****
 Since line 10 is used for positioning the RELative file pointer, you can`'t in this case code:
 
-[source, basic]
+[source,imagebasic]
 9 if nt=0 then:&,69,4,21,left$(" "+cm$+"{space:21}",22),$8c
 10 return
 ****

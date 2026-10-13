@@ -7,20 +7,17 @@ v0.5, {docdate}
 :toclevels: 4
 :icons: font
 :showtitle:
-
 // enable source code highlighting
 :source-highlighter: pygments
-// set default source language to generic basic
-:source-language: basic
+// default source language: Image BBS BASIC (tools/pygments/imagebbs_lexer.py)
+:source-language: imagebasic
 // choose syntax highlighting stylesheet
 :pygments-style: manni
 // [styles | css] for html output, embed stylesheet in html file
 :pygments-css: styles
 :pygments-linenums-mode: inline
-
 // GitHub Flavored AsciiDoc
 // https://gist.github.com/eirnym/25d75fcea31478956a5e307f0f5735bf
-
 // PDF generation config
 :pdf-theme: default
 

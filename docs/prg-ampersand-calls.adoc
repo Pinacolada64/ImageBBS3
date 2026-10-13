@@ -17,14 +17,14 @@ NOTE: This section is undergoing discovery of what some routines are for and how
 In BASIC, the `print` keyword (or its abbreviation, `?`) displays text on the screen.
 For example:
 
-[source,basic]
+[source,imagebasic]
 ----
 print"Hello there!"
 ----
 
 or
 
-[source,basic]
+[source,imagebasic]
 ----
 ?"Hello there!"
 ----
@@ -37,14 +37,14 @@ Hello there!
 
 You can substitute `&` in Image BBS to do the same thing:
 
-[source,basic]
+[source,imagebasic]
 & "Hello there!"
 
 But unlike BASIC, after outputting this text, the cursor remains on the same line--there is no automatic carriage return printed.
 
 It`'s as if a semicolon (`;`) was used after the `print` statement above--this keeps the text all on one line:
 
-[source,basic]
+[source,imagebasic]
 print"Hello ";"there!"
 
 Gives the result:
@@ -53,7 +53,7 @@ Gives the result:
 
 vs. printing on two lines:
 
-[source,basic]
+[source,imagebasic]
 print"Hello"
 print"there!"
 
@@ -82,7 +82,7 @@ However, ``print``ing in Commodore BASIC--and our BBS in this example--doesn`'t 
 A carriage return is the equivalent of a carriage return plus linefeed.
 ****
 
-[source,basic]
+[source,imagebasic]
 &"Hello there!"+chr$(13)
 
 `chr$()` (read it as "`character string`") is a function that outputs a character supplied in parentheses.
@@ -93,7 +93,7 @@ There is also a string variable defined in `im`: `r$=chr$(13)` (short for "`retu
 This is a handy shortcut.
 You can now code:
 
-[source,basic]
+[source,imagebasic]
 &"Hello there!"+r$
 
 // TODO: data file tutorial
@@ -185,7 +185,7 @@ This outputs `Hello there` and a carriage return.
 
 We can take the previous example of:
 
-[source,basic]
+[source,imagebasic]
 &"Hello there!"+r$
 
 and simplify it further with:
@@ -200,12 +200,12 @@ TIP: Because of a quirk in the BASIC interpreter, you must follow a `then` claus
 
 In other words, the following results in a `?syntax&#160;&#160;error`:
 
-[source,basic]
+[source,imagebasic]
 if b then &"hello"
 
 This must be used instead:
 
-[source,basic]
+[source,imagebasic]
 if b then:&"hello"
 ====
 
@@ -253,7 +253,7 @@ The position to wrap words is usually 40 columns on the console, whatever the re
 
 Setting the variable `lp=1` and outputting text with `&"..."` will enable word-wrap.
 
-[source,basic]
+[source,imagebasic]
 t=50:lp=1:&"Generating {pound}!t unique random numbers..."
 
 outputs:
@@ -288,7 +288,7 @@ The use of `&#163;m<__x__` and `&#163;m>__x__` together allows you to make "`blo
 
 NOTE: Outputting a string which itself contains MCI commands or MCI string variables will not work as expected, _e.g._:
 
-[source,basic]
+[source,imagebasic]
 c$="Hi":c%=3:z$="£$c £#3£#0£%c":&"£$z"
 
 does not output `z$` (`£$c` outputs `c$`, `£#3` sets 3 leading characters, `£#0` sets the fill character to `0`, and `£%c` displays the value of `c%`).
@@ -298,7 +298,7 @@ It outputs a literal
 
 Instead, do this:
 
-[source,basic]
+[source,imagebasic]
 c$="Hi":c%=3:z$="£$c £#3£# £%c":&z$
 
 This outputs as expected:
@@ -332,19 +332,19 @@ To output a two-character variable name (_e.g._, `xx`, `c1`), you have some choi
 
 * assign the two-character variable name to a single letter variable name, _e.g._:
 
-[source,basic]
+[source,imagebasic]
 xx=500:x=xx:&"Blocks free: £!x"
 
 Output `Blocks free: 500`.
 
 * output the two-character variable using the `str$()` function, which _will_ output a leading space if the value is positive or zero, or a leading `-` if the value is negative:
 
-[source, basic]
+[source,imagebasic]
 xx=100:&"Number of days:"+str$(xx)
 
 Output ``Number of days: 100``.
 
-[source, basic]
+[source,imagebasic]
 xx=-3.14:&"Value of pi in the mirror universe:"+str$(xx)
 
 Output `Value of pi in the mirror universe:-3.14`
@@ -527,7 +527,7 @@ _Examples:_
 #TODO#: write examples for each option.
 
 .Input Line: Set Line Length and Prompt
-[source,basic]
+[source,imagebasic]
 poke 53252,10:p$="Name":&,1
 
 `poke 53252,10`: Set the input length to 10 characters.
@@ -537,7 +537,7 @@ poke 53252,10:p$="Name":&,1
 `&,1`: Allow user input, and return string in `an$`.
 
 .Input Line: Set Line Length, Default Text, Prompt and Edit Mode
-[source,basic]
+[source,imagebasic]
 poke 53252,20:w$=na$:p$="Handle":&,1,32:if an$<>"" then na$=an$
 
 `poke 53252,20`: Set the input length to 20 characters.
@@ -560,7 +560,7 @@ The string typed in response to a prompt is returned in `an$`.
 If something else was typed (`an$<>""`), assign `na$` to what was typed (`an$`).
 
 .Input Line: Set Line Length, Default Text, Prompt and Allow MCI & Graphics Characters
-[source,basic]
+[source,imagebasic]
 poke 53252,30:p$="New Prompt":&,1,9:if an$<>"" then po$=an$
 
 `poke 53252,30`: Set the input length to 30 characters.
@@ -623,7 +623,7 @@ data <1>
 <2> a 30-character string (with `+` every 5 characters to simplify keeping track of string position), used to demonstrate `&,2,2,25`
 
 .i.read test file
-[source, basic]
+[source,imagebasic]
 3000 dr=1:a$="s.test file,s,r":gosub 4 <1>
 3002 if e% then:&:goto 3100 <2>
 3004 &,2,2:& <3>
@@ -728,7 +728,7 @@ _Exit:_
 _Example:_
 
 .im: Password Mask
-[source,basic]
+[source,imagebasic]
 263 &"Password: ":&,6:if an$<>ep$ then:&"Incorrect Password."
 
 `&"Password: "`: Display the prompt ``Password: ``.
@@ -789,28 +789,28 @@ Not all segments are currently defined.
 ////
 
 .im: Load Protocol File, Method 1
-[source,basic]
+[source,imagebasic]
 29 ml$="++ "+a$:a$=dr$+ml$:&,7,dv%,2:goto 5
 
 This line loads an ML protocol (`++` file).
 
-[source,basic]
+[source,imagebasic]
 ml$="++ "+a$
 
 Assign `ml$` the ``++ `` prefix for error reporting purposes.
 
-[source,basic]
+[source,imagebasic]
 a$=dr$+ml$
 
 Concatenate `dr$` (the current drive prefix) and `ml$` (discussed above) into `a$`.
 This is the filename to load.
 
-[source,basic]
+[source,imagebasic]
 &,7,dv%,2
 
 Do a module load using device `dv%` into segment 2 (the protocol address, `49152` or `$c000`).
 
-[source,basic]
+[source,imagebasic]
 goto 5
 
 Check for a DOS error and `return` from the subroutine.
@@ -851,7 +851,7 @@ This leads to a `?syntax  error`.
 ====
 
 .Display Entire s. Disk Directory
-[source, basic]
+[source,imagebasic]
 3000 dr=1:gosub 3:open 2,dv%,0,"$"+dr$+"*":get#2,a$,a$ <1>
  3002 &,8,2,0:close 2:goto 300 <2>
 
@@ -1005,7 +1005,7 @@ TIP: Related string conversion functions can be found at  <<convert>>.
 
 Convert an 11-digit Image BBS-formatted date into a long date string.
 
-[source,basic]
+[source,imagebasic]
 an$=d1$:&,15:&an$
 
 .Result
@@ -1129,7 +1129,7 @@ A word starts after any character that isn't a letter, except `'`: `O'MALLEY'S B
 
 This is the same as <<convstr,`&,64,1`>>.
 
-[source,basic]
+[source,imagebasic]
 .Example
 ----
 an$="THE CHIEF":&,15,1:&an$
@@ -1160,7 +1160,7 @@ Based on code from `i.t` (the Image terminal)::
 
 Replaces each of the characters `$ , * ? : = ;` in `an$` with `-`, so that `an$` can be used as part of a filename.
 
-[source,basic]
+[source,imagebasic]
 an$="FILE: A*B?"+"":&,15,3:&an$
 
 .Result
@@ -1194,7 +1194,7 @@ Convert an 11-digit Image BBS date in `an$` into a 10-digit, sortable `yymmddhhm
 
 If `an$` is not exactly 11 characters long, it is left unchanged.
 
-[source,basic]
+[source,imagebasic]
 an$="61112250412":&,15,5:&an$
 
 .Result
@@ -1255,7 +1255,7 @@ TIP: If the specified character is not found in `an$`, `a$=""`, a null string.
 ====
 
 // ====
-[source, basic]
+[source,imagebasic]
 .im
 ----
 312 &,15,6,140:uu$=an$:an$=a$
@@ -1637,7 +1637,7 @@ If _size_ is less than 14, only the name bytes up to the end of the record are c
 
 Structs store each record's fields next to each other, so in `t%(7,2)` each record `t%(0-7,_r_)` is 8 integers, or 16 bytes long.
 
-[source,basic]
+[source,imagebasic]
 dim t%(7,2)
 t%(1,1)=1:&,60,0,8,t%(3,1),"FOO"
 t%(1,2)=2:&,60,0,8,t%(3,2),"BAR"
@@ -1688,7 +1688,7 @@ The difference is that `&,26` lets the caller choose the mask, the record size a
 
 ===== Example: An Access-Checked Command Lookup
 
-[source,basic]
+[source,imagebasic]
 ' ct%(7,n): command table; name in ct%(3,r), allowed access groups in ct%(1,r)
 ' nc: number of commands; cm$: command the user typed
 ' a level 5 user has mask 2^5=32
@@ -2063,7 +2063,7 @@ _Enter:_
 TIP: Line 4016 is the root example, lines 4010 and 4018 are provided for context.
 
 .i.IM/ecs: Save ECS Definitions to Disk
-[source,basic]
+[source,imagebasic]
 ----
 4010 tt$(n+1)=chr$(0):&,42,3,n+1:return <1>
 
@@ -2277,7 +2277,7 @@ If it doesn't, `poke 4836,1` should make it start counting.
 
 Line 375 of `im` uses `&,53` and then displays a sysop screen mask:
 
-[source,basic]
+[source,imagebasic]
 375 &,53,a:im=2+a:goto 443 <1>
 
 <1> `&,53,a`: reset the indicators and flags, and store `a` in `curdsp`.
@@ -2409,7 +2409,7 @@ A BASIC program has to do that swap itself.
 _Example:_
 
 .im: set the clock, then the alarm
-[source,basic]
+[source,imagebasic]
 &,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.
 
 After setting the clock to `b`:`c`, this swaps hours `12` and `92` in `b`, then sets the alarm to `b`:`00`.
@@ -2505,7 +2505,7 @@ NOTE: `0,0` is the top left corner of the screen.
 So it only changes where the next character printed on the local screen appears.
 
 .im: Position Terminal Cursor
-[source,basic]
+[source,imagebasic]
 4004 &,38:&,61,.,8:print"&,37:goto300:":end
 
 `&,61,0,8`: position the cursor at column 0, row 8 (the ninth line), then `print` recovery information if the BBS crashes.
@@ -2587,7 +2587,7 @@ If a user is online with 1-100 minutes left, this also takes 1 minute off their 
 ==== Example
 
 .im: set the date and time from z$
-[source,basic]
+[source,imagebasic]
 a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
 a=val(mid$(z$,2,2)):gosub {:3184}:poke 52938,a
 a=val(mid$(z$,4,2)):gosub {:3184}:poke 52936,a
@@ -2687,7 +2687,7 @@ Leaves kbd:[f5] (`"`), kbd:[f6] (kbd:[Return]) and kbd:[f8] (`^`) encoded, since
 See <<encoded-function-keys>> for the function key encoding.
 
 .Example
-[source,basic]
+[source,imagebasic]
 an$="host{f3}port"+"":&,64,2:&an$
 
 .Result
@@ -2748,7 +2748,7 @@ The hour is adjusted for the user`'s time zone.
 |===
 
 .Example
-[source,basic]
+[source,imagebasic]
 d$="30408178427":for i=1 to 11:poke 830+i,asc(mid$(d$,i,1)):next
 &,65:for i=5856 to 5880:&chr$(peek(i)):next
 
@@ -2779,7 +2779,7 @@ The `a%+1` is necessary because `on-goto` does not recognize when variables equa
 ====
 
 .BASIC on-goto
-[source,basic]
+[source,imagebasic]
 3000 a%=rnd(1)*14
 3010 on a%+1 goto 4000, 4100, 4200, 4300, 4400, 4500, 4600, 4700, 4800, 4900, 5000, 5100, 5200, 5300
 4000 rem code
@@ -2791,7 +2791,7 @@ The `a%+1` is necessary because `on-goto` does not recognize when variables equa
 The same thing can be written like so (which uses 19 bytes):
 
 .&,66: Calculated goto
-[source,basic]
+[source,imagebasic]
 3000 a%=4000+a%*100:&,66
 4000 &"£!a{f6}":goto 300:rem print "1"
 4100 &"£!a{f6}":goto 300:rem print "2"
@@ -2857,7 +2857,7 @@ fora=0to13:?a,3000+a*100:next
 
 Based on the value of `a%` (including `0`), `&,66,1` will `gosub` lines starting at `3100`, in increments of 50 (`0`=3100, `1`=3150, `2`=3200, `3`=3250, etc).
 
-[source,basic]
+[source,imagebasic]
 a%=3:a%=3100+a%*50:&,66,1
 
 would `gosub 3250`.
@@ -2918,7 +2918,7 @@ For reversed colors, add `$80` (or `128` decimal).
 _Example:_
 
 .im: Display String on Console
-[source,basic]
+[source,imagebasic]
 13 &,69,4,21,left$(" "+cm$+"{21 spaces}",22),$8c
 
 [start=1]
@@ -3009,7 +3009,7 @@ Before moving, it checks the caller's terminal (`cursmode`):
 |===
 
 .i.IM: Position Terminal Cursor
-[source,basic]
+[source,imagebasic]
 3350 ... &,70,.,n/2+8.5:&"{white}"
 
 ==== `&,61` or `&,70`?

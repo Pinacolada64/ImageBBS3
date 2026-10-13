@@ -12,7 +12,7 @@ There are two types of strings in BASIC: _static_ and __dynamic__.
 
 _Static strings_ look like:
 
-[source, "basic"]
+[source,imagebasic]
 10 a$="hello":b$="there"
 
 They are given a _variable descriptor_ (which includes the address, length, and type of string) which points within the BASIC program itself.
@@ -27,7 +27,7 @@ _Dynamic strings_ are different: they`'re created when two strings get concatena
 You`'ve probably looked through Image`'s code and seen lines like:
 
 .i.SB: String Concatenation Example
-[source, basic]
+[source,imagebasic]
 3192 ... sy$="Su"+"b" ...
 
 Why not just write `sy$="Sub"`?
@@ -71,7 +71,7 @@ There are variables shown in the error log which can be handy to show which line
 
 If your module spans from, say, lines `3000-4000` (or beyond), it would be a good idea to do something like:
 
-[source,basic]
+[source,imagebasic]
 ----
 pr$="i."+"test calls":p1$=pr$+""
 ----
@@ -81,7 +81,7 @@ This avoids leaving garbage strings in `e.errlog` because of the previously-ment
 
 If your module contains a collection of sub-modules, you might find it helpful to define in your main program something similar to:
 
-[source,basic]
+[source,imagebasic]
 ----
 3000 pr$="i."+"test calls"
 ----
@@ -89,7 +89,7 @@ If your module contains a collection of sub-modules, you might find it helpful t
 And in your sub-module, define:
 
 
-[source,basic]
+[source,imagebasic]
 ----
 4000 p1$=pr$+".structs"
 ----
