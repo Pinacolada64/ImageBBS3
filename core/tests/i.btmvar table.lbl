@@ -18,7 +18,7 @@
 ' 20-29:
 	v$=v$+"nl ul qe rq ac%ef lf w$ p$ tr%"
 ' 30-39:
-	v$=v$+"a% b$ dv%dr$c1$c2$co$ch$kp%c3$"
+	v$=v$+"a% b% dv%dr$c1$c2$co$ch$kp%c3$"
 ' 40-49:
 	v$=v$+"f1$f2$f3$f4$f5$f6$f7$f8$mp$mn%"
 {:help}
