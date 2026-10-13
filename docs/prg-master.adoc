@@ -58,17 +58,18 @@ include::prg-variables.adoc[]
 
 include::prg-pokes.adoc[]
 
-include::prg-machine-language.adoc[]
-
+[appendix]
 include::prg-lightbar.adoc[]
 
 // Ray wrote this
+[appendix]
 include::prg-memory-map.adoc[]
-
-include::prg-file-formats.adoc[]
 
 [appendix]
 include::prg-appendix-jump-tables.adoc[]
+
+[appendix]
+include::prg-file-formats.adoc[]
 
 [appendix]
 include::prg-appendix-test-programs.adoc[]

@@ -1,15 +1,16 @@
 :experimental:
 // enable 'kbd:[x]' macro
 
-== Machine Language Entry Points
+// Included by prg-appendix-jump-tables.adoc (Appendix A), after the jump
+// table explanation.
+
+=== Protocols [[protocols]]
 
 Here is a listing of ML modules and their entry points.
 
 ====
 NOTE: This section is currently undergoing research.
 ====
-
-=== Protocols [[protocols]]
 
 `&,16,4,_x_`: `getflag`
 

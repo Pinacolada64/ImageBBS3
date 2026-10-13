@@ -1303,7 +1303,7 @@ _Parameters:_
 Following `&,16` with a _sub-function_ number (_e.g._, `&,16,2`) calls a sub-function of the module through a _jump table_.
 
 ====
-INFO: Refer to xref:appendix-jump-table.adoc for more information.
+TIP: Refer to <<appendix-jump-tables>> (xref:appendix-jump-tables[xrefstyle=short]) for more information.
 ====
 
 ====

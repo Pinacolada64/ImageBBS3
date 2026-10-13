@@ -22,6 +22,8 @@ Variable 31 is `b%`, not `b$`.
 * Code examples use C64List's `{f6}`, `{f3}` and `{pound}`, not `kbd:[...]` (which only works in running text); the `&` date example shows kbd:[Ctrl+D].
 * Apostrophes in code (`O\'MALLEY\'S BAR`, `?redim\'d array`) showed as boxes: they were turned into typographic quotes the code font doesn't have.
 * Mentions of `&` calls link to the call's section and give its name (53 more), and `&,1`, `&,9` and `&,22` have their own anchors.
+* The Jump Tables appendix has a heading at last, and the Protocols section (the ML modules: `{plus}{plus} copier`, `{plus}{plus} index`, `{plus}{plus} punter`, `{plus}{plus} reader`, `{plus}{plus} menu2`) has moved into it, as "`Jump Tables and Protocols`".
+* Lightbar Reference, Memory Map and File Formats are now appendices (A, B and D), with Jump Tables and Protocols (C).
 * Formatting fixes: stray backticks where code touched italics or an apostrophe, and in the `an$` copy example of `&,64`.
 * How to Use This Guide: what the curly-brace tokens in listings mean, and what to type for them.
 * `im` routines table: narrower line-number columns, so the Purpose column is wider.
