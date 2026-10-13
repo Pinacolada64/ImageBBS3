@@ -43,8 +43,8 @@
 ' ----+----+----+----+----+----+----+----+
 '    Insert All System Disks In Correct
 '         Drives and Press RETURN
-	z1$="Insert All System Disks In Correct"
-	z2$="     Drives and Press RETURN      "
+	z1$=" Insert All System Disks In Correct "
+	z2$="      Drives and Press RETURN       "
 ' 3405: draw header
 ' 3406: display menu
 ' 3410: flash border, get input
@@ -86,7 +86,7 @@
 ' 3406 b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
 ' display both z2$ and z3$, don't scroll
 {:3405}
-	&,69,3,3,z1$,c:&,69,3,4,z2$,c:return
+	&,69,2,3,z1$,c:&,69,2,4,z2$,c:return
 
 ' FIX: remove z=z+1 stuff. this does not delay 1/2 second on a SuperCPU system. use timer instead:
 ' 'i=not i' does not work
