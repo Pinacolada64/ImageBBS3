@@ -18,6 +18,12 @@ Variable 31 is `b%`, not `b$`.
 * Memory map: `$1764` is used by `i.tests`.
 * `i.test-convert` is now `i.test convert`.
 * BASIC listings are syntax-highlighted again (the setting was outside the document header), with a new lexer for Image BBS BASIC that knows `&` calls, `$hex` numbers and C64List's tokens.
+* In code listings, control codes inside strings (`{f6}`, `{white}`, `{clear}`...) are shown in reverse field, as in quote mode.
+* Code examples use C64List's `{f6}`, `{f3}` and `{pound}`, not `kbd:[...]` (which only works in running text); the `&` date example shows kbd:[Ctrl+D].
+* Apostrophes in code (`O\'MALLEY\'S BAR`, `?redim\'d array`) showed as boxes: they were turned into typographic quotes the code font doesn't have.
+* Mentions of `&` calls link to the call's section and give its name (53 more), and `&,1`, `&,9` and `&,22` have their own anchors.
+* Formatting fixes: stray backticks where code touched italics or an apostrophe, and in the `an$` copy example of `&,64`.
+* How to Use This Guide: what the curly-brace tokens in listings mean, and what to type for them.
 * `im` routines table: narrower line-number columns, so the Purpose column is wider.
 * Table headings, and short values like `$42f2`, no longer wrap in the PDF (28 tables had a heading that did, some mid-word, like "`Function`").
 
@@ -46,7 +52,7 @@ Tables for Put/Get String, Load Struct and Put Date; Put Date's byte layout corr
 * `&,15,5` (`newdate`): an 11-digit date to a sortable `yymmddhhmm`.
 * `&,26` (`ecschk`): finding a record by flags and name.
 * `&,53` (Logoff): `curdsp` is an idle timer flag, not a screen mask.
-* `&,58`, and `&,62` (Set Time); `d1$`'s hour range corrected.
+* `&,58`, and `&,62` (Set Time); ``d1$``'s hour range corrected.
 
 === 2024-07-08
 

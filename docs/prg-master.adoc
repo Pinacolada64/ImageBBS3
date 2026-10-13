@@ -11,8 +11,8 @@ v0.5, {docdate}
 :source-highlighter: pygments
 // default source language: Image BBS BASIC (tools/pygments/imagebbs_lexer.py)
 :source-language: imagebasic
-// choose syntax highlighting stylesheet
-:pygments-style: manni
+// highlighting style: Manni, with control codes in strings reversed (tools/pygments)
+:pygments-style: imagebbs
 // [styles | css] for html output, embed stylesheet in html file
 :pygments-css: styles
 :pygments-linenums-mode: inline
@@ -31,6 +31,12 @@ list-of::listing[]
 include::prg-introduction.adoc[]
 
 === How to Use This Guide
+
+Code listings are in C64List form, as the BASIC source in the Image BBS 3.0 repository is.
+Text in curly braces, such as `\{f6\}`, `\{white\}` or `\{pound\}`, stands for a key to type.
+We deliberately chose a character not available on the C64 keyboard; just type what the text in the curly braces represents: kbd:[f6] for `\{f6\}`, kbd:[Ctrl+2] for `\{white\}`, kbd:[£] for `\{pound\}`.
+A control key that C64List has no name for is written as its character code, `{$xx}` in hex: `{$04}` is kbd:[Ctrl+D].
+Inside quotes, control codes such as `\{f6\}` are shown in reverse field, as the C64 shows them in quote mode.
 
 === How to Get Help
 

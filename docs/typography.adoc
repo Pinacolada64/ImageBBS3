@@ -60,7 +60,7 @@ Bold monospace text represents text typed by the user in response to a prompt.
 Text inside curly braces (such as `\{f6\}`) is often used to represent keys or color codes (like `\{white\}`) to type, since the keypress shading (kbd:[f6]) isn`'t available in code blocks.
 
 If you are typing the listing on a real C64, there are no curly brace keys on the keyboard.
-(Symbols not available on the C64 keyboard were deliberately chosen to avoid mistakenly typing them in.)
+We deliberately chose a character not available on the C64 keyboard; just type what the text in the curly braces represents (kbd:[f6] for `\{f6\}`, kbd:[Ctrl+2] for `\{white\}`).
 
 .Details: C64List brace entities
 ****

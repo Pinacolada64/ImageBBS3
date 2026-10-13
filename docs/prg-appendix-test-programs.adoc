@@ -55,7 +55,7 @@ To add a test program to the menu, add its name (without `i.test`) to the `data`
 
 | `i.test calls`
 | The `&` calls, `&,0` to `&,70`, a page of 10 at a time.
-Choose a call to see its name; some have a demonstration, for example `&,9` (show a variable), `&,15` (convert a date, title case, and more), `&,22` (wait), and `&,26` (find a record by flags and name).
+Choose a call to see its name; some have a demonstration, for example <<prg-ampersand-calls.adoc#amp-9-bottom-variable,`&,9` Bottom Variable>> (show a variable), <<prg-ampersand-calls.adoc#convan,`&,15` Convert `an$`>> (convert a date, title case, and more), <<prg-ampersand-calls.adoc#amp-22-wait,`&,22` Wait _x_ Tenths of a Second>> (wait), and <<prg-ampersand-calls.adoc#ecschk,`&,26` Find Record by Flags and Name>> (find a record by flags and name).
 | _none_
 
 | `i.test clocks`
@@ -63,30 +63,30 @@ Choose a call to see its name; some have a demonstration, for example `&,9` (sho
 | `sub.clocks`
 
 | `i.test convert`
-| `&,64`: converting `an$` (`convnam`, `convdsk`, `convimg`, `chkspcl`), with a plain text string and one with encoded characters.
+| <<prg-ampersand-calls.adoc#convstr,`&,64` Convert String>>: converting `an$` (`convnam`, `convdsk`, `convimg`, `chkspcl`), with a plain text string and one with encoded characters.
 | _none_
 
 | `i.test copier`
-| `++ copier`: copy all (`&,16,0`), count bytes (`&,16,1`), copy some (`&,16,2`), compare (`&,16,3`) and the protocol number (`&,16,255`).
-It copies `++ 2` from system disk 5 and leaves `e.copier copy`, `count`, `pack` and `unpack` on system disk 3.
+| `{plus}{plus} copier`: copy all (`&,16,0`), count bytes (`&,16,1`), copy some (`&,16,2`), compare (`&,16,3`) and the protocol number (`&,16,255`).
+It copies `{plus}{plus} 2` from system disk 5 and leaves `e.copier copy`, `count`, `pack` and `unpack` on system disk 3.
 See <<_copier>>.
-| `++ copier` (with `&,16,3`), `++ 2`, `sub.display`
+| `{plus}{plus} copier` (with `&,16,3`), `{plus}{plus} 2`, `sub.display`
 
 | `i.test date`
-| `&,15`: shows two dates converted from Image's 11-digit format.
+| <<prg-ampersand-calls.adoc#convan,`&,15` Convert `an$`>>: shows two dates converted from Image's 11-digit format.
 | _none_
 
 | `i.test frame`
-| A framed header box drawn with `&,69` and `&,70`: draw it, scroll lines through it, and flash it while waiting for a key (kbd:[1]-kbd:[3], or kbd:[←] to go back).
+| A framed header box drawn with <<prg-ampersand-calls.adoc#display-string-on-console,`&,69` Display String on Console>> and <<prg-ampersand-calls.adoc#position-cursor,`&,70` Position Terminal Cursor>>: draw it, scroll lines through it, and flash it while waiting for a key (kbd:[1]-kbd:[3], or kbd:[←] to go back).
 | _none_
 
 | `i.test string`
-| Storing a string in an integer array with `&,60,0` (PutString) and reading it back with `&,60,1` (GetString).
+| Storing a string in an integer array with <<prg-structures.adoc#put-string,`&,60,0` Put String>> (PutString) and reading it back with <<prg-structures.adoc#_601_get_string,`&,60,1` Get String>> (GetString).
 kbd:[Return] on its own quits.
 | _none_
 
 | `i.test structs`
-| The structure calls, `&,60,0` to `&,60,13`, on a test array: strings, dates, scans, sorting, copying records.
+| The structure calls, <<prg-structures.adoc#put-string,`&,60,0` Put String>> to `&,60,13`, on a test array: strings, dates, scans, sorting, copying records.
 See the Structures chapter.
 | _none_
 
@@ -106,8 +106,8 @@ In the editor, kbd:[Ctrl+H] shows its keys, kbd:[Ctrl+V] re-prints the lines typ
 
 These aren't in the menu:
 
-* `i.test menu`: a text menu of the `&` calls, showing how to jump to a routine for each choice with a calculated `gosub` (`&,66,1`).
-* `i.btmvar table`: a table of the variables `&,9` can show.
+* `i.test menu`: a text menu of the `&` calls, showing how to jump to a routine for each choice with a calculated `gosub` (<<prg-ampersand-calls.adoc#_661_calculated_gosub,`&,66,1` Calculated `gosub`>>).
+* `i.btmvar table`: a table of the variables <<prg-ampersand-calls.adoc#amp-9-bottom-variable,`&,9` Bottom Variable>> can show.
 * `test-day-of-week.lbl`: working out the day of the week from a date; unfinished.
-* `randomize animals.lbl`: shuffles a list of animal names, test data for sorting (`&,60,7`).
+* `randomize animals.lbl`: shuffles a list of animal names, test data for sorting (<<prg-structures.adoc#sort-array,`&,60,7` Sort Array>>).
 * `randomize numbers.bas`: picks unique random numbers in a range.

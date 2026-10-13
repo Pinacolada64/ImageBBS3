@@ -63,7 +63,7 @@ n2$:
 ==== sub.clocks
 
 `sub.clocks` reads the date and time from a clock and sets the BBS clock.
-Call it with `im=`_n_`:a$="clocks":gosub 74`.
+Call it with ``im=``__n__``:a$="clocks":gosub 74``.
 
 [%autowidth]
 [%header]
@@ -95,7 +95,7 @@ Image BBS 3.0's `im` reads this record with `val()`, and treats `4` like `0` (ma
 | `0` | Manual
 | `2`, `3` | Lt. Kernal port 1, 2
 | `8`-`30` | CMD device number
-| `4,d,`_base_ | DS12C887 at _base_
+| ``4,d,``__base__ | DS12C887 at _base_
 | `4,u` | Ultimate
 | `4,t` | TeensyROM
 | `4,a` | Last AutoMaint date

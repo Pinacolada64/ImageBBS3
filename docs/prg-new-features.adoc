@@ -57,7 +57,7 @@ Next:
 
 <1> Method 1: `load dr$+a$,dv%,2` loads drive prefix `dr$` plus filename `a$` from device `dv%` to segment 2 (`$c000`)
 
-<2> Method 2: `&,7,2` uses `dr$`, `a$` and `dv%` as defined by BASIC, but is shorter code
+<2> Method 2: <<prg-ampersand-calls.adoc#load-file,`&,7,2` Load File>> uses `dr$`, `a$` and `dv%` as defined by BASIC, but is shorter code
 
 // Larry:
 The third (preferred) method calls a routine in `im`:

@@ -159,7 +159,7 @@ The encoded characters are `chr$(133)`-`chr$(140)`:
 ===== Typed Input Is Encoded [[input-encoding]]
 
 Image BBS also encodes characters as they are typed.
-Its input routines, such as <<_1_input_line,`&,1`>> (line input) and `&,23` (get a character), replace each typed `,` `:` `"` `*` `?` `=` and `^` with its encoded character.
+Its input routines, such as <<amp-1-input-line,`&,1`>> (line input) and <<_23_get_character_from_modem,`&,23` Get Character from Modem>> (get a character), replace each typed `,` `:` `"` `*` `?` `=` and `^` with its encoded character.
 kbd:[Return] is left alone, since it ends the input.
 
 This means:
@@ -169,7 +169,7 @@ This means:
 A typed `?` arrives as `chr$(137)`, so `if an$="?" then...` is never true; use `if an$=chr$(137) then...`.
 * Wildcards typed for <<prg-structures.adoc#scan-for-string,`&,60,11` Scan for String>> arrive ready to use.
 
-There is no `&` call to encode a string built in BASIC; `&,15,2`, `&,15,4` and `&,64` only decode.
+There is no `&` call to encode a string built in BASIC; `&,15,2`, <<_15_4,`&,15,4` Decode All Function Keys>> and <<convstr,`&,64` Convert String>> only decode.
 Write the encoded characters in yourself, _e.g._ `"ok"+chr$(136)`.
 
 The encoding is done by `getchr` in `source/chrio.s`, from `getchr11` on: each character is looked up in the ML's `spchars` table, and if found (except kbd:[Return]), replaced with `$85` plus its position in the table.
@@ -178,8 +178,8 @@ The encoding is done by `getchr` in `source/chrio.s`, from `getchr11` on: each c
 
 This is a quick way to output the contents of `a$`.
 
-[source]
-a$="Hello therekbd:[f6]":&
+[source,imagebasic]
+a$="Hello there{f6}":&
 
 This outputs `Hello there` and a carriage return.
 
@@ -190,8 +190,8 @@ We can take the previous example of:
 
 and simplify it further with:
 
-[source]
-`&"Hello there!kbd:[f6]"`
+[source,imagebasic]
+&"Hello there!{f6}"
 
 // TODO: `&"bla","bla"` # test this
 
@@ -360,7 +360,7 @@ Substitute the appropriate number in its place.
 
 .Example
 
-`&,40`: perform garbage collection
+<<_40_forcegc,`&,40` forcegc>>: perform garbage collection
 
 `&,_call[,optional]_`::
 This means that, again, `&,_call_` is required.
@@ -370,7 +370,7 @@ If it is supplied, there needs to be a `,` and the appropriate parameter substit
 
 .Example
 
-`&,9,1`: display `a$` in the 16-character programmable window
+<<amp-9-bottom-variable,`&,9,1` Bottom Variable>>: display `a$` in the 16-character programmable window
 
 // &,_call_[,_optional_[,_parameter_]] -- don't think this ever happens
 
@@ -391,7 +391,7 @@ Examples of setup, the `&` call being used, and some typical results are listed 
 
 '''
 
-=== `&,1` Input Line
+=== `&,1` Input Line [[amp-1-input-line]]
 
 `&,1` accepts input from the user at a prompt.
 It handles features including word wrap, MCI access, line length, and the ability to type graphics characters.
@@ -865,7 +865,7 @@ The secondary address must be **`0`** to instruct the drive to return the disk d
 
 '''
 
-=== `&,9` Bottom Variable
+=== `&,9` Bottom Variable [[amp-9-bottom-variable]]
 
 Output variables to 16-character status window.
 
@@ -1112,7 +1112,7 @@ As the table above shows, this string stands for `Mon May 17, 2021&#160;&#160;9:
 NOTE: You can also output kbd:[Ctrl+d] or `chr$(4)` in an `&` statement to convert an 11-digit date/time string to a long date/time string.
 Both these statements output the same string as above:
 
-* `a$="22105178944":&"kbd:[Ctrl+d]"+a$`
+* `a$="22105178944":&"` kbd:[Ctrl+D] `"+a$` (in a C64List listing, kbd:[Ctrl+D] is written `{$04}`)
 * `a$="22105178944":&chr$(4)+a$`
 
 // Jay Campey:
@@ -1125,7 +1125,7 @@ Outputting the date and time this way also outputs the user's time zone.
 
 Changes an all-uppercase string (such as a user's handle) to mixed case.
 The first letter of each word is changed to uppercase, and the other letters to lowercase.
-A word starts after any character that isn't a letter, except `'`: `O'MALLEY'S BAR` becomes `O'malley's Bar`.
+A word starts after any character that isn't a letter, except `'`: `O\'MALLEY\'S BAR` becomes `O\'malley\'s Bar`.
 
 This is the same as <<convstr,`&,64,1`>>.
 
@@ -1149,7 +1149,7 @@ To decode all eight, use <<_15_4,`&,15,4`>>.
 This is the same as <<convstr,`&,64,2`>>.
 
 Based on code from `i.t` (the Image terminal)::
-`an$="hostkbd:[f3]port":&,15,2:&"&#163;v7kbd:[f6]"`
+`an$="host{f3}port":&,15,2:&"{pound}v7{f6}"`
 
 .Result:
  host:port
@@ -1178,7 +1178,7 @@ See <<encoded-function-keys>>.
 This is the same as <<convstr,`&,64,4`>>.
 
 ====
-NOTE: `&,15,1` through `&,15,4` all go through the same entry in ``&,15``'s table, so they can look like the same call in the source.
+NOTE: <<_15_1,`&,15,1` Title Case>> through `&,15,4` all go through the same entry in ``&,15``'s table, so they can look like the same call in the source.
 The sub-function number is passed along to <<convstr,`&,64`>>, which picks the conversion.
 ====
 
@@ -1393,7 +1393,7 @@ _Example:_
 
 '''
 
-=== `&,22` Wait _x_ Tenths of a Second
+=== `&,22` Wait _x_ Tenths of a Second [[amp-22-wait]]
 
 This waits for any interval from .1 second to 25.5 seconds, in 1/10-second steps.
 
@@ -1470,7 +1470,7 @@ xchrout1:
 `source/swap1.s` has a variant, `xchrout0`, which outputs nothing at all when the password "`no output`" mode is on (`passmode` bit 1).
 
 * From BASIC, `&"`...`"` is the usual way to output text.
-A single character could be sent with `poke 254,`_c_`:&,24`, though this hasn't been tested.
+A single character could be sent with ``poke 254,``__c__``:&,24``, though this hasn't been tested.
 
 ==== What It Does
 
@@ -1665,7 +1665,7 @@ You pass in what the user typed as _string$_, and a _mask_ with the user's own a
 If the command is in the table _and_ the user's bit is set in its flag word, `a%` returns its record number; otherwise, `0`.
 The program can then branch on that number, with `on a% goto...` or <<calcgoto,`&,66` Calculated `goto`>>.
 
-===== Why the Mask Is Probably a "`Who's Allowed`" Bit
+===== Why the Mask Is Probably a "`Who\'s Allowed`" Bit
 
 The ECS (Extended Command Set) module used by <<_42_check_for_ecs_command,`&,42`>> does almost the same job, and its code shows what the mask is for.
 It builds a mask with one bit set for the user's access level, `ac%`, by shifting a `1` bit left `ac%` times:
@@ -1684,7 +1684,7 @@ dex
 bpl ecsc3
 
 It then ``and``s that bit with each command's access bytes, and compares the command name: the same pattern as `&,26`.
-The difference is that `&,26` lets the caller choose the mask, the record size and where the table is, while `&,42` uses its own fixed ECS table format.
+The difference is that `&,26` lets the caller choose the mask, the record size and where the table is, while <<_42_ecs_commands,`&,42` ECS Commands>> uses its own fixed ECS table format.
 
 ===== Example: An Access-Checked Command Lookup
 
@@ -1736,10 +1736,10 @@ To check this description against the code:
 | Name test
 | `source/miscl.s`: `ecsscan1` / `ecsscan2`
 
-| `chr$(0)` padding by `&,60,0`
+| `chr$(0)` padding by <<prg-structures.adoc#put-string,`&,60,0` Put String>>
 | `source/miscl.s`: `putstruc`
 
-| `&,42`'s access level mask, used in <<ecschk-possible-use>>
+| ``&,42``'s access level mask, used in <<ecschk-possible-use>>
 | `source/ecs.s`: `ecschk:` and `ecsc3` (namespace `ecsml`)
 |===
 
@@ -1758,7 +1758,7 @@ This erases unnecessary variables after they're done being used.
 ==== Creating New Arrays
 
 If you define any new arrays in a module, be sure not to consume unnecessary memory after you end the module.
-You can do this by using the `&,27` (array pointer save) and `&,28` (array pointer restore) calls.
+You can do this by using the `&,27` (array pointer save) and <<restore-variable-pointers,`&,28` Restore Variable Pointers>> (array pointer restore) calls.
 
 ====
 Image 1.2 had just one level of variable pointer save and restore.
@@ -1778,15 +1778,15 @@ Image 1.3 and above adds multiple levels of save and restore with an additional 
 
 <2> create new array
 
-<3> `&,28,2`: restore level 2 array pointers (this frees up memory used by the array but preserves level 1 system variables still needed by the BBS). `goto 300`: go to main prompt.
+<3> <<restore-variable-pointers,`&,28,2` Restore Variable Pointers>>: restore level 2 array pointers (this frees up memory used by the array but preserves level 1 system variables still needed by the BBS). `goto 300`: go to main prompt.
 
 #TODO#: I would like a diagram of array pointers, creating new arrays, restoring old pointers here.
 
 ====
-TIP: The main prompt restores level 1 array pointers and already does a `&,28,1` there.
+TIP: The main prompt restores level 1 array pointers and already does a <<restore-variable-pointers,`&,28,1` Restore Variable Pointers>> there.
 
-If you substitute `&,27,1` for `&,27,2` and `&,28,1` for `&,28,2` in the above code, line 300 will redo `&,28,1`.
-This causes a `?redim'd array&#160;&#160;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
+If you substitute `&,27,1` for `&,27,2` and <<restore-variable-pointers,`&,28,1` Restore Variable Pointers>> for `&,28,2` in the above code, line 300 will redo `&,28,1`.
+This causes a `?redim\'d array&#160;&#160;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
 ====
 
 '''
@@ -2402,7 +2402,7 @@ _Parameters:_
 
 `minute`: minute
 
-`&,58` shares its code with `&,62` (`setalm` and `settim` in `source/irqhn.s`).
+`&,58` shares its code with <<set-time,`&,62` Set Time>> (`setalm` and `settim` in `source/irqhn.s`).
 The differences are that `&,58` writes to the CIA's alarm registers instead of the clock, and does _not_ swap hours `12` and `92` (see <<set-time>>).
 A BASIC program has to do that swap itself.
 
@@ -2412,7 +2412,7 @@ _Example:_
 [source,imagebasic]
 &,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.
 
-After setting the clock to `b`:`c`, this swaps hours `12` and `92` in `b`, then sets the alarm to `b`:`00`.
+After setting the clock to ``b``:``c``, this swaps hours `12` and `92` in `b`, then sets the alarm to ``b``:``00``.
 
 The expression also changes `13` to `1` and `93` to `81`, though neither can come from `d1$`.
 This suggests the alarm was meant to be set to the top of the _next_ hour (`b+1`).
@@ -2509,7 +2509,7 @@ So it only changes where the next character printed on the local screen appears.
 4004 &,38:&,61,.,8:print"&,37:goto300:":end
 
 `&,61,0,8`: position the cursor at column 0, row 8 (the ninth line), then `print` recovery information if the BBS crashes.
-Since this is printed with BASIC's `print` after `&,38` (trap off), it only needs the local cursor.
+Since this is printed with BASIC's `print` after <<_38_trapoff,`&,38` trapoff>> (trap off), it only needs the local cursor.
 
 '''
 
@@ -2609,7 +2609,7 @@ c=val(mid$(z$,10,2))
 | `&,62` jump table entry
 | `source/jmptb.s`: `.word settim //&,62`
 
-| `settim` routine (shared with `setalm`, `&,58`)
+| `settim` routine (shared with `setalm`, <<set-alarm,`&,58` setalarm>>)
 | `source/irqhn.s`: `settim:` through `settim5:`
 
 | 12/92 swap
@@ -2659,7 +2659,7 @@ NOTE: This description comes from reading the source code (see <<convstr-source>
 | `1`
 | `convnam`
 | Title case: the first letter of each word becomes uppercase, the other letters lowercase.
-A word starts after any character that isn't a letter, except `'`: `O'MALLEY'S BAR` becomes `O'malley's Bar`.
+A word starts after any character that isn't a letter, except `'`: `O\'MALLEY\'S BAR` becomes `O\'malley\'s Bar`.
 | <<_15_1,`&,15,1`>>
 
 | `2`
@@ -2694,10 +2694,10 @@ an$="host{f3}port"+"":&,64,2:&an$
  host:port
 
 ====
-CAUTION: `an$` is changed _in place_: the conversion overwrites the characters wherever `an$`'s text is stored.
+CAUTION: `an$` is changed _in place_: the conversion overwrites the characters wherever ``an$``'s text is stored.
 If `an$` was assigned a string literal (`an$="THE CHIEF"`), its text is the literal inside your program, so the program line itself is changed.
 If it was assigned from another variable (`an$=a$`), that variable may share the same text.
-Adding `+""` (`an$="THE CHIEF"+""`) makes a separate copy first.
+Adding `{plus}""` (`an$="THE CHIEF"{plus}""`) makes a separate copy first.
 ====
 
 ==== Source References [[convstr-source]]
@@ -2716,7 +2716,7 @@ Adding `+""` (`an$="THE CHIEF"+""`) makes a separate copy first.
 | Conversions
 | `source/swap2.s`: `convnam` (with `isalpha`), `convdsk` (with table `convd0`), `convimg` (with table `convi0`); `source/ml.s`: `chkspcl0` (with table `spchars`)
 
-| `&,15,1`-`&,15,4` using `&,64`
+| <<_15_1,`&,15,1` Title Case>>-<<_15_4,`&,15,4` Decode All Function Keys>> using `&,64`
 | `source/strio.s`: `convtbl`/`convtbh`, which send sub-functions 1-4 to `convstr`; `source/calls.s`: `convstr:` (jump table entry 64)
 |===
 
@@ -2755,7 +2755,7 @@ d$="30408178427":for i=1 to 11:poke 830+i,asc(mid$(d$,i,1)):next
 ====
 NOTE: Before Image BBS 3.0's source was available, `&,65` was believed to be a group of string conversion functions.
 Those are <<convstr,`&,64`>>.
-In the jump table, `&,64` is `$f809` (the `swap2` module) and `&,65` is `$fc09` (the `swap3` module, routine `convdate`); `&,15` calls entry 65 to build its long date.
+In the jump table, `&,64` is `$f809` (the `swap2` module) and `&,65` is `$fc09` (the `swap3` module, routine `convdate`); <<convan,`&,15` Convert `an$`>> calls entry 65 to build its long date.
 ====
 
 '''
@@ -2879,7 +2879,7 @@ Display the copyright message.
 
 // Ray:
 
-Certain sub-functions of `&,60` are re-directed here.
+Certain sub-functions of <<_60_structures,`&,60` Structures>> are re-directed here.
 
 '''
 
@@ -3014,8 +3014,8 @@ Before moving, it checks the caller's terminal (`cursmode`):
 
 ==== `&,61` or `&,70`?
 
-`&,61` moves only the local cursor, using the KERNAL; `&,70` moves the caller's cursor as well, by sending cursor codes.
+`&,61` moves only the local cursor, using the KERNAL; <<position-cursor,`&,70` Position Terminal Cursor>> moves the caller's cursor as well, by sending cursor codes.
 
 NOTE: The visual editor (`source/visual.s`) has its own `crsrpos`, which keeps track of where the caller's cursor is and uses whichever is cheaper: cursor keys from where it is, or kbd:[Home] first.
-`&,70` could do the same by reading the local cursor position from the KERNAL (`$d3`, `$d6`), which follows what has been sent, though that needs checking with the screen mask on.
+<<position-cursor,`&,70` Position Terminal Cursor>> could do the same by reading the local cursor position from the KERNAL (`$d3`, `$d6`), which follows what has been sent, though that needs checking with the screen mask on.
 

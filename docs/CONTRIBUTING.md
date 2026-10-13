@@ -29,7 +29,9 @@ BASIC listings are colored by Pygments, through the `pygments.rb` gem (`gem inst
 Without the gem the guide still builds, just without colors.
 
 Listings use `[source,imagebasic]` (the default in `prg-master.adoc`): `tools/pygments/imagebbs_lexer.py`, Pygments' CBM BASIC V2 lexer plus `&` calls, `$hex` and `%binary` numbers, and C64List's `{...}` tokens and `'` comments.
-`make pdf` finds it by setting `PYTHONPATH` to `tools/pygments`; building by hand, do the same:
+The same file has the `imagebbs` style (the guide's `:pygments-style:`): Pygments' Manni, with C64List control tokens inside strings (`{f6}`, `{white}`, `{clear}`) shown in reverse field, as a C64 shows control codes in quote mode.
+
+`make pdf` finds them by setting `PYTHONPATH` to `tools/pygments`; building by hand, do the same:
 
 `PYTHONPATH=../tools/pygments asciidoctor-pdf prg-master.adoc`
 

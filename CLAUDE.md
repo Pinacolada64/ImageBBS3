@@ -62,3 +62,18 @@ To print a single-letter variable in an `&` string, use MCI instead of
 (e.g. `&"User {pound}%u's list"`, not `&"User"+str$(u%)+"'s list"`). MCI
 reads just one letter after the command, so this only works for one-letter
 names, and it prints no leading space as `str$()` does.
+
+## Documentation (`docs/`)
+
+### Link every `&,xx` mention to its section, with the call's name
+
+In the manuals, write a mention of an `&` call as a cross-reference to the
+section that documents it, with the call's name, as most mentions already
+are: `<<position-cursor,`&,70` Position Terminal Cursor>>`. The target is
+the anchor on the call's heading in `prg-ampersand-calls.adoc`
+(`=== `&,70` Position Terminal Cursor [[position-cursor]]`), or Asciidoctor's
+automatic ID for a heading without one (`_15_4` for `&,15,4`); add an anchor
+if neither fits. From another file, name the file:
+`<<prg-structures.adoc#scan-for-string,`&,60,11` Scan for String>>`.
+Leave `&,xx` bare in code (listings and code spans of BASIC), in the call's
+own heading, and when the same call comes up again in the same paragraph.

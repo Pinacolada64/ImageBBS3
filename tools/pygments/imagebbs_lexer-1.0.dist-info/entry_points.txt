@@ -1,2 +1,5 @@
 [pygments.lexers]
 imagebasic = imagebbs_lexer:ImageBasicLexer
+
+[pygments.styles]
+imagebbs = imagebbs_lexer:ImageBBSStyle

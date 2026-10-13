@@ -95,11 +95,11 @@ When the routines grow in size, you just adjust the addresses in the `jmp` table
 |====
 
 
-`c000: jmp $c009` ; `sys 49152` sub-function 0 (`&,16`)
+`c000: jmp $c009` ; `sys 49152` sub-function 0 (<<prg-ampersand-calls.adoc#_16_sys49152,`&,16` sys49152>>)
 
-`c003: jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of `&,17`)
+`c003: jmp $c0a5` ; `sys 49155` sub-function 1 (`&,16,1`, also the equivalent of <<prg-ampersand-calls.adoc#_17_sys49155,`&,17` sys49155>>)
 
-`c006: jmp $c147` ; `sys 49158` sub-function 2 (`&,16,2`)
+`c006: jmp $c147` ; `sys 49158` sub-function 2 (<<prg-ampersand-calls.adoc#_16_sys49152,`&,16,2` sys49152>>)
 
 `c009:` _<first byte of first routine>_
 ****

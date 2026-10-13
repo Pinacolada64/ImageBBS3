@@ -43,7 +43,7 @@ Layout :
 | gosub&#160;1001
 | Position record pointer of the currently opened REL file on LFN 2 (it calls line `10` <<line-10>> twice).
 
-There is a 1/10^th^-second delay (`&,22,1`) between positioning commands.
+There is a 1/10^th^-second delay (<<prg-ampersand-calls.adoc#amp-22-wait,`&,22,1` Wait _x_ Tenths of a Second>>) between positioning commands.
 This is to give a physical disk drive`'s read/write head (or a slower filesystem, such as on a SD card) time to move to the correct spot within the file.
 
 _Enter:_
@@ -316,7 +316,7 @@ This routine then:
 . checks whether the module requested has already been ``load``ed (``ml$=a$``):
 
 * If so, the DOS error status (`e%`) is set to `0` to indicate no error, and it ``return``s instead of re-``load``ing the file.
-* otherwise, loads the module via `&,7` and ``return``s
+* otherwise, loads the module via <<prg-ampersand-calls.adoc#load-file,`&,7` Load File>> and ``return``s
 
 ////
 standard im does not do this:
@@ -709,7 +709,7 @@ Action is dependent on the value of `f1`:
 
 | gosub&#160;304
 |
-| Reverts memory marker back to 1 (`&,28,1`), calls line 306 which then issues an `&,27` (save) and exits.
+| Reverts memory marker back to 1 (<<prg-ampersand-calls.adoc#restore-variable-pointers,`&,28,1` Restore Variable Pointers>>), calls line 306 which then issues an <<prg-ampersand-calls.adoc#save-variable-pointers,`&,27` Save Variable Pointers>> (save) and exits.
 
 | gosub&#160;306
 |
@@ -731,7 +731,7 @@ This executes the specified command history`'s entry, by putting it in `an$` and
 | gosub&#160;312
 | _n/a_
 | Split off the first of several stacked commands.
-`&,15,6,140` splits `an$` at the first `^` (the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
+<<prg-ampersand-calls.adoc#_156_scan_string,`&,15,6,140` Scan String>> splits `an$` at the first `^` (the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
 Line 313 then adds `an$` to the command history, `hs$()`, and ``return``s.
 
 | [[line-314,Echo command]]gosub&#160;314
