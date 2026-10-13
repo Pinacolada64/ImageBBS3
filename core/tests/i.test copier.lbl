@@ -1,4 +1,17 @@
 {uses:../3_0-preface.lbl}
+' i.test copier: try the &,16 calls of "++ copier" (source/copier.s). It
+' copies between files BASIC opened: file #3 is read, file #2 written.
+'   &,16,0    copy all of #3 to #2 ("Good:" counts 254-byte blocks)
+'   &,16,1    count the bytes of #3 ("Bytes:" counts them), write the count
+'             to #2 as 3 bytes (low, middle, high), and close #3
+'   &,16,2    "copy some": read a 3-byte count from #3, then copy that
+'             many more bytes of #3 to #2
+'   &,16,255  a% = 2, the protocol number
+' 1 then 0 into one file packs a file behind its length; 2 unpacks it.
+'
+' The file copied is "++ 2" from the plus-file drive (dr=5); the results go
+' to the etcetera drive (dr=3) as e.copier copy, count, pack and unpack.
+' The counters show on the protocol screen of sub.display (im=5:gosub 443).
 
 {assign:im.open_file=4}
 {assign:im.read_cmd_channel=5}
@@ -14,90 +27,71 @@
 {step:2}
 ' set program name for e.errlog, get debug status (checked means *disabled*):
 	pr$="i."+"test copier":&,52,56,3:db=1-a%
-	&,18,1:lp=1:&"Test {f5}++ copier{f5} &{comma}16{comma}x params{f6:2}"
-	if db then:&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
-'	f$="copier":a$=f$:gosub {:im.loadProtocol}:if e% then:&:goto {:quit}
-	a$="copier":gosub 28:if e% then:&:goto {:quit}
-' report name of protocol:
-	&"{quotation}{pound}vl{quotation} loaded.{f6}"
+	&,18,1:a$="copier":gosub 28:if e% then:&:goto {:quit}
 {:menu}
-	lp=1:&"0{equal}copy{comma} 1{equal}count bytes{comma} 2{equal}copy some{comma} 255{equal}report protocol #{f6}"
-	&"&{comma}16{comma}{pound}i1":if an$="" then:&"Quitting.{f6}":goto {:quit}
+	lp=1:&"{clear}Test {f5}++ copier{f5} &{comma}16{comma}x calls ({quotation}{pound}vl{quotation} loaded){f6}"
+	if db then:&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
+	lp=1:&"{f6}0{equal}copy all{comma} 1{equal}count bytes{comma} 2{equal}copy some{comma} 255{equal}protocol #{f6}"
+	&"&{comma}16{comma}{pound}i1":if an$="" or tr%<1 then:&"Quitting.{f6}":goto {:quit}
 	an=int(val(an$)):op=-1*(an=0)-2*(an=1)-3*(an=2)-4*(an=255)
-	if op<1 or op>4 then:&"Invalid selection{colon} 0-2 or 255.{f6}":goto {:menu}
-' a% is line # for calculated gosub (&,66,1):
-	a%=3000+op*100:&,66,1:goto {:menu}
+	if op<1 then:&"Choose 0-2 or 255.{f6}{pound}w2":goto {:menu}
+' a% is line # for calculated gosub (&,66,1): 3100, 3200, 3300 or 3400
+	a%=3000+op*100:&,66,1:&"{f6}Hit a key{colon} {pound}g1":goto {:menu}
 
 {:quit}
 ' restore screen mask
-'	im=1:gosub {:im.subDisplay}
 	im=1:gosub 443
-'	&,18,1:goto {:im.mainPrompt}
 	&,18,1:a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 {nice:100}
-' 3100
-' &,16,0: copy file:
-' show sub.display screen mask, and appropriate action message:
-	im=5:x=an+1:gosub 443
-' open files:
-	gosub {:sub.open_files}:if e% then:&
-' display status:
-	if e%=. then:&,16,0
-	return
+' 3100: &,16,0: copy all of ++ 2 to e.copier copy
+	x=3:gosub {:show}:gosub {:open3}:if e% then return
+	dr=3:a$="e.copier copy":gosub 19:a$=a$+",p,w":gosub 4:if e% then close 3:&:return
+	&,16,0:close 2:close 3:&"Copied {f5}++ 2{f5} to {f5}e.copier copy{f5}.{f6}":return
 
 {nice:100}
-' 3200
-' &,16,1: count bytes in file: nothing returned, prints on screen
-	x=4 ' scanning
-{:3202}
-' im=5: use protocol display, an$=filename
-	im=5:an$="++ 2,p":gosub 443
-'	&"{pound}%b bytes{f6}"
-	return
+' 3200: &,16,1: count the bytes of ++ 2 into e.copier count, read it back
+	x=4:gosub {:show}:gosub {:open3}:if e% then return
+	dr=3:a$="e.copier count":gosub 18:if e% then close 3:&:return
+	&,16,1:close 2:a$="e.copier count,s,r":gosub {:read_count}:if e% then return
+	&"{f5}++ 2{f5} is {pound}!n bytes (written to {f5}e.copier count{f5}).{f6}":return
 
 {nice:100}
-' 3300
-' &,16,2: copy some, based on the first 3 bytes of the file?
-	x=3:gosub {:3202} ' copying
-	return
-'	&"{up:2}Hit a key: {pound}g1"
+' 3300: &,16,2: pack ++ 2 behind its length (&,16,1 then &,16,0) into
+' e.copier pack, unpack it with &,16,2 into e.copier unpack, compare
+	x=3:gosub {:show}:gosub {:open3}:if e% then return
+	dr=3:a$="e.copier pack":gosub 18:if e% then close 3:&:return
+	&,16,1:gosub {:open3}:if e% then close 2:return
+	&,16,0:close 3:close 2:a$="e.copier pack,s,r":gosub {:read_count}:if e% then return
+	&"Packed {pound}!n bytes into {f5}e.copier pack{f5}.{f6}"
+	dr=3:gosub 3:open 3,dv%,3,dr$+"e.copier pack,s,r":gosub 5:if e% then close 3:&:return
+	a$="e.copier unpack":gosub 19:a$=a$+",p,w":gosub 4:if e% then close 3:&:return
+	&,16,2:close 2:close 3:&"Unpacked it to {f5}e.copier unpack{f5}.{f6}"
+' compare e.copier unpack with ++ 2, byte by byte
+	gosub {:open3}:if e% then return
+	dr=3:a$="e.copier unpack,p,r":gosub 4:if e% then close 3:&:return
+	n=.
+{:compare}
+	get#3,a$:c=st:get#2,b$:n=n+1:if a$<>b$ or c<>st then {:differ}
+	if c=. then {:compare}
+	close 2:close 3:&"It matches {f5}++ 2{f5} ({pound}!n bytes).{f6}":return
+{:differ}
+	close 2:close 3:&"It differs from {f5}++ 2{f5} at byte {pound}!n.{f6}":return
 
 {nice:100}
-' &,16,255: report protocol number (seen in i.SB for '++ post'):
-	&"Protocol #{pound}%a{f6}":return
+' 3400: &,16,255: protocol number
+	&,16,255:&"Protocol number{colon} {pound}%a{f6}":return
 
-' {nice:100}
-' {:sub.status_line}
-'	&"{clear}":&,69,0,15,"Good: 00000 Bad: 00000 Bytes: 000000",3:return
+' protocol screen: x = 3 "Copying", 4 "Scanning"; then print from row 1
+{:show}
+	im=5:an$="++ 2":gosub 443:&,70,.,1:return
 
-{nice:100}
-{:sub.open_files}
-	dr=5:gosub 4:open 15,dv%,15:open 3,dv%,3,"++ 2,p,r":gosub 5:if e% then:&:return
-	dr=3:gosub 4:open 15,dv%,15:open 2,dv%,2,"e.++ 2 test,p,w":gosub 5:if e% then:&
+' open ++ 2 on the plus-file drive as file #3
+{:open3}
+	dr=5:gosub 3:open 3,dv%,3,dr$+"++ 2,p,r":gosub 5:if e% then close 3:&
 	return
 
-{':3014}
-'	close 3:close 2:&"{up:2}Hit a key: {pound}g1"
-
-' 1 = Sending:   inc Good
-' 2 = Receiving:
-' 3 = Copying:   inc Good
-' 4 = Scanning:  no particular result
-
-' 1 for x=1 to 4
-' 2 x$="Send":ifx>1tHx$="Receiv":ifx>2tHx$="Copy":ifx>3tHx$="Scann"
-' 3 printx;x$"ing":next
-'
-'  1 Sending
-'  2 Receiving
-'  3 Copying
-'  4 Scanning
-
-' Run: i.test copier
-
-' ----+----+----+----+----+----+----+----+
-' 0=copy, 1=count bytes, 2=copy some,
-' 255=report protocol #
-
-' Good: 00000  Bad: 00000  Bytes: 000179
+' read the 3-byte count at the start of file a$ (drive 3): n
+{:read_count}
+	dr=3:gosub 4:if e% then close 2:&:return
+	get#2,a$,b$,c$:close 2:n=asc(a$+nl$)+256*asc(b$+nl$)+65536*asc(c$+nl$):return

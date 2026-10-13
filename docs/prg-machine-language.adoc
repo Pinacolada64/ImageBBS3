@@ -21,6 +21,37 @@ Its purpose is currently unknown.
 This sets the value of `defflag` from the protocol.
 Its purpose is currently unknown.
 
+==== `++ copier`
+
+The file "`protocol`" Image uses in Console Local mode, and the copier behind `i.CP` (Copy-All).
+It copies between two files your module has already opened: it reads file #3 and writes file #2.
+It doesn't close them, except as noted.
+
+[%header]
+[%autowidth]
+|===
+| Function | Purpose | Returns
+| `&,16,0` | Copy all of file #3 to file #2, in blocks of up to 254 bytes, until the end of #3. `Good:` counts the blocks. | _n/a_
+| `&,16,1` | Count the bytes in file #3 (`Bytes:` counts them), write the count to file #2 as 3 bytes, low byte first, then close #3. | _n/a_
+| `&,16,2` | "`Copy some`": read a 3-byte count (low byte first) from file #3, then copy that many more bytes of #3 to #2. A count of 0 copies to the end of #3. | _n/a_
+| `&,16,255` | Report the protocol number. | `a%`=2
+|===
+
+`&,16,1` and then `&,16,0` into the same file #2 writes a file behind its own length.
+`&,16,2` on the result copies that file back out and stops at its end, so a file of several such entries can be unpacked one at a time.
+
+The counters are the digits of row 15 of the protocol screen that `sub.display` draws (`im=5:gosub 443`):
+
+ Good: 00000  Bad: 00000  Bytes: 000000
+
+.Copy one file (condensed from i.CP)
+[source]
+----
+open3,f,3,f$+c$+",r":open2,g,2,g$+c$+",w":&,16:close2:close3
+----
+
+Test program: `core/tests/i.test copier.lbl`.
+
 ==== `++ index`
 
 This module handles the `u.config` (user log) and `u.weedinfo` (user weed info) files.
