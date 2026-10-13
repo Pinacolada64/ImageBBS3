@@ -118,6 +118,30 @@
 
 #import "calls.s"
 
+// make varbuf a string descriptor for the number FOUT left at $0100,
+// without its leading space; for btmvar (&,9)
+numdesc:
+		ldx #0
+		lda $0100
+		cmp #' '
+		bne numdesc1
+		inx
+numdesc1:
+		stx varbuf+1
+		lda #1
+		sta varbuf+2
+numdesc2:
+		lda $0100,x
+		beq numdesc3
+		inx
+		bne numdesc2
+numdesc3:
+		txa
+		sec
+		sbc varbuf+1
+		sta varbuf
+		rts
+
 // put intro program in
 
 .label room_under_basic_rom = protostart-*
@@ -432,6 +456,19 @@ convchr0:
 convchr1:
 		and #127
 		rts
+
+// integer in varbuf (as usevar leaves it: high byte, low byte) as text at
+// $0100, with BASIC's GIVAYF and FOUT (like fpout); for btmvar (&,9)
+intfout:
+		lda r6510
+		pha
+		lda #r6510_normal
+		sta r6510
+		lda varbuf
+		ldy varbuf+1
+		jsr $b391
+		jsr $bddd
+		jmp exitint
 
 .label room_in_swapper = $cd00 - *
 * = $cd00 "interface"

@@ -878,7 +878,7 @@ _Parameters:_
 |====================
 |  Variable  |  Variable  |  Variable  |  Variable  |  Variable
 |  ``0 an$`` | ``10 tt$`` | ``20 nl `` | ``30 a% `` | ``40 f1$``
-|  ``1 a$ `` | ``11 na$`` | ``21 ul `` | ``31 b$ `` | ``41 f2$``
+|  ``1 a$ `` | ``11 na$`` | ``21 ul `` | ``31 b% `` | ``41 f2$``
 |  ``2 b$ `` | ``12 rn$`` | ``22 qe `` | ``32 dv%`` | ``42 f3$``
 |  ``3 tr$`` | ``13 ph$`` | ``23 rq `` | ``33 dr$`` | ``43 f4$``
 |  ``4 d1$`` | ``14 ak$`` | ``24 ac%`` | ``34 c1$`` | ``44 f5$``
@@ -888,6 +888,11 @@ _Parameters:_
 |  ``8 d5$`` | ``18 sh `` | ``28 p$ `` | ``38 kp%`` | ``48 mp$``
 |  ``9 ld$`` | ``19 mw `` | ``29 tr%`` | ``39 c3$`` | ``49 mn%``
 |====================
+
+Number variables (``lp``, ``a%`` and so on) are shown as digits, as `print` would show them but without the leading space; negative integers have a minus sign.
+
+NOTE: Before October 2026, `&,9` only handled strings: it showed garbage for a number variable.
+`btmvar` (`source/swap2.s`) now checks the variable's type first.
 
 _Examples:_
 

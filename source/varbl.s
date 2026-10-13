@@ -216,7 +216,7 @@ vars:
 		.byte $50, $80         // 28 p$
 		.byte $d4, $d2         // 29 tr%
 		.byte $c1, $80         // 30 a%
-		.byte $c2, $80         // 31 b$
+		.byte $c2, $80         // 31 b%
 		.byte $c4, $d6         // 32 dv%
 		.byte $44, $d2         // 33 dr$
 		.byte $43, $b1         // 34 c1$

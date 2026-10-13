@@ -327,7 +327,8 @@ ansiprm4:
 		sta ansiprm
 		jmp ansiprm1
 
-//print string variable to bottom
+//print string variable to bottom (a number variable is shown as text:
+//btmnum)
 btmvar:
 		inc scnlock
 		lda scnmode
@@ -339,6 +340,7 @@ btm0:
 		dey
 		bpl btm0
 		jsr usevar
+		jsr btmnum
 		ldy #0
 		ldx #0
 		lda varbuf
@@ -369,6 +371,36 @@ btm1a:
 		bcc btm1
 btm2:
 		dec scnlock
+		rts
+
+// a number variable: make varbuf a string descriptor for it as text. The
+// variable's name is in the 2 bytes before its value ($47): bit 7 set in
+// both = integer, in the second only = string, in neither = floating point
+btmnum:
+		lda $47
+		sec
+		sbc #2
+		sta $22
+		lda $48
+		sbc #0
+		sta $23
+		ldy #1
+		lda ($22),y
+		bpl btmnum1
+		dey
+		lda ($22),y
+		bpl btmnum2
+		jsr intfout
+		jmp numdesc
+// floating point: unpack it into the FAC (varbuf is $61) for FOUT
+btmnum1:
+		lda $62
+		sta $66
+		ora #$80
+		sta $62
+		jsr fpout
+		jmp numdesc
+btmnum2:
 		rts
 
 isalpha:
