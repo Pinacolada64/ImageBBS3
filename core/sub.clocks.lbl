@@ -65,22 +65,22 @@
 	&"{f6}{lt. blue}Set the BBS clock:{f6:2}":b$=d1$
 	h=val(mid$(b$,8,2)):c$="A":if h>79 then h=h-80:c$="P"
 {:sub.manual_year}
-	poke 53252,2:pl=1:w$=mid$(b$,2,2):v=val(w$):p$="Year (00-99)":&,1,32:y=val(an$):if an$="" then y=v
+	poke 53252,2:pl=1:w$=mid$(b$,2,2):v=val(w$):p$="Year (00-99)"+"":&,1,32:y=val(an$):if an$="" then y=v
 	if y<. or y>99 then {:sub.manual_year}
 {:sub.manual_month}
-	poke 53252,2:pl=1:w$=mid$(str$(val(mid$(b$,4,2))),2):v=val(w$):p$="Month (1-12)":&,1,32:n=val(an$):if an$="" then n=v
+	poke 53252,2:pl=1:w$=mid$(str$(val(mid$(b$,4,2))),2):v=val(w$):p$="Month (1-12)"+"":&,1,32:n=val(an$):if an$="" then n=v
 	if n<1 or n>12 then {:sub.manual_month}
 {:sub.manual_date}
-	poke 53252,2:pl=1:w$=mid$(str$(val(mid$(b$,6,2))),2):v=val(w$):p$="Date (1-31)":&,1,32:d=val(an$):if an$="" then d=v
+	poke 53252,2:pl=1:w$=mid$(str$(val(mid$(b$,6,2))),2):v=val(w$):p$="Date (1-31)"+"":&,1,32:d=val(an$):if an$="" then d=v
 	if d<1 or d>31 then {:sub.manual_date}
 {:sub.manual_hour}
-	poke 53252,2:pl=1:w$=mid$(str$(h),2):v=val(w$):p$="Hour (1-12)":&,1,32:h=val(an$):if an$="" then h=v
+	poke 53252,2:pl=1:w$=mid$(str$(h),2):v=val(w$):p$="Hour (1-12)"+"":&,1,32:h=val(an$):if an$="" then h=v
 	if h<1 or h>12 then {:sub.manual_hour}
 {:sub.manual_minute}
-	poke 53252,2:pl=1:w$=mid$(b$,10,2):v=val(w$):p$="Minute (0-59)":&,1,32:m=val(an$):if an$="" then m=v
+	poke 53252,2:pl=1:w$=mid$(b$,10,2):v=val(w$):p$="Minute (0-59)"+"":&,1,32:m=val(an$):if an$="" then m=v
 	if m<. or m>59 then {:sub.manual_minute}
 {:sub.manual_ampm}
-	poke 53252,1:pl=1:w$=c$:p$="A/P":&,1,32:if an$="" then an$=c$
+	poke 53252,1:pl=1:w$=c$:p$="A/P"+"":&,1,32:if an$="" then an$=c$
 	if an$<>"A" and an$<>"P" then {:sub.manual_ampm}
 ' 12-hour to 24-hour
 	h=h+12*(h=12)-12*(an$="P"):gosub {:sub.build_z$}

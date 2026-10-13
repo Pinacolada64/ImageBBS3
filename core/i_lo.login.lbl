@@ -11,11 +11,11 @@
 	dr=5:b$="i/lo!"+a$:a$=b$:gosub 4:close2:if e%then:&"{f6}{white}[Module {pound}$b Failed]{f6}":return
 	new4500:loaddr$+b$,dv%:goto 4500
 {:4010}
-	p$="FIRST Name":t$=ff$:return
+	p$="FIRST Name"+"":t$=ff$:return
 {:4012}
-	p$="LAST Name":t$=ll$:return
+	p$="LAST Name"+"":t$=ll$:return
 {:4014}
-	p$="Email Address ":t$=ph$:p=1:return
+	p$="Email Address "+"":t$=ph$:p=1:return
 {:4020}
 ' logoff
 	mm=.:f1=3:goto 3000

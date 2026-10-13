@@ -185,7 +185,7 @@
 	bn=0:r=abs(int(val(an$)))
 {number:3194}
 {:3194}
-	a=r:if r=.andbz>.then an$="":gosub {:3324}:p$="{f6}Which Sub?":gosub 6:gosub {:3012}
+	a=r:if r=.andbz>.then an$="":gosub {:3324}:p$="{f6}Which Sub?"+"":gosub 6:gosub {:3012}
 	on-(a=.)goto {:3266}:r=a:bn=.:goto {:3206}
 {:3198}
 	f=(a$="<"ora$=";")*2+1:r=bn+f

@@ -37,7 +37,7 @@
 {:directory}
 	gosub {:device_prompt}:if a then return
 ' pl=0: uppercase/lowercase input
-	t%=.:b%=.:w$="*":pl=.:p$="Pattern":&,1,32:if an$="" then an$=w$
+	t%=.:b%=.:w$="*":pl=.:p$="Pattern"+"":&,1,32:if an$="" then an$=w$
 	&,15,2:close 1:open 1,dv%,.,"$"+dr$+an$:get#1,a$,a$:poke 970,.
 {:directory_2}
 ' TODO: check st instead?

@@ -199,7 +199,7 @@
 	if rr then:&"{f6}{lt. red}User count modified, reboot required"
 
 	&"{f6:2}{cyan}Enter handle or ID# of user to edit.{f6:2}"
-	p$="User Edit":gosub {:im.prompt}:if an$="" then return
+	p$="User Edit"+"":gosub {:im.prompt}:if an$="" then return
 ' look up user:
 {:got_param}
 	gosub {:sub.str_to_int}:x=a:if x<=ur and x>. then {:_110}
@@ -296,7 +296,7 @@
 '  6 Unknown
 '  7 Unknown
 
-	if i=12 then p$="Punter        Xmodem        Copier        Relaxed Punter"
+	if i=12 then p$="Punter        Xmodem        Copier        Relaxed Punter"+""
 	if i=12 then c$="Unknown":if v>-1 and v<4 then c$=mid$(p$,(v+1)*14-13,14)
 ' 13: user flags (linefeeds, time zone)
 ' 14: Expert Mode
@@ -375,7 +375,7 @@
 {:_142}
 ' 10 - computer type:
 	&"{f6}":for t=1 to 9:&"{f6}{pound}!t) "+co$(t):next
-	w$=tt$(10):p$="Computer Type":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
+	w$=tt$(10):p$="Computer Type"+"":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
 	on -(a<1 or a>9) goto {:_142}:tt$(10)=str$(a):tz=.:return
 
 {nice:10}
@@ -383,7 +383,7 @@
 ' FIXME: get protos from s.m.protos: gosub 1666
 ' 12 - transfer protocol:
 	&"{f6}1) Punter{f6}2) Xmodem{f6}3) Copier{f6}4) Relaxed Punter{f6:2}"
-	w$=tt$(12):p$="Protocol":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
+	w$=tt$(12):p$="Protocol"+"":&,1,32:gosub {:sub.str_to_int}:if tr%<1 then return
 	on -(a<1 or a>4) goto {:sub.xfer_proto}:tt$(12)=str$(a):tz=.:return
 
 {nice:10}
@@ -431,7 +431,7 @@
 	w$=tt$(2)
 {:sub.change_pw}
 ' if input <> Return or original text, then modify it, set tz=0
-	p$="Password":&,1,32:if an$<>"" or an$<>w$ then tt$(2)=an$:tz=.
+	p$="Password"+"":&,1,32:if an$<>"" or an$<>w$ then tt$(2)=an$:tz=.
 	return
 
 {:sub.show_access_flags}

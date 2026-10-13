@@ -42,7 +42,7 @@
 
 {nice:10}
 {:prompt}
-	&"{f6}[0-49, A)ll, Q)uit, {question}=Menu]{f6}":p$="Display variable":&,1:op$=an$
+	&"{f6}[0-49, A)ll, Q)uit, {question}=Menu]{f6}":p$="Display variable"+"":&,1:op$=an$
 	on -(op$="A")-2*(op$="Q")-3*(op$="{question}") goto {:all}, {:quit}, {:help}
 	an=int(val(op$)):if an<0 or an>49 then:&"Out of range.{f6}":goto {:prompt}
 	gosub {:sub.display}:goto {:prompt}

@@ -17,7 +17,7 @@
 	&"0) Quit{f6}1) Draw frame{f6}"
 	&"2) Scroll header{f6}3) Flash header{comma} get keyboard input{f6:2}"
 {:prompt}
-	p$="Option":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":a$="tests":on -(peek(5988)=165) goto 70:goto 300
+	p$="Option"+"":&,1:a%=val(an$):if tr%<1 or a%=. then:&"Quitting.":a$="tests":on -(peek(5988)=165) goto 70:goto 300
 	if a%<1 or a%>3 then:&"Out of range.{f6}":goto {:prompt}
 ' calculated gosub: [save 2 bytes vs. a%=3000+(a%*100)]
 ' a%=1: 3100, a%=2: 3200, a%=3: 3300

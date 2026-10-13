@@ -27,7 +27,7 @@
 	&"[{pound}!l-{pound}!h":if q then:&"{comma} {question}) List"
 	if m then:&"{comma} M)ain Menu"
 ' q: quick way of checking for menu/help...
-	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+	&"] ":p$="Option"+"":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
 ' ...or main menu input: 'if [q|m] then <whatever>'
 	if m then m=-(an$="M")
 	er=-(an<l or an>h):if q+m=. then if er then gosub {:sub.out_of_range}

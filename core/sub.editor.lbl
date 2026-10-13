@@ -6,7 +6,7 @@
 {:60002}
 	close6:open6,dv%,6,dr$+v$+",s,"+a$:goto 5
 {:60004}
-	p$="Filename":b$=b$+" File"
+	p$="Filename"+"":b$=b$+" File"
 {:60006}
 	&"{pound}$b {pound}g1":fl=0:if an$<>r$then:&"{pound}h"+chr$(65+len(b$)):fl=1:return
 	&"{f6}":return

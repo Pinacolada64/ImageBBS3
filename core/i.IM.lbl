@@ -183,15 +183,15 @@
 	&"Edit{f6:2}"
 	&"Which #? {pound}i1":a=val(an$):if a<1ora>nthen {:3214} ' was 3938
 	b$=(left$(tt$(a),3)):c$=mid$(tt$(a),5)
-	poke 53252,4:w$=b$:p$="ID":pl=1:&,1,32:if an$<>""then b$=an$
-	poke 53252,5:w$=c$:p$="Credits":pl=.:&,1,32:if an$<>""then c$=an$
+	poke 53252,4:w$=b$:p$="ID"+"":pl=1:&,1,32:if an$<>""then b$=an$
+	poke 53252,5:w$=c$:p$="Credits"+"":pl=.:&,1,32:if an$<>""then c$=an$
 	b%=val(b$):c%=val(c$)
 	tt$(a)=right$(str$(1000+b%),3)+str$(c%):cf=1:goto {:3214}
 {:3268}
 	rem
-	p$="{gray3}Device{white}":w$=mid$(str$(dv%(lm)),2):&,1,32:a=val(an$)
+	p$="{gray3}Device{white}"+"":w$=mid$(str$(dv%(lm)),2):&,1,32:a=val(an$)
 	if an$<>""anda<>dv%(lm)anda>6anda<32then tf=1:dv%(lm)=a
-	p$="{gray3}Drive/LU{white}":w$=mid$(str$(dr%(lm)),2):&,1,32:a=val(an$)
+	p$="{gray3}Drive/LU{white}"+"":w$=mid$(str$(dr%(lm)),2):&,1,32:a=val(an$)
 	if an$<>""anda<>dr%(lm)anda=>.anda<255then tf=1:dr%(lm)=a
 	if tfthen gosub33:x=lm+51:gosub 1:print#2,dv%(lm);r$;dr%(lm):close2
 	return
@@ -202,26 +202,26 @@
 {:3286}
 	&"{f6}{pound}{back arrow}10{cyan}Current Date/Time is{f6}{pound}{back arrow}07{pound}v0{f6:3}":d$=d1$:tz=.
 {:3288}
-	p$=" Day   ":w$=left$(d$,1):a=1:gosub {:3328}:if a<1ora>7then {:3288}
+	p$=" Day   "+"":w$=left$(d$,1):a=1:gosub {:3328}:if a<1ora>7then {:3288}
 	dw$=mid$(str$(val(an$)),2,1)
 {:3292}
-	p$=" Month ":w$=mid$(d$,4,2):a=2:gosub {:3328}:if a<1ora>12then {:3292}
+	p$=" Month "+"":w$=mid$(d$,4,2):a=2:gosub {:3328}:if a<1ora>12then {:3292}
 	gosub {:3334}:mo$=an$
 {:3296}
-	p$=" Date  ":w$=mid$(d$,6,2):a=2:gosub {:3328}:if a<1ora>31then {:3296}
+	p$=" Date  "+"":w$=mid$(d$,6,2):a=2:gosub {:3328}:if a<1ora>31then {:3296}
 	gosub {:3334}:dt$=an$
 {:3300}
-	p$=" Year  ":w$=mid$(d$,2,2):a=2:gosub {:3328}:if a<1ora>99then {:3300}
+	p$=" Year  "+"":w$=mid$(d$,2,2):a=2:gosub {:3328}:if a<1ora>99then {:3300}
 	gosub {:3334}:yr$=an$
 	c$="A":e%=val(mid$(d$,8,2)):if e%>79then e%=e%-80:c$="P"
 {:3306}
-	p$=" Hour  ":an$=mid$(str$(e%),2):gosub {:3334}:w$=an$:a=2:gosub {:3328}:if a<1ora>12then {:3306}
+	p$=" Hour  "+"":an$=mid$(str$(e%),2):gosub {:3334}:w$=an$:a=2:gosub {:3328}:if a<1ora>12then {:3306}
 	gosub {:3326}:b=a:gosub {:3334}:hr$=an$
 {:3310}
-	p$=" Min.  ":w$=right$(d$,2):a=2:gosub {:3328}:if a<.ora>59then {:3310}
+	p$=" Min.  "+"":w$=right$(d$,2):a=2:gosub {:3328}:if a<.ora>59then {:3310}
 	a=a-sgn(a):gosub {:3326}:c=a:mn$=an$:w$=c$
 {:3314}
-	p$=" A/P   ":a=1:gosub {:3328}:on-(an$<>"A"andan$<>"P")goto {:3314}:if an$<>v$then tz=1
+	p$=" A/P   "+"":a=1:gosub {:3328}:on-(an$<>"A"andan$<>"P")goto {:3314}:if an$<>v$then tz=1
 	if (an$="P"andb<>18)or(an$="A"andb=18)then b=bor128:gosub {:3336}
 	ontz+1goto {:3346}:gosub {:3338}:&"{cyan}{pound}{back arrow}10Setting Date/Time to{f6}{pound}{back arrow}07{$04}"+a$+"{f6:2} OK?   {lt. green}: "
 	gosub 96:ona+1goto {:3006}:gosub {:3340}:poke 56331,b:poke 56330,c:poke 56329,89

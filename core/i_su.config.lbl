@@ -13,20 +13,20 @@
 {:4002}
 	z3$="Part I: Sysop Information":gosub {:3404}:d1$="12011111201"
 {:4004}
-	&"{f6}{white}":poke 53252,20:w$="IMAGE SYSOP":b$=w$:pl=1:p$="Sysop Handle":&,1,32
+	&"{f6}{white}":poke 53252,20:w$="IMAGE SYSOP":b$=w$:pl=1:p$="Sysop Handle"+"":&,1,32
 	if an$=""then an$=b$
 	&"{up:2}{lt. blue}Sysop Handle{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {white}"
-	tt$(1)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":w$="JOHN":b$=w$:p$="Sysop First Name":&,1,32
+	tt$(1)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":w$="JOHN":b$=w$:p$="Sysop First Name"+"":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Sysop First Name{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {white}"
-	tt$(3)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":w$="DOE":b$=w$:p$="Sysop Last Name":&,1,32
+	tt$(3)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":w$="DOE":b$=w$:p$="Sysop Last Name"+"":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Sysop Last Name{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {white}"
 	tt$(4)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":poke 53252,40:w$="example@example.com"
-	pl=.:b$=w$:p$="Sysop Email":&,1,32
+	pl=.:b$=w$:p$="Sysop Email"+"":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Sysop Email{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {white}":poke 53252,20
-	tt$(5)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":pl=1:w$="PASS":b$=w$:p$="Sysop Password":&,1,32
+	tt$(5)=an$:&"{f6}{pound}{back arrow}38 {f6}{up}":pl=1:w$="PASS":b$=w$:p$="Sysop Password"+"":&,1,32
 	if an$=""then an$=b$
 	tt$(2)=an$:&"{up:3}{lt. blue}Sysop Password{blue}:{pound}{back arrow}17{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}30 {yellow}{f6}Is the above information correct? ":gosub 96:if a=.then gosub{:3414}:goto {:4004}
 	tt$=tt$(1)+r$+tt$(2)+r$+tt$(3)+r$+tt$(4)+r$+tt$(5)+r$+d1$+r$
@@ -44,19 +44,19 @@
 	&"{yellow}Is the above information correct? ":gosub 96:if a=.then gosub{:3414}:&"{f6}":restore:goto {:4032}
 	z3$="Part IV: BBS Information":gosub {:3414}:gosub {:3404}:poke 53252,30:pl=.
 {:4044}
-	w$="IMAGE BBS V3.0":b$=w$:p$="BBS Name":&"{f6}{white}":&,1,32
+	w$="IMAGE BBS V3.0":b$=w$:p$="BBS Name"+"":&"{f6}{white}":&,1,32
 	if an$=""then an$=b$
 	&"{up:2}{lt. blue}BBS Name{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
-	bn$=an$:w$="IMAGE MAIN":b$=w$:p$="Main Prompt":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
+	bn$=an$:w$="IMAGE MAIN":b$=w$:p$="Main Prompt"+"":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Main Prompt{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
-	po$=an$:w$="* Entering Chat Mode *":b$=w$:p$="Chat Entry":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
+	po$=an$:w$="* Entering Chat Mode *":b$=w$:p$="Chat Entry"+"":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Chat Entry{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
-	c1$=an$:w$="* Exiting Chat Mode *":b$=w$:p$="Chat Exit":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
+	c1$=an$:w$="* Exiting Chat Mode *":b$=w$:p$="Chat Exit"+"":&"{f6}{pound}{back arrow}38 {f6}{up}":&,1,32
 	if an$=""then an$=b$
 	&"{up:3}{lt. blue}Chat Exit{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}"
-	c2$=an$:w$="100":b$=w$:p$="New User Credits":&"{f6}{back arrow}38 {f6}{up}":&,1,32:if an$=""then an$=b$
+	c2$=an$:w$="100":b$=w$:p$="New User Credits"+"":&"{f6}{back arrow}38 {f6}{up}":&,1,32:if an$=""then an$=b$
 	nc=val(an$):&"{up:3}{lt. blue}NEW Credits{blue}:{pound}{back arrow}12{cyan}{pound}v7{pound}{back arrow}38 {f6}{pound}{back arrow}38 {white}{yellow}{f6}Is the above information correct? ":gosub 96:if a=.then gosub{:3414}:goto {:4044}
 ' TODO: log setup messages to "e.log <day>"
 	gosub {:3414}:z3$="Creating Image 3.0 System Files...":gosub {:3404}:&"{f6}{lt. blue}Creating {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}..."
@@ -215,7 +215,7 @@
 	&"{blue}({lt. blue}3{blue}) {cyan}$D700 {blue}({lt. blue}4{blue}) {cyan}$DF00{f6:2}{lt. blue}]> {white}{pound}g1{f6:2}":a=val(an$):if a<1 or a>4 then a=1
 	ck$="4,d,"+mid$(str$(54272+256*a-(a=4)*1792),2):return
 {:sub.clock_device}
-	poke 53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}":&,1,32:b=val(an$)
+	poke 53252,2:pl=1:w$="8":p$="{yellow}CMD Device{white}"+"":&,1,32:b=val(an$)
 	if an$=""then b=val(w$)
 	&"{cyan}Is {pound}!b Correct? ":gosub 96:if a=.then {:sub.clock_device}
 	return

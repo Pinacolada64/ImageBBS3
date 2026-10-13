@@ -59,7 +59,7 @@
 ' &,60,1,length,struct%(field,record),string$: Get String
 '   copy up to length bytes from the struct into string$ (here, a SIG name)
 4120 &"{f6}{white} ##  SIG Name{f6:2}":for i=1 to x2%(0):a%=i:x=x2%(i):&,60,1,30,x1%(3,x),b$
-4122 &"{white}{pound}#3{pound}# {pound}%a  {cyan}{pound}$b{f6}":next:&"{white}{f6}":p$="Which SIG?":gosub 6:gosub 4004
+4122 &"{white}{pound}#3{pound}# {pound}%a  {cyan}{pound}$b{f6}":next:&"{white}{f6}":p$="Which SIG?"+"":gosub 6:gosub 4004
 4124 if r<1 or r>x2%(0) then 4168
 4126 sg=x2%(r):r=0:so%=x1%(2,sg):&,60,1,30,x1%(3,sg),s$
 4128 sg$=s$:gosub 4008:bz=0:if e%then 4144

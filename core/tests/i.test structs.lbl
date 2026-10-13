@@ -49,7 +49,7 @@
 	&"[0-13{comma} Q)uit{comma} {question} List]{f6}"
 {:prompt}
 ' TODO: add "Px" for page selection
-	p$="Struct Option":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
+	p$="Struct Option"+"":&,1:on -(an$="Q" or tr%<1) -2*(an$="{question}") goto {:quit}, {:display_page_6}
 ' &,66: calcgoto: routines start on 50-line increments
 '	a%=abs(val(an$)):on -(a%<. and a%>14) goto {:prompt}:a%=3000+a%*50:&,66
 ' &,66,1: calcgosub: first, gosub the header, then gosub the demo routine
@@ -59,13 +59,13 @@
 {nice:10}
 {:sub.which_record}
 ' if q=1, a is out of bounds
-	&"[1-{pound}!t] ":p$="Which Record":&,1:a=int(val(an$)):q=-(a<1 or a>t)
+	&"[1-{pound}!t] ":p$="Which Record"+"":&,1:a=int(val(an$)):q=-(a<1 or a>t)
 	return
 
 {:3100} ' &,60,0: PutString
 ' &,60,0, length, struct%(field, record), string$
 	gosub {:sub.which_record}:if q or an$="" then return
-	p$="Enter String":pl=.:&,1:if an$<>"" then:&,60,0,l,s%(11,a),an$:gosub {:sub.show_string}
+	p$="Enter String"+"":pl=.:&,1:if an$<>"" then:&,60,0,l,s%(11,a),an$:gosub {:sub.show_string}
 	goto {:3100}
 
 {:3150} ' &,60,1: GetString
@@ -258,7 +258,7 @@
 	a%=sr:&" search){f6}S)tarting record..{colon} {pound}%a{f6}"
 	a%=nr:&"N)umber of records{colon} {pound}%a{f6:2}"
 	&"G)o{f6}R)eset defaults{f6:2}[F{comma} O{comma} S{comma} N{comma} R{comma} G{comma} {question}) Menu{comma} M)ain Menu]{f6}"
-	pl=1:p$="Option":&,1:if an$="" or an$="M" then return
+	pl=1:p$="Option"+"":&,1:if an$="" or an$="M" then return
 	if an$="{question}" then {:struct_11_menu}
 	if an$="R" then:&"Resetting defaults.{f6}":goto {:reset_defaults}
 	a=-(an$="F")-2*(an$="N")-3*(an$="O")-4*(an$="S")-5*(an$="G")
@@ -269,7 +269,7 @@
 {:struct_11_find_string}
 ' pl=0: uppercase/lowercase; &,1,32: use input with edit mode
 	if op=1 then lp=1:&"(You may use {question} or {asterisk} in the search string.)"
-	an$=fs$:w$=an$:pl=.:p$="Find what":&,1,32
+	an$=fs$:w$=an$:pl=.:p$="Find what"+"":&,1,32
 {:struct_11_unchanged}
 	if an$=w$ or an$="" then:&"(Unchanged.){f6}":return
 ' no conversion needed for wildcards: &,1 encodes what's typed, so a typed ?
@@ -278,7 +278,7 @@
 
 {nice:5}
 {:struct_11_num_records}
-	p$="Number of records to scan [1-{pound}!t]":w$=mid$(str$(t),2):&,1,32:if an$="" or an$=w$ then {:struct_11_unchanged}
+	p$="Number of records to scan [1-{pound}!t]"+"":w$=mid$(str$(t),2):&,1,32:if an$="" or an$=w$ then {:struct_11_unchanged}
 	nr=int(val(an$)):if nr<1 or nr>t then:&"Out of range.{f6}":goto {:struct_11_num_records}
 	return
 
@@ -288,7 +288,7 @@
 
 {nice:5}
 {:struct_11_starting_record}
-	p$="Starting Record":&p$+"{colon} ":gosub {:sub.which_record}:if q=. then sr=a:&p$+"{pound}!a{f6}"
+	p$="Starting Record"+"":&p$+"{colon} ":gosub {:sub.which_record}:if q=. then sr=a:&p$+"{pound}!a{f6}"
 	return
 
 {nice:5}
@@ -486,7 +486,7 @@
 	&"[{pound}%l-{pound}%h":if q then:&"{comma} {question}) List"
 	if m then:&"{comma} M)ain Menu"
 ' q: quick way of checking for menu/help...
-	&"] ":p$="Option":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
+	&"] ":p$="Option"+"":&,1:an=int(val(an$)):if q then q=-(an$="{question}")
 ' ...or main menu input: 'if [q|m] then <whatever>'
 	if m then m=-(an$="M")
 	er=-(an<l% or an>h%):if q+m=. then if er then gosub {:sub.out_of_range}

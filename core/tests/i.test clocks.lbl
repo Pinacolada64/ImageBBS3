@@ -16,12 +16,12 @@
 	t=-1:if an$>="0" and an$<="7" then t=val(an$)
 	if an$="S" or an$="s" then t=8
 	if t<. then {:3000}
-	if t=8 then poke 53252,1:pl=1:w$="4":p$="Method (1-7)":&,1,32:ck=val(an$):if an$="" then ck=4
+	if t=8 then poke 53252,1:pl=1:w$="4":p$="Method (1-7)"+"":&,1,32:ck=val(an$):if an$="" then ck=4
 	if t=8 and (ck<1 or ck>7) then {:3000}
 	z=t:if t=8 then z=ck
-	cp=.:if z=2 then w$="8":p$="Device":gosub {:ask}
-	if z=3 then w$="1":p$="Port (1-2)":gosub {:ask}
-	if z=4 then w$="54528":p$="Base (54528=$D500)":gosub {:ask}
+	cp=.:if z=2 then w$="8":p$="Device"+"":gosub {:ask}
+	if z=3 then w$="1":p$="Port (1-2)"+"":gosub {:ask}
+	if z=4 then w$="54528":p$="Base (54528=$D500)"+"":gosub {:ask}
 	im=t:a$="clocks":gosub 74
 	&"{f6}{lt. blue}e%{equal}{white}{pound}%e{lt. blue}  z${equal}{white}{pound}$z{f6}{lt. blue}ck{equal}{white}"+str$(ck)+"{lt. blue}  cp{equal}{white}"+str$(cp)
 	&"{f6:2}{yellow}>Hit a Key<{pound}g1":goto {:3000}

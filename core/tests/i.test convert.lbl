@@ -76,7 +76,7 @@
 	a$="tests":on -(peek(5988)=165) goto 70:goto 300
 
 {:test_convnam}
-	poke 53252,78:an$="O'MALLEY'S BAR":w$=an$:p$="String with ' in it"
+	poke 53252,78:an$="O'MALLEY'S BAR":w$=an$:p$="String with ' in it"+""
 	&"[{quotation}Q{quotation} quits]{f6:2}":&,1,32
 	if an$="Q" then:&"Quitting.{f6}":goto {:menu}
 	if an$="" then an$=w$:lp=1:&"(Set an${equal}{quotation}{pound}v7{quotation}){f6}"

@@ -264,11 +264,11 @@
 
 ' tz=1: phonebook modified flag
 ' edit/store BBS name: get struct into w$, store from an$
-	p$="{$c2:2}S Name  ":pl=.:&,60,1,16,s%(1,a),w$:poke 53252,16:&,1,32
+	p$="{$c2:2}S Name  "+"":pl=.:&,60,1,16,s%(1,a),w$:poke 53252,16:&,1,32
 	if an$<>"" then:&,60,0,16,s%(1,a),an$:tz=1
 ' edit/store phone number: get struct into w$, store from an$
 ' need to allow uppercase/lowercase input (pl=.); uppercase letters result in AT command errors
-	p$="{$c2:2}S Number":pl=.:&,60,1,14,s%(17,a),w$:poke 53252,14:&,1,32
+	p$="{$c2:2}S Number"+"":pl=.:&,60,1,14,s%(17,a),w$:poke 53252,14:&,1,32
 	if an$<>"" then:&,60,0,14,s%(17,a),an$:tz=1
 {number:3350}
 {:show_phonebook}

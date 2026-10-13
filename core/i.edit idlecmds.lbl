@@ -163,7 +163,7 @@
 ' Keypress: C
 ' Keypress: _ (cursor blinks here)
 ' pl=0 allows uppercase/lowercase input (read by ML)
-	poke 53252,1:pl=.:p$="Keypress":w$=chr$(wc%(0,x)):&,1,32
+	poke 53252,1:pl=.:p$="Keypress"+"":w$=chr$(wc%(0,x)):&,1,32
 ' kp% is maintained by ml: keypress PETSCII value, replaces "a=asc(an$)"
 '	if an$<>"" then if kp% then wc%(0,x)=kp%:tz=1
 	if an$<>"" then wc%(0,x)=asc(an$):tz=1
@@ -175,7 +175,7 @@
 {:edit_lm}
 ' works
 ' TODO: range is 1-9 I'm assuming? add check
-	poke 53252,1:p$="LM Value":w$=chr$(wc%(1,x)):&,1,32
+	poke 53252,1:p$="LM Value"+"":w$=chr$(wc%(1,x)):&,1,32
 	if an$<>w$ then wc%(1,x)=val(an$):tz=1
 '	if an$="" then gosub {:sub.remove}:if a then n=.
 ' FIXME
@@ -183,7 +183,7 @@
 	goto {:edit}
 
 {:edit_filename}
-	poke 53252,11:p$="i/lo.* Filename"
+	poke 53252,11:p$="i/lo.* Filename"+""
 ' TODO: possibly get directory with '$'
 ' TODO: check for blank entry
 	&,60,1,11,wc%(2,x),w$
@@ -195,7 +195,7 @@
 
 {:edit_text}
 ' pl=0: allow uppercase/lowercase input
-	poke 53252,16:p$="Text":pl=0:&,60,1,16,wc%(8,x),w$
+	poke 53252,16:p$="Text"+"":pl=0:&,60,1,16,wc%(8,x),w$
 
 '	PutString: put string into structure
 '	Usage:	&,60,0,<#_bytes>,wc%(<field>,<record>),<string$>

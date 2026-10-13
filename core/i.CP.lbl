@@ -6,7 +6,7 @@
 ' 3118: close all open disk files
 	gosub{:3118}:&"{f6:2} {white}[C]{cyan}opy Files{f6} {white}[D]{cyan}irectory"
 	&"{f6} {white}[M]{cyan}ulti-Scratch{f6} {white}[S]{cyan}end Disk Command{f6} {white}[Q]{cyan}uit{f6:2}"
-	p$="Copy":gosub[6]:on-(an$="C")-(an$="D")*2-(an$="S")*3 goto {:3024},{:3012},3120
+	p$="Copy"+"":gosub[6]:on-(an$="C")-(an$="D")*2-(an$="S")*3 goto {:3024},{:3012},3120
 	on-(an$="M")-(an$="Q"oran$="")*2goto{:3140},300:goto{:3004}
 {:3012}
 	f=8:d$="":b%=8:gosub{:3134}:ifb%>6andb%<33thenf=b%

@@ -38,7 +38,7 @@
 	close 2:if r then an$="":x=r:goto {:find}
 
 {:prompt}
-	&"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{gray3} Built "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}{cyan}":p$="User Edit"
+	&"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{gray3} Built "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}{cyan}":p$="User Edit"+""
 	a%=ur:&"{f6} Users{colon} {pound}%a{f6:2}Enter ID# or handle of user to edit{comma}{f6}or L for a list.{f6}"
 	&"Hit RETURN to exit.{f6:2}":gosub 6:if an$="L" then gosub {:list}:goto {:prompt}
 	on -(an$="" or tr%<1) goto {:quit}:x=abs(int(val(left$(an$,4))))
@@ -140,13 +140,13 @@
 	u$(1,0)=nh$:return
 {:edit_group}
 	&"{clear}{f6}":for a=0 to 9:a%=a:b$=ac$(a,0):&"{pound}#2{pound}# {pound}%a) {pound}$b{f6}":next
-	p$="Access Group":w$=mid$(str$(g),2):poke 53252,2:&"{f6}":&,1,32:if an$="" or tr%<1 then return
+	p$="Access Group"+"":w$=mid$(str$(g),2):poke 53252,2:&"{f6}":&,1,32:if an$="" or tr%<1 then return
 	a=val(an$):if a<. or a>9 or a=g then return
 ' new group: its default access flags, as i.ED does
 	g=a:u$(7,0)=mid$(hx$,g+1,1)+mid$(u$(7,0),2):u$(23,0)=ac$(g,1):goto {:split_flags}
 {:edit_computer}
 	&"{clear}{f6}":for a=1 to 9:a%=a:b$=co$(a):&"{pound}%a) {pound}$b{f6}":next
-	p$="Computer Type":poke 53252,1:&"{f6}":&,1,32:if an$="" or tr%<1 then return
+	p$="Computer Type"+"":poke 53252,1:&"{f6}":&,1,32:if an$="" or tr%<1 then return
 	a=val(an$):if a>. and a<10 then u$(i,0)=mid$(str$(a),2)
 	return
 {:edit_yesno}
@@ -259,7 +259,7 @@
 ' list users (from i.UU)
 {:list}
 	a$="index":gosub 28:dr=6:gosub 3:a$=dr$+"u.index":&,16,1:uh=a%
-	p$="{lt. green}User List{lt. blue}":cm$=p$+"":gosub 9:a=10:gosub 11
+	p$="{lt. green}User List{lt. blue}"+"":cm$=p$+"":gosub 9:a=10:gosub 11
 	if a=. then x=4:gosub 390:close 2:return
 	close 2
 	kk=1:dt$(1)="":gosub 35:rc=.:sh=.
