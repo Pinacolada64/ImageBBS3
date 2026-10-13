@@ -6,11 +6,14 @@
 '             to #2 as 3 bytes (low, middle, high), and close #3
 '   &,16,2    "copy some": read a 3-byte count from #3, then copy that
 '             many more bytes of #3 to #2
+'   &,16,3    compare #3 with #2 (both read): a% = 0 if the same, else 1,
+'             with b% the number of the first byte that differs
 '   &,16,255  a% = 2, the protocol number
 ' 1 then 0 into one file packs a file behind its length; 2 unpacks it.
 '
 ' The file copied is "++ 2" from the plus-file drive (dr=5); the results go
-' to the etcetera drive (dr=3) as e.copier copy, count, pack and unpack.
+' to the etcetera drive (dr=3) as e.copier copy, count, pack and unpack
+' (all PRG files).
 ' The counters show on the protocol screen of sub.display (im=5:gosub 443).
 
 {assign:im.open_file=4}
@@ -31,11 +34,11 @@
 {:menu}
 	lp=1:&"{clear}Test {f5}++ copier{f5} &{comma}16{comma}x calls ({quotation}{pound}vl{quotation} loaded){f6}"
 	if db then:&"Build date{colon} "+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6}"
-	lp=1:&"{f6}0{equal}copy all{comma} 1{equal}count bytes{comma} 2{equal}copy some{comma} 255{equal}protocol #{f6}"
+	lp=1:&"{f6}0{equal}copy all{comma} 1{equal}count bytes{comma} 2{equal}copy some{comma} 3{equal}compare{comma} 255{equal}protocol #{f6}"
 	&"&{comma}16{comma}{pound}i1":if an$="" or tr%<1 then:&"Quitting.{f6}":goto {:quit}
-	an=int(val(an$)):op=-1*(an=0)-2*(an=1)-3*(an=2)-4*(an=255)
-	if op<1 then:&"Choose 0-2 or 255.{f6}{pound}w2":goto {:menu}
-' a% is line # for calculated gosub (&,66,1): 3100, 3200, 3300 or 3400
+	an=int(val(an$)):op=-1*(an=0)-2*(an=1)-3*(an=2)-4*(an=3)-5*(an=255)
+	if op<1 then:&"Choose 0-3 or 255.{f6}{pound}w2":goto {:menu}
+' a% is line # for calculated gosub (&,66,1): 3100 to 3500
 	a%=3000+op*100:&,66,1:&"{f6}Hit a key{colon} {pound}g1":goto {:menu}
 
 {:quit}
@@ -45,51 +48,60 @@
 
 {nice:100}
 ' 3100: &,16,0: copy all of ++ 2 to e.copier copy
-	x=3:gosub {:show}:gosub {:open3}:if e% then return
-	dr=3:a$="e.copier copy":gosub 19:a$=a$+",p,w":gosub 4:if e% then close 3:&:return
+	x=3:gosub {:show}:a$="e.copier copy":gosub {:open_files}:if e% then return
 	&,16,0:close 2:close 3:&"Copied {f5}++ 2{f5} to {f5}e.copier copy{f5}.{f6}":return
 
 {nice:100}
 ' 3200: &,16,1: count the bytes of ++ 2 into e.copier count, read it back
-	x=4:gosub {:show}:gosub {:open3}:if e% then return
-	dr=3:a$="e.copier count":gosub 18:if e% then close 3:&:return
-	&,16,1:close 2:a$="e.copier count,s,r":gosub {:read_count}:if e% then return
+	x=4:gosub {:show}:a$="e.copier count":gosub {:open_files}:if e% then return
+	&,16,1:close 2:a$="e.copier count,p,r":gosub {:read_count}:if e% then return
 	&"{f5}++ 2{f5} is {pound}!n bytes (written to {f5}e.copier count{f5}).{f6}":return
 
 {nice:100}
 ' 3300: &,16,2: pack ++ 2 behind its length (&,16,1 then &,16,0) into
 ' e.copier pack, unpack it with &,16,2 into e.copier unpack, compare
-	x=3:gosub {:show}:gosub {:open3}:if e% then return
-	dr=3:a$="e.copier pack":gosub 18:if e% then close 3:&:return
-	&,16,1:gosub {:open3}:if e% then close 2:return
-	&,16,0:close 3:close 2:a$="e.copier pack,s,r":gosub {:read_count}:if e% then return
-	&"Packed {pound}!n bytes into {f5}e.copier pack{f5}.{f6}"
-	dr=3:gosub 3:open 3,dv%,3,dr$+"e.copier pack,s,r":gosub 5:if e% then close 3:&:return
-	a$="e.copier unpack":gosub 19:a$=a$+",p,w":gosub 4:if e% then close 3:&:return
-	&,16,2:close 2:close 3:&"Unpacked it to {f5}e.copier unpack{f5}.{f6}"
-' compare e.copier unpack with ++ 2, byte by byte
-	gosub {:open3}:if e% then return
-	dr=3:a$="e.copier unpack,p,r":gosub 4:if e% then close 3:&:return
-	n=.
-{:compare}
-	get#3,a$:c=st:get#2,b$:n=n+1:if a$<>b$ or c<>st then {:differ}
-	if c=. then {:compare}
-	close 2:close 3:&"It matches {f5}++ 2{f5} ({pound}!n bytes).{f6}":return
-{:differ}
-	close 2:close 3:&"It differs from {f5}++ 2{f5} at byte {pound}!n.{f6}":return
+	x=3:gosub {:show}:a$="e.copier pack":gosub {:open_files}:if e% then return
+' &,16,1 closes #3, so open ++ 2 again for &,16,0
+	&,16,1:gosub {:open3}:&,16,0:close 3:close 2
+	a$="e.copier pack,p,r":gosub {:read_count}:if e% then return
+	&"Packed {pound}!n bytes into {f5}e.copier pack{f5}.{f6}Unpacking..."
+	dr=3:a$="e.copier unpack":gosub 19:a$=a$+",p,w":gosub 4:if e% then close 2:&:return
+	dr=3:gosub 2:open 3,dv%,3,dr$+"e.copier pack,p,r"
+	&,16,2:close 2:close 3:&" done{comma} into {f5}e.copier unpack{f5}.{f6}"
+' compare e.copier unpack with ++ 2 (&,16,3)
+	&"Comparing it with {f5}++ 2{f5}...":a$="e.copier unpack":goto {:compare}
 
 {nice:100}
-' 3400: &,16,255: protocol number
+' 3400: &,16,3: compare e.copier copy (from option 0) with ++ 2
+	x=3:gosub {:show}:&"Comparing {f5}e.copier copy{f5} with {f5}++ 2{f5}...":a$="e.copier copy"
+' compare file a$ on drive 3 (#2) with ++ 2 (#3)
+{:compare}
+	dr=3:a$=a$+",p,r":gosub 4:if e% then close 2:&:return
+	gosub {:open3}:&,16,3:close 2:close 3
+	if a% then:&" they differ at byte {pound}%b.{f6}":return
+	&" they match.{f6}":return
+
+{nice:100}
+' 3500: &,16,255: protocol number
 	&,16,255:&"Protocol number{colon} {pound}%a{f6}":return
 
-' protocol screen: x = 3 "Copying", 4 "Scanning"; then print from row 1
+' protocol screen: x = 3 "Copying", 4 "Scanning", with the plus-file drive
+' as its Device and Drive (d1%/d2%, put back after). Print from row 8:
+' ++ copier's block buffer is screen memory, rows 0-6
 {:show}
-	im=5:an$="++ 2":gosub 443:&,70,.,1:return
+	j=d1%:k=d2%:d1%=dv%(5):d2%=dr%(5):im=5:an$="++ 2":gosub 443:d1%=j:d2%=k
+	&,70,.,8:return
 
-' open ++ 2 on the plus-file drive as file #3
+' Closing the command channel (15) makes the drive close every file it has
+' open, and im's lines 3, 4, 18 and 19 all close and reopen it. So: check
+' that ++ 2 is there, scratch and open the output file a$ (drive 3) as #2,
+' and only then open ++ 2 as #3, with gosub 2 (which leaves 15 alone).
+{:open_files}
+	b$=a$:dr=5:gosub 3:open 3,dv%,3,dr$+"++ 2,p,r":gosub 5:close 3:if e% then:&:return
+	dr=3:a$=b$:gosub 19:a$=a$+",p,w":gosub 4:if e% then close 2:&:return
+' open ++ 2 on the plus-file drive as #3, without touching channel 15
 {:open3}
-	dr=5:gosub 3:open 3,dv%,3,dr$+"++ 2,p,r":gosub 5:if e% then close 3:&
-	return
+	dr=5:gosub 2:open 3,dv%,3,dr$+"++ 2,p,r":return
 
 ' read the 3-byte count at the start of file a$ (drive 3): n
 {:read_count}

@@ -34,11 +34,15 @@ It doesn't close them, except as noted.
 | `&,16,0` | Copy all of file #3 to file #2, in blocks of up to 254 bytes, until the end of #3. `Good:` counts the blocks. | _n/a_
 | `&,16,1` | Count the bytes in file #3 (`Bytes:` counts them), write the count to file #2 as 3 bytes, low byte first, then close #3. | _n/a_
 | `&,16,2` | "`Copy some`": read a 3-byte count (low byte first) from file #3, then copy that many more bytes of #3 to #2. A count of 0 copies to the end of #3. | _n/a_
-| `&,16,255` | Report the protocol number. | `a%`=2
+| `&,16,3` | Compare file #3 with file #2, both opened for reading, a block at a time (`Bytes:` counts the bytes compared). | `a%`=0 if they're the same, 1 if not; `b%`=the number of the first byte that differs, or of the first byte past the end of the shorter file
+| `&,16,255` | Report the protocol number. Modules check it: `i.UX` refuses transfers when `pr=2` (the copier). | `a%`=2
 |===
 
 `&,16,1` and then `&,16,0` into the same file #2 writes a file behind its own length.
 `&,16,2` on the result copies that file back out and stops at its end, so a file of several such entries can be unpacked one at a time.
+
+`&,16,0`, `&,16,2` and `&,16,3` read each block into screen memory (`$0400`, rows 0-6), so the bytes being copied or compared show at the top of the screen.
+Print below row 6 while they run.
 
 The counters are the digits of row 15 of the protocol screen that `sub.display` draws (`im=5:gosub 443`):
 
@@ -50,7 +54,49 @@ The counters are the digits of row 15 of the protocol screen that `sub.display` 
 open3,f,3,f$+c$+",r":open2,g,2,g$+c$+",w":&,16:close2:close3
 ----
 
+[NOTE]
+====
+Closing a drive's command channel (15) makes the drive close every file it has open.
+`im` lines 3, 4, 18 and 19 all close and reopen channel 15, so do them before opening the other file, not after.
+Once a file is open, open the next one with `gosub 2` (which only sets `dv%` and `dr$`) and a plain `open`, as `i.test copier` does, or use a second command channel, as `i.CP` does.
+====
+
 Test program: `core/tests/i.test copier.lbl`.
+
+===== `&,16,3`: Compare Two Files
+
+`&,16,3` compares two files your module has opened for reading, as file #3 and file #2.
+
+It reads up to 254 bytes of #3 into its buffer, then reads the same number of bytes of #2, checking each one against the buffer as it arrives.
+It repeats until it finds a difference, or one of the files ends.
+`Bytes:` on the protocol screen counts the bytes compared.
+
+It's much faster than comparing in BASIC with `get#`, which makes the drive switch between the two files for every byte.
+
+_Parameters:_ none.
+Open both files for reading first, #3 and #2; it doesn't matter which file is which.
+It doesn't close them.
+
+_Returns:_
+
+`a%`: `0` if the files are the same (same length, same bytes); `1` if not.
+
+`b%`: when `a%=1`, the number of the first byte that differs (the first byte is `1`).
+If the files are the same up to where the shorter one ends, it's the first byte past that end.
+`b%` holds only the low 16 bits of the position, so past byte 32767 it isn't the true position.
+
+.Compare e.copier copy with ++ 2 (condensed from i.test copier)
+[source]
+----
+dr=3:a$="e.copier copy,p,r":gosub 4:if e% then close 2:&:return
+dr=5:gosub 2:open 3,dv%,3,dr$+"++ 2,p,r"
+&,16,3:close 2:close 3
+if a% then:&"They differ at byte {pound}%b.{f6}":return
+&"They match.{f6}"
+----
+
+NOTE: `&,16,3` is new in this repository (October 2026).
+The `++ copier` in the 12/31/2023 release ignores it: `a%` and `b%` are left as they were.
 
 ==== `++ index`
 
