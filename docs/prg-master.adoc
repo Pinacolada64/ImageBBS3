@@ -67,5 +67,8 @@ include::prg-file-formats.adoc[]
 [appendix]
 include::prg-appendix-jump-tables.adoc[]
 
+[appendix]
+include::prg-appendix-test-programs.adoc[]
+
 [index]
 == Index

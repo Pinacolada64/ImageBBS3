@@ -1,0 +1,113 @@
+== Test Programs [[appendix-test-programs]]
+
+The test programs are small `i.*` modules that try out parts of Image BBS 3.0 on a running BBS: `&` calls, machine language modules, and BASIC subroutines.
+Each one shows what a feature does, using the calls described in this guide, and is a quick way to check that a change still works.
+
+Their source is in `core/tests/` in the Image BBS 3.0 repository.
+Sections of this guide point to the test program for what they describe ("`Test program: ...`").
+
+=== Getting the Test Programs
+
+From the repository:
+
+* `make tests` builds them into `build/tests/`.
+* `make test-disk` makes `build/image30-tests.d81`: the release boot disk, with the test programs, and the modules some of them need, added to it.
+The files added are listed in `tests.manifest`.
+
+Copy the test programs to your `i.*` module disk (Image system disk 5), along with the modules they need (see the table below).
+
+=== Running the Test Programs
+
+The easiest way is through `i.tests`, a menu of all of them.
+Run it as you would any `i.*` module: at the main prompt, type kbd:[R], choose command class kbd:[3], type `tests` at the `Run: i.` prompt, then choose system disk kbd:[5].
+Any value will do for `mm`.
+
+`i.tests` uses `++ menu2` (see <<_menu2_graphic_menu>>) to show the test programs in two columns.
+Choose one with the cursor keys and kbd:[Return], or its letter; kbd:[Q] quits.
+
+When a test program started from the menu finishes, `i.tests` loads again, so you can try another.
+Started some other way (with kbd:[R], for example), a test program returns to the main prompt, as usual.
+
+.How a Test Program Returns to the Menu
+****
+Loading an `i.*` module replaces the one that loaded it, so `i.tests` can't just wait for a test program to finish.
+Instead, before loading one, it pokes `165` into `$1764` (`5988`), a byte Image doesn't otherwise use (see <<_memory_map>>).
+Each test program ends with:
+
+[source]
+----
+a$="tests":on -(peek(5988)=165) goto 70:goto 300
+----
+
+which loads `i.tests` again if it's set, and goes to the main prompt if it isn't.
+Quitting `i.tests` clears it.
+
+To add a test program to the menu, add its name (without `i.test`) to the `data` line at the end of `i.tests`, and end the program with the line above.
+****
+
+=== The Test Programs
+
+.Test Programs
+[%header]
+[%autowidth]
+|===
+| Program | What it tries | Also needs
+
+| `i.test calls`
+| The `&` calls, `&,0` to `&,70`, a page of 10 at a time.
+Choose a call to see its name; some have a demonstration, for example `&,9` (show a variable), `&,15` (convert a date, title case, and more), `&,22` (wait), and `&,26` (find a record by flags and name).
+| _none_
+
+| `i.test clocks`
+| Each way `sub.clocks` can set the BBS clock at boot (the eight methods of "`Part II: Set Clock`" in the setup chapter), showing what it read.
+| `sub.clocks`
+
+| `i.test convert`
+| `&,64`: converting `an$` (`convnam`, `convdsk`, `convimg`, `chkspcl`), with a plain text string and one with encoded characters.
+| _none_
+
+| `i.test copier`
+| `++ copier`: copy all (`&,16,0`), count bytes (`&,16,1`), copy some (`&,16,2`), compare (`&,16,3`) and the protocol number (`&,16,255`).
+It copies `++ 2` from system disk 5 and leaves `e.copier copy`, `count`, `pack` and `unpack` on system disk 3.
+See <<_copier>>.
+| `++ copier` (with `&,16,3`), `++ 2`, `sub.display`
+
+| `i.test date`
+| `&,15`: shows two dates converted from Image's 11-digit format.
+| _none_
+
+| `i.test frame`
+| A framed header box drawn with `&,69` and `&,70`: draw it, scroll lines through it, and flash it while waiting for a key (kbd:[1]-kbd:[3], or kbd:[←] to go back).
+| _none_
+
+| `i.test string`
+| Storing a string in an integer array with `&,60,0` (PutString) and reading it back with `&,60,1` (GetString).
+kbd:[Return] on its own quits.
+| _none_
+
+| `i.test structs`
+| The structure calls, `&,60,0` to `&,60,13`, on a test array: strings, dates, scans, sorting, copying records.
+See the Structures chapter.
+| _none_
+
+| `i.test tagscan`
+| `++ tagscan` as the inventory and crafting engine of a small made-up adventure game: makes a user's inventory (`&,16,3`), checks for an object (`&,16,2`), finds what builds an object (`&,16,1`), and builds objects from their pieces (`&,16,0`).
+| `++ tagscan`
+
+| `i.test visual`
+| `++ visual`, the visual (full-screen) editor left unfinished in Image 2.0.
+In the editor, kbd:[Ctrl+H] shows its keys, kbd:[Ctrl+V] re-prints the lines typed so far, and kbd:[Ctrl+X] saves them and exits.
+| `++ visual`
+|===
+
+`i.tests` itself needs `++ menu2`.
+
+=== Other Files in `core/tests/`
+
+These aren't in the menu:
+
+* `i.test menu`: a text menu of the `&` calls, showing how to jump to a routine for each choice with a calculated `gosub` (`&,66,1`).
+* `i.btmvar table`: a table of the variables `&,9` can show.
+* `test-day-of-week.lbl`: working out the day of the week from a date; unfinished.
+* `randomize animals.lbl`: shuffles a list of animal names, test data for sorting (`&,60,7`).
+* `randomize numbers.bas`: picks unique random numbers in a range.
