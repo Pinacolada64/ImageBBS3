@@ -18,6 +18,8 @@ Variable 31 is `b%`, not `b$`.
 * Memory map: `$1764` is used by `i.tests`.
 * `i.test-convert` is now `i.test convert`.
 * BASIC listings are syntax-highlighted again (the setting was outside the document header), with a new lexer for Image BBS BASIC that knows `&` calls, `$hex` numbers and C64List's tokens.
+* `im` routines table: narrower line-number columns, so the Purpose column is wider.
+* Table headings, and short values like `$42f2`, no longer wrap in the PDF (28 tables had a heading that did, some mid-word, like "`Function`").
 
 === 2026-10-09
 

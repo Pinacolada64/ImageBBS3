@@ -17,6 +17,12 @@ It needs the `asciidoctor-pdf` and `asciidoctor-lists` gems.
 
 Or, from `docs/`: `asciidoctor-pdf prg-master.adoc`
 
+### Table headings
+
+`extensions/table-heading-widths.rb` keeps table headings, and short values like `$42f2` or `&,16,255`, on one line: Prawn, which lays out the PDF's tables, will otherwise squeeze a column down to one character, so a heading like "`Function`" wraps mid-word.
+A value counts as short if it has no spaces and is up to 100 points wide; if a table is too narrow for all of them, only its headings are kept whole.
+`make pdf` loads it; building by hand, add `-r ./extensions/table-heading-widths.rb`.
+
 ### Syntax highlighting
 
 BASIC listings are colored by Pygments, through the `pygments.rb` gem (`gem install --user-install pygments.rb`; Python Pygments must be installed too).

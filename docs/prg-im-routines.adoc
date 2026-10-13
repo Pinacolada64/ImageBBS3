@@ -27,7 +27,7 @@ Layout :
 
 .im routines
 [%header]
-[cols="16m,16m,68a"]
+[cols="13m,13m,74a"]
 [frame="none"]
 [grid="rows"]
 |===
