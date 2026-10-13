@@ -302,7 +302,39 @@ only items not already here are listed from it. Locations are
 These belong in Image-128 (`im 128.bas`), with the setup ideas in its
 issue #1:
 
-- [ ] BASIC 7.0: `WINDOW` (`:484`), `DCLOSE` to close files (`:279`, `:281`).
+- [ ] BASIC 7.0 has statements for things `im` does by hand; using them
+  would make the 128 version shorter and easier to read:
+  - [ ] `RECORD#lfn,record[,byte]` positions a REL file's pointer, instead
+    of sending `"p"` down the command channel (`im` line 1, which also
+    waits a tenth of a second with `&,22,1`).
+  - [ ] `DOPEN#` (with `,L`_reclen_ to create a REL file), `APPEND#` and
+    `DCLOSE#` (`:279`, `:281`); `DCLOSE` alone closes every file on a
+    drive.
+  - [ ] `DS` and `DS$`: the drive's status, without
+    `input#15,e%,e$,t%,s%` (`im` line 5).
+  - [ ] `SCRATCH`, `RENAME`, `COPY`, `CONCAT`, `HEADER`, `COLLECT` and
+    `DCLEAR`: disk commands without `print#15` (`im` line 19 scratches
+    with `print#15,"s"...`).
+  - [ ] `DO`...`LOOP` with `WHILE` or `UNTIL` (at either end), and `EXIT`:
+    loops without `goto` back to a label.
+  - [ ] `IF`...`THEN`...`ELSE`, with `BEGIN`...`BEND` for a `THEN` or
+    `ELSE` that runs over several lines.
+  - [ ] `TRAP` and `RESUME`, with `ER`, `EL` and `ERR$()`: error handling
+    in BASIC (Image has `&,37`/`&,38`, trap on/off, and its error
+    handler at line 4000).
+  - [ ] `INSTR(a$,b$[,start])`: find a string in a string, instead of a
+    `mid$()` loop.
+  - [ ] `GETKEY a$` waits for a key; `SLEEP` waits whole seconds (`&,22`
+    waits tenths, so it stays).
+  - [ ] `PRINT USING` and `PUDEF`: formatted numbers (Image's MCI
+    `{pound}#`).
+  - [ ] `WINDOW`: a text window, like Image's screen mask (`:484`).
+  - [ ] `KEY n,"..."`: function key definitions.
+  - [ ] `HEX$()` and `DEC()`: hex conversion.
+  - [ ] `POINTER(var)`: a variable's address; `SYS addr,a,x,y` and `RREG`
+    pass and read registers, as `&` calls do with _x_ and _y_.
+  - [ ] `FAST`/`SLOW`: 2 MHz, though `FAST` blanks the 40-column screen.
+  - [ ] `TRON`/`TROFF`, `RENUMBER` and `HELP`: for development.
 - [ ] Move the modem setup and other setup lines into an `i/setup 128`
   (`:348`, `:550`).
 - [ ] The RS-232 buffers (`:295`); check the `Dbg` lightbar before turning
