@@ -1,0 +1,103 @@
+// Documentation changes, newest first. Included by the Programmer's
+// Reference Guide (prg-appendix-changelog.adoc) and by CHANGELOG.adoc.
+// Add new entries at the top, under a === YYYY-MM-DD heading.
+
+=== 2026-10-12
+
+* New appendix: Test Programs: what each `i.test` program tries, and how to run them from the `i.tests` menu.
+* New appendix: this changelog.
+* `++ copier`: new section.
+The four calls (copy all, count bytes, copy some, protocol number), and the new `&,16,3`, which compares two files.
+How count and copy some pack a file behind its length and unpack it.
+The protocol screen's counters.
+Closing a drive's command channel closes every file it has open.
+* `++ menu2` (cursor menus): its parameters worked out.
+The menu item record, adding items one at a time or from a struct array, drawing a menu and choosing from it.
+* `&,9`: number variables are now shown as digits (they showed garbage).
+Variable 31 is `b%`, not `b$`.
+* Memory map: `$1764` is used by `i.tests`.
+* `i.test-convert` is now `i.test convert`.
+
+=== 2026-10-09
+
+* `&,24` (`xchrout1`), and what `mci` (`$07ef`, 2031) does.
+* `&,61` and `&,70`, and how they differ.
+* `&,58`: the CIA alarm isn't used; the lightbar alarms are separate.
+* `&,60,12`: Game Scan.
+* PDF: back to the serif theme.
+* Sysop guide: the new clock-set methods (and a DS12C887 clock in VICE), the status line and its indicators, and a start on the IM configuration chapter, with `sub.modem`.
+
+=== 2026-10-08
+
+* Input encoding: typed `,` `:` `"` `*` `?` `=` and `^` arrive encoded (`&,1`, `&,23`).
+* Structures (`&,60`): Scan Struct (`&,60,6`), Sort Array (`&,60,7`), Scan Numbers (`&,60,8`), Scan Sum (`&,60,9`) and its carry bug, and Scan for String (`&,60,11`) and its memory hazards.
+Tables for Put/Get String, Load Struct and Put Date; Put Date's byte layout corrected.
+* `&,64`: the string conversions; `&,65` is the long-date routine.
+* `&` calls: Enter/Exit headings, new examples, tidier tables.
+`im` routines: tidier tables, duplicate rows merged.
+* The guide shows its date, and has an index.
+* "`E-mail`" is spelled the same way throughout.
+
+=== 2026-10-07
+
+* `&,15,5` (`newdate`): an 11-digit date to a sortable `yymmddhhmm`.
+* `&,26` (`ecschk`): finding a record by flags and name.
+* `&,53` (Logoff): `curdsp` is an idle timer flag, not a screen mask.
+* `&,58`, and `&,62` (Set Time); `d1$`'s hour range corrected.
+
+=== 2024-07-08
+
+* Simpler wording about ``return``ing from a subroutine.
+
+=== 2024-06-29
+
+* New appendix: Jump Tables.
+* Formatting converted from Markdown to AsciiDoc; typographer's quotes; spelling and grammar.
+
+=== 2024-06-15
+
+* Added `bf()` to the arrays not to use; `co$(co%)` (computer names) and how many there are; `ti$`.
+
+=== 2024-06-06
+
+* "`element, byte`" is now "`field, record`".
+* `&,16,255`: asking a protocol for its number.
+* A better explanation of the `im` routines; better table titles; missing module line numbers.
+
+=== 2024-06-05
+
+* Use asciidoctor-lists extension to add listing of tables and code snippets
+* Clarify wording about garbage collection
+* Update `++ index` entry/exit information
+* Add `++ post` protocol query function, `&,16,255`
+
+=== 2022-10-21
+
+* Revamp/finish Sysop Guide lightbar appendix
+
+=== 2022-09-30
+
+* Starting to add `im` routine calls
+* Continuing on with `im` variable usage info
+* Added static vs. dynamic string info, garbage collection explanation
+* Added more module and `e.errlog` filename hints: `pr$`, `p1$`, `p2$`
+* `&,60` (structs): hopefully fix `struct%(record, field)` ordering mistakes
+* PDF generation works, albeit with some table header wrapping issues
+* Lots of little fixes, too numerous to mention--have a look
+
+=== 2022-08-20
+
+* `&,15`: outputting date with `Ctrl-d` outputs time zone also -- Jay Campey
+* add information on suggested `e.errlog` module name hints
+
+=== 2022-05-06
+
+* syntax highlighting of BASIC source code
+* `&,1` (input): improve documentation
+* `&,2,2,25` (disk input, _x_ characters): clarify syntax
+* `&,6` (password): clarify
+* `&,7` (load module): add `&,7,x` segment information
+* `&,9,1` (display `a$` in programmable window): fix documentation
+* `&,11` (dumparray): add array names
+* `&,54` (text editor): add call information
+* starting variable listing

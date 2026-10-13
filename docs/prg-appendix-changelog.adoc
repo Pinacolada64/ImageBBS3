@@ -1,0 +1,7 @@
+== Documentation Changelog [[appendix-changelog]]
+
+What's changed in the Image BBS 3.0 documentation, newest first.
+Most entries are about this guide; a few are about the Sysop guide.
+For every change, see the history of the `docs/` folder in the Image BBS 3.0 repository.
+
+include::includes/changelog-entries.adoc[]
