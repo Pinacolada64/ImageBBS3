@@ -156,10 +156,15 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
   record 37) instead, so it works with every clock method.
 - [ ] **`im` at boot:** set the clock with `sub.clocks` (`im=0`) instead of
   lines 3155-3156 and 3348-3366 (needs `core/im.lbl` to build first).
-- [x] **`i.IM` K (Set Time):** uses `sub.clocks` (`im=1`, manual), as does
-  the idle screen's 1) Set Time (`i/lo.misc`); unanswered for 5 minutes, it
-  gives up and leaves the clock alone (10/13/2026).
-- [ ] **`i.IM` K:** also offer "set from the clock now" (`im=0`).
+- [x] **`i.IM` K (Set Time):** a menu using `sub.clocks`: set the clock with
+  the saved method (`im=0`), set it by hand (`im=1`; unanswered for 5
+  minutes, it gives up and leaves the clock alone), or choose another method
+  (`im=8`). The idle screen's 1) Set Time (`i/lo.misc`) uses the saved method
+  (10/13/2026).
+- [ ] **Writing hardware clocks:** `sub.clocks` `im=9` writes the BBS time to
+  a CMD device (`T-WD`) or a DS12C887; try the CMD one on real hardware.
+  The Lt. Kernal and Ultimate can't be written yet (their commands are
+  unknown here); the TeensyROM sets itself from the network.
 - [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` and `im`.
 
 ## Improving Image BBS
