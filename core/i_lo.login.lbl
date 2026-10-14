@@ -140,4 +140,6 @@
 ' 10/13/2026: goto 3000 (i.lo), not {:3000}: there's no label 3000 in this
 ' file, so it built as the text "[:3000]"
 	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke 951,ll%:mm=10:goto 3000
-	rem i/lo.login (c)nissa 200621 lh-ad
+'	rem i/lo.login (c)nissa 200621 lh-ad
+' 10/13/2026: quoted, so -crunch keeps the spaces
+	rem "i/lo.login (c) nissa 2026-10-13 lh-ad-rs"
