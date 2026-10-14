@@ -97,6 +97,9 @@
 	b$="{cyan} Press {f5}{yellow}"+b$:x=x+1:if (x and 1)=. then:&"{pound}{back arrow}39{pound}$b":return
 	&"{f6}{pound}$b":return
 
+' 10/13/2026: steps of 1 to 4193: in steps of 2 these lines ran into the
+' labels 4170 and 4193, and i/lo.login didn't build. No label moves
+{step:1}
 {:4150}
 	&"{f6}{cyan}Enter Your {white}Handle {cyan}Or {white}Login {cyan}ID#{f6:2}{pound}b1: {white}{pound}i1":on-(tr%<1)goto {:4020}:dd$=an$
 	if dd$="VISITOR"then:&"{f6}Sorry, that handle is reserved.":goto {:4150}
@@ -110,8 +113,13 @@
 	lp=1:&" Would You Like To Apply For An Account Using That Handle?: "
 	gosub 94:if athen f1=1:g$=dd$:dd$="NE"+"W":goto {:4056}
 {:4170}
-	ac%=16:k=k+1:on-(k>4)goto {:4020}:lp=1:&"{f6:2}Enter {f5}NEW{f5} if you have no Login"
-	lp=1:&" ID, or {f5}HELP{f5} if you are having trouble logging on.{f6}":goto {:4102}
+' 10/13/2026: with lp=1, & ends its own line unless the text ends in a space,
+' so "Login" ended one and " ID, or HELP..." started the next; the space moves
+' to the end of the first line
+'	ac%=16:k=k+1:on-(k>4)goto {:4020}:lp=1:&"{f6:2}Enter {f5}NEW{f5} if you have no Login"
+'	lp=1:&" ID, or {f5}HELP{f5} if you are having trouble logging on.{f6}":goto {:4102}
+	ac%=16:k=k+1:on-(k>4)goto {:4020}:lp=1:&"{f6:2}Enter {f5}NEW{f5} if you have no Login "
+	lp=1:&"ID, or {f5}HELP{f5} if you are having trouble logging on.{f6}":goto {:4102}
 {:4180}
 	id=val(mid$(dd$,len(cc$)+1)):if id<.orid>urthen id=.:goto {:4194}
 {:4182}
@@ -125,8 +133,11 @@
 	&"{f6:2}":gosub 6:c$=an$:on-(pw$=z$andt$=c$andc$<>""andz$<>"")+1goto {:4194},{:4200}
 {:4193}
 	if pw$=z$then {:4200}
+{step:2}
 {:4194}
 	&"{f6:2}Login is not valid.":a$="telecheck":gosub {:4004}:goto {:4170}
 {:4200}
-	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke 951,ll%:mm=10:goto {:3000}
+' 10/13/2026: goto 3000 (i.lo), not {:3000}: there's no label 3000 in this
+' file, so it built as the text "[:3000]"
+	&"{f6}{cyan}Login {white}Successful{cyan}!{f6:2}":ll%=l9%:poke 951,ll%:mm=10:goto 3000
 	rem i/lo.login (c)nissa 200621 lh-ad

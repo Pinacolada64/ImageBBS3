@@ -1,0 +1,110 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/lo.on" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+' (-crunch also drops the empty statement at the end of 4124's ":".)
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps out of this module, which 3_0-preface.lbl doesn't assign:
+{assign:320	=320	} ' im
+{crunch:on}
+
+4000 rem" ** i.lo.on ** 95APR28  JLF              Post-Login Sequence       "
+4002 ll%=l9%:gosub 90:goto 4100
+4004 dr=5:b$="i/lo-"+a$:a$=b$:gosub 4:close 2:if e%then:&"{f6}{white}[Module {pound}$b Failed]{f6}":return
+4006 new 4500:cm$=b$:gosub 9:load dr$+b$,dv%:goto 4500
+4010 an$=d5$:&,15:lp=1:&"{f6:2}{lt. blue}At the end of your last call, on {cyan}{pound}v7M{lt. blue}, you "
+' 10/13/2026: with lp=1, & ends its own line unless the text ends in a space,
+' so "set to" ended one and " that time?" started the next; the space moves
+' to the end of 4012
+'4012 lp=1:&"didn't properly logoff.  Do you want your message scan date set to"
+'4014 lp=1:&" that time? ":gosub 96:if athen ld$=d5$
+4012 lp=1:&"didn't properly logoff.  Do you want your message scan date set to "
+4014 lp=1:&"that time? ":gosub 96:if athen ld$=d5$
+4016 return
+4020 a$="index":gosub 28:dr=6:gosub 3:b$=dr$+"u.weedinfo":a$=b$:&,16,1:gosub 5
+4022 if e%then a$=b$:&,16,3:b%=1:goto 4026
+4024 a%=id:&,16,8:if a%then:&,16,5:goto 4024
+4026 a%=id:&,16,4:a$=b$:print# 15,"s" a$:&,16,2:return
+4030 dr=1:a$="s.lines/screen":mm=13:gosub 3000:poke 53252,3:&"{f6:2}{pound}q"+chr$(48+df%)
+4032 lp=1:&" How many lines of text can your screen display?{white}: {pound}i1"
+4034 mp%=abs(val(an$))-25*(tr%<1):if mp%<1 or mp%>255 or mp%=40 or mp%=80 then mp%=.:goto 4030
+4036 return
+4100 f4=.:on cd%gosub 4010:cd%=1:if ll%<1 then ll%=40
+4101 if pw$="" then na$="VISITOR"
+4102 a$="":for a=1 to ll%-2:a$=a$+"{$c0}":next:ak$=" "+a$+"{f6}"
+4103 f1=.:ao%=ac%:gosub 320
+4104 gosub 90:an$=ff$:&,15,1:a=1:b=7:if mn%>719 then a=8:b=9:if mn%>1079 then a=17:b=7
+4106 b$="Good "+mid$("MorningAfternoonEvening",a,b)+", "+an$
+4107 c$=right$("00"+mid$(str$(int((39-len(b$))/2)),2,2),2)
+4108 &"{clear}{f6}{blue}{pound}vj {cyan}{rvrs on}{pound}{back arrow}"+c$+q$+b$+"!{pound}{back arrow}39{f6}{blue}{pound}vj"
+4110 gosub 33:x=1:gosub 1:&,2,2:ca=val(a$):close 2:&,52,20,em:poke 970,.
+4112 &,52,34,val(mid$(uf$,2,1)):if zzthen a=val(mt$):qb=300*2^(a+(a=1)):goto 4120
+4113 ca=ca+1:gosub 33:x=1:gosub 1:print# 2,ca:close 2:close 15
+4114 &,52,21,3:on a%+1 goto 4120:a=3:gosub 11:on-(na$<>d3$or a<>.) goto 4120
+4116 &"{pound}$q {cyan}Sorry, no back-to-back calls allowed.{f6}{pound}{back arrow}11{pound}$qTry Again Later!{f6}{blue}{pound}vj"
+4118 f4=1:ac%=16:return
+4120 a=17:gosub 11:if left$(d1$,7)<>left$(d5$,7) then ct%=.
+4121 &,52,35,3:if a%=1 then:&,52,34,.
+4122 f2=.:ct%=ct%+1:tc%=tc%+1:on-(ct%<a)-2*(a=.) goto 4128,4130
+4124 if ct%>athen:&"{pound}$q {cyan}Sorry, call limit exceeded for today.{f6}{blue}{pound}vj":ac%=16:f4=1
+4126 &"{pound}$q  {cyan}Note: This is your last call today!{f6}{blue}{pound}vj":goto 4130
+4128 a%=a-ct%:&"{pound}$q  {cyan}You are allowed {pound}%a more calls today.{f6}{blue}{pound}vj"
+4130 &,28,1:dim l%(30,10):dr=3:gosub 3:&,60,2,.,l%(.,1),dr$+"e.last",dv%
+4132 l%(.,.)=.:&,60,4,.,l%(1,.),lt$:&,60,4,.,l%(4,.),d1$:l%(7,.)=lt%
+4134 an$=na$:&,15,1:&,60,.,20,l%(8,.),an$:gosub 4222:&,60,.,25,l%(18,.),b$
+4136 a$="e.last":gosub 19:&,60,3,.,l%(.,.),620,dr$+"e.last",dv%
+4138 on-(x%+k%+i%>.) goto 4140:a$="last":gosub 4004:goto 4142
+4140 &" {rvrs on}{yellow}{pound}{back arrow}10{pound}$qXpress Login Active!{pound}{back arrow}39{f6}{blue}{pound}vj"
+4142 gosub 30:i=1:x=20:gosub 16:for x=1 to 11:st(x)=.:gosub 17:next:close 2
+4144 on sgn(id) gosub 4020:dd$=cc$+mid$(str$(id),2)
+4146 &,52,16,3:b$="C/G":if a%then b$="ASCII":&,52,18,3:if a%then b$="ANSI"
+4148 a$=" {purple}Call  {white}:"+str$(ca)+"   {gray1}({gray3}"+b$+" Mode{gray1})"+r$+" {lt. blue}Logon {white}: {$04}"+d1$+r$
+4150 a$=a$+" {lt. green}User  {white}: "+na$+" {gray1}({gray3}"+dd$+"{gray1})":gosub 50
+4151 a=val(mt$):qb=300*2^(a+(a=1)):qb$=str$(qb):if zzthen qb$=" {white}Local Console"
+4152 a$=" {lt. red}BPS   {white}:"+qb$+r$+" {yellow}Stats {white}:"+str$(cr)+" {gray3}Credits"
+4154 on-(tc%>1) goto 4160:b$="New User":if id=.then b$="Visitor"
+4156 &"{clear}{red}{pound}vj{pound}{back arrow}12{pound}$q{lt. red}Welcome {pound}$b{red}{f6}{pound}vj"
+4158 a$=a$+" {gray1}({gray3}"+b$+"{gray1})":d$=a$:if idthen gosub 30:i=1:x=8:gosub 16:a$=d$
+4160 gosub 50
+4162 a=1:gosub 375:pt%=.:gosub 84:&,52,7,3:if a%then pt%=1-pt%:if p1%<1 then p1%=30
+4164 b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):on pt%+1 goto 4172
+4166 for y=1 to 5:&,69,26,y+16,mid$("PRIME",y,1),135:next
+4168 on-(b%<p1%) goto 4172:b%=p1%:&"{f6}{green}{pound}vj{yellow}   Please Note: It is now PRIME TIME."
+4170 &"      all callers limited to {white}{pound}%b {yellow}minutes!{f6}{green}{pound}vj":goto 4174
+4172 if b%<101 then:&"{f6}{green}{pound}vj   {yellow}Time allowed for this call{white}: {pound}%b {yellow}Min.{f6}{green}{pound}vj"
+4174 tr%=b%:cn=cn+1:im=1:gosub 443:im=6:if len(uf$)<11 then im=4
+4176 gosub 447:on-(mp%<1 or mp%=40 or mp%=80) gosub 4030
+4178 dr=2:a$=left$("f."+na$,16)+",s,r":gosub 4:if e%=.then a$="fmail":gosub 4004
+4180 close 2:on-((f4=1) or (tr%<1) or (i%+k%+x%>.)) goto 999
+4182 b$=str$(ca):g%=uh:f%=cn:an$=d3$:&,15,1:if na$=d3$then an$="You!"
+4183 if nl=1 then dr=1:a$="s.start"+left$(d1$,1):mm=13:gosub 3000
+4184 dr=1:a$="s.welcome"+str$(nl):if ll%=80 then a$=a$+" 80"
+4186 gosub 14
+4190 &,28,1:dim lm%(15,40):dr=3:gosub 3:&,60,2,.,lm%(.,.),dr$+"e.loginmods",dv%
+4191 lh=lm%(2,.)
+4192 on-(e%>.) goto 4220:rk=.:ad=.:&,52,45,3:m%=a%:if m%then:&,52,44,3:m%=a%
+4193 if m%then m%=m%and lm%(1,.):if m%then a$="menu2":gosub 28:n=lm%(.,.)+1:dim mo%(16,n)
+4194 rk=rk+1:if lm%(0,rk) and (2^ac%) then on lm%(1,rk) goto 4204:goto 4198
+4196 goto 4206
+4198 &,60,1,16,lm%(8,rk),a$
+4200 if m%then ad=ad+1:&,16,.,lm%(2,.),mo%(.,ad),mid$(str$(ad),2),"",a$:goto 4206
+4202 &"{f6}{pound}q"+chr$(48+df%)+"Launch "+a$+"? ":gosub 94:on a+1 goto 4206
+4204 &,60,1,11,lm%(2,rk),a$:gosub 4004
+4206 on-(rk<lm%(.,.)) goto 4194:on m%goto 4208:goto 4220
+4208 ad=ad+1:&,16,.,lm%(2,.),mo%(.,ad),"Q","","Exit Menu"
+4209 gosub 4228:if lh=42 then goto 4214
+4210 &,16,2,34,mo%(.,1),ad,17,2,ad/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:goto 4216
+4212 &"{f6}Login{shft space}Menu{f6}"
+4214 &,16,2,34,mo%(.,1),ad,36,1,ad,2,6,.:lm=a%+1:&,70,.,n+8
+4216 &"{pound}f1{pound}q"+chr$(48+df):on-(tr%<1 or lm=ad) goto 4220:&,60,1,11,lm%(2,lm),a$
+4218 gosub 4004:goto 4209
+4220 return
+4222 &,52,4,3:if a%then b$="{gray3}Local Console":return
+4224 &,52,16,3:b$="C/G":if a%then b$="ASCII":&,52,18,3:if a%then b$="ANSI"
+4226 b$="{gray3}In"+str$(ll%)+" Col. "+b$+" Mode":return
+4228 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+4229 &"{rvrs on} {cyan}        Logon Menu Selection{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}":return
+4230 rem:"i/lo.on (c)nissa 231215 lh ad"
