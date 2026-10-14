@@ -15,7 +15,11 @@
 ' (which gives up after 5 minutes without an answer, so the idle screen comes
 ' back). The release's own clock setter here (4100-4166) only asked by hand,
 ' and waited for ever.
-4100 &"{clear}":im=.:a$="clocks":gosub 74:return
+' 10/14/2026: keep z$ (zs$) across sub.clocks, which sets z$ to the date:
+' this module runs through im line 80, which keeps the name of the module to
+' go back to (lo.idle) in z$, and loaded "i/<the date>" instead (?load error)
+'4100 &"{clear}":im=.:a$="clocks":gosub 74:return
+4100 &"{clear}":zs$=z$:im=.:a$="clocks":gosub 74:z$=zs$:return
 4200 &"{clear}{f6}System Password{f6:2}[A]ll Calls, [O]ne Call or [N]one? {pound}g1"
 4202 if an$="N" then l2=0:&,52,40,0:&"None{f6}"
 4203 if an$="N" then:&,69,31,19," None    ",$8 c:an$="Off":goto 4212
