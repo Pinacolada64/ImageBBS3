@@ -10,7 +10,7 @@ include::includes/boot-command.adoc[]
 
 === Status Line
 
-==== Status Indicators [[status-indicators]]
+==== Status Indicators [[boot-up-status-indicators]]
 
 .Function Indicators
 [options="autowidth",options="header"]

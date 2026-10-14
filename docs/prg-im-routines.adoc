@@ -513,19 +513,15 @@ _Enter:_
 
 These files replace 2.0`'s `im.*` files.
 
-Sets `dr=5`, the Plus File drive.
-The module isn't loaded again if it's already the one in memory (`p2$`); otherwise line 78 <<line-78>> loads it.
+Every module except `sub.modem` goes to line 100 <<line-100>>, which loads it, runs it, and loads the previous `sub.*` module again afterwards.
+
+`sub.modem` stays here: it's loaded (line 78 <<line-78>>) only if it isn't already the one in memory (`p2$`), from the Plus File drive (`dr=5`).
 Its name is pushed on the module stack (`is` is the stack depth, `im$(is)` the name), and it runs with `gosub 60000`.
-When it ``return``s, its name is popped, and the module that was on the stack before it, if any, is loaded again (line 78), so a `sub.*` module that loads another one finds itself back in memory.
+When it ``return``s, its name is popped, and the module that was on the stack before it, if any, is loaded again (line 78).
 
 _Enter:_
 
 `a$`: the module name, minus the `sub.` prefix
-
-[NOTE]
-====
-`a$="modem"` goes to line 100 <<line-100>> instead.
-====
 
 | [[line-76,Load i.* file]]gosub&#160;76
 |
