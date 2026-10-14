@@ -198,7 +198,9 @@
 ' FIXME: compare to master im, possibly revert this block of changes, I didn't know what I was doing
 {:100}
 ' moved 'p2$="sub."+a$' to 110
-	gosub {:110}:is=is+1:im$(is)=im$
+'	gosub {:110}:is=is+1:im$(is)=im$
+' 10/13/2026: check the DOS error status after loading (gosub 5), as line 79 does
+	gosub {:110}:gosub {:5}:is=is+1:im$(is)=im$
 {:102}
 ' moved 'p2$="sub."+a$' to 110
 	gosub 60000:new 60000:is=is-1:if is then a$=im$(is):gosub {:110}
@@ -593,15 +595,24 @@
 	dim tt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
 ' NOTE: these unused ECS command arrays take 1574 bytes, "im-cuts" mod removes them
 '	dim ec%(19,24),es%(3,49),ei%(50)
+' 10/13/2026: number the boot code in steps of 1, as the release does: in
+' steps of 2 its lines ran into the labels 3090, 3128, 3158, 3404, 3410 and
+' 3414, and im didn't build. No label moves (i/su.config calls 3300, 3404, 3414)
+{step:1}
 {number:3072}
 	restore:for i=1 to 9:read a$:co$(i)=a$+"":next
 ' bd$=boot drive?
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys 49155:&,53
-	d1$="2"+"2405218146":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
+'	d1$="2"+"2405218146":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
+' 10/13/2026: im revision date: Tue Oct 13, 2026 7:05 PM
+	d1$="3"+"2610138705":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
 ' not needed anymore, 12/2020 ML fixes Y2K display
 '	poke $16ec,$32:poke $16ed,$30
 	a$="NTSC":if peek(678) then a$="PAL"
 	gosub {:3400}:z3$=a$+" System Detected.":gosub {:3404}
+' 10/13/2026: label 3080, as in the release: i/su.config goes here when it
+' can't write bd.data
+{:3080}
 	close 15:open 15,dv%,15:&,18,.:poke 53248,1
 {:3084}
 	dv%=z%:z3$="Reading Drive Configuration...":gosub {:3404}:close 2:close 15:open 15,dv%,15
@@ -766,6 +777,8 @@
 	&"{home}{f6:6}":fori=1to17:&"{pound}{back arrow}38 {f6}":next:&"{home}{f6:6}":return
 '	for i=8 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
 
+' 10/13/2026: back to steps of 2 (see 3072)
+{step:2}
 {:3500}
 	data"Commodore 64","Commodore 128","Amiga","Apple/Comp."
 	data"IBM/Comp.","Macintosh","Atari/ST","Tandy Series","Other Type"
