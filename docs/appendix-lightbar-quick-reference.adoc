@@ -264,7 +264,7 @@ Bells [`chr$(7`), kbd:[Ctrl+G], or the MCI command `&#163;b__x__`] sent to the u
     
 | *Local Beeps Disable*
 
-This prevents beep sound effects from being played when a `&,25[,0]` command is encountered.
+This prevents the beep sound effect (`&,25,0`, sound 0) from being played.
 
 // row 7
 

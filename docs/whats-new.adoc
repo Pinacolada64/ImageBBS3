@@ -84,7 +84,7 @@ Many new features have been added and improvements have been made in existing fe
 
 ** Sounds
 *** New "`gong`" sound (`&,25,3`)
-*** _repeat_ parameter: `0`=stop repeating, `1-254`=repeat count, `255`=infinite repeat
+*** _repeat_ parameter: `0` plays the sound once, `1`-`254` play it that many more times, `255` repeats it until `&,25,255` stops it
 * Image 1._x_ emulation layer so their `+.` files can be run (if renumbered to 3000-)
 
 * BASIC keyword extensions
