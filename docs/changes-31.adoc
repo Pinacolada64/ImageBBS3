@@ -1,0 +1,94 @@
+// DRAFT: not included in either guide yet.
+// What Image BBS 3.1 changes from the 3.0 release (2023-12-31): the files on
+// a 3.1 system disk that differ from the release disk, and why.
+// Documentation corrections that apply to 3.0 as well are in the changelog,
+// not here.
+
+== Changes in 3.1 [[changes-3-1]]
+
+Image BBS 3.1 is the 3.0 release of 2023-12-31, with the fixes and features below.
+Sections of the guides that describe something new or changed in 3.1 are marked _New in 3.1_ or _Changed in 3.1_.
+
+=== Files
+
+[%autowidth]
+[%header]
+|===
+| | Files
+
+| Changed
+| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `++ copier`; the ML (`ml 3.1`)
+
+| New
+| `sub.clocks`, `++ visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
+
+| Renamed
+| `boot 3.0`, `image 3.0`, `ml 3.0` are `boot 3.1`, `image 3.1`, `ml 3.1`
+
+| Removed
+| `i/lo.idle2` (merged into `i/lo.idle`)
+|===
+
+=== For the Sysop
+
+==== Clock
+
+* The clock is set automatically when the BBS starts, from the clock source chosen in setup or in `IM`: a CMD device, Lt. Kernal, DS12C887, Ultimate, TeensyROM, or the last AutoMaint date.
+3.0 only read CMD and Lt. Kernal clocks at boot.
+* The lightbar's `Trc` right check (Time: Reset Clock) re-reads the clock source every few hours, whichever it is (3.0: CMD only).
+* `IM` K (Set Time) is a menu: set the clock from the clock source, set it by hand, or choose a different clock source.
+Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the next boot.
+* Setting the clock by hand gives up after 5 minutes without an answer, so the idle screen comes back (3.0 waited for ever).
+* The idle screen's 1) Set Time uses the clock source.
+
+==== Idle Screen and Login
+
+* `i/lo.idle2` is gone: the lightbar's `Alt` right check (flag 55) now makes `i/lo.idle` show New Messages in place of Calls/Log.
+* `sub.modem` is loaded once at start-up, not twice.
+* `i/lo.login`: L) Toggle Linefeeds on the Login Options Menu, which shows two options to a line.
+* Two sentences that broke over two lines are mended: "`...set to that time?`" (`i/lo.on`) and "`Enter NEW if you have no Login ID...`" (`i/lo.login`).
+* Auto-Maint with no modules in `e.maintmods` no longer stops with `?undef'd statement error` (`i.lo`).
+
+==== `IM` Configuration
+
+* `IM` J (Modem Config): modem profiles in `nimodem.dat` can be imported, created and edited, with a 19.2k tcpser profile for VICE.
+* `IM` C (Payroll Editor): Edit with an entry number out of range no longer stops with `?undef'd statement error`.
+* `i.UU`: the user account editor has a cursor menu.
+
+==== Other Changes
+
+* A user's time-per-day limit can be two digits.
+* Answering No to "`Would You Like To Leave Feedback?`" is quicker (blocks free is only checked for Yes).
+* The sysop window's Area field clears a longer module name properly.
+* At boot, the "`Insert All System Disks`" menu's Reset C64 asks "`Are You Sure?`" first, and the blocks free list lines up its numbers.
+* A system error only turns the border red if the lightbar's `Trb` right check is set.
+* At boot, `im` shows the date it was last changed ("`im Revision: Oct 14, 2026 12:08 PM`"), from its own date string; the release always showed "`Apr. 17, 2023 6:55 AM`".
+
+==== Fixes
+
+* kbd:[Ctrl]/kbd:[C=] with a function key could lock up the BBS; programmable function keys work, up to 75 characters.
+* After a password prompt (`&,1,x,1`), everything printed was masked until the next input.
+
+=== For the Programmer
+
+* `&,5` returns the version (3.1) in `lp` and the revision in `a%` (3.0: 2.0, and `a%` not set).
+* `&,9` shows number variables as digits (3.0 showed garbage).
+* `&,1` clears its password flags when input ends.
+* `++ copier` has `&,16,3`, which compares two files.
+* `sub.clocks`: reads (and for CMD and DS12C887, writes) every supported clock; `im=0`-`11`.
+* `++ visual`: Image 2.0's unfinished visual editor, converted.
+* `im`:
+** Line 28 copies `a$` into `cm$` (`cm$=a$+""`); modules set `pr$`, `cm$` and `p$` as copies, not pointers into the program.
+** The boot code sets the clock with `sub.clocks`; its own CMD and Lt. Kernal clock code is gone.
+** `im`'s revision date is in line 3074 (`core/im.lbl`, line 627): `d1$="4"+"2610149208"`, an 11-digit Image date (weekday 1-7, then `yymmdd`, the hour with 80 added for PM, and the minutes).
+Change it when you change `im`: `&,15` turns it into the date shown at boot.
+It's also `d1$`'s and `am$`'s value until the clock is set and `e.data` is read.
+** Line 15 (after displaying a file) resets the output defaults (line 12).
+** Line 32 (`m.` mail file) keeps 14 characters of the handle (the release kept 13).
+** Line 43 (`e.say`) closes the file if it can't be read.
+** `cm$` has no "`L:`" prefix while a module loads; the status line shows L instead.
+** Line 370 (show a mode On/Off) no longer changes `an$`.
+** "`Are You Sure?`" (lines 93 and 95) is one subroutine, line 98.
+** The jump table has 23 new entries: 504, 506-508, 510, 513, 515, 525, 541, 543, 545-548, 556, 558-564.
+* #TO CHECK#: `i/su.config` differs from the release: what changed?
+* The test programs: see the Test Programs appendix.
