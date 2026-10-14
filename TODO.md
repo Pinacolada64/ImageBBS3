@@ -167,6 +167,19 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
   The Lt. Kernal and Ultimate can't be written yet (their commands are
   unknown here); the TeensyROM sets itself from the network.
 - [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` (`im`'s is gone).
+- [ ] `IM` N) Base Editors (`i.SM`, Larry's fixed copy from `fixes 231231.d81`):
+  remove H) Set Time Dv # and I) Set CMD Clock (`i/SM.cmdclock`); K) Set
+  Time covers them now (10/14/2026: not in the repo yet).
+- [ ] `i/GF-maint`: a new item starts on the System drive (4202); for Prg
+  and Mod items, use the Program drive (`dv%(5)`/`dr%(5)`), where `i.` and
+  `i/` modules are. (An item on the wrong drive fails with error 29 at `im`
+  line 79.)
+- [ ] `i.GF` 3570: the header works the short title out from the library's
+  name each time, overwriting the Name set in Maintenance's Z) Misc Info.
+- [ ] `docs/changes-31.adoc`: add the GF and `sub.local` fixes; check
+  `i/su.config`; then put it in both guides, with "New in 3.1" callouts.
+- [ ] Programmer's Reference, `&,62`: its example uses `im`'s old clock code
+  (3170, 3184), which is gone; use `sub.clocks`' `sub.set_bbs_clock`.
 
 ## Improving Image BBS
 
