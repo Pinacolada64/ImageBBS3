@@ -155,20 +155,10 @@
 4497 a$="lo."+"wf":goto 70
 4498 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:a$="lo."+"rf":goto 70
 4499 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:zz=1:a$="lo."+"im":goto 70
-4500 gosub 33:x=37:gosub 1:&,2,2:y1%=val(a$):close 2:if y1%<8 then 4526
-4501 b$="update time":x=11:gosub 3080:close 2
-4502 close 15:open 15,y1%,15:print# 15,"t-ra":&,2,15
-4504 z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
-4506 a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
-4508 a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
-4510 z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1
-4512 a=val(mid$(z$,1,1)):gosub 4528:poke 52935,a
-4514 a=val(mid$(z$,2,2)):gosub 4528:poke 52938,a
-4516 a=val(mid$(z$,4,2)):gosub 4528:poke 52936,a
-4518 a=val(mid$(z$,6,2)):gosub 4528:poke 52937,a
-4520 b=val(mid$(z$,8,2))
-4522 c=val(mid$(z$,10,2))
-4524 &,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93) or (b=13)):&,58,b,.
-4526 &,52,25,.:return
-4528 a=16*int(a/10)+a-int(a/10)*10:return
+' 10/14/2026: lightbar Trc right (Time: Reset Clock) re-reads the clock with
+' sub.clocks im=10, whatever the method saved in e.data record 37 (CMD device,
+' DS12C887, Ultimate, TeensyROM, Lt. Kernal), and quietly; nothing for manual.
+' It replaced CMD-only code (4500-4528), which skipped every other method.
+' sub.clocks takes sub.modem's place at 60000; the idle loop loads it again
+4500 &,52,25,.:b$="update time":x=11:gosub 3080:close 2:im=10:a$="clocks":gosub 74:return
 4530 rem:"i/lo.idle (c)nissa 230711 lh rs"

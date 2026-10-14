@@ -150,12 +150,13 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
 
 ## `sub.clocks` follow-ups
 
-- [ ] **`Trc` right** ("Time: Reset Clock"), run every few hours by the
-  default alarm trigger `At1`, re-reads the CMD RTC itself. Find where that's
-  done and have it call `sub.clocks` (`im=0`: the method saved in `e.data`
-  record 37) instead, so it works with every clock method.
-- [ ] **`im` at boot:** set the clock with `sub.clocks` (`im=0`) instead of
-  lines 3155-3156 and 3348-3366 (needs `core/im.lbl` to build first).
+- [x] **`Trc` right** ("Time: Reset Clock"), run every few hours by the
+  default alarm trigger `At1`: `i/lo.idle` 4500 re-read only a CMD device's
+  clock itself. It calls `sub.clocks` `im=10` now (the method saved in
+  `e.data` record 37, quietly, and nothing for manual) (10/14/2026).
+- [x] **`im` at boot:** sets the clock with `sub.clocks` (`im=10`, the method
+  in record 37, quietly; manual doesn't load it), instead of lines 3155-3156,
+  3170-3184 and 3348-3366, which only knew CMD and Lt. Kernal (10/14/2026).
 - [x] **`i.IM` K (Set Time):** a menu using `sub.clocks`: set the clock with
   the saved method (`im=0`), set it by hand (`im=1`; unanswered for 5
   minutes, it gives up and leaves the clock alone), or choose another method
@@ -165,7 +166,7 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
   a CMD device (`T-WD`) or a DS12C887; try the CMD one on real hardware.
   The Lt. Kernal and Ultimate can't be written yet (their commands are
   unknown here); the TeensyROM sets itself from the network.
-- [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` and `im`.
+- [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` (`im`'s is gone).
 
 ## Improving Image BBS
 

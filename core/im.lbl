@@ -679,9 +679,14 @@
 	x=48:gosub {:1}:&,2,2:c1$="{clear}{f6}{$07}"+a$+"{f6:2}":x=49:gosub {:1}:&,2,2:c2$="{f6:2}"+a$+"{f6:2}"
 	x=51:gosub {:1}:&,2,2:cc$=a$
 	x=58:gosub {:1}:&,2,2:nc=val(a$)
-	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
+' 10/14/2026: set the clock with sub.clocks, im=10: the method saved in
+' e.data record 37 (y%), quietly. It knows every clock (CMD, Lt. Kernal,
+' DS12C887, Ultimate, TeensyROM); this only knew CMD and Lt. Kernal, and
+' ignored the newer ones, stored as "4,...". Manual (y%=0) doesn't load it
+'	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
 ' 3160: clock set method <in larry's im>:
-	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
+'	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
+	if y% then z3$="Setting Clock...":gosub {:3404}:im=10:a$="clocks":gosub {:74}:if e%=. then z3$="Clock Set.":gosub {:3404}
 ; FIXME: line # off by two; should be
 {:3158}
 	poke 970,.:poke 971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
@@ -690,16 +695,8 @@
 	close2:gosub {:3186}:&,37
 	a$=z$:t1=mn%:an$=z$:&,15:d2$=an$+"M":for i=54272 to i+24:poke i,.:next
 	f1=3:&,27,1:goto {:302}
-{:3170}
-	a=val(left$(z$,1)):gosub {:3184}:poke 52935,a
-	a=val(mid$(z$,2,2)):gosub {:3184}:poke 52938,a
-	a=val(mid$(z$,4,2)):gosub {:3184}:poke 52936,a
-	a=val(mid$(z$,6,2)):gosub {:3184}:poke 52937,a
-	b=val(mid$(z$,8,2))
-	c=val(mid$(z$,10,2))
-	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93)or(b=13)):&,58,b,.:return
-{:3184}
-	a=16*int(a/10)+a-int(a/10)*10:return
+' 10/14/2026: 3170-3184 (set the BBS clock from z$) removed: sub.clocks
+' does it now
 {:3186}
 	forq=.to6:bf(q)=-1:next
 	z3$="Reading Blocks Free...":gosub {:3404}:forq=1to6:dr=q:gosub {:61}
@@ -750,23 +747,9 @@
 	a$=" LOG START: "+d6$+"{f6} {pound}q0{yellow}{pound}o{$c0}{pound}o{$c0}{f6}":gosub {:51}
 	gosub {:33}:x=44:gosub {:1}:print#2,d6$:close2
 	gosub {:30}:forx=12to22:st(x)=.:gosub {:17}:next:return
-{:3348}
-	z3$="Setting Clock by CMD Device...":gosub {:3404}:close15:open15,y%,15:print#15,"t-ra":&,2,15
-	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
-	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
-	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
-	z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1:return
-{:3358}
-	gosub {:3364}:sys 49155:goto {:3362}
-' 1010: timeflag: 1=time set
-	gosub {:33}:x=35:gosub {:1}:&,2,2:d1$=a$:close 2:poke 1010,1:return
-{:3362}
-' read LtK clock:
-	z$="":for a=49159 to 49169:z$=z$+chr$(peek(a)):next:poke 1010,1:return
-{:3364}
-	z$="Setting Clock by Lt.Kernal...":gosub {:3404}:dr=5:gosub {:4}:a$=dr$+"swr.ml":&,7,dv%,2:return
-{:3366}
-	gosub {:3364}:sys49152:sys49155:goto {:3362}
+' 10/14/2026: 3348-3366 (read a CMD or Lt. Kernal clock) removed:
+' sub.clocks does it now
+
 {:3400}
 ' TODO: overhaul this, see "/core/tests/test frame.lbl"
 	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"

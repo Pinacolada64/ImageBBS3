@@ -18,6 +18,10 @@
 ' im=8: save the method ck and parameter cp to e.data record 37
 ' im=9: write the BBS clock to the clock saved in e.data record 37: a CMD
 '       device or a DS12C887 (the others can't be written from here)
+' im=10: as im=0, but without a word: for the idle screen's periodic re-read
+'       (lightbar Trc right, Time: Reset Clock). It does nothing (e%=1) if
+'       the saved method is manual or the last AutoMaint date, and prints no
+'       messages, so the idle screen isn't written over
 '
 ' After im=1 sets the BBS clock, if record 37 names a CMD device or a
 ' DS12C887, it offers to write the time to that clock too (as im=9 does).
@@ -43,12 +47,14 @@
 '   every few hours (alarm trigger At1)
 '
 ' Variables: ck, cp; temporary: a b c d f h i j k m n s u v w y, a$ b$ c$ z$ an$
+' z$ is changed: a module run through im line 80 (gosub 80), which keeps the
+' module to go back to in z$, has to save it around the call (i/lo.misc does)
 
 {alpha:alt}
 {include:quoters.lbl}
 {:60000}
 {step:2}
-	on im+1 goto {:sub.from_record_37},{:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint},{:sub.save_method},{:sub.write}
+	on im+1 goto {:sub.from_record_37},{:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint},{:sub.save_method},{:sub.write},{:sub.auto}
 	return
 
 {nice:100}
@@ -57,6 +63,11 @@
 {:sub.dispatch}
 	on ck goto {:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint}
 	e%=1:return
+
+{:sub.auto}
+' 10/14/2026: im=10
+	gosub {:sub.read_record_37}:if ck=1 or ck=7 then e%=1:return
+	goto {:sub.dispatch}
 
 {:sub.read_record_37}
 ' e.data record 37 -> ck (the method) and cp (its setting)
@@ -146,9 +157,9 @@
 '                     123456789012345678901234
 ' first check that the device is there (as im line 353 does for a drive):
 ' opening and closing its command channel sets st if nothing answers
-	close 15:open 15,cp,15:close 15:if st then e%=1:&"{f6}{lt. red}No device "+mid$(str$(cp),2)+".{f6}":return
+	close 15:open 15,cp,15:close 15:if st then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}No device "+mid$(str$(cp),2)+".{f6}":return
 	open 15,cp,15:print# 15,"t-ra":&,2,15:close 15
-	if len(a$)<24 then e%=1:&"{f6}{lt. red}No CMD clock on device "+mid$(str$(cp),2)+".{f6}":return
+	if len(a$)<24 then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}No CMD clock on device "+mid$(str$(cp),2)+".{f6}":return
 	z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
 	a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
 	a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
@@ -161,7 +172,7 @@
 {:sub.ltk}
 ' swr.ml (on Image drive 5) reads the Lt. Kernal clock into memory at
 ' 49159-49169 as an 11-digit date string; port 2 calls 49152 first
-	dr=5:gosub 3:a$=dr$+"swr.ml":&,7,dv%,2:gosub 5:if e% then:&"{f6}{lt. red}swr.ml not loaded.{f6}":return
+	dr=5:gosub 3:a$=dr$+"swr.ml":&,7,dv%,2:gosub 5:if e% then on -(im=10) goto {:sub.return}:&"{f6}{lt. red}swr.ml not loaded.{f6}":return
 	if cp=2 then sys 49152
 	sys 49155:z$="":for i=49159 to 49169:z$=z$+chr$(peek(i)):next
 	goto {:sub.set_clock}
@@ -181,7 +192,7 @@
 	poke cp,4:b=peek(cp+1):k=b and 128:if f and 2 then k=.
 	b=b and 127:gosub {:sub.ds_value}:h=b
 	if (f and 2)=. then h=h+12*(h=12)-12*(k>.)
-	if y>99 or n<1 or n>12 or d<1 or d>31 or h>23 or m>59 then e%=1:&"{f6}{lt. red}No DS12C887 clock at "+mid$(str$(cp),2)+".{f6}":return
+	if y>99 or n<1 or n>12 or d<1 or d>31 or h>23 or m>59 then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}No DS12C887 clock at "+mid$(str$(cp),2)+".{f6}":return
 	gosub {:sub.build_z$}:goto {:sub.set_clock}
 
 {:sub.ds_read}
@@ -196,7 +207,7 @@
 {nice:100}
 {:sub.ultimate}
 ' $df1d reads $c9 (or $49) when the Command Interface is enabled
-	u=57116:a=peek(57117):if a<>201 and a<>73 then e%=1:&"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
+	u=57116:a=peek(57117):if a<>201 and a<>73 then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
 	if peek(u) and 8 then poke u,8
 ' DOS target ($01), GET_TIME ($26), format 0: "yyyy/mm/dd hh:mm:ss"
 	poke 57117,1:poke 57117,38:poke 57117,.:poke u,1:i=.
@@ -207,7 +218,7 @@
 	if peek(u) and 128 then a$=a$+chr$(peek(57118)):goto {:sub.ultimate_data}
 {:sub.ultimate_status}
 	if peek(u) and 64 then a=peek(57119):goto {:sub.ultimate_status}
-	poke u,2:if len(a$)<19 then e%=1:&"{f6}{lt. red}The Ultimate didn't send the time.{f6}":return
+	poke u,2:if len(a$)<19 then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}The Ultimate didn't send the time.{f6}":return
 	y=val(mid$(a$,3,2)):n=val(mid$(a$,6,2)):d=val(mid$(a$,9,2))
 	h=val(mid$(a$,12,2)):m=val(mid$(a$,15,2))
 	gosub {:sub.build_z$}:goto {:sub.set_clock}
@@ -222,7 +233,7 @@
 	poke 57012,12:i=.
 {:sub.teensyrom_wait}
 	i=i+1:if peek(57014)<>85 and i<500 then {:sub.teensyrom_wait}
-	if i>=500 then e%=1:&"{f6}{lt. red}No TeensyROM clock.{f6}":return
+	if i>=500 then e%=1:on -(im=10) goto {:sub.return}:&"{f6}{lt. red}No TeensyROM clock.{f6}":return
 	a=peek(57018):b=peek(57018):c=peek(57018):s=int((a*65536+b*256+c)/60)
 	h=int(s/3600):m=int(s/60)-h*60:if h>23 then e%=1:return
 ' the date: the last saved date
@@ -332,7 +343,11 @@
 	a=val(mid$(z$,6,2)):gosub {:sub.to_bcd}:poke 52937,a
 	b=val(mid$(z$,8,2)):c=val(mid$(z$,10,2))
 	&,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93) or (b=13)):&,58,b,.
-	an$=z$:&,15:&"{f6}{lt. blue}BBS clock: {white}"+an$+"M{f6}":return
+	an$=z$:&,15:on -(im=10) goto {:sub.return}:&"{f6}{lt. blue}BBS clock: {white}"+an$+"M{f6}":return
+
+{:sub.return}
+' im=10 jumps here past a message
+	return
 
 {:sub.to_bcd}
 	a=16*int(a/10)+a-int(a/10)*10:return
