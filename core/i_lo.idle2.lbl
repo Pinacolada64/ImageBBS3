@@ -1,0 +1,166 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/lo.idle2" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps out of this module, which 3_0-preface.lbl doesn't assign:
+{assign:302	=302	} ' im: load i.lo
+{assign:3080	=3080	} ' i.lo: log idle time
+{assign:3233	=3233	} ' i.lo: F) feedback/mail
+{crunch:on}
+
+4000 gosub 4480:on lmgoto 4100,4200,4010:mm=.:f1=3:goto 3000
+4006 cm$="Connected":gosub 9:&,69,5,21,cm$,$85
+4008 lt$=d1$:lt%=mn%:poke 53248,.:mm=.:f1=.:gosub 4480:goto 3000
+4010 &,18,1:an$=d3$:&,15,1:&,69,5,17,an$,$8 c:&,69,5,18,d2$,$8 c:&,69,5,19,d6$,$8 c
+4012 &,69,5,20,l2$,$8 c:if pt%then:&,69,16,20,"*PRIMETIME*",$8 c
+4014 &,52,41,3:&,69,31,17," Res O"+mid$("ff n  ",a%*3+1,3),$8 c:kk=a%
+4016 &,52,40,3:&,69,31,18," Res O"+mid$("ff n  ",a%*3+1,3),$8 c:kk=kk+2*a%
+4018 if l2=.and a%=.then:&,69,31,19," None    ",$8 c
+4019 if l2=1 then:&,69,31,19," One     ",$8 c
+4020 if l2>1 then:&,69,31,19," All     ",$8 c
+4022 &,69,31,20,"         ",$8 c:&,69,31,20,str$(qb),$8 c
+4024 &,69,31,21,"         ",$8 c:&,69,31,21,str$(uh)+"/"+mid$(str$(ur),2),$8 c
+4026 &,69,2,22,right$(str$(ca+1 e5),5),$81:&,69,10,22,right$(str$(cn+1 e5),3),$81
+4028 return
+4030 &,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:return
+4040 cm$="System Idle":&,69,5,21,cm$,$8 a:return
+4042 cm$="Connected":gosub 9:&,69,5,21,cm$,$85:return
+4044 gosub 84:&,52,7,3:if a%then pt%=1-pt%:if p1%<1 then p1%=30
+4046 b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):on pt%+1 goto 4050
+4048 for y=1 to 5:&,69,26,y+16,mid$("PRIME",y,1),135:next:goto 4052
+4050 for y=1 to 5:&,69,26,y+16,mid$("     ",y,1),140:next
+4052 return
+4100 a=.:gosub 375:b$="logoff":x=10:mm=4:gosub 3000:&,52,4:&,52,5:tr%=.
+4102 f1=.:&,28,1:dr=3:b$="e.idle cmds":a$=b$:gosub 4:if e%then wc=.:close 2:goto 4106
+4104 wc=1:dim wc%(15,30):&,60,2,0,wc%(0,0),b$,dv%
+' 10/13/2026: sub.info (im=6, 4110) before sub.modem (im=0, 4112), which
+' used to come first, at 4106: sub.info replaced it in memory, and the idle
+' loop (4200) loaded sub.modem again. Now it's still there: 12 blocks less
+' to load. sub.info's im=6 only sets the time zone display from uf$.
+'4106 im=.:gosub 446:if ac%=16 then mm=5:gosub 3000
+4106 ak$=" {$c0:38}"+"{f6}":pf=.:poke 951,40
+4108 gosub 33:x=17:gosub 1:&,2,2:d3$=a$:x=19:gosub 1:&,2,2:close 2
+4110 an$=a$:&,15:d2$=an$+"M":&,52,44,1:uf$="00100"+tz$:im=6:gosub 447
+4112 im=.:gosub 446:if ac%=16 then mm=5:gosub 3000
+4114 lc=.:em=.:zz=.:gs=.:cf=.:cr=.:lf=1:nl=.:ul=.:le=.:pm=1:c9=.
+4116 &,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:if a=.then:&,52,2,4
+4118 i%=.:ac%=16:dc%=.:ct%=.:tc%=.:u$="":sy$="":ba$="":na$="":ph$="":id=.
+4120 poke 830,3:poke 53248,.:&,52,16,1:&,52,17,1:&,52,18,.:&,52,19,.
+4122 gosub 82:gosub 12:for j=217 to 242:poke j,peek(j) or 128:next:dr=3:gosub 61
+4124 gosub 33:x=21:gosub 1:&,2,2:l2=val(a$):l2$=mid$(a$,3):close 2
+4126 gosub 4010:if peek(1010) then a$=d1$:t1=mn%
+4128 a$="clock":gosub 28:goto 4200
+4200 q=.:k=1:im=10:gosub 446:poke 53248,.:poke 53252,.:on f3gosub 4400,4420,4430
+4202 t1%=mn%:ti$="000000":gosub 4481
+4204 on-(ti>36000) gosub 4044
+4205 mm=6:on-(ti>36000) gosub 3000:if mn%<>t1%then t1%=mn%
+4206 &,52,41,3:z%=a%:&,52,40,3:z%=z%+2*a%:on-(z%<>kk) gosub 4010
+4208 &,52,4,3:zz=a%:if zzthen im=4:gosub 446:goto 4008
+4209 &,52,25,3:on a%gosub 4500
+4210 if peek(1010)>.and mid$(am$,2,6)<>mid$(d1$,2,6) then mm=7:goto 3000
+4211 &,52,29,3:if peek(1010)>.and a%then mm=3:goto 3000
+4212 poke 646,df%:&,16:a$="":if peek(198) then get a$
+4214 on-(a$="") goto 4230:poke 198,.:on wc+1 goto 4222
+4216 b=.:lm=1:for i=1 to wc%(0,0):if asc(a$)=wc%(0,i) then b=i:i=wc%(0,0)+1
+4218 next:on-(b=.) goto 4224:&,60,1,16,wc%(8,b),cm$:gosub 9:&,60,1,11,wc%(2,b),a$
+4220 lm=wc%(1,b):mm=8:goto 72
+4222 x=val(a$):if xthen on xgoto 4450,4465,4465,4465,4462,4464,4452,4454
+4223 if a$="R" then b$="reload":x=11:mm=4:gosub 3000:f1=3:pr$="":goto 302
+4224 x=.:x=-(a$="+")-2*(a$="-")-3*(a$="{pound}")-4*(a$="T")-5*(a$="A")-6*(a$="{back arrow}")
+4225 on-(a$="F")-(a$="W")*2-(a$="C")*3-(a$="D")*4 goto 3233,4488,4487,4498
+4226 on-(a$="+")-(a$="-")*2 gosub 4250,4252:on-(a$="I") goto 4499
+4227 on x+1 goto 4230,,,,4259,4258,4260:on xgosub 4250,4252,4254,4256:goto 4232
+4230 k=k+(k>.):on-(a$=" " or k=1) goto 4200:on-(a$<>"" and (a$<"{f1}" or a$>"{f8}")) gosub 4270
+4231 &,52,43,3:on a%goto 4204
+4232 im=5:gosub 446:on agoto 4006,4264,4266:gosub 4040:goto 4204
+4250 gosub 4484:n=n+1:if n>15 then n=1
+4251 goto 4486
+4252 gosub 4484:n=n-1:if n<1 then n=15
+4253 goto 4486
+4254 im=7:goto 446
+4256 poke 53258,16-peek(53258):return
+4258 mm=7:goto 3000
+4259 poke 53258,16-peek(53258):goto 4204
+4260 poke 2042,.:poke 53248,1:&"{clear}{f6:2}Loading Image-Term..{f6}":gosub 304:b$="term":x=11
+4262 mm=4:gosub 3000:a$="t":goto 70
+4264 cm$="Ring Detected":gosub 9:&,69,5,21,cm$,$83:goto 4202
+4266 gosub 4040:goto 4204
+4270 on-(a$="?") goto 4300:poke 53248,1:poke 971,16:&"{clear}{f6}{cyan}{$ac}{pound}o{$a2}{pound}o{$a2}{pound}h1{blue}{$bb}{f6}"
+4272 &"{cyan}{rvrs on}{$a1}{lt. blue}1)Set Time{pound}{back arrow}202)View BAR{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}3)View Blocks Free{pound}{back arrow}204)View"
+4273 &" Clock/Calls{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}5)Garbage Collect{pound}{back arrow}206)Reset Modem{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+4274 &"{cyan}{rvrs on}{$a1}{lt. blue}7)Set Password{pound}{back arrow}208)View Logs{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}+)Color +{pound}{back arrow}20-)Color "
+4275 &"-{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}{back arrow})Image-Term{pound}{back arrow}20A)Auto-Maint{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{cyan}{rvrs on}{$a1}{lt. blue}R)Re-Load LO{pound}{back arrow}20"
+4276 &"F)Feedback/Mail {$ba} {blue}{rvrs off}{$a1}{f6}"
+4277 &"{cyan}{rvrs on}{$a1}{lt. blue}W)WF Editor{pound}{back arrow}20C)Copier{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+4278 &"{cyan}{rvrs on}{$a1}{lt. blue}D)Display Files{pound}{back arrow}20I)IM Configurator{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}":if wc%(.,.)=.then 4290
+4282 a=.:for i=1 to wc%(.,.):a$=mid$("{cyan}{rvrs on}{$a1}{lt. blue}",a*4+1):e$=mid$("{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}{pound}{back arrow}20",(1-a)*8+1,8)
+4284 on-(wc%(0,i)=0) goto 4288:b$=chr$(wc%(.,i)):&,60,1,16,wc%(8,i),c$
+4286 &a$+b$+")"+c$+e$:a=1-a
+4288 next:if a=1 then:&"{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
+4290 &"{cyan}{$bc}{blue}{rvrs on}{pound}o{$a2}{pound}o{$a2}{pound}h1{rvrs off}{$be}{f6}":poke 53248,.:poke 2042,.:k=50:return
+4300 a$="":goto 4270:rem"GM Will be here"
+4400 f3=1:poke 53248,1:poke 2042,1:x%=st(15)+st(16):y%=st(24):z%=st(23):w%=st(29)
+4402 &"{clear}{f6}{pound}{back arrow}20{lt. red}{rvrs on} Feedback     {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}20{rvrs on} SysOp Mail   {pound}#3{pound}# {pound}%y {gray1} {f6}"
+4404 &"{pound}{back arrow}20{lt. red}{rvrs on} New Messages {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}20{lt. red}{rvrs on} New Users    {pound}#3{pound}# {pound}%w {gray1} {f6}"
+4406 &"{pound}{back arrow}23{rvrs on}                {f6}{up}":&,27,3:dim l%(30,9):dr=3:gosub 3
+4408 &,60,2,.,l%(.,.),dr$+"e.last",dv%:gosub 5:if e%then 4416
+4409 &,52,$36,3:for i=.to 9:m$=" "+right$("  "+str$(l%(7,i)),3)+" Min"
+4410 &,60,1,20,l%(8,i),c$:&,60,5,.,l%(1,i),an$:if len(c$)<4 then 4415
+4411 d$=mid$(an$,4,2)+"/"+mid$(an$,6,2):&,15:t$=right$(an$,7)+"M":if a%then 4413
+4412 &"{f6}{rvrs on}{gray2}{pound}$d @ {pound}$t{pound}$m{pound}{back arrow}25":goto 4414
+4413 &"{f6}{lt. blue}{pound}$d {yellow}@ {lt. blue}{pound}$t{white}{pound}$m{pound}{back arrow}25{yellow}"
+4414 c$=left$(c$,13):&"{pound}$c{pound}{back arrow}39{rvrs off}"
+4415 next
+4416 &,28,3:close 2:poke 53248,.:goto 4040
+4420 f3=2:poke 53248,1:poke 2042,.:&"{clear}":im=3:a$="bar":gosub 74:poke 53248,.:goto 4040
+4430 f3=3:poke 53248,1:poke 2042,.:&"{clear}{f6} {rvrs on}{cyan} Blocks Free On System Disks {f6:2}"
+4432 dr=1
+4434 b$="System":d$="Mail":gosub 4438:b$="Etc.":d$="Dir.":gosub 4438
+4436 b$="Program":d$="User":gosub 4438:&"{f6:2}":poke 53248,.:poke 198,.:goto 4040
+4438 c$=str$(bf(dr)):f$=str$(bf(dr+1))
+4440 a$="{lt. red} {pound}$b {gray3}Disk{white}:{pound}{back arrow}15{pound}$c{f6}{lt. red} {pound}$d {gray3}Disk{white}:{pound}{back arrow}15{pound}$f{f6}":&:dr=dr+2:return
+4450 lm=1:goto 4460
+4452 lm=2:goto 4460
+4454 lm=3:goto 4460
+4460 z$="lo."+"misc":gosub 80:goto 4200
+4462 &,40:goto 4204
+4464 mm=6:gosub 3000:goto 4204
+4465 on xgosub,4420,4430,4400:goto 4204
+4480 &,52,$34,3:on-(a%=.) goto 4482:poke 53371,0:&,52,$35,1:goto 4482
+4481 &,52,$34,3:on-(a%=.) goto 4482:poke 53370,0:&,52,$35,0
+4482 return
+4484 gosub 33:x=40:gosub 1:&,2,2:n=val(a$):close 2:return
+4486 gosub 33:x=40:gosub 1:print# 2,n:close 2:df%=n:poke 646,df%:&,16:return
+4487 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:a$="lo."+"cp":goto 70
+4488 gosub 4480:c=a:a=.:lt$=d1$:poke 2033,.:&,52,16,1:&,52,4,1:zz=1
+4489 &,52,17,1:&,52,5,1
+4490 &,52,10,3:fl=-(a%=1):poke 53251,101:poke 2042,.:nl=1
+4491 poke 53248,1:&,52,16,1:k=.:i%=1:id=i%:gosub 35:x=id:gosub 1
+4492 input# 2,na$,pw$,ff$,ll$,ph$,ld$,ac%,ct%:close 2:co%=1:ll%=40:ul=1:lf=.
+4493 le=100:em=val(left$(i2$,1)):ld$=d1$:d5$=d1$:tc%=1:&,52,20,em:poke 53252,20
+4495 fl$=fl$(9):co$=str$(co%):im=15:gosub 445
+4496 ch$=co$:d5$=lt$:for i=1 to 10:st(i)=.:next:&,18,0:gosub 12
+4497 a$="lo."+"wf":goto 70
+4498 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:a$="lo."+"rf":goto 70
+4499 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:zz=1:a$="lo."+"im":goto 70
+4500 gosub 33:x=37:gosub 1:&,2,2:y1%=val(a$):close 2:if y1%<8 then 4526
+4501 b$="update time":x=11:gosub 3080:close 2
+4502 close 15:open 15,y1%,15:print# 15,"t-ra":&,2,15
+4504 z$=left$(a$,2):a=-(z$="su")-2*(z$="mo")-3*(z$="tu")-4*(z$="we")-5*(z$="th")
+4506 a=a-6*(z$="fr")-7*(z$="sa"):z$=mid$(str$(a),2,1)+mid$(a$,12,2)+mid$(a$,6,2)
+4508 a=-80*(mid$(a$,24,1)="p")+val(mid$(a$,15,2))
+4510 z$=z$+mid$(a$,9,2)+right$("0"+mid$(str$(a),2),2)+mid$(a$,18,2):poke 1010,1
+4512 a=val(mid$(z$,1,1)):gosub 4528:poke 52935,a
+4514 a=val(mid$(z$,2,2)):gosub 4528:poke 52938,a
+4516 a=val(mid$(z$,4,2)):gosub 4528:poke 52936,a
+4518 a=val(mid$(z$,6,2)):gosub 4528:poke 52937,a
+4520 b=val(mid$(z$,8,2))
+4522 c=val(mid$(z$,10,2))
+4524 &,62,b,c:b=b+80*((b=92)-(b=12))+12*((b=93) or (b=13)):&,58,b,.
+4526 &,52,25,.:return
+4528 a=16*int(a/10)+a-int(a/10)*10:return
+4530 rem:"i/lo.idle2(c)nissa 230711 lh rs"

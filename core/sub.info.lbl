@@ -1,0 +1,69 @@
+' imported from Larry Hedman/master-release-2023-12-31/sub.info.prg (the 2023-12-31 master
+' release; the same file is on the run disk) with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+60000 on imgoto 60002,60030,60068,60074,60072,60078,60100:return
+60002 an$=ff$:&,15,1:f$=an$:an$=ll$:&,15,1:l$=an$:rn$=ff$+" "+ll$
+60004 t$=mid$(uf$,6,3)
+60006 dr=1:a$="s.m.info":gosub 13:poke 53252,2:&"{white}  > {pound}i1":a=val(an$)
+60008 if athen gosub 60012:goto 60002
+60010 return
+60012 on agoto 60022,60026,60014,60074,60030
+60014 a1$=ph$
+60016 &"{f6}":w$=a1$:pl=.:poke 53252,78:p$="Email":&,1,32:if an$="" then 60024
+60020 ph$=an$:return
+60022 w$=ff$:p$="First Name":pl=1:poke 53252,15:&,1,32:if an$<>"" then ff$=an$
+60024 return
+60026 w$=ll$:p$="Last Name":pl=1:poke 53252,15:&,1,32:if an$<>"" then ll$=an$
+60028 return
+60030 on abs(pw$="") goto 999:&"{f6}Old Password?: ":&,6:on-(an$<>pw$) goto 60110
+60032 &"{f6:2}Would you like to:{f6:2} (A) Enter a password{f6} (B) Generate a Random "
+60034 &"Password{f6} (C) Not change your password{f6:2}> {pound}g1"
+60036 if tr%>.then on-(an$="A")-2*(an$="B")-3*(an$="C") goto 60042,60052,60040:goto 60032
+60038 &"C{f6:2}"
+60040 return
+60042 poke 53252,14:&"A{f6:2}Please Enter A Password To Use{f6}"
+60044 &"for your account on this BBS.{f6:2}: {pound}i1":on tr%+1 goto 60040:if an$="" then 60032
+60046 pw$=an$:poke 53252,20:if na$=pw$or tr%<1 then 60050
+60048 if na$=an$then:&"{f6}Please Do Not Use Your Handle{f6}As A Password.{f6}":goto 60042
+60050 pw$=an$:return
+60052 &"B{f6:2}":gosub 60058:&"Your random password is {f5}{pound}$b{f5}{f6:2}Is this ok? ":gosub 96
+60054 if athen pw$=b$:return
+60056 goto 60032
+60058 b$="":v$="AEIOU":c$="STTRSHSCBLFL":n$="NTRSB"
+60060 gosub 60064:gosub 60066:gosub 60064:gosub 60066:gosub 60064:gosub 60066
+60062 b$=b$+mid$(n$,int(rnd(1)*len(n$))+1,1):return
+60064 b$=b$+mid$(c$,int(rnd(1)*(len(c$)/2))*2+1,2):return
+60066 b$=b$+mid$(v$,int(rnd(1)*len(v$))+1,1):return
+60068 d$="System":gosub 60084:if a=.then return
+60070 tz$=an$:gosub 33:x=45:gosub 1:print# 2,tz$:close 2
+60072 an$=tz$:gosub 60082:poke 866,x:poke 867,y:return
+60074 d$="Your":gosub 60084:if a=.then return
+60076 uf$=left$(uf$,5)+an$
+60078 an$=mid$(uf$,6):gosub 60082:poke 868,x:poke 869,y
+60080 for i=.to 2:poke 5882+i,asc(mid$(an$+"   ",i+1,1)):next:poke 5885,.:return
+60082 x=val(mid$(an$,4,2)):y=val(mid$(an$,6,2)):a$=left$(an$+"   ",3):return
+60084 dr=1:a$="s.timezones,s,r":gosub 4:n=.:if e%then close 2:return
+60086 &,2,2:if a$<>"{^}" then n=n+1:tt$(n)=a$:on-(st=.) goto 60086
+60088 close 2:&"{f6}Select {pound}$d Time Zone:{f6:2}"
+60090 for i=1 to n:b$=left$(tt$(i),3):c$=mid$(tt$(i),8):a%=i:if i<10 then:&" "
+60091 &" {white}{pound}%a) ({lt. red}{pound}$b{white}) {green}{pound}$c{pound}{back arrow}39 ":if ll%<80 and i=20 then:&" {white}<Hit any key>{pound}g1{f6}"
+60092 next
+60093 poke 53252,2:&"{f6}{white} Which One? {pound}i1"
+60094 a=val(an$):if an$="" or a<1 or a>nthen a=.:return
+60096 c$=mid$(tt$(a),8):an$=left$(tt$(a),7):return
+' copyright line: plain text, not a rem; -crunch would take out its spaces, so
+' they're written as {$20}
+60098 copr.{$20}1994{$20}new{$20}image{$20}9/18/94
+60100 o%=val(mid$(fl$,18,2))-tr%:st(10)=o%:st(21)=st(21)+o%:st(11)=0
+60102 tv$="":tu$=mid$(str$(o%),2):for x=1 to (4-len(tu$)):tv$=tv$+"0":next
+60104 tu$=tv$+tu$:return
+60110 &"{f6}Incorrect password entered {pound}w2{f6}":return
+60150 rem:"sub.info (c)nissa 230406 lh"

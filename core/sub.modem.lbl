@@ -1,0 +1,89 @@
+' imported from Larry Hedman/master-release-2023-12-31/sub.modem.prg (the 2023-12-31 master
+' release; the same file is on the run disk) with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+60000 on imgoto 60005,60055,60075,60100,60135,60205,60180,60325,60395,60070:goto 60110
+60005 if val(mt$)=0 then return
+60010 get#131,a$:gosub 60070:gosub 60395:m$="z":t=50:gosub 60325
+60015 m$="e0v0":if mid$(mt$,7,1)="H" then m$=m$+"h":if mid$(mt$,6,1)="0" then m$=m$+"0"
+60020 m$=m$+"x"+mid$(mt$,8,1)+"m"+chr$(mf+48)+"b"+mid$(mt$,10,1)
+60025 gosub 60045:on-(t=0) goto 60010:&,52,43,3:a=49:if a%or mid$(mt$,3,1)<>"A" then a=48
+60030 m$="s0="+chr$(a)+"s2=27s7=25":gosub 60045:on-(t=0) goto 60010:&,22,10
+60035 an$=in$:&,15,2:m$=an$:gosub 60045
+60040 on-(t=0) goto 60010:&,22,10:goto 60395
+60045 x=1
+60050 a$=m$:t=50:&,22,10:gosub 60325:x=x-1:on-(a<>0 and x>0) goto 60050:return
+60055 z=val(mt$):gosub 60075:gosub 60185:if a=.then 60070
+60060 for y=1 to z:on ygosub 60355,60360,60365,60370,60375,60380,60385:gosub 60075:gosub 60185:if a=.then y=z
+60065 next
+60070 on val(mt$) goto 60355,60360,60365,60370,60375,60380,60385:return
+60075 if mid$(mt$,2,1)="D" then 60295
+60080 &,22,15:for x=1 to 3:print# 131,chr$(27);:&,22,5:next
+60081 &,22,15:for x=1 to 3:print# 131,chr$(43);:&,22,5:next:&,22,10
+60085 if mid$(mt$,6,1)="0" then a$="h0":gosub 60325:goto 60095
+60090 if mid$(mt$,4,1)="H" then a$="h":gosub 60325
+60095 &,22,5:goto 60395
+60100 if left$(mt$,1)<>"0" and mid$(mt$,5,1)="H" then a$="h1":gosub 60325
+60105 return
+60110 dr=3:a$="e.i.modem":p=.:mt$="0":if lk%then p=(peek(57092) and 15)
+60115 gosub 4:on-(e%>0) goto 999:x=p+1:gosub 1
+60120 &,2,2:mt$=a$:&,2,2:in$=a$:close 2:return
+60135 t=0:a$="":&,4:a=peek(780) and 127:if a=0 then return
+60140 a$=right$(a$+chr$(a),3):t=0:if a=13 then b=val(a$):goto 60150
+60145 &,4:a=peek(780) and 127:on-(a<>0) goto 60140:t=t+1:on-(t<100) goto 60145:return
+60150 a=.:for i=1 to mr%(0,0):if mr%(1,i)=bthen a=i:i=mr%(0,0)+1
+60155 next:b=.:on-(a=.) goto 60160:&,60,1,26,mr%(3,a),a$:qb$=qb$+"{f6}-"+a$:b=mr%(2,a)
+60160 a=1:on val(mt$) goto 60355,60360,60365,60370,60375,60380,60385:goto 60170
+60165 &,52,43,3:on-(mid$(mt$,3,1)="M" and a%=0) gosub 60180:a=2:qb$="-":return
+60170 a=.:return
+60175 qb$="":a=3:return
+60180 on ntgoto 999:print# 131,"ata":return
+60185 a=sgn(peek(2033) and 128):return
+60205 &,52,16,1:x=b:gosub 60390:&"{f6}{lt. blue}Dialing {pound}$b: {pound}$c{f6}":a$="dt"+c$:t=250:gosub 60325
+60210 if peek(653) and 2 then 60290
+60215 on agoto 60275:x=-(b=1)-2*(b=5)-3*(b=10):if xthen x=val(mt$):goto 60280
+60220 on bgoto 60065,60245,60250,60255,60270,60265,60270,60265,60255,60285,60245
+60240 gosub 60330:goto 60210
+60245 &"Ring...":goto 60240
+60250 &"No Carrier{f6}":goto 60285
+60255 &"Error{f6}":goto 60285
+60260 &"Error (RC#{pound}!b){f6}":goto 60285
+60265 &"No DialTone{f6}":&,22,100:goto 60285
+60270 &"Busy{f6}":goto 60285
+60275 &"No Connection{f6}":goto 60285
+60280 &,22,10:gosub 60390:an$=qb$:&,15,1:&"{f6}"+an$+"{f6}Connect"+str$(qb):&,22,10:a=1:return
+60285 gosub 60075:&,22,30:a=0:qb$="":return
+60290 &"Aborted{f6}":a=2:qb$="":return
+60295 a=254:b=255:if mid$(mt$,9,1)="R" then a=255:b=254
+60300 &,41,a:&,22,7:&,41,b:&,22,3:goto 60395
+60305 if (peek(2033) and 128)=0 then print# 131,"at"
+60310 &,69,31,20,str$(qb),$8 c:qb$=mid$(qb$,2)
+60315 &,22,5:goto 60395
+60320 return:z=peek(53248):poke 53248,1:&"{pound}$c: {pound}$a{f6}":poke 53248,z:return
+60325 poke 667,.:poke 668,.:c$="{f6}Sent":a$="at"+a$:print# 131,a$:gosub 60320
+60330 a$="":t=10
+60335 &,4:a=peek(780) and 127:&,22,1:if athen t=100:a$=right$(a$+chr$(a),32)
+60336 if a=49 then b=1:a=0:return
+60340 if peek(653)=2 then 60350
+60345 t=t-1:on-(t<1) goto 60350:on-(a<>13 and t>0) goto 60335:b=val(a$):a=0:return
+60350 print# 131,"at":b=0:a=1:return
+60355 qb=300:&,41,0:goto 60305
+60360 qb=1200:&,41,2:goto 60305
+60365 qb=2400:&,41,3:goto 60305
+60370 qb=4800:&,41,4:goto 60305
+60375 qb=9600:&,41,5:goto 60305
+60380 qb=19200:&,41,6:goto 60305
+60385 qb=38400:&,41,7:goto 60305
+60390 on xgoto 60355,60360,60365,60370,60375,60380,60385:goto 60355
+60395 &,4:on-(peek(668)<>peek(667)) goto 60395:a$="":return
+' copyright line: plain text, not a rem; -crunch would take out its spaces, so
+' they're written as {$20}
+60400 copyright{$20}1995{$20}new{$20}image{$20}1/24/95
+60405 rem:"sub.modem (c)nissa 210501 lh"
