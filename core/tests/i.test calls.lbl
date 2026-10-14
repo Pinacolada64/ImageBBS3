@@ -202,7 +202,7 @@
 	a%=3012+p*20:&,66,1:&"{f6}[Px) Page 1-8{comma} Q)uit]{f6}"
 {:prompt}
 ' m=0: "main menu" not displayed
-	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:show_page}
+	l=0:h=70:m=.:q=1:gosub {:sub.input_range}:on -(an$="" or an$="Q" or tr%<1) -2*(q=1) goto {:quit}, {:show_page}
 ' Px (switch to Page x) hook:
 	if left$(an$,1)<>"P" then {:dispatch}
 	an=val(mid$(an$,2,1)):if an>. or an<9 then p=an:goto {:show_page}
@@ -248,23 +248,52 @@
 ' 0 = normal, 1 = Delete or dot on column one, 2 = chat key, 3 = carrier
 ' lost or time up
 
-' password input: masked (&,1,0,1) or not echoed at all (&,1,0,2)
-	l=peek(53252):pl=.
+' password input: masked (&,1,0,1) or not echoed at all (&,1,0,2); any
+' editor flags (&,1,x,0), with w$ as the text to edit
+	l=peek(53252):pl=.:qf=.
 {:amp_1_menu}
 	&"{f6}Mask character (peek(4850)){colon} "+chr$(peek(4850))+"{f6:2}"
 	&"1) &{comma}1{comma}0{comma}1{colon} password{comma} shown masked{f6}"
 	&"2) &{comma}1{comma}0{comma}2{colon} password{comma} not shown{f6}"
 	&"3) Change the mask character{f6}"
-	poke 53252,1:p$="Which":&,1,0,0:op=val(an$):if op<1 or op>3 or tr%<1 then poke 53252,l:return
+	&"4) Editor flags (&{comma}1{comma}x{comma}0){f6}"
+	&"Q) Quit{f6}"
+	poke 53252,1:pl=1:p$="Which":&,1,0,0:pl=.:if an$="" or an$="Q" or tr%<1 then poke 53252,l:return
+	op=val(an$):if op<1 or op>4 then {:amp_1_menu}
 	if op=3 then p$="Mask":&,1,0,0:if an$<>"" then poke 4850,asc(an$)
 	if op=3 then {:amp_1_menu}
+	if op=4 then {:amp_1_editor}
 	poke 53252,15:p$="Password":on op goto {:amp_1_masked},{:amp_1_hidden}
 {:amp_1_masked}
 	&,1,0,1:goto {:amp_1_result}
 {:amp_1_hidden}
 	&,1,0,2
 {:amp_1_result}
-	b=peek(53254):&"{f6}an${equal}{quotation}{pound}v7{quotation}{comma} peek(53254){equal}{pound}!b{f6}":goto {:amp_1_menu}
+	b=peek(53254):&"{f6}an${equal}{quotation}{pound}v7{quotation}{comma} w${equal}{quotation}{pound}$w{quotation}{comma} peek(53254){equal}{pound}!b{f6}":if qf then {:amp_1_flags}
+	goto {:amp_1_menu}
+
+' editor flags: 1-8 toggle a bit (shown On/Off), T tries &,1,x,0 with them
+{:amp_1_editor}
+	x=.:qf=1:q1$(1)="graphics{comma} color and cursor keys allowed":q1$(2)=". or / on column one exits"
+	q1$(3)="no prompt":q1$(4)="the MCI character allowed":q1$(5)="word wrap: a word typed past the end goes to w$"
+	q1$(6)="edit mode: w$ shown to edit":q1$(7)="time remaining ignored":q1$(8)="Delete on column one exits"
+{:amp_1_flags}
+' bit values by doubling: 2^n can come out a hair short, and "and" truncates
+	&"{f6}Editor flags{colon} &{comma}1{comma}{pound}!x{comma}0{f6:2}":b=1
+' lp=1: word-wrap these lines rather than break words at column 40. With
+' lp=1, & ends the line itself (source/strio.s, outstr3), so no {f6} at the end
+	for i=1 to 8:lp=1:&"{pound}!i) "+mid$("Off On ",1-4*((x and b)>0),3)+" "+q1$(i):b=b*2:next
+	lp=1:&"{f6}T) Try it{f6}N) Try it with no time left (tr%{equal}0{colon} bit 7 decides){f6}Return) Back"
+	poke 53252,1:pl=1:p$="Toggle":&,1,0,0:pl=.:if an$="" or tr%<1 then qf=.:goto {:amp_1_menu}
+	if an$="T" then w$="Edit me":poke 53252,30:p$="Input":&,1,x,0:goto {:amp_1_result}
+' &,1 checks the time left by reading tr% (gettsr, source/irqhn.s): save it,
+' set it to 0 for the input, then put it back
+	if an$="N" then q2%=tr%:tr%=.:w$="Edit me":poke 53252,30:p$="Input":&,1,x,0:tr%=q2%:goto {:amp_1_result}
+	i=val(an$):if i<1 or i>8 then {:amp_1_flags}
+' a for loop always runs once, even "for j=2 to 1", so only loop for i>1
+	b=1:if i>1 then for j=2 to i:b=b*2:next
+	if x and b then x=x-b:goto {:amp_1_flags}
+	x=x+b:goto {:amp_1_flags}
 
 {:3300} ' &,2: dskin
 	gosub {:sub.todo}:return
@@ -297,7 +326,7 @@
 
 {:3650} ' &,9: btmvar
 ' enumerate variables that can be displayed, from &,9,x table:
-' FIXME: can't display ints or floats properly
+' FIXED Oct 2026: displays ints and floats properly
 ' 0-9:
 	v$="an$a$ b$ tr$d1$d2$d3$d4$d5$ld$"
 ' 10-19:
