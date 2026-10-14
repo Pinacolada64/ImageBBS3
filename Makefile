@@ -8,6 +8,9 @@
 #   make test-disk the release boot disk, unchanged except for the test
 #                 programs in tests.manifest           -> build/image30-tests.d81
 #   make pdf      build the Programmer's Reference Guide PDF -> build/prg-master.pdf
+#   make sysop-pdf  build the Sysop Guide PDF                -> build/master.pdf
+#   make book-pdf   the Sysop Guide as a book (title page, chapters on new
+#                   pages, index)                            -> build/master-book.pdf
 #   make clean    remove build/
 #
 # Override any of these on the command line, e.g. make KICKASS=/path/KickAss.jar
@@ -32,7 +35,7 @@ TEST_DISK := $(BUILD)/image30-tests.d81
 RUN_C64LIST = WINEDEBUG=-all $(WINE) $(C64LIST)
 winpath = Z:$(abspath $(1))
 
-.PHONY: all asm basic tests disk test-disk pdf clean
+.PHONY: all asm basic tests disk test-disk pdf sysop-pdf book-pdf clean
 
 all: asm basic tests
 
@@ -152,6 +155,36 @@ $(BUILD)/prg-master.pdf: $(wildcard docs/prg-*.adoc docs/includes/*.adoc) tools/
 		-r ./extensions/table-heading-widths.rb \
 		-r ./extensions/table-keep-together.rb -b pdf \
 		-o $(abspath $@) prg-master.adoc
+
+# The Sysop Guide: master.adoc, or master-book.adoc for the book layout (same
+# chapters, :doctype: book). Both use the docs/*.adoc that aren't prg-*, and
+# need only asciidoctor-pdf.
+
+SYSOP_DOCS := $(filter-out docs/prg-%,$(wildcard docs/*.adoc))
+
+sysop-pdf: $(BUILD)/master.pdf
+
+$(BUILD)/master.pdf: $(SYSOP_DOCS) $(wildcard docs/includes/*.adoc) \
+		docs/extensions/table-heading-widths.rb docs/extensions/table-keep-together.rb
+	@echo '= t' | asciidoctor -r asciidoctor-pdf -o /dev/null - 2>/dev/null \
+		|| { echo "asciidoctor-pdf isn't installed: gem install asciidoctor-pdf"; exit 1; }
+	@mkdir -p $(BUILD)
+	cd docs && asciidoctor -r asciidoctor-pdf \
+		-r ./extensions/table-heading-widths.rb \
+		-r ./extensions/table-keep-together.rb -b pdf \
+		-o $(abspath $@) master.adoc
+
+book-pdf: $(BUILD)/master-book.pdf
+
+$(BUILD)/master-book.pdf: $(SYSOP_DOCS) $(wildcard docs/includes/*.adoc) \
+		docs/extensions/table-heading-widths.rb docs/extensions/table-keep-together.rb
+	@echo '= t' | asciidoctor -r asciidoctor-pdf -o /dev/null - 2>/dev/null \
+		|| { echo "asciidoctor-pdf isn't installed: gem install asciidoctor-pdf"; exit 1; }
+	@mkdir -p $(BUILD)
+	cd docs && asciidoctor -r asciidoctor-pdf \
+		-r ./extensions/table-heading-widths.rb \
+		-r ./extensions/table-keep-together.rb -b pdf \
+		-o $(abspath $@) master-book.adoc
 
 clean:
 	rm -rf $(BUILD)

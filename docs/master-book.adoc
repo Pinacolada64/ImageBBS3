@@ -1,11 +1,10 @@
 = Image BBS 3.0 Sysop Manual
 Ryan Sherwood <sym.rsherwood@gmail.com>; Larry Hedman <larryhedman@gmail.com>; Al DeRosa <bucko219@gmail.com>
-v0.1
+v0.2, 2026-10-14
 :experimental:
 :toc:
 :toclevels: 10
-:icon: font
-:icon-set: far
+:icons: font
 // e.g., Section 2.3, “Installation”:
 :xrefstyle: full
 // this requires using docbook but allows index entries:
@@ -24,10 +23,10 @@ the next level 2 heading will start normal page numbering
 include::preface.adoc[]
 
 [preface]
-include::typography.adoc[]
+include::whats-new.adoc[]
 
 [preface]
-include::whats-new.adoc[]
+include::typography.adoc[]
 
 // end of preface: back to arabic page numbers
 
@@ -50,6 +49,8 @@ include::new-features.adoc[]
 include::lightbar.adoc[]
 
 include::modules.adoc[]
+
+include::command-stacking.adoc[]
 
 include::22-text-editor.adoc[]
 
