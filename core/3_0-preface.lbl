@@ -30,19 +30,27 @@
 {assign:31  =31 } ' im.open_e_access
 {assign:32	=32	} ' im.m_file
 {assign:33	=33	} ' im.open_e_data
+' 10/13/2026: added 34-542 below for i.CP, i/C, sub.menus, im.emul13 and
+' i/MM.subop, which jumped to im lines not assigned here
+{assign:34	=34	} ' im.open_e_log (a$: "a", "r" or "w")
 {assign:35	=35	} ' im.open_u_config
 {assign:36  =36 } ' im.open_e_file
+{assign:37	=37	} ' im: append to e.<b$>, or create it
+{assign:38	=38	} ' im: write the user record (print#2)
 {assign:39	=39	} ' im.dump_tt_array
 {assign:40  =40 } ' im.open_s_new_user
 {assign:41  =41 } ' im.open_s_config
 {assign:42  =42 } ' im.open_s_file
 {assign:43  =43 } ' im.open_e.say
+{assign:44	=44	} ' im: pick a random e.say record
+{assign:45	=45	} ' im: display an e.say saying
 {assign:50	=50	} ' im.check_local_mode
 {assign:51  =51 } ' im.open_s_config
 
 ' TODO: move these to the 2x range
 {assign:60	=60	} ' im.getFreeDirEntry
 {assign:61	=61	} ' im.getBlocksFree
+{assign:62	=62	} ' im: read blocks free (no cached value)
 
 ' module loading
 {assign:70	=70	} ' im.prep_load_i.file
@@ -68,6 +76,7 @@
 {assign:94	=94	} ' im.msg_no
 {assign:95	=95	} ' im.are_you_sure.yes
 {assign:96	=96	} ' im.msg_yes
+{assign:97	=97	} ' im: print Yes/No from a
 
 {assign:200	=200	} '
 {assign:216	=216	} '
@@ -76,10 +85,14 @@
 {assign:289	=289	} ' input an$, fall through:
 {assign:290	=290	} ' convert special characters in an$
 {assign:300	=300	} ' im.main_prompt
+{assign:302	=302	} ' im: load i.lo (logon/idle)
 {assign:304	=304	} ' save array pointers (level 1), gosub 306, restore array pointers
 {assign:306	=306	} ' dimension Image 1.2 arrays
+{assign:308	=308	} ' im: dimension the rest of the Image 1.2 arrays
+{assign:310	=310	} ' im: command stack/history
 {assign:349	=349	} ' im.prompt_device_drive
 {assign:350	=350	} ' im.set_drive
+{assign:330	=330	} ' im: open e.macros
 {assign:304	=304	}
 {assign:370	=370	}
 {assign:375	=375	} '
@@ -109,6 +122,7 @@
 {assign:450	=450	} ' im.stack
 
 {assign:505	=505	} ' im.find_id
+{assign:542	=542	} ' im: im=1, then line 440 (sub.editor)
 {assign:563	=563	} '
 
 {assign:999	=999	} ' im.genericReturn

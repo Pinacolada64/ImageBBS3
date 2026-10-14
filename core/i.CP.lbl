@@ -1,12 +1,14 @@
+{uses:3_0-preface.lbl}
+' 10/13/2026: the preface above assigns the im lines this module jumps to
 {alpha:alt}
 	pr$="i."+"CP":&"{clear}{f6}{cyan} *IMAGE Copy-All 3.0*{f6:2} Special Thanks To Jim Butterfield!"
-	&"{f6} Mods by {blue}Wa{lt. blue}nd{cyan}er{white}er{f6}":a$="copier":gosub[28]
+	&"{f6} Mods by {blue}Wa{lt. blue}nd{cyan}er{white}er{f6}":a$="copier":gosub28
 '	&,5:v=1.2
 {:3004}
 ' 3118: close all open disk files
 	gosub{:3118}:&"{f6:2} {white}[C]{cyan}opy Files{f6} {white}[D]{cyan}irectory"
 	&"{f6} {white}[M]{cyan}ulti-Scratch{f6} {white}[S]{cyan}end Disk Command{f6} {white}[Q]{cyan}uit{f6:2}"
-	p$="Copy"+"":gosub[6]:on-(an$="C")-(an$="D")*2-(an$="S")*3 goto {:3024},{:3012},3120
+	p$="Copy"+"":gosub6:on-(an$="C")-(an$="D")*2-(an$="S")*3 goto {:3024},{:3012},3120
 	on-(an$="M")-(an$="Q"oran$="")*2goto{:3140},300:goto{:3004}
 {:3012}
 	f=8:d$="":b%=8:gosub{:3134}:ifb%>6andb%<33thenf=b%
@@ -23,12 +25,12 @@
 	f$="0:":gosub{:3136}:a=val(an$):ifa>.thenf$=mid$(str$(a),2)+":"
 	d$="Target":b%=8-(f=8):g=b%:gosub{:3134}:ifb%>6andb%<33theng=b%
 	g$="0:":gosub{:3136}:a=val(an$):ifa>.theng$=mid$(str$(a),2)+":"
-	d1%=g:d2%=val(g$):dr=.:gosub[61]:lp=1:&"{f6}Blocks Free: "+str$(a):kk=a
+	d1%=g:d2%=val(g$):dr=.:gosub61:lp=1:&"{f6}Blocks Free: "+str$(a):kk=a
 ' TODO: "Target Full!"
-	ifa<3thengosub[92]:goto{:3004}
+	ifa<3thengosub92:goto{:3004}
 ' get/set target pattern:
 	gosub{:3138}:&,15,2:ifan$=""thenan$="*"
-	t$=an$:iftr%<1then[200]
+	t$=an$:iftr%<1then200
 {:3040}
 	t=.
 {:3042}
@@ -60,7 +62,7 @@
 	ifx=6thens8=1:x9=.
 	ifs=.then{:3050}
 {:3090}
-	close1:a9$="":ift=.thengosub[92]:goto{:3004}
+	close1:a9$="":ift=.thengosub92:goto{:3004}
 ' check if devices online:
 	&"{f6}":a=f:gosub{:3132}:on a goto{:3116}:a=g:gosub{:3132}:if a then {:3116}
 {:3094}
@@ -90,8 +92,8 @@
 ' the whole reason we can't use sub.sysdos is because of print#15,c$?
 ' z$ (dos command in sub.sysdos) is used nowhere else in this module
 	&"{f6:2}Disk Command: ":gosub 289:c$=an$:a$=left$(c$,1):if a$="" then {:3004}
-	ifa$="n"ora$="s"thengosub[93]:ifa=.then{:3004}
-	close15:open15,f,15:print#15,c$:gosub[5]
+	ifa$="n"ora$="s"thengosub93:ifa=.then{:3004}
+	close15:open15,f,15:print#15,c$:gosub5
 	close15:&:&"{f6} (Hit A Key) {pound}g1":goto{:3004}
 {:3132}
 	close15:open15,a,15:poke781,15:sys65481:sys65484:close15:a=st:return
@@ -135,12 +137,12 @@
 {:3166}
 	f%=f%+1:a%(f%)=b%:tt$(f%)=f$:a%(f%)=b%:l=l+b%:goto{:3170}
 {:3168}
-	s=1:ifx=3thenf%=.:gosub[92]
+	s=1:ifx=3thenf%=.:gosub92
 {:3170}
 	on-(s=.andf%<100)goto{:3154}:close1:on-(f%=.)goto{:3004}
 	for i=1 to f%:b$=tt$(i):b%=i:&"{lt. blue}{f6}{pound}#2{pound}# {pound}%b-{pound}$b":next
-	&"{f6:2}Correct?: ":gosub[96]:on a+1 goto {:3004}:for i=1 to f%:b$=tt$(i)
-	&"{f6}Scratching {f5}{pound}$b{f5}...":print# 15,"s"+dr$+b$:gosub[5]:&
+	&"{f6:2}Correct?: ":gosub96:on a+1 goto {:3004}:for i=1 to f%:b$=tt$(i)
+	&"{f6}Scratching {f5}{pound}$b{f5}...":print# 15,"s"+dr$+b$:gosub5:&
 	next:&"{f6}":goto{:3022}
 {:3180}
 	on-(an$="S")-(an$="A")*2goto{:3112},3182:goto{:3214}

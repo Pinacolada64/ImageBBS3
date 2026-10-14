@@ -375,6 +375,8 @@
 	&"{f6}{yellow}[P]ost  [N]ext  [Q]uit: {pound}g1{pound}v7{f6}":on-(an$="P")-(an$="Q")*2goto {:3460},{:3462}:return
 {:3460}
 	tz=bn:bn=g:gosub {:3364}:bn=tz:goto {:3458}
+' 10/13/2026: label 3462 put back: 3458's Q)uit goes here
+{:3462}
 	sh=47:u$="":return
 	&,16,255:if pr=a%then return
 {:3466}
