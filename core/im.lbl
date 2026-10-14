@@ -3,6 +3,9 @@
 
 ' C64List4_04.exe im.prg -lbl -crunch -keycase -varcase -ovr -alpha:alt
 
+' 10/13/2026: {alpha:alt} was missing (only the comment above named it), so
+' every capital in a string built as $41-$5a and showed in lower case
+{alpha:alt}
 {step:2}
 {assign: 4000= 4000}
 {assign:60000=60000}
