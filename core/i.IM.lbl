@@ -1,290 +1,238 @@
-{uses:3_0-preface.lbl}
+' imported from the release disk (MASTER D1 231231.d81), "i.IM" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
 
-{step:2}
-' C64List4_04.exe i.IM.lbl -prg -crunch -alpha:alt -ovr
-' original: 8032 bytes
-'  revised: 7795 bytes
-'    delta:  237 bytes
-{:3000}
-' zz%=8
-	pr$="i."+"IM":&,52,44,3:mm=a%:&,52,45,3:gm=gmanda%:fl=.:&,18,0
-{:3002}
-	a$="menu2":gosub 28
-	if flthen return
-{:3006}
-	&,28,1:n=15:dimm%(16,n),dt$(60),ed$(60),a%(60):if tr%<1then return
-	&,16,.,34,m%(.,1),"A","","Macros Editor"
-	&,16,.,34,m%(.,2),"B","","Command Set"
-	&,16,.,34,m%(.,3),"C","","Payroll Editor"
-	&,16,.,34,m%(.,4),"D","","Logon Editor"
-	&,16,.,34,m%(.,5),"E","","Access Groups"
-	&,16,.,34,m%(.,6),"F","","File Lists"
-	&,16,.,34,m%(.,7),"G","","Function Keys"
-	&,16,.,34,m%(.,8),"H","","Lightbar/Alarms"
-	&,16,.,34,m%(.,9),"I","","Misc. Features"
-	&,16,.,34,m%(.,10),"J","","Modem Config"
-	&,16,.,34,m%(.,11),"K","","Set Time"
-	&,16,.,34,m%(.,12),"L","","System Drives"
-	&,16,.,34,m%(.,13),"M","","Netmail Config"
-{:3033}
-	&,16,.,34,m%(.,14),"N","","Base Editors"
-{:3034}
-	&,16,.,34,m%(.,15),"Q","","Quit"
-	gosub {:3348}:if tr%<1orlm=norlm=.then {:3042}
-	onlmgoto {:3204},{:3187},{:3208},{:3068},{:3189},{:3190},{:3206},{:3084},{:3128},{:3188}
-	onlm-10goto {:3282},{:3104},{:3044},{:3192}
-{:3042}
-	&,18,1:goto 300
-{:3044}
-	&,28,1:n=8:dimm%(16,n)
-	&,16,.,34,m%(.,1),"A","","Local Info"
-	&,16,.,34,m%(.,2),"B","","Modem Specs"
-	&,16,.,34,m%(.,3),"C","","Calling Hours"
-	&,16,.,34,m%(.,4),"D","","Make nm.create"
-	&,16,.,34,m%(.,5),"E","","Connections"
-	&,16,.,34,m%(.,6),"F","","Fwd. List"
-	&,16,.,34,m%(.,7),"G","","Netwall/Grf"
-	&,16,.,34,m%(.,8),"M","","Main Menu"
-{:3062}
-	n=8:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
-	a$="netmail":gosub {:3198}:fl=1:gosub {:3002}:fl=.:goto {:3062}
-	a$="netmail":gosub {:3198}:goto {:3062}
-{:3068}
-	&,28,1:n=5:dimm%(16,n),fb%(29,15),a%(60):if tr%<1then {:3006}
-	&,16,.,34,m%(.,1),"A","","Login Mods"
-	&,16,.,34,m%(.,2),"B","","Maint Mods"
-	&,16,.,34,m%(.,3),"C","","Wall Ads"
-	&,16,.,34,m%(.,4),"D","","Quicklist"
-	&,16,.,34,m%(.,5),"M","","Main Menu"
-	n=5:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
-	a$="logon":gosub {:3198}:fl=1:gosub {:3002}:fl=.:goto {:3068}
-{:3084}
-	&,28,1:n=4:zz%=8:dimam%(3,15),m%(16,n),b$(zz%*16-1),c$(60),a%(60)
-	&"{f6}Reading Checkmark Definitions...":if tr%<1then {:3006}
-	dr=1:a$="s.lightdefs,s,r":gosub 4:x=.:if e%then close2:&:goto {:3092}
-	forx=.to16*zz%-1:&,2,2:b$(x)=a$:next:close2:&"Done{f6}"
-{:3092}
-	&,16,.,34,m%(.,1),"A","","LightBar Defs"
-	&,16,.,34,m%(.,2),"B","","Alarms"
-	&,16,.,34,m%(.,3),"C","","NetMail Alarms"
-	&,16,.,34,m%(.,4),"M","","Main Menu"
-{:3100}
-	n=4:gosub {:3348}:if tr%<1orlm=norlm=.then {:3006}
-	a$="lightbar":gosub {:3198}:goto {:3100}
-{:3104}
-	&,28,1:n=7:zz%=6:dimm%(20,n)
-	a=1:a$="System":gosub {:3124}
-	a=2:a$="E-Mail":gosub {:3124}
-	a=3:a$="Etcetera":gosub {:3124}
-	a=4:a$="Directory":gosub {:3124}
-	a=5:a$="Program":gosub {:3124}
-	a=6:a$="User":gosub {:3124}
-	&,16,.,42,m%(.,7),"M","","Main Menu"
-	n=7:gosub {:3354}:if tr%<1orlm=norlm=.then {:3006}
-	gosub {:3268}:goto {:3104}
-{:3124}
-	b$=right$("   "+str$(dv%(a)),3)+","+mid$(str$(dr%(a)),2)
-	&,16,.,42,m%(.,a),chr$(192+a),"",left$(a$+" Disk:     ",15)+b$:return
-{:3128}
-	&,28,1:n=14:dimm%(22,n):gosub 33
-{:3129}
-	x=20:gosub 1:&,2,2:pt$=a$
-{:3130}
-	x=38:gosub 1:&,2,2:lk%=val(a$)
-	x=39:gosub 1:&,2,2:a%(2)=val(a$)
-	x=40:gosub 1:&,2,2:a%(3)=val(a$)
-	x=41:gosub 1:&,2,2:a%(4)=val(a$):x=42:gosub 1:&,2,2:a%(5)=val(a$)
-	x=43:gosub 1:&,2,2:mm$=a$:x=45:gosub 1:&,2,2:tz$=a$
-	x=47:gosub 1:&,2,2:bn$=a$:x=51:gosub 1:&,2,2:cc$=a$
-	x=58:gosub 1:&,2,2:nc=val(a$):close2
-	a$=bd$+"bd.data,s,r":gosub 4
-	input#2,a$,b$,po$:close2
-	restore:fori=1to15:readtt$(i):next:tt$(.)=tt$(3)
-	&,16,.,46,m%(.,1),"A","","Lt. Kernal Device: "+str$(lk%)
-	&,16,.,46,m%(.,2),"B","","Autoweed Cutoff:   "+str$(a%(2))
-	&,16,.,46,m%(.,3),"C","","Default Color:      "+tt$(a%(3))
-	&,16,.,46,m%(.,4),"D","","Printer Address:   "+str$(a%(4))
-	a$=mid$("YesNo",-3*(a%(5)<>10)+1,3)
-	&,16,.,46,m%(.,5),"E","","Printer Linefeeds:  "+a$
-	&,16,.,46,m%(.,6),"F","","Password Masks:     "+mm$
-	&,16,.,46,m%(.,7),"G","","Time Zone:          "+left$(tz$,3)
-	&,16,.,46,m%(.,8),"H","","Main Prompt:        "+left$(po$,15)
-	&,16,.,46,m%(.,9),"I","","BBS Name:           "+left$(bn$,15)
-	&,16,.,46,m%(.,10),"J","","System ID:          "+cc$
-{:3172}
-	&,16,.,46,m%(.,11),"K","","New User Credits:  "+str$(nc)
-{:3173}
-' NEW: improve Prime Time display
-	gosub {:3400}:&,16,.,46,m%(.,12),"L","","Prime Time:        "+b$
-{:3174}
-	&,16,.,46,m%(.,13),"M","","Chat Messages"
-	&,16,.,46,m%(.,14),"N","","Main Menu"
-	n=14:gosub {:3360}:a=lm:if tr%<1orlm=norlm=.then {:3006}
-	a$="misc":gosub {:3198}:goto {:3128}
-	data"White","Red","Cyan","Purple","Green","Blue","Yellow","Orange","Brown"
-	data"Light Red","Dark Gray","Medium Gray","Light Green","Light Blue"
-{:3186}
-	data"Light Gray"
-{:3187}
-	a$="ecs":gosub {:3198}:goto {:3006}
-{:3188}
-	a$="modem":gosub {:3198}:goto {:3006}
-{:3189}
-	a$="access":gosub {:3198}:goto {:3006}
-{:3190}
-	a$="filelist":gosub {:3198}:goto {:3006}
-{:3191}
-	a$="macros":gosub {:3198}:goto {:3006}
-{:3192}
-	a$="SM":goto 70
-	a$="NetSubEdit":gosub {:3198}:goto {:3044}
-{:3198}
-' 	&"{f6}Loading {pound}$a module.."
-' 	if lm$<>"IM."+a$then dr=5:gosub 3:lm$="IM."+a$:a$=dr$+"i/"+lm$:loada$,dv%
-' 	&"{f6}":goto 4000
-	if p1$="IM."+a$ then 4000
- 	&"{f6}Loading {f5}{pound}$a{f5} module...":a$="IM."+a$:gosub 72:if e%=. then 4000
- 	&:return
-{:3204}
-	lm=1:goto {:3191}
-{:3206}
-	lm=2:goto {:3191}
-{:3208}
-	dr=6:a$="u.payroll,s,r":n=.:gosub 4:if e%then {:3212}
-{:3210}
-	n=n+1:&,2,2:tt$(n)=a$:if st=.then {:3210}
-{:3212}
-	close2:cf=.
-{:3214}
-	&"{clear}{f6}{gray3}Payroll Editor{f6}{white}{pound}vj":poke 53252,38
-	if n=.then:&"{yellow}No Entries.{f6}":goto {:3222}
-	fori=1ton:a%=i:b%=val(left$(tt$(i),3)):c%=val(mid$(tt$(i),5))
-	&"{lt. green}{pound}#2{pound}# {pound}%a{blue}) {lt. green}ID{white}{pound}#0{pound}%b{pound}{back arrow}17{pound}#4{pound}# {pound}%c {lt. green}Credits{f6}":i=i+rc*n:next
-{:3222}
-	&"{white}{pound}vjA{green}dd{blue}/{white}D{green}elete{blue}/{white}E{green}dit{blue}/{white}Q{green}uit{blue}: {white}{pound}g1"
-	on-(an$="A")-2*(an$="D")-3*(an$="E")goto {:3236},3246,3254
-	&"Quit{f6}":if cf=.then {:3234}
-{:3228}
-	&"{f6}{white}Save Changes? ":gosub 96:if a=.then {:3234}
-	dr=6:a$="u.payroll":gosub 18
-	fori=1ton:print#2,tt$(i):next:close2
-{:3234}
-	goto {:3006}
-{:3236}
-	&"Add{f6:2}"
-	poke 53252,4:&"ID: {pound}i1":b%=val(an$):if b%<1orb%>urthen {:3214}
-	poke 53252,5:&"Credits: {pound}i1":c%=val(an$):if c%<1then {:3214}
-	n=n+1:tt$(n)=right$(str$(1000+b%),3)+str$(c%):cf=1
-	goto {:3214}
-	&"Delete{f6:2}"
-	&"Which #? {pound}i1":a=val(an$):if a<1ora>nthen {:3214}
-	cf=1:n=n-1:if a=n+1then {:3214}
-	fori=aton:tt$(i)=tt$(i+1):next:goto {:3214}
-	&"Edit{f6:2}"
-	&"Which #? {pound}i1":a=val(an$):if a<1ora>nthen {:3214} ' was 3938
-	b$=(left$(tt$(a),3)):c$=mid$(tt$(a),5)
-	poke 53252,4:w$=b$:p$="ID"+"":pl=1:&,1,32:if an$<>""then b$=an$
-	poke 53252,5:w$=c$:p$="Credits"+"":pl=.:&,1,32:if an$<>""then c$=an$
-	b%=val(b$):c%=val(c$)
-	tt$(a)=right$(str$(1000+b%),3)+str$(c%):cf=1:goto {:3214}
-{:3268}
-	rem
-	p$="{gray3}Device{white}"+"":w$=mid$(str$(dv%(lm)),2):&,1,32:a=val(an$)
-	if an$<>""anda<>dv%(lm)anda>6anda<32then tf=1:dv%(lm)=a
-	p$="{gray3}Drive/LU{white}"+"":w$=mid$(str$(dr%(lm)),2):&,1,32:a=val(an$)
-	if an$<>""anda<>dr%(lm)anda=>.anda<255then tf=1:dr%(lm)=a
-	if tfthen gosub33:x=lm+51:gosub 1:print#2,dv%(lm);r$;dr%(lm):close2
-	return
-{:3282}
-' TODO: move this into i.IM/clockset
-	&"{f6:2}{purple}{pound}vj{cyan}   Remote Time Editor v3.0{f6}{purple}{pound}vj{cyan}":goto {:3286}
-	a$=d1$:a=mn%:t1=a:return
-{:3286}
-	&"{f6}{pound}{back arrow}10{cyan}Current Date/Time is{f6}{pound}{back arrow}07{pound}v0{f6:3}":d$=d1$:tz=.
-{:3288}
-	p$=" Day   "+"":w$=left$(d$,1):a=1:gosub {:3328}:if a<1ora>7then {:3288}
-	dw$=mid$(str$(val(an$)),2,1)
-{:3292}
-	p$=" Month "+"":w$=mid$(d$,4,2):a=2:gosub {:3328}:if a<1ora>12then {:3292}
-	gosub {:3334}:mo$=an$
-{:3296}
-	p$=" Date  "+"":w$=mid$(d$,6,2):a=2:gosub {:3328}:if a<1ora>31then {:3296}
-	gosub {:3334}:dt$=an$
-{:3300}
-	p$=" Year  "+"":w$=mid$(d$,2,2):a=2:gosub {:3328}:if a<1ora>99then {:3300}
-	gosub {:3334}:yr$=an$
-	c$="A":e%=val(mid$(d$,8,2)):if e%>79then e%=e%-80:c$="P"
-{:3306}
-	p$=" Hour  "+"":an$=mid$(str$(e%),2):gosub {:3334}:w$=an$:a=2:gosub {:3328}:if a<1ora>12then {:3306}
-	gosub {:3326}:b=a:gosub {:3334}:hr$=an$
-{:3310}
-	p$=" Min.  "+"":w$=right$(d$,2):a=2:gosub {:3328}:if a<.ora>59then {:3310}
-	a=a-sgn(a):gosub {:3326}:c=a:mn$=an$:w$=c$
-{:3314}
-	p$=" A/P   "+"":a=1:gosub {:3328}:on-(an$<>"A"andan$<>"P")goto {:3314}:if an$<>v$then tz=1
-	if (an$="P"andb<>18)or(an$="A"andb=18)then b=bor128:gosub {:3336}
-	ontz+1goto {:3346}:gosub {:3338}:&"{cyan}{pound}{back arrow}10Setting Date/Time to{f6}{pound}{back arrow}07{$04}"+a$+"{f6:2} OK?   {lt. green}: "
-	gosub 96:ona+1goto {:3006}:gosub {:3340}:poke 56331,b:poke 56330,c:poke 56329,89
-	poke 56328,.:poke 1010,1
-	gosub 33:x=19:gosub 1:print#2,d1$:close2:goto {:3006}
-{:3326}
-	a=16*int(a/10)+a-int(a/10)*10:return
-{:3328}
-	v$=w$:p$="{cyan}"+p$+"{gray3}":poke 53252,a:pl=1:&,1,32:on-(an$="")goto {:3332}:&"{f6}"
-	a=val(an$):tz=(tzor-(a<>val(v$))):return
-{:3332}
-	&"{f6}":an$=v$:a=val(an$):return
-{:3334}
-	an$=right$("0"+mid$(str$(val(an$)),2,2),2):return
-{:3336}
-	hr$=right$("0"+mid$(str$(-80*(an$="P")+val(hr$)),2,2),2):return
-{:3338}
-	a$=dw$+yr$+mo$+dt$+hr$+mn$:return
-{:3340}
-	a=val(dw$):gosub {:3326}:poke 52935,a:a=val(mo$):gosub {:3326}:poke 52936,a
-	a=val(dt$):gosub {:3326}:poke 52937,a:a=val(yr$):gosub {:3326}:poke 52938,a
-	return
-{:3346}
-	&"{f6}No Changes Made - Aborted!{f6:2}":goto {:3006}
-' --- end block ---
-{:3348}
-	gosub {:sub.menu_header}
-	&,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
-{:3354}
-	gosub {:sub.menu_header}
-	&,16,2,42,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}":return
-{:3360}
-	gosub {:sub.menu_header}
-	&,16,2,46,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}":return
-{:sub.menu_header}
-	&"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS v3.0{pound}{back arrow}37{blue}  {f6}"
-	&"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
-	return
-{number:3400}
-{:sub.prime_time_display}
-	if p1%=0 then b$="Not Set":return
-' p1%=minutes, p2%=start, p3%=end
-' 10 p1%=0:p2%=0:p3%=0:gosub 100
-' 20 p1%=60:p2%=1:p3%=9:gosub 100
-' 40 p1%=240:p2%=1:p3%=23:gosub 100
-' 99 stop
-	b$=right$(str$(p1%),3)+", ":b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
-	if p1%<1 then p2%=.:p3%=.:b=.:d=.
-	b$=b$+mid$(str$(band15),2)+mid$("AP",(band16)/16+1,1)+"-"
-	b$=b$+mid$(str$(dand15),2)+mid$("AP",(dand16)/16+1,1)
-	return
-'100 print"Prime Time: ";
-'102 if p1%=0 then b$="Not Set":goto 150
-'110 b$=right$(str$(p1%),3)+", ":b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
-'120 if p1%<1then p2%=.:p3%=.:b=.:d=.
-'130 b$=b$+mid$(str$(band15),2)+mid$("AP",(band16)/16+1,1)+"-"
-'140 b$=b$+mid$(str$(dand15),2)+mid$("AP",(dand16)/16+1,1)
-'150 printb$:return
-' Prime Time: Not Set
-' Prime Time:  60, 1A-9A
-' Prime Time:  90, 1P-7P
-' Prime Time: 240, 1A-11P
-{crunch:off}
-	rem copr. 1994 new image 9/18/94
-	rem "i.IM (c)nissa 200519 lh"
-	rem 2021-06-26 pinacolada
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+3000 zz%=8:pr$="":lm$="":&,52,44,3:mm=a%:&,52,45,3:gm=gmand a%:fl=.:&,18,0
+3002 a$="menu2":gosub 28
+3004 if flthen return
+3006 &,28,1:n=15:dim m%(16,n),dt$(60),ed$(60),a%(60):if tr%<1 then return
+3008 &,16,.,34,m%(.,1),"A","","Macros Editor"
+3010 &,16,.,34,m%(.,2),"B","","Command Set"
+3012 &,16,.,34,m%(.,3),"C","","Payroll Editor"
+3014 &,16,.,34,m%(.,4),"D","","Logon Editor"
+3016 &,16,.,34,m%(.,5),"E","","Access Groups"
+3018 &,16,.,34,m%(.,6),"F","","File Lists"
+3020 &,16,.,34,m%(.,7),"G","","Function Keys"
+3022 &,16,.,34,m%(.,8),"H","","Lightbar/Alarms"
+3024 &,16,.,34,m%(.,9),"I","","Misc. Features"
+3026 &,16,.,34,m%(.,10),"J","","Modem Config"
+3028 &,16,.,34,m%(.,11),"K","","Set Time"
+3030 &,16,.,34,m%(.,12),"L","","System Drives"
+3032 &,16,.,34,m%(.,13),"M","","Netmail Config"
+3033 &,16,.,34,m%(.,14),"N","","Base Editors"
+3034 &,16,.,34,m%(.,15),"Q","","Quit"
+3036 gosub 3348:if tr%<1 or lm=nor lm=.then 3042
+3038 on lmgoto 3204,3187,3208,3068,3189,3190,3206,3084,3128,3188
+3040 on lm-10 goto 3282,3104,3044,3192
+3042 &,18,1:goto 300
+3044 &,28,1:n=8:dim m%(16,n)
+3046 &,16,.,34,m%(.,1),"A","","Local Info"
+3048 &,16,.,34,m%(.,2),"B","","Modem Specs"
+3050 &,16,.,34,m%(.,3),"C","","Calling Hours"
+3052 &,16,.,34,m%(.,4),"D","","Make nm.create"
+3054 &,16,.,34,m%(.,5),"E","","Connections"
+3056 &,16,.,34,m%(.,6),"F","","Fwd. List"
+3058 &,16,.,34,m%(.,7),"G","","Netwall/Grf"
+3060 &,16,.,34,m%(.,8),"H","","Quit"
+3062 n=8:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
+3064 a$="netmail":gosub 3198:fl=1:gosub 3002:fl=.:goto 3062
+3066 a$="netmail":gosub 3198:goto 3062
+3068 &,28,1:n=5:dim m%(16,n),fb%(29,15),a%(60):if tr%<1 then 3006
+3070 &,16,.,34,m%(.,1),"A","","Login Mods"
+3072 &,16,.,34,m%(.,2),"B","","Maint Mods"
+3074 &,16,.,34,m%(.,3),"C","","Wall Ads"
+3076 &,16,.,34,m%(.,4),"D","","Quicklist"
+3078 &,16,.,34,m%(.,5),"E","","Quit"
+3080 n=5:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
+3082 a$="logon":gosub 3198:fl=1:gosub 3002:fl=.:goto 3068
+3084 &,28,1:n=4:zz%=8:dim am%(3,15),m%(16,n),b$(zz%*16-1),c$(60),a%(60)
+3086 &"{f6}Reading Checkmark Definitions...":if tr%<1 then 3006
+3088 dr=1:a$="s.lightdefs,s,r":gosub 4:x=.:if e%then close 2:&:goto 3092
+3090 for x=.to 16*zz%-1:&,2,2:b$(x)=a$:next:close 2:&"Done{f6}"
+3092 &,16,.,34,m%(.,1),"A","","LightBar Defs"
+3094 &,16,.,34,m%(.,2),"B","","Alarms"
+3096 &,16,.,34,m%(.,3),"C","","NetMail Alarms"
+3098 &,16,.,34,m%(.,4),"D","","Quit"
+3100 n=4:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
+3102 a$="lightbar":gosub 3198:goto 3100
+3104 &,28,1:n=7:zz%=6:dim m%(20,n)
+3106 a=1:a$="System":gosub 3124
+3108 a=2:a$="E-Mail":gosub 3124
+3110 a=3:a$="Etcetera":gosub 3124
+3112 a=4:a$="Directory":gosub 3124
+3114 a=5:a$="Program":gosub 3124
+3116 a=6:a$="User":gosub 3124
+3118 &,16,.,42,m%(.,7),"G","","Quit"
+3120 n=7:gosub 3354:if tr%<1 or lm=nor lm=.then 3006
+3122 gosub 3268:goto 3104
+3124 b$=right$("   "+str$(dv%(a)),3)+","+mid$(str$(dr%(a)),2)
+3126 &,16,.,42,m%(.,a),chr$(192+a),"",left$(a$+" Disk:     ",15)+b$:return
+3128 &,28,1:n=14:dim m%(22,n):gosub 33
+3129 x=20:gosub 1:&,2,2:pt$=a$
+3130 x=38:gosub 1:&,2,2:lk%=val(a$)
+3132 x=39:gosub 1:&,2,2:a%(2)=val(a$)
+3134 x=40:gosub 1:&,2,2:a%(3)=val(a$)
+3136 x=41:gosub 1:&,2,2:a%(4)=val(a$):x=42:gosub 1:&,2,2:a%(5)=val(a$)
+3138 x=43:gosub 1:&,2,2:mm$=a$:x=45:gosub 1:&,2,2:tz$=a$
+3140 x=47:gosub 1:&,2,2:bn$=a$:x=51:gosub 1:&,2,2:cc$=a$
+3142 x=58:gosub 1:&,2,2:nc=val(a$):close 2
+3144 a$=bd$+"bd.data,s,r":gosub 4
+3146 input# 2,a$,b$,po$:close 2
+3148 restore:for i=1 to 15:read tt$(i):next:tt$(.)=tt$(3)
+3150 &,16,.,46,m%(.,1),"A","","Lt. Kernal Device: "+str$(lk%)
+3152 &,16,.,46,m%(.,2),"B","","Autoweed Cutoff:   "+str$(a%(2))
+3154 &,16,.,46,m%(.,3),"C","","Default Color:      "+tt$(a%(3))
+3156 &,16,.,46,m%(.,4),"D","","Printer Address:   "+str$(a%(4))
+3158 a$=mid$("YesNo",-3*(a%(5)<>10)+1,3)
+3160 &,16,.,46,m%(.,5),"E","","Printer Linefeeds:  "+a$
+3162 &,16,.,46,m%(.,6),"F","","Password Masks:     "+mm$
+3164 &,16,.,46,m%(.,7),"G","","Time Zone:          "+left$(tz$,3):a$=po$
+3166 &,16,.,46,m%(.,8),"H","","Main Prompt:        "+left$(po$,15)
+3168 &,16,.,46,m%(.,9),"I","","BBS Name:           "+left$(bn$,15)
+3170 &,16,.,46,m%(.,10),"J","","System ID           "+cc$
+3172 &,16,.,46,m%(.,11),"K","","New User Credits:  "+str$(nc)
+3173 &,16,.,46,m%(.,12),"L","","Prime Time         "+pt$
+3174 &,16,.,46,m%(.,13),"M","","Chat Messages"
+3176 &,16,.,46,m%(.,14),"N","","Quit"
+3178 n=14:gosub 3360:a=lm:if tr%<1 or lm=nor lm=.then 3006
+3180 a$="misc":gosub 3198:goto 3128
+3182 data "White","Red","Cyan","Purple","Green","Blue","Yellow","Orange","Brown"
+3184 data "Light Red","Dark Gray","Medium Gray","Light Green","Light Blue"
+3186 data "Light Gray"
+3187 a$="ecs":gosub 3198:goto 3006
+3188 a$="modem":gosub 3198:goto 3006
+3189 a$="access":gosub 3198:goto 3006
+3190 a$="filelist":gosub 3198:goto 3006
+3191 a$="macros":gosub 3198:goto 3006
+3192 a$="SM":goto 70
+3194 a$="NetSubEdit":gosub 3198:goto 3044
+3198 &"{f6}Loading {pound}$a module.."
+3200 if lm$<>"IM."+a$then dr=5:gosub 3:lm$="IM."+a$:a$=dr$+"i/"+lm$:load a$,dv%
+3202 &"{f6}":goto 4000
+3204 lm=1:goto 3191
+3206 lm=2:goto 3191
+3208 dr=6:a$="u.payroll,s,r":n=.:gosub 4:if e%then 3212
+3210 n=n+1:&,2,2:tt$(n)=a$:if st=.then 3210
+3212 close 2:cf=.
+3214 &"{clear}{f6}{gray3}Payroll Editor{f6}{white}{pound}vj":poke 53252,38
+3216 if n=.then:&"{yellow}No Entries.{f6}":goto 3222
+3218 for i=1 to n:a%=i:b%=val(left$(tt$(i),3)):c%=val(mid$(tt$(i),5))
+3220 &"{lt. green}{pound}#2{pound}# {pound}%a{blue}) {lt. green}ID{white}{pound}#0{pound}%b{pound}{back arrow}17{pound}#4{pound}# {pound}%c {lt. green}Credits{f6}":i=i+rc*n:next
+3222 &"{white}{pound}vjA{green}dd{blue}/{white}D{green}elete{blue}/{white}E{green}dit{blue}/{white}Q{green}uit{blue}: {white}{pound}g1"
+3224 on-(an$="A")-2*(an$="D")-3*(an$="E") goto 3236,3246,3254
+3226 &"Quit{f6}":if cf=.then 3234
+3228 &"{f6}{white}Save Changes? ":gosub 96:if a=.then 3234
+3230 dr=6:a$="u.payroll":gosub 18
+3232 for i=1 to n:print# 2,tt$(i):next:close 2
+3234 goto 3006
+3236 &"Add{f6:2}"
+3238 poke 53252,4:&"ID: {pound}i1":b%=val(an$):if b%<1 or b%>urthen 3214
+3240 poke 53252,5:&"Credits: {pound}i1":c%=val(an$):if c%<1 then 3214
+3242 n=n+1:tt$(n)=right$(str$(1000+b%),3)+str$(c%):cf=1
+3244 goto 3214
+3246 &"Delete{f6:2}"
+3248 &"Which #? {pound}i1":a=val(an$):if a<1 or a>nthen 3214
+3250 cf=1:n=n-1:if a=n+1 then 3214
+3252 for i=ato n:tt$(i)=tt$(i+1):next:goto 3214
+3254 &"Edit{f6:2}"
+' 10/13/2026: an entry number out of range went to 3938, which doesn't
+' exist (?undef'd statement error); back to the list (3214), as Add and
+' Delete do (also fixed in i.IM-2021.lbl)
+'3256 &"Which #? {pound}i1":a=val(an$):if a<1 or a>nthen 3938
+3256 &"Which #? {pound}i1":a=val(an$):if a<1 or a>nthen 3214
+3258 b$=(left$(tt$(a),3)):c$=mid$(tt$(a),5)
+3260 poke 53252,4:w$=b$:p$="ID":pl=1:&,1,32:if an$<>"" then b$=an$
+3262 poke 53252,5:w$=c$:p$="Credits":pl=.:&,1,32:if an$<>"" then c$=an$
+3264 b%=val(b$):c%=val(c$)
+3266 tt$(a)=right$(str$(1000+b%),3)+str$(c%):cf=1:goto 3214
+3268 rem
+3270 p$="{gray3}Device{white}":w$=mid$(str$(dv%(lm)),2):&,1,32:a=val(an$)
+3272 if an$<>"" and a<>dv%(lm) and a>6 and a<32 then tf=1:dv%(lm)=a
+3274 p$="{gray3}Drive/LU{white}":w$=mid$(str$(dr%(lm)),2):&,1,32:a=val(an$)
+3276 if an$<>"" and a<>dr%(lm) and a=>.and a<255 then tf=1:dr%(lm)=a
+3278 if tfthen gosub 33:x=lm+51:gosub 1:print# 2,dv%(lm);r$;dr%(lm):close 2
+3280 return
+' 10/13/2026: K) Set Time is a menu, using sub.clocks: set the clock with the
+' saved method (e.data record 37, sub.clocks im=0), or choose another method
+' and save it (im=8). The release's own Remote Time Editor here (3282-3346)
+' only set the clock by hand, and waited for ever; sub.clocks' manual method
+' gives up after 5 minutes without an answer.
+' B (Set Clock Manually) only when the saved method isn't manual already;
+' after setting it, sub.clocks offers to write the time to a CMD or DS12C887
+' clock (so it's right at the next boot)
+3282 &,28,1:gosub 3336:n=3-(q1>1):dim m%(22,n):i=2
+3283 &,16,.,46,m%(.,1),"A","","Set Clock Using "+b$
+3284 if q1>1 then:&,16,.,46,m%(.,2),"B","","Set Clock Manually":i=3
+3285 &,16,.,46,m%(.,i),chr$(192+i),"","Choose Different Clock Source":&,16,.,46,m%(.,n),"M","","Main Menu"
+3286 gosub 3360:if tr%<1 or lm=n or lm=. then 3006
+' lm: 1 saved method (im=0), 2 manual (im=1), 3 choose. A 2-second pause, so
+' the result shows before the menu comes back
+3287 if q1=1 and lm>1 then lm=lm+1
+3288 on lm-2 goto 3289:im=lm-1:a$="clocks":gosub 74:&,22,20:goto 3282
+' B: the menu order is sub.clocks' method number (ck)
+3289 &,28,1:n=8:dim m%(22,n)
+3290 &,16,.,46,m%(.,1),"A","","Manual Entry"
+3291 &,16,.,46,m%(.,2),"B","","CMD Device's Clock"
+3292 &,16,.,46,m%(.,3),"C","","Lt. Kernal's Clock"
+3293 &,16,.,46,m%(.,4),"D","","DS12C887 Clock Chip"
+3294 &,16,.,46,m%(.,5),"E","","Ultimate's Clock"
+3295 &,16,.,46,m%(.,6),"F","","TeensyROM (Time Only)"
+3296 &,16,.,46,m%(.,7),"G","","Last AutoMaint Date"
+3297 &,16,.,46,m%(.,8),"M","","Cancel"
+3298 n=8:gosub 3360:if tr%<1 or lm=n or lm=. then 3282
+' ck=0 (set by 3302-3315) means the setting typed was out of range
+3299 ck=lm:cp=.:on lm-1 gosub 3302,3306,3310:if tr%<1 or ck=. then 3282
+3300 im=8:a$="clocks":gosub 74:goto 3282
+' CMD device: its device number, default the saved one or 8
+3302 v=8:if q1=2 then v=q2
+3303 p$="Device (8-30)"+"":w$=mid$(str$(v),2):poke 53252,2:pl=1:&,1,32:cp=val(an$):if an$="" then cp=v
+3304 if cp<8 or cp>30 then ck=.
+3305 return
+' Lt. Kernal: port 1 or 2
+3306 v=1:if q1=3 then v=q2
+3307 p$="Port (1-2)"+"":w$=mid$(str$(v),2):poke 53252,1:pl=1:&,1,32:cp=val(an$):if an$="" then cp=v
+3308 if cp<1 or cp>2 then ck=.
+3309 return
+' DS12C887: base address, typed in hex ($ optional), default $d500
+3310 v=54528:if q1=4 then v=q2
+3311 q5=v:gosub 3334:p$="Base Address (hex)"+"":w$=h$:poke 53252,5:pl=1:&,1,32:cp=v:if an$="" then return
+3312 if left$(an$,1)="$" then an$=mid$(an$,2)
+' a typed letter is $41-$46 or $c1-$c6: "and 127" makes both $41-$46
+3313 cp=.:for i=1 to len(an$):c=asc(mid$(an$,i,1)) and 127:c=c-48+7*(c>64):cp=cp*16+c:if c<. or c>15 then ck=.
+3314 next:if cp<1 or len(an$)>4 then ck=.
+3315 return
+' q5 -> h$, 4 hex digits. Dividing by 16 is exact; 16^n (and "and", above
+' 32767) wouldn't be
+3334 h$="":q4=4096:for i=1 to 4:q3=int(q5/q4):q5=q5-q3*q4:q4=q4/16:h$=h$+mid$("0123456789ABCDEF",q3+1,1):next:return
+' record 37 -> q1 (method), q2 (its setting) and b$ (its name), as sub.clocks
+' reads it (sub.from_record_37); see sub.clocks for the record's format
+3336 gosub 33:x=37:gosub 1:&,2,2:close 2:v=val(a$):q1=1:q2=.
+3337 if v=2 or v=3 then q1=3:q2=v-1
+3338 if v>4 then q1=2:q2=v
+3339 if v=4 then c$=mid$(a$,3,1):q1=4-(c$="u")-2*(c$="t")-3*(c$="a"):q2=val(mid$(a$,5)):if q1=4 and q2=. then q2=54528
+3340 b$="Manual Entry":if q1=2 then b$="CMD Device"+str$(q2)
+3341 if q1=3 then b$="Lt. Kernal Port"+str$(q2)
+3342 if q1=4 then q5=q2:gosub 3334:b$="DS12C887 at $"+h$
+3343 if q1=5 then b$="Ultimate"
+3344 if q1=6 then b$="TeensyROM"
+3345 if q1=7 then b$="Last AutoMaint Date"
+3346 return
+3348 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3350 &"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3352 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}":return
+3354 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3356 &"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3358 &,16,2,42,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}":return
+3360 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3362 &"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3364 &,16,2,46,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}":return
+' copyright line: plain text, not a rem; -crunch would take out its spaces, so
+' they're written as {$20}
+3366 copr.{$20}1994{$20}new{$20}image{$20}9/18/94
+3368 rem:"i.IM (c)nissa 200519 lh"
