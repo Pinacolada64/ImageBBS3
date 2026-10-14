@@ -4,6 +4,7 @@
 
 === 2026-10-14
 
+* `im` routines: line 300 goes back to `GF` when `pf` is set (a module run from a General Files library).
 * `im` routines: lines 79 and 100 don't read the DOS status after loading a module; line 100 adds the `sub.` prefix, not `i.`.
 
 === 2026-10-13

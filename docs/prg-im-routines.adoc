@@ -740,6 +740,9 @@ NOTE: If an ECS command is detected, the routine at line 304 is called.  If noth
 | Main prompt entry routine.
 `i.main` is loaded at line 3000, and executed.
 
+If `pf` isn't `0`, `i.GF` is loaded instead (line 300), and the user is back in the General Files library they ran a module from: `pf` is the library's depth (1 for `GF.Main`), and `pf$(pf)` its name.
+Otherwise line 301 loads `i.main`.
+
 | 302
 |
 | Loads `i.lo` file and executes with `mm` set to `0` (init).

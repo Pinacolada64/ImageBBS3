@@ -320,7 +320,12 @@
 	&,15,2:return
 {:300}
 ' FIXME: much of these two lines repeats, combine somehow?
-	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:a$="main":goto {:70}
+' 10/14/2026: back to GF if pf is set, as the release does: "Subdirectory level
+' is remembered and returned to after executing a module"; this went to main
+'	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:a$="main":goto {:70}
+	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:if pf then a$="GF":goto {:70}
+{:301}
+	a$="main":goto {:70}
 {:302}
 	&,28,1:&,52,$30,3:on a% gosub {:309}:mm=.:a$="lo":goto {:70}
 {:304}
@@ -487,6 +492,9 @@
 	im=1:goto {:439}
 {:528}
 	im=1:goto {:438}
+' 10/14/2026: 529 put back, as in the release (BA calls it): sub.bar, im=3
+{:529}
+	im=3:goto {:439}
 {:533}
 	im=13:goto {:445}
 {:534}
@@ -616,7 +624,9 @@
 	dv%=peek(828):z%=dv%:dr$="0"+":":bd$=dr$:sr=2:pr=-1:f3=1:sys 49155:&,53
 '	d1$="2"+"2405218146":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
 ' 10/13/2026: im revision date: Tue Oct 13, 2026 7:05 PM
-	d1$="3"+"2610138705":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
+'	d1$="3"+"2610138705":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
+' 10/14/2026: im revision date: Wed Oct 14, 2026 12:08 PM (92: 12 PM)
+	d1$="4"+"2610149208":am$=d1$:an$=d1$:&,15:&,69,1,1,"im Revision: "+an$+"M",3
 ' not needed anymore, 12/2020 ML fixes Y2K display
 '	poke $16ec,$32:poke $16ed,$30
 	a$="NTSC":if peek(678) then a$="PAL"
@@ -820,13 +830,20 @@
 ' FIXME: 6/23/2021
 ' &,52,4,3 (Console login); &,52,58,3 (Carrier detect)
 '	if ac%<>16 then:&,52,4,3:on a% goto {:4050}:if (peek(2033) and 1)=. then {:4050}
-	if ac%<>16 then:&,52,4,3:a=a%:&,52,58,3:if a+a%=1 then {:4050}
+'	if ac%<>16 then:&,52,4,3:a=a%:&,52,58,3:if a+a%=1 then {:4050}
+' 10/14/2026: back to the release's line. Flag 58 is the Invert DCD setting,
+' not carrier detect; peek(2033) and 1 is the "carrier lost" latch (carrst),
+' which already follows Invert DCD. So: Loc, or a remote caller still
+' connected -> 4050 (error mail, recover); carrier lost -> log off (4046)
+	if ac%<>16 then:&,52,4,3:on a% goto {:4050}:if (peek(2033) and 1)=. then {:4050}
 	f1=2:goto {:302}
 	a$="FATAL ERROR!!":gosub {:51}:sys 64789:print"{clear}{switchdisable}{white}{lowercase}{down:2}"a$:end
 {:4050}
 ' TODO: Loc mode check just completed, 4050 not called anywhere else, so remove
-'	&,52,4,3:if a%=1 or i% or id=1 then {:4068}
-	if i% or id=1 then {:4068}
+'	if i% or id=1 then {:4068}
+' 10/14/2026: the Loc check is back: 4044 comes here for Loc or for a remote
+' caller still connected, and only the remote one gets the error mail
+	&,52,4,3:if a%=1 or i% or id=1 then {:4068}
 	gosub {:4092}:kk=.:a$="s.errmail,s,r":dr=1:gosub {:4}:if e% then close 2:goto {:4068}
 {:4054}
 	kk=kk+1:&,2,2:s=(64andst):tt$(kk)=a$:if s=. then {:4054}

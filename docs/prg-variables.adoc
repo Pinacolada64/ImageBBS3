@@ -444,9 +444,10 @@ General-purpose work variable.
 (Also MCI variable `&#163;vj`.)
 
 | `am$`
+| BBS
 |
-|
-|
+| Date and time of the last AutoMaint run, as an 11-digit date (`e.data` record 35).
+At boot, `im` also uses it as the date the daily log (`e.log`) last started (`lt$`).
 
 | `an$`
 | BBS
