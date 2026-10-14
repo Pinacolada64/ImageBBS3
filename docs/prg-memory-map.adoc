@@ -29,6 +29,7 @@ While running:
 [%header]
 |===
 | Memory range | Purpose
+| `$02A7`-`$02F4` | `fkeybuf`: the text of a function key being typed (kbd:[Ctrl]/kbd:[C=] + function key): an index, up to 75 characters, and a 0. `++ post` uses `$02FD`-`$02FF`
 | `$0800`-`$0AFF` | RS232 driver
 | `$0B00`-`$0B7F` | RS232 input buffer
 | `$0B80`-`$0BFF` | RS232 output buffer

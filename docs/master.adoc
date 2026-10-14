@@ -39,3 +39,6 @@ include::22-text-editor.adoc[]
 
 [appendix]
 include::appendix-lightbar-quick-reference.adoc[]
+
+[appendix]
+include::im-configuration.adoc[]

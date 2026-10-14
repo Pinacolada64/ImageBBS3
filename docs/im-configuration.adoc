@@ -1,6 +1,7 @@
 :experimental:
 :icons: font
 
+[appendix]
 == The `IM` Configuration Editor [[im-configuration]]
 
 `IM` is the sysop's configuration editor.
@@ -57,7 +58,48 @@ Each menu option loads its own module (`i/IM.access`, `i/IM.modem`, and so on), 
 
 === Function Keys [[im-function-keys]]
 
-#TODO#
+The function keys can each hold a line of text, up to 75 characters, which the BBS types for you when you press the key with kbd:[Ctrl] or kbd:[C=] at the console.
+Use them for things you type often: your password, a command you use a lot, a stock reply.
+
+.Function Key Shortcuts
+[%autowidth]
+[%header]
+|===
+| Key | Types | | Key | Types
+
+| kbd:[Ctrl+f1] | F1 | | kbd:[C=+f1] | F2
+| kbd:[Ctrl+f3] | F3 | | kbd:[C=+f3] | F4
+| kbd:[Ctrl+f5] | F5 | | kbd:[C=+f5] | F6
+| kbd:[Ctrl+f7] | F7 | | kbd:[C=+f7] | F8
+|===
+
+They work wherever the BBS is reading the C64's keyboard: at a prompt, in the text editor, and so on.
+They're for the sysop at the console: a caller's function keys don't use them.
+
+==== Editing the Keys
+
+Choose kbd:[G] (Function Keys) from the `IM` main menu.
+The Function Key Editor lists F1 to F8, showing the first 35 characters of each.
+
+. Type the number of a key, kbd:[1]-kbd:[8], to edit it.
+Its text is shown for you to change; kbd:[Return] keeps it.
++
+End the text with kbd:[_] (back arrow, kbd:[←]) to have the key press kbd:[Return] after it.
+Only a kbd:[_] at the very end does this.
+. Press any other key to finish.
+. If you changed anything, `IM` asks:
+** _Save Changes?_: kbd:[Y] saves the keys to `e.fkeys`, so they're there the next time the BBS starts.
+** _Activate?_: kbd:[Y] puts them to use straight away.
+
+A key can't be emptied from the editor: kbd:[Return] on an empty line leaves it as it was.
+
+==== `e.fkeys`
+
+The keys are kept in `e.fkeys`, a SEQ file on the Etcetera drive: eight lines, F1 to F8.
+The BBS reads it when it starts (the "`Enabling Function Keys...`" step); without it, the keys are empty.
+
+NOTE: Before October 2026, pressing kbd:[Ctrl] or kbd:[C=] with a function key could lock up the BBS.
+The ML read the key's text from the wrong address, and could copy hundreds of bytes over the C64's system vectors.
 
 === Lightbar/Alarms [[im-lightbar]]
 
@@ -343,7 +385,56 @@ On multi-port systems, `e.modem` _n_ is the table for port _n_.
 
 === Set Time [[im-set-time]]
 
-#TODO#
+Sets the BBS's clock.
+The BBS can read the date and time from a clock (a CMD device's real-time clock, a DS12C887 chip, an Ultimate, ...), or you can type them; `IM` remembers which, as the _clock source_.
+
+.Set Time Menu
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | _Set Clock Using_ the clock source, for example "`Set Clock Using CMD Device 10`": sets the BBS clock from it now.
+If the source is Manual Entry, it asks you for the date and time.
+| kbd:[B] | _Set Clock Manually_: asks you for the date and time (only shown when the clock source isn't Manual Entry already).
+| kbd:[C] | _Choose Different Clock Source_ (below)
+| kbd:[M] | _Main Menu_
+|===
+
+When the clock has been set, the new date and time show for two seconds before the menu comes back.
+
+==== Setting the Clock by Hand
+
+You're asked for the year (00-99), month, date, hour (1-12), minute and A or P, each with the current setting shown: press kbd:[Return] to keep it.
+The weekday is worked out from the date.
+Then `IM` shows the new date and time and asks _Set the clock to ...?_: kbd:[N] starts again.
+
+If a question isn't answered in 5 minutes, it gives up and leaves the clock as it was.
+
+If the clock source is a CMD device or a DS12C887, you're then asked _Also set the ... clock?_: kbd:[Y] sets that clock to the new time too, so it's right the next time the BBS starts.
+
+==== Choosing a Clock Source
+
+[%autowidth]
+[%header]
+|===
+| Source | Asks for | Notes
+
+| Manual Entry | | You type the date and time.
+| CMD Device's Clock | Device (8-30) | A CMD HD, FD or RAMLink with a real-time clock.
+| Lt. Kernal's Clock | Port (1-2) |
+| DS12C887 Clock Chip | Base Address (hex) | For example `D500`. In VICE: `x64sc -ds12c887rtc -ds12c887rtcbase 0xd500`.
+| Ultimate's Clock | | A 1541 Ultimate or Ultimate 64, with its Command Interface turned on.
+| TeensyROM (Time Only) | | The time from the TeensyROM; the date is the last one the BBS saved.
+| Last AutoMaint Date | | The date and time of the last AutoMaint run.
+|===
+
+The choice is saved in `e.data` (record 37), and _Set Clock Using_ then uses it.
+
+==== From the Idle Screen
+
+Option kbd:[1], Set Time, on the idle screen does the same as kbd:[A]: it sets the clock from the clock source, or asks for the date and time if that's Manual Entry.
+If nobody answers within 5 minutes, the idle screen comes back with the clock unchanged.
 
 === System Drives [[im-system-drives]]
 
