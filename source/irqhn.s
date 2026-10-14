@@ -829,22 +829,33 @@ fkey:
 		bne fkey1
 		inx
 fkey1:
-		txa
-		clc
-		adc #40
-		asl
-		tay
+// 10/13/2026: Ctrl/C= + f1-f8 could lock up the BBS. vars holds each ML
+// variable's offset from the start of BASIC's variables ($2d/$2e), and this
+// used it as an address, so it read a "length" and pointer from near $0000
+// and copied up to 255 bytes into fkeybuf (32 bytes at $2a7): past $2ff that
+// overwrote the vectors at $300, the IRQ vector among them. Now gvarptr finds
+// the variable, as everywhere else, and the length is cut to 75, the most
+// i/IM.macros' Function Key Editor takes: fkeybuf then runs on into emptym0
+// (unused) up to 756; ++ post uses 765-767. (Same size as before, with a nop,
+// so nothing after it moves.)
 		lda 3
 		pha
 		lda 4
 		pha
-		lda vars,y
-		sta 3
-		lda vars+1,y
-		sta 4
+		txa
+		clc
+		adc #40			// f1$-f8$ are ML variables 40-47
+		tax
+		jsr gvarptr		// x/y: the string's descriptor (length, pointer)
+		stx 3
+		sty 4
 		ldy #0
 		lda (3),y
-		sta fkeybuf
+		cmp #76
+		bcc fkey1a
+		lda #75			// fkeybuf: index, 75 characters, 0
+fkey1a:
+		pha
 		iny
 		lda (3),y
 		tax
@@ -852,9 +863,10 @@ fkey1:
 		lda (3),y
 		sta 4
 		stx 3
-		ldy #0
-		ldx fkeybuf
+		pla
+		tax
 		beq fkey3
+		ldy #0
 fkey2:
 		lda (3),y
 		sta fkeybuf+1,y
@@ -870,6 +882,7 @@ fkey3:
 		sta 4
 		pla
 		sta 3
+		nop
 fkey4:
 		rts
 

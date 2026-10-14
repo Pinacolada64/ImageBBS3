@@ -141,7 +141,7 @@
 .label adisp=$0400+880
 .label acolr=$d800+880
 
-.label fkeybuf = 679 //32
+.label fkeybuf = 679 //32; with emptym0, up to 756 (fkey: up to 75 characters)
 .label emptym0 = 711 //57
 
 .label cassbuff = 828
