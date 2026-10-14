@@ -157,7 +157,12 @@
 3306 if mm=0 then 3314
 3308 gosub 3350:on-(tr%<1) goto 3202:on-(a$="R") goto 3304:on-(a$="Q") goto 3200
 3312 cx=a%:rk=2:gosub 4000:on tzgosub 3150:on rsgoto 3200:goto 3306
-3314 im=6:gosub 429:on-(tr%<1) goto 3235:im=2:gosub 429:on f4goto 3233:on rsgoto 3304:goto 3306
+' 10/14/2026: in text mode, an answer that isn't a BBS command (rs=0) goes to
+' i/GF-maint's handler (4100), as 3312 does in Graphic Menu mode; it went
+' back to the prompt (3306), so A, E, K and Z did nothing
+'3314 im=6:gosub 429:on-(tr%<1) goto 3235:im=2:gosub 429:on f4goto 3233:on rsgoto 3304:goto 3306
+3314 im=6:gosub 429:on-(tr%<1) goto 3235:im=2:gosub 429:on f4goto 3233:on rsgoto 3304
+3315 rk=2:gosub 4000:on tz gosub 3150:on rs goto 3200:goto 3304
 3350 &,52,$22,3:m%(0,0)=0:m%(1,0)=-1:m%(2,0)=-1:m%(3,0)=asc("R")
 3352 m%(1,1)=n*256+2:m%(1,n)=(n-1)*256+1
 3354 &,70,cx,n+1:&,70,0,mp%-1:a$=mid$(str$(a%),2)
@@ -214,7 +219,13 @@
 3564 &"{right:3}{rvrs on} Press any key to continue     {rvrs off} {f6}"
 3566 &"{right:3}{rvrs on}{pound}{back arrow}34{rvrs off} {f6}"
 3568 &"{right:4}{pound}{back arrow}35{f6}":fd=3:return
-3570 d2$=mid$(p$,4):if left$(p$,3)="(M)" then d2$=mid$(p$,8)
-' 3572: &,60,0: the short title (d2$, 10 bytes) into the header, then save
-3572 &,60,0,10,s%(15,0),d2$:goto 3074
+' 10/14/2026: store the short title and save the library (3074 scratches and
+' rewrites d.<library>) only when the title has changed: this saved it every
+' time the header was shown, at every prompt. gd$: the title 3008 just read
+'3570 d2$=mid$(p$,4):if left$(p$,3)="(M)" then d2$=mid$(p$,8)
+'3572 &,60,0,10,s%(15,0),d2$:goto 3074
+3570 gd$=d2$:d2$=mid$(p$,4):if left$(p$,3)="(M)" then d2$=mid$(p$,8)
+3572 if left$(gd$,10)=left$(d2$,10) then return
+' 3574: &,60,0: the short title (d2$, 10 bytes) into the header, then save
+3574 &,60,0,10,s%(15,0),d2$:goto 3074
 3600 rem:"i.GF (c)nissa 230526 lh"

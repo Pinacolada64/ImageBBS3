@@ -1,0 +1,66 @@
+' imported from the release disk (MASTER D1 231231.d81), "sub.local" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+60000 on imgoto 60002,60006,60008,60012,60018,60020,60028,60044,60092
+60002 &"{f6:2}#Credits?: {pound}i1":cr=cr+int(val(left$(an$,6)))
+60004 b$=str$(cr):&"{f6}Now:{pound}$b Credits{f6}":return
+60006 dr=1:a$="s.menu 4":goto 13
+60008 gosub 83:&,40
+60010 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+60012 gosub 350:on agoto 60082:&"{f6:2}Filename?: ":gosub 289:if an$="" then return
+60014 a$=an$+",s,r":gosub 4:if e%then:&:return
+60016 &,3,2:s=st:on-(rc+s=.) goto 60016:goto 60084
+60018 gosub 350:on agoto 60082:gosub 62:a%=dv%:b$=dr$:&"{f6:2}{pound}%a:{pound}$b":&str$(a):return
+60020 a$="read":gosub 28:if e%then return
+60022 gosub 350:on agoto 60082:poke 53252,16:&"{f6:2}Filename: ":gosub 289:if an$="" then return
+60024 a$=an$+",p,r":gosub 4:if e%then:&:close 2:return
+60026 &,16,nl,ll%:close 2:return
+60028 if zzthen 60038
+60030 a$="a":b$="zz log":gosub 36:if e%then a$="w":gosub 36
+' 10/14/2026: no &,15: it converts an$, not hr$, so it turned the command just
+' typed (ZZ) into a broken date; {$04} below formats hr$ itself
+'60032 hr$=d1$:&,15
+60032 hr$=d1$
+60034 print# 2,"{blue}{pound}vj{white} "+na$+"{yellow} Used Local Maint {pound}{back arrow}39 On {white}{$04}"+hr$
+60036 close 2
+' 10/14/2026: at the console, say "Local Mode: On/Off" too, as 60040 does for a
+' remote sysop; both keep an$ (zq$), which 60086 changes
+'60038 &,52,4,3:if a%then zz=1-zz:&,52,5,zz:return
+'60040 a=3:gosub 11:if athen a=zz:b$="Local":gosub 60086:zz=a:&,52,5,zz:return
+60038 zq$=an$:&,52,4,3:if a%then a=zz:b$="Local":gosub 60086:zz=a:&,52,5,zz:an$=zq$:return
+60040 a=3:gosub 11:if athen a=zz:b$="Local":gosub 60086:zz=a:&,52,5,zz:an$=zq$:return
+60042 rs=.:return
+60044 if tt$="" then return
+60046 an$=mid$(tt$,5):&,15,6,94:b$=an$:an$=a$
+60048 if left$(tt$,1)="!" then b$=mid$(tt$,2,3)+b$
+60050 if b$<>"" then 60058
+60052 c$=left$("m."+an$,15):gosub 60076:if e%then close 2:&:return
+60054 an$=right$(str$(id+10000),4)+na$
+60056 print# 2,an$r$id:goto 60074
+60058 dr=2:a$="nm.config":gosub 4
+60060 &,2,2:x=val(a$)+1:&,2,2:&,2,2:&,2,2:&,2,2:close 2:if x<2 then return
+60062 d$="":if len(a$)=3 then d$="{^}"+a$
+60064 dr=2:a$="nm.nodes":gosub 4
+60066 gosub 1:&,2,2:close 2:if len(a$)<>3 then return
+60068 n$=a$:a$=left$(b$,3):b$=mid$(b$,4):if len(b$)=3 then a$=a$+"-"+b$
+60070 c$="nm.E."+a$+"/"+n$:gosub 60076:if e%then close 2:&:return
+60072 print# 2,tt$r$"!" n$na$d$r$0
+60074 print# 2,d1$r$tt$(0):&,14,2,kk:print# 2,"{^}":close 2:return
+60076 dr=2:a$=c$+",s,w":gosub 4:if e%then a$=c$+",s,a":gosub 4
+60078 return
+60080 rem:subroutines
+60082 x=6:goto 390:rem 1995
+60084 poke 144,sand 255:a=rc:gosub 12:rc=a:return:rem:1032
+60086 a=1-a:an$=mid$("ffn",a*2+1,2):&"{f6}{pound}$b Mode: O{pound}v7{f6}":return:rem:1870
+60088 a=val(mid$(uf$,b,1)):gosub 60086:uf$=left$(uf$,b-1)+chr$(a+48)+mid$(uf$,b+1)
+60090 return:rem:1871
+60092 gosub 350:on agoto 60022:&"{f6}Pattern: ":gosub 289
+60094 close 1:open 1,dv%,.,"$"+dr$+an$:&"{f6}":&,8,1:close 1:return:rem:1089
+60096 rem:"sub.local (c)nissa 211211 lh

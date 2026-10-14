@@ -130,3 +130,7 @@ You can find a more complete breakdown of what most individual modules do in the
 ////
 
 You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer`'s Reference Guide_.
+
+=== From General Files
+
+A General Files library can list modules too, so callers can run them from its menu; see <<gf-modules>>.

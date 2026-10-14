@@ -1,0 +1,134 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/GF-maint" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps into i.GF (in memory at 3000 while this runs), which 3_0-preface.lbl
+' doesn't assign:
+{assign:3004	=3004	} ' i.GF: item number from an$
+{assign:3050	=3050	} ' i.GF: item type's name and prefix
+{assign:3090	=3090	} ' i.GF: access groups
+{assign:3130	=3130	} ' i.GF: show an item
+{crunch:on}
+
+4000 &,52,34,1:on rkgoto 4002,4100
+4002 n=0
+4004 p$="Maintenance Options":gosub 4030
+4006 a$="A":b$="Add Item":gosub 4022
+4008 a$="E":b$="Edit Item":gosub 4022
+4010 a$="K":b$="Kill Item":gosub 4022
+4012 a$="Z":b$="Misc Info":gosub 4022
+4014 a$="Q":b$="Return to Menu":gosub 4022
+4016 if mmthen:&"{right:9}{rvrs on}{yellow}{pound}{back arrow}32{rvrs off} {f6}"
+4018 if mmthen:&"{right:10}{pound}{back arrow}33{f6}"
+4020 fd=2:return
+4022 n=n+1:m%(3,n)=asc(a$+chr$(0)):m%(2,n)=-1:m%(1,n)=(n-1)*256+n+1
+4024 m%(0,n)=14*256+5+n
+4026 if mmthen:&"{right:9}{rvrs on}{yellow} {f5}{pound}$a{f5} {white}{$a4}{yellow} {pound}$b{pound}{back arrow}32{rvrs off} {f6}":return
+4028 &"{pound}$a) {pound}$b{f6}":return
+4030 if mm=0 then:&"{clear}{pound}$p{f6:2}":return
+4032 &"{home}{down:4}{right:9}{rvrs on}{yellow} {pound}$p{pound}{back arrow}32{f6}"
+4034 &"{right:9}{rvrs on}{yellow}     {$a4}{pound}{back arrow}32{rvrs off} {f6}"
+4036 return
+' 10/14/2026: act on a$, which i.GF has already set (the option chosen from
+' the menu, or the first letter typed at the prompt): this asked "Which
+' Option?" again and waited for another key
+'4100 rs=1:tz=0:&"{up}Which Option?: ":gosub 7:&"{pound}v7{f6}"
+4100 rs=1:tz=0
+4102 on-(a$="A")-2*(a$="E")-3*(a$="K")-4*(a$="Z") goto 4200,4300,4400,4500:goto 4666
+4104 rs=0:return
+4200 if s%(0,0)=60 then:&"This {pound}$h is Full{f6}":return
+4202 br=s%(0,0)+1:s%(1,br)=1023:s%(2,br)=0:s%(3,br)=dv%(1):s%(4,br)=dr%(1)
+4204 s%(5,br)=0:s%(6,br)=0:&,60,4,0,s%(7,br),d1$:&,60,4,0,s%(10,br),d1$
+4206 &,60,0,16,s%(27,br),"":&,60,0,28,s%(13,br),""
+4208 s%(36,br)=0:s%(37,br)=0:s%(38,br)=0:s%(39,br)=0
+4210 gosub 4600:&,60,1,16,s%(27,br),a$:&,60,1,28,s%(13,br),b$:a=s%(1,br)
+4212 if a<1 or a$="" or b$="" then return
+4214 s%(0,0)=s%(0,0)+1:tz=1:return
+4300 &"Which Item?: {pound}i1":an$=" "+an$
+4302 gosub 3004:if a>0 and a<=rnthen br=e%(a):tz=1:goto 4600
+4304 return
+4400 &"Which: {pound}i1":an$=" "+an$
+4402 a$="":gosub 3004:if a<1 or a>rnthen return
+4404 br=e%(a):&"{f6}{purple} {$b0}{pound}$y{$ae}{f6}":gosub 3130:&"{purple} {$ad}{pound}$y{$bd}{f6:2}{pound}q0Kill This? ":gosub 94
+4406 if a=0 then return
+4408 &"{f6}Scratch {pound}$j? ":gosub 94:if a=0 then 4414
+4410 a=s%(2,br):gosub 3050:&,60,1,16,s%(13,br),c$:a$=b$+c$
+4412 dr=0:d1%=s%(3,br):d2%=s%(4,br):gosub 3:print# 15,"s" dr$a$
+4414 if br<>s%(0,0) then for a=brto s%(0,0)-1:&,60,10,80,s%(0,a+1),s%(0,a):next
+4416 s%(0,0)=s%(0,0)-1:tz=1:return
+4500 &"{clear}{f6}{pound}q0{pound}$i Options:{f6:2}"
+4502 &"1. Edit Entry Text{f6}":&,60,1,30,s%(25,0),a$
+4504 &"2. Prompt: {f5}{pound}$a{f5}{f6}":&,60,1,20,s%(15,0),a$
+4506 &"3. Name:   {f5}{pound}$a{f5}{f6}":a%=s%(2,0)
+4508 &"4. {pound}$i:    {pound}%a{f6}":a%=s%(3,0)
+4510 &"5. Device: {pound}%a{f6}":a%=s%(4,0)
+4512 &"6. Drive:  {pound}%a{f6}"
+4514 &"{f6}> {pound}g1":a=val(an$)
+4516 if athen:&"{pound}v7{f6:2}":on agosub 4520,4532,4556,4538,4544,4550:goto 4500
+4518 return
+4520 dr=1:o$="s."+pf$(pf):a$=o$+",s,r":gosub 4:kk=1:if e%then:&:goto 4526
+4522 &"{f6}Loading Text...{f6:2}"
+4524 &,2,2:if a$<>"{^}" and kk<101 then tt$(kk)=a$:kk=kk+1:&".":goto 4524
+4526 close 2:im=2:gosub 440:if kk=0 then return
+4528 &"{f6:2}Saving...":a$=o$:dr=1:gosub 18:&,14,2,kk-1:print# 2,"{^}":close 2:&,11
+4530 goto 62
+4532 p$="Prompt":&,60,1,30,s%(25,0),w$:poke 53252,30:pl=0
+4534 &,1,33:if an$="" then return
+4536 tz=1:&,60,0,30,s%(25,0),an$:return
+4538 p$=i$:w$=mid$(str$(s%(2,0)),2):poke 53252,4:pl=1
+4540 &,1,32:if an$="" then return
+4542 tz=1:s%(2,0)=val(an$):return
+4544 p$="Device":w$=mid$(str$(s%(3,0)),2):poke 53252,4:pl=1
+4546 &,1,32:if an$="" then return
+4548 tz=1:s%(3,0)=val(an$):return
+4550 p$="Drive":w$=mid$(str$(s%(4,0)),2):poke 53252,4:pl=1
+4552 &,1,32:if an$="" then return
+4554 tz=1:s%(4,0)=val(an$):return
+4556 p$="Name":&,60,1,20,s%(15,0),w$:poke 53252,20:pl=0
+4558 &,1,32:if an$="" then return
+4560 tz=1:&,60,0,20,s%(15,0),an$:return
+4600 &"{clear}{f6}":&,60,1,28,s%(13,br),a$
+4602 &"{blue}({white}1{blue}) {cyan}Title{blue}:  {white}{pound}$a{f6}":a=s%(2,br):gosub 3050
+4604 &"{blue}({white}2{blue}) {cyan}Type{blue}:   {white}{pound}$a{f6}":a%=s%(1,br)
+4606 &"{blue}({white}3{blue}) {cyan}Access{blue}: {white}{pound}%a{f6}":a%=s%(5,br)
+4608 &"{blue}({white}4{blue}) {cyan}Credit{blue}: {white}{pound}%a{f6}":&,60,1,16,s%(27,br),a$
+4610 &"{blue}({white}5{blue}) {cyan}{pound}$j{blue}:   {cyan}{pound}$b{white}{pound}$a{f6}":n=5:on-(dr=4) goto 4616:n=7:a%=s%(3,br)
+4612 &"{blue}({white}6{blue}) {cyan}Device{blue}: {white}{pound}%a{f6}":a%=s%(4,br)
+4614 &"{blue}({white}7{blue}) {cyan}Drive{blue}:  {white}{pound}%a{f6}"
+4616 &"{f6}> {pound}g1":a=val(an$):a=val(an$):if a<1 or a>nthen return
+4618 &"{pound}v7{f6:2}":on agosub 4620,4626,4658,4652,4634,4640,4646:goto 4600
+4620 p$="Title":&,60,1,28,s%(13,br),w$:poke 53252,28:pl=0
+4622 &,1,33:if an$="" then return
+4624 &,60,0,28,s%(13,br),an$:return
+4626 &"Type:{f6:2}":for a=1 to 9:gosub 3050:a$=mid$(a$,2):lp=1:&"{pound}!a-{pound}$a ":next
+4628 &"{f6:2}{pound}q0> {pound}g1"
+4630 a=val(an$):if a<1 or a>7 then return
+4632 gosub 3050:&"{pound}$a{f6}":s%(2,br)=a:return
+' 10/14/2026: edit the whole filename, prefix and all (i.tests, not tests),
+' and take the prefix off again before storing it: the prompt showed only the
+' name, so typing i.tests stored "i.tests" and ran "i.i.tests"
+'4634 a=s%(2,br):gosub 3050:p$=j$:&,60,1,16,s%(27,br),w$:pl=0
+'4636 poke 53252,16-len(b$):&,1,32:if an$="" then return
+4634 a=s%(2,br):gosub 3050:p$=j$:&,60,1,16,s%(27,br),w$:w$=b$+w$:pl=0
+4636 poke 53252,16:&,1,32:if an$="" then return
+4637 if left$(an$,len(b$))=b$ then an$=mid$(an$,len(b$)+1)
+4638 &,60,0,16,s%(27,br),an$:return
+4640 p$="Device":w$=mid$(str$(s%(3,br)),2):poke 53252,4
+4642 &,1,32:if an$="" then return
+4644 s%(3,br)=val(an$):return
+4646 p$="Drive":w$=mid$(str$(s%(4,br)),2):poke 53252,4
+4648 &,1,32:if an$="" then return
+4650 s%(4,br)=val(an$):return
+4652 p$="Credit":w$=mid$(str$(s%(5,br)),2):poke 53252,4
+4654 &,1,32:if an$="" then return
+4656 s%(5,br)=val(an$):return
+4658 p$="Access":w$=mid$(str$(s%(1,br)),2):poke 53252,4
+4660 &,1,32:if an$="" then return
+4662 a=val(an$):if an$="{f2}" then gosub 3090
+4664 s%(1,br)=a:return
+4666 return
+4700 rem:"i/GF-maint (c)nissa 190523 lh"

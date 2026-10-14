@@ -35,6 +35,8 @@ include::lightbar.adoc[]
 
 include::modules.adoc[]
 
+include::general-files.adoc[]
+
 include::command-stacking.adoc[]
 
 include::22-text-editor.adoc[]

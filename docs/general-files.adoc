@@ -1,0 +1,119 @@
+// General Files: libraries of files, programs, text and sub-menus (i.GF)
+:experimental:
+:icons: font
+
+== General Files [[general-files]]
+
+General Files (`GF`) is a tree of _libraries_: menus of items, which can be files to read or download, text to show, programs to run, or more libraries.
+It replaces Image 1.2's separate `MF`, `PF`, `RF` and `TF` sections.
+Type kbd:[GF] at the main prompt to go to the top library, `GF.Main`.
+
+The lightbar's `Sub` right check (_Files Section Closed (GF)_) keeps callers out of it.
+
+=== Using a Library
+
+At a library's prompt, kbd:[?] lists the commands:
+
+.General Files Commands
+[%autowidth]
+[%header]
+|===
+| Command | Does
+
+| a number | select that item
+| kbd:[S] | Scan Items
+| kbd:[L] | List Items
+| kbd:[Q] | Quit to the main prompt
+| kbd:[M] | Return to the Main Directory (`GF.Main`)
+| kbd:[<] | Return to the Previous Directory
+| kbd:[MN] | Change to Graphic Menu (GM) mode: choose items with the cursor keys
+2+| _Sysop (or the library's subop):_
+| kbd:[Z] | Maintenance Options: add, edit and kill items (see <<gf-maintenance>>)
+|===
+
+The help screen also lists kbd:[A], kbd:[E]__x__ and kbd:[K]__x__ as sysop commands, but typing them at the prompt doesn't work: use kbd:[Z].
+
+=== Items [[gf-items]]
+
+.General Files Entry Types
+[%autowidth]
+[%header]
+|===
+| Type | Shown as | Runs or shows
+
+| 1 | `Dir` | another library (`d.GF.` _name_)
+| 2 | `Prg` | an `i.` module: `i.` _filename_
+| 3 | `Mod` | a GF sub-module: `i/GF.` _filename_
+| 4 | `Txt` | a text file
+| 5 | `Mov` | a text file shown without ASCII translation, so its Commodore graphics and cursor movements play as they are (a "`movie`")
+| 6 | `RLE` | an RLE graphics file
+| 7 | `U/X` | an upload/download area (`d.UX.` _name_)
+| 8 | `U/D` | an upload/download area (`d.UD.` _name_)
+| 9 | `Sub` | a set of message sub-boards (`d.SB.` _name_)
+|===
+
+=== Adding and Editing Items [[gf-maintenance]]
+
+The sysop, or a library's subop, changes a library's items by pressing kbd:[Z] at its prompt (in either mode) for _Maintenance Options_:
+
+[%autowidth]
+|===
+| kbd:[A] | Add Item
+| kbd:[E] | Edit Item
+| kbd:[K] | Kill Item
+| kbd:[Z] | Misc Info (the library's own settings)
+| kbd:[Q] | Return to Menu
+|===
+
+Add Item and Edit Item show the item's settings, numbered.
+Type a number to change one (kbd:[Return] keeps it as it is), or anything else to finish:
+
+----
+(1) Title:  Test Modules
+(2) Type:   Prg
+(3) Access: 1023
+(4) Credit: 0
+(5) File:   i.
+(6) Device: 11
+(7) Drive:  0
+----
+
+[%autowidth]
+[%header]
+|===
+| Setting | What it is
+
+| Title | The description shown in the library's list, up to 28 characters.
+| Type | A number from the list (see <<gf-items>>).
+Only types 1-7 can be chosen here.
+| Access | Which access groups can see and use the item.
+Type kbd:[?] to be asked about each group in turn ("`Group #0?`" to "`Group #9?`", each Yes or No), and the number is worked out for you; or type the number itself (below).
+| Credit | What it costs to use, `0` for nothing.
+| File | The file's whole name, up to 16 characters, with the prefix its type uses (`i.` for Prg, `d.GF.` for Dir, ...): `i.tests` runs `i.tests`.
+You can leave the prefix off: it's added when the item is used.
+| Device, Drive | Where the file is. A new item starts on the System drive.
+|===
+
+The Access number adds up a value for each group allowed: 1 for group 0, 2 for group 1, 4 for group 2, and so on to 512 for group 9.
+So `1023` means every group, and `512` means group 9 only.
+A new item starts at `1023`.
+
+An item without a title or a filename isn't added.
+
+=== Running Modules from a Library [[gf-modules]]
+
+A library can list modules as well as files, so callers can run them from a menu.
+When the module finishes, the caller is back in the same library, not at the main prompt.
+
+To add a module to a library:
+
+. Go to the library in `GF`, and press kbd:[Z] for Maintenance Options.
+. Choose kbd:[A] (Add Item), and set:
+** (2) _Type_: `2` (Prg)
+** (5) _File_: the module's name, `i.test calls` (or just `test calls`)
+** (6) _Device_ and (7) _Drive_: where the module is, usually the Program disk (see <<im-system-drives>>)
+** (1) _Title_, and (3) _Access_ and (4) _Credit_ as you want them
+. Choose the new entry from the library's list to try it.
+
+The module runs from line 3000, as if started with kbd:[R].
+When it ends (with `goto 300`, as `i.` modules do), `im` sees that a library was open, and loads `GF` again at the same library.
