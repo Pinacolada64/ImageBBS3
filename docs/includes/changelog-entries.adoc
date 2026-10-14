@@ -4,6 +4,7 @@
 
 === 2026-10-13
 
+* `&,25` Sound: _repeat_ `0` plays the sound once (it doesn't stop it); `&,25,255` stops a repeating sound; a repeating sound ignores other `&,25` calls; sound `0` follows the lightbar's Local Beeps Disable. `i.test calls` has a demo.
 * Version 3.1: the boot files are now `boot 3.1`, `image 3.1` and `ml 3.1`.
 * `&,5` Get Version: the ML returns version 3.1 in `lp` and revision 0 in `a%` (it returned 2.0, and never set `a%`); `a$` is the 8-character git commit the ML was built from.
 * `im` routines: lines 40 and 41 display `s.new user` and `s.config`; how lines 70-79 load modules (only if not already in memory, the `sub.*` module stack); new rows for lines 77, 78 and 80; anchors for the lines from 30 to 80.

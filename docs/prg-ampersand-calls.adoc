@@ -1543,15 +1543,37 @@ _Parameters:_
 
 `&,25,_sound_[,_repeat_]`
 
-_sound_=
+[%autowidth]
+[%header]
+|===
+| _sound_ | Sound
 
-	&,25,0  beep
-	&,25,1	ding
-	&,25,2	higher pitched ding
-	&,25,3	gong sound from CCGMS (a terminal program)
+| `0` | Beep (silent if the lightbar's `Bel` right checkmark, Local Beeps Disable, is on)
+| `1` | Ding
+| `2` | Higher-pitched ding
+| `3` | Gong (from the CCGMS terminal program)
+| `255` | Stop a repeating sound (_repeat_ is not needed)
+|===
 
-`repeat=`
-Number of times to repeat: [`0`: Stop repeat | `1-254`: Repeat count | `255`: infinite]
+[%autowidth]
+[%header]
+|===
+| _repeat_ | Plays the sound
+
+| `0` | Once
+| `1`-`254` | _repeat_ more times after the first (`&,25,1,2` dings three times)
+| `255` | Over and over, until `&,25,255`
+|===
+
+While a sound is repeating, any other `&,25` call except `&,25,255` is ignored.
+The repeats are timed by the interrupt routine, so the program carries on while the sound plays.
+Entering chat mode also stops a repeating sound.
+
+Only sounds `0`-`3` are defined: each is 16 bytes of the 64-byte sound table at `$13f0`, so a higher number reads whatever follows the table.
+
+Source: `source/swap2.s` (`sound`); the repeats are in `source/irqhn.s`.
+
+Test program: `core/tests/i.test calls.lbl`, line `{:4450}`: play each sound once, repeat one, play one forever, and see that another `&,25` is ignored while it does.
 
 === `&,26` Find Record by Flags and Name [[ecschk]]
 

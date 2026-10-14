@@ -213,10 +213,13 @@
 	an$=mid$(str$(an),2):n=val(right$(an$,1)):t=.:if val(an$)>9 then t=val(left$(an$,1))
 ' display function name:
 ' &,66,1 (calcgosub): routines start on 20-line increments for {display_page_<an>} routines
-	a%=3020+t*20:&"[header line] a%{equal}{pound}%a{comma} [item] 10s{colon} an{equal}"+str$(an)+"{comma} 1s{colon} n{equal}{pound}!n{f6}":&,66,1
+	a%=3020+t*20:if db then:&"[header line] a%{equal}{pound}%a{comma} [item] 10s{colon} an{equal}"+str$(an)+"{comma} 1s{colon} n{equal}{pound}!n{f6}"
+	&,66,1
 
 ' FIXME: temporary hook:
 	if an=23 then gosub {:4350}:goto {:prompt}
+	if an=25 then gosub {:4450}:goto {:prompt}
+	if an=26 then gosub {:4500}:goto {:prompt}
 	if an=65 then gosub {:sub.convert}:goto {:prompt}
 	if an=67 then gosub {:sub.copyright}:goto {:prompt}
 	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
@@ -355,17 +358,17 @@
 	&"{pound}#2{pound}# {pound}%e {pound}$e{f6}":next
 
 {:amp_9_prompt}
-	&"{f6}[0-49{comma} A)ll{comma} M)ain Menu{comma} {question}{equal}List]{f6}":p$="Display variable"+"":&,1:op$=an$
+	h=49:&"{f6}[0-{pound}!h{comma} A)ll{comma} M)ain Menu{comma} {question}{equal}List]{f6}":p$="Display variable"+"":&,1:op$=an$
 	on -(op$="A")-2*(op$="M")-3*(op$="{question}") goto {:amp_9_all}, {:amp_9_quit}, {:amp_9_help}
-	an=int(val(op$)):if an<0 or an>49 then gosub {:sub.out_of_range}:goto {:amp_9_prompt}
+	an=int(val(op$)):if an<0 or an>h then gosub {:sub.out_of_range}:goto {:amp_9_prompt}
 	gosub {:sub.amp_9_display}:goto {:amp_9_prompt}
 {:amp_9_all}
 	&"[At {quotation}Key{colon}{quotation} prompt{comma} {quotation}Q{quotation} quits.]{f6}"
-	for an=0 to 49:i%=an:&"[#{pound}#2{pound}# {pound}%i/49] "
+	for an=0 to h:i%=an:&"[#{pound}#2{pound}# {pound}%i/{pound}!h] "
 	gosub {:sub.amp_9_display}:if an$="Q" then:&"Quitting.{f6}":an=50
 	next:goto {:amp_9_prompt}
 {:sub.amp_9_display}
-	&,9,an:&"Displaying "+mid$(v$,(an+1)*3-2,3)+"- Key{colon} {pound}g1{f6}":return
+	&,9,an:&"Displaying "+mid$(v$,(an+1)*3-2,3)+". Key{colon} {pound}g1{f6}":return
 {:amp_9_quit}
 ' restore window to computer type string
 ' var 36 is co$, computer type:
@@ -498,11 +501,25 @@
 	gosub {:sub.todo}:return
 
 {:4450} ' &,25: Sound
-' &,25,<sound>,<repeat>
-' <repeat> = 0: stop playing
-' <repeat> = 1 - 254: # of repetitions
-' <repeat> = 255: infinite
-	gosub {:sub.todo}:return
+' &,25,<sound>,<repeat> (source/swap2.s, sound; repeats in irqhn.s)
+' <sound> = 0-3: beep, ding, higher ding, CCGMS gong; 255: stop repeating
+' <repeat> = 0: play once; 1-254: play it repeat+1 times; 255: forever
+' While a sound repeats, another &,25 (except 255) is ignored. Sound 0 is
+' silent if lightbar flag 27 (local beeps disabled) is on.
+	l=peek(53252):&,52,27,3:if a% then:&"{f6}Lightbar 27 (beeps disabled) is on{colon} sound 0 is silent.{f6}"
+{:amp_25_menu}
+	&"{f6}0-3) Play sound 0-3 once (&{comma}25{comma}x{comma}0){f6}R) Repeat a sound{f6}"
+	&"F) Forever (&{comma}25{comma}x{comma}255){f6}S) Stop (&{comma}25{comma}255){f6}Q) Quit{f6}"
+	poke 53252,1:pl=1:p$="Sound":&,1,0,0:pl=.:if an$="" or an$="Q" or tr%<1 then:&,25,255:poke 53252,l:return
+	if an$="S" then:&,25,255:goto {:amp_25_menu}
+	if an$>="0" and an$<="3" then s=val(an$):&,25,s,0:goto {:amp_25_menu}
+	if an$<>"R" and an$<>"F" then {:amp_25_menu}
+	r=255:o$=an$:poke 53252,1:p$="Which sound (0-3)":&,1,0,0:s=val(an$):if an$<"0" or an$>"3" then {:amp_25_menu}
+	if o$="R" then poke 53252,3:p$="Repeat (1-254)":&,1,0,0:r=val(an$):if r<1 or r>254 then {:amp_25_menu}
+	&,25,s,r:if r<255 then:&"{f6}&{comma}25{comma}{pound}!s{comma}{pound}!r{colon} plays {pound}!r more time(s) after the first.{f6}":goto {:amp_25_menu}
+	&"{f6}&{comma}25{comma}{pound}!s{comma}255{colon} repeating. Another &{comma}25 is ignored now{colon}{f6}"
+	poke 53252,1:p$="Return plays sound 1":&,1,0,0:&,25,1,0
+	p$="Return stops it (&{comma}25{comma}255)":&,1,0,0:&,25,255:goto {:amp_25_menu}
 
 {:4500} ' &,26: ecschk (find record by flags and name)
 ' &,26,size,count,mask,array%(element),s$
