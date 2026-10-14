@@ -232,7 +232,7 @@ template:
 |
 | Temporary blocks free count.
 
-| bu
+| `bu`
 |
 |
 |
@@ -366,7 +366,7 @@ Use: Disable or enable word-wrap for `&` text output.
 // rq
 // rs
 // sg
-// sh - ascii value of last key hit?
+// sh - ascii value of last key hit: 47 = "/"
 // sr - copy of st?
 // st - Commodore DOS status
 // t1
@@ -432,7 +432,7 @@ General-purpose work variable.
 | `ag$`
 | BBS
 | icon:times-circle[role=red]
-| Access group information, including 4 control characters and access group name.
+| Access group information, which consists of 4 control characters and the access group name.
 
 (Also MCI variable `&#163;vm`.)
 
@@ -922,7 +922,7 @@ set up Image 1.2 arrays:
 return
 ////
 
-[cols=1m,2]
+[cols="1m,2"]
 [%header]
 |===
 | Variable | Purpose

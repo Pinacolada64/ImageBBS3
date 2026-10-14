@@ -262,6 +262,10 @@ outputs:
 
 Setting `lp=0` disables word-wrap, so words continue past the right margin.
 
+NOTE: With `lp=1`, `&` ends its output with a carriage return of its own, unless the last character was a space, and then sets `lp` back to `0` (`source/strio.s`, `outstr3`).
+So don't end a word-wrapped line with `\{f6}` as well: it would be followed by a blank line.
+Set `lp=1` again before each `&` that should wrap.
+
 ==== Set Margins
 
 The left and right margins can now be indented by up to 15 characters using two new MCI commands:
@@ -490,7 +494,7 @@ If the user did not type anything and just hit kbd:[Return] or kbd:[Enter], `an$
 
 _Explanations:_
 
-Test program: `core/tests/i.test calls.lbl`, line `{:3250}`: password input, masked and not shown.
+Test program: `core/tests/i.test calls.lbl`, line `{:3250}`: password input, masked and not shown, and input with any editor flags, which you turn on and off one at a time from a list.
 
 Edit mode::
 The prompt (`p$`) is displayed, and the default response (`w$`) is displayed.
@@ -1313,10 +1317,6 @@ Following `&,16` with a _sub-function_ number (_e.g._, `&,16,2`) calls a sub-fun
 
 ====
 TIP: Refer to <<appendix-jump-tables>> (xref:appendix-jump-tables[xrefstyle=short]) for more information.
-====
-
-====
-TIP: Refer to xref:prg-machine-language.adoc#protocols[Protocols] for more information and listings of jump tables.
 ====
 
 '''

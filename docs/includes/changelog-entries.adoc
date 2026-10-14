@@ -4,8 +4,12 @@
 
 === 2026-10-13
 
-* `&,1` Input Line: the editor flags for bits 0, 3 and 7 were backwards (they allow graphics and the MCI character, and make Delete on column one exit); the password flags are confirmed, with examples, and a test in `i.test calls`.
+* `im` routines: lines 40 and 41 display `s.new user` and `s.config`; how lines 70-79 load modules (only if not already in memory, the `sub.*` module stack); new rows for lines 77, 78 and 80; anchors for the lines from 30 to 80.
+* Variables: the Image 1.2 Arrays table had one column (its `cols` setting wasn't quoted); it has Variable and Purpose again.
+* A table that fits on one page is no longer split across two in the PDF (14 were, some leaving just a heading and a row at the bottom of a page); longer tables still start where they are.
+* `&,1` Input Line: the editor flags for bits 0, 3 and 7 were backwards (they allow graphics and the MCI character, and make Delete on column one exit); the password flags are confirmed, with examples; `i.test calls` tests password input and any editor flags.
 * `&,1` now clears its password flags when input ends (`source/swap1.s`); after `&,1,x,1`, all output was masked until the next `&,1`.
+* Word-wrap: `&` with `lp=1` ends the line itself and resets `lp`.
 * The password mask character is at 4850 (`$12f2`), not 17138; `&,6` sets an input length of 15, not 14.
 
 === 2026-10-12

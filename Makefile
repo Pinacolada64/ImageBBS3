@@ -141,7 +141,7 @@ test-disk: tests
 pdf: $(BUILD)/prg-master.pdf
 
 $(BUILD)/prg-master.pdf: $(wildcard docs/prg-*.adoc docs/includes/*.adoc) tools/pygments/imagebbs_lexer.py \
-		docs/extensions/table-heading-widths.rb
+		docs/extensions/table-heading-widths.rb docs/extensions/table-keep-together.rb
 	@for gem in asciidoctor-pdf asciidoctor-lists; do \
 		echo '= t' | asciidoctor -r $$gem -o /dev/null - 2>/dev/null \
 			|| { echo "$$gem isn't installed: gem install $$gem"; exit 1; }; \
@@ -149,7 +149,8 @@ $(BUILD)/prg-master.pdf: $(wildcard docs/prg-*.adoc docs/includes/*.adoc) tools/
 	@mkdir -p $(BUILD)
 	cd docs && PYTHONPATH=$(abspath tools/pygments) \
 		asciidoctor -r asciidoctor-pdf -r asciidoctor-lists \
-		-r ./extensions/table-heading-widths.rb -b pdf \
+		-r ./extensions/table-heading-widths.rb \
+		-r ./extensions/table-keep-together.rb -b pdf \
 		-o $(abspath $@) prg-master.adoc
 
 clean:
