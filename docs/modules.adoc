@@ -127,5 +127,6 @@ Here is a list of all the BBS module types.
 |===
 
 You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer`'s Reference Guide_.
+////
 
 You can find a more complete breakdown of what most individual modules do in the _Image BBS 3.0 Programmer`'s Reference Guide_.
