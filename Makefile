@@ -64,9 +64,11 @@ $(BUILD)/asm/%.prg: source/%.s source/equat.s | $(BUILD)/asm
 $(BUILD)/asm/ml.prg: $(ML_PARTS:%=source/%.s) source/stamp.s
 $(BUILD)/asm/rs232.prg: $(BUILD)/asm/rs232_user.prg $(BUILD)/asm/rs232_swift.prg
 
-# the current git commit, shown as the ML version string
+# the ML's stamp (tools/make-stamp.py): the current git commit (&,5's a$),
+# the revision (a%: commits since the version last changed) and the build's
+# date and time, which the clock starts from until it's set
 source/stamp.s: FORCE
-	echo '.var version_string ="'`git log -1 --format='%H' | cut -c 1-8`'"' > $@
+	python3 tools/make-stamp.py $@
 
 $(BUILD)/asm/image.prg: $(addprefix $(LOGO_DIR)/,chr.imagelogo scn.imagelogo col.imagelogo)
 

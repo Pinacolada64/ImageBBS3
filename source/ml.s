@@ -677,18 +677,21 @@ spchars:
 		.fill 80, $20
 
 // date in 6 byte bcd format
+// 10/14/2026: the date and time the ML was built (tools/make-stamp.py, in
+// stamp.s), so the clock starts from that until it's set. It was a fixed
+// Sun Dec 9, 2090 (the century is always 20), with an hour of 20
 
 bootdate:
 
 dateday:
-		.byte $01
+		.byte build_weekday
 datemon:
-		.byte $12
+		.byte build_month
 datedate:
-		.byte $09
+		.byte build_date
 dateyear:
-		.byte $90
-		.byte $20,$00
+		.byte build_year
+		.byte build_hour, build_minute
 
 // storage for conversion routines
 
@@ -721,7 +724,8 @@ versnum:
 // 10/13/2026: 3.1
 		.byte $82, $46, $66, $66, $66 // 3.1
 
-.const version_revision = 0
+// version_revision: the number of commits since the version last changed
+// (tools/make-stamp.py, in stamp.s)
 
 // 10/13/2026: the rest of getversn: put the version in lp, then the
 // revision in a% (an integer is high byte first in varbuf); it never set a%
