@@ -1,4 +1,6 @@
-.var version_number = "3.0"
+// 10/13/2026: 3.1 (was 3.0). Also the file names: boot loads "image 3.1",
+// which loads "ml 3.1" (see disk.manifest)
+.var version_number = "3.1"
 
 // image ml equates
 

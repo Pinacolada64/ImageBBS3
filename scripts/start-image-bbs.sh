@@ -135,4 +135,4 @@ x64sc \
 	-dos1581 "$DOS1581" \
 	-10 "$PROGRAMS_D81" \
 	-11 "$DATA_D81" \
-	-keybuf 'load"boot 3.0",10,1\n'
+	-keybuf 'load"boot 3.1",10,1\n'

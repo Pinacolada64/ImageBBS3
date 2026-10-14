@@ -711,13 +711,27 @@ Get the version information embedded in the BBS ML.
 
 _Exit:_
 
-`lp`: major/minor (1.3)
+`lp`: version, major.minor, as a floating-point number (`3.1`)
 
-`a%`: revision (1)
+`a%`: revision (`0`)
 
-`a$`: date (`"12/29/91  1:18p"`)
+`a$`: the first 8 characters of the git commit the ML was built from (`"f9850df0"`).
+In Image 1.3 it was the date the ML was made (`"12/29/91  1:18p"`).
 
-// im 1335: "Image BBS 64 V1.3.1: 12/29/91  1:18p"
+To show the version, print `lp`, a period, and `a%`:
+
+[source]
+----
+&,5:v=lp:&"Image BBS 64 v{pound}!v.{pound}%a{colon} {pound}$a{f6}"
+----
+
+shows `Image BBS 64 v3.1.0: f9850df0`.
+Image 1.3's `im` (line 1335) showed `Image BBS 64 V1.3.1: 12/29/91  1:18p` this way.
+
+Until 10/13/2026, the 3.0 ML returned version 2.0 and never set `a%`, so this showed `2.` followed by whatever `a%` happened to be.
+The version and revision are at the end of `source/ml.s` (`versnum`, `version_revision`).
+
+Test program: `core/tests/i.test calls.lbl`, line `{:3450}`.
 
 '''
 

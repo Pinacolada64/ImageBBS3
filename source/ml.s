@@ -216,7 +216,9 @@ loop:
 		dey
 		bpl loop
 		ldx #var_lp_float
-		jmp putvar
+// 10/13/2026: was jmp putvar; getversn2 (at the end, so nothing here moves)
+// also returns the revision in a%
+		jmp getversn2
 
 scrnset:
 		sta blnkflag
@@ -702,17 +704,35 @@ decchr:
 		.byte $30,$30,$30,$30,$30
 		.byte $31,$30,$31
 
-// the date this ml was made
+// the date this ml was made (now the git commit it was built from, 8
+// characters: see the Makefile's stamp.s rule)
 
 version:
 		.text version_string
 version_end:
 
-// version in floating point
+// &,5 returns the version (major.minor) in lp, as floating point, and the
+// revision in a%: "£!v.£%a" (v=lp) shows 3.1.0
 
 versnum:
 //		.byte $81, $19, $99, $99, $9a // 1.2
 //		.byte $81, $26, $66, $66, $66 // 1.3
-		.byte $82, $00, $00, $00, $00 // 2.0
+//		.byte $82, $00, $00, $00, $00 // 2.0
+// 10/13/2026: 3.1
+		.byte $82, $46, $66, $66, $66 // 3.1
+
+.const version_revision = 0
+
+// 10/13/2026: the rest of getversn: put the version in lp, then the
+// revision in a% (an integer is high byte first in varbuf); it never set a%
+getversn2:
+		jsr putvar
+		lda #>version_revision
+		sta varbuf
+		lda #<version_revision
+		sta varbuf+1
+		ldx #var_a_integer
+		jmp putvar
 
 .label room_in_buffer_page = $cf00 - *
+.errorif * > $cf00, "ml runs into the buffer page at $cf00"

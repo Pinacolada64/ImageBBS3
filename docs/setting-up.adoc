@@ -275,8 +275,8 @@ Use `fcopy+`, included on the 3.0 UTILS disk, for copying the following files:
 [options="autowidth",options="header"]
 |====================
 | Filename    | Purpose
-| `boot`      | autoboot program
-| `image 3.0` | title screen
+| `boot 3.1`  | autoboot program
+| `image 3.1` | title screen
 | `im`        | core routines
 | `i*`        | BBS modules
 | `ml*`       | assembly language

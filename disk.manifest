@@ -5,9 +5,9 @@
 # numbers (shown as [50] etc. by petcat): a broken module can crash the BBS.
 
 # --- machine language (make asm) ---
-asm/ml.prg	ml 3.0
-asm/boot.prg	boot 3.0
-asm/image.prg	image 3.0
+asm/ml.prg	ml 3.1
+asm/boot.prg	boot 3.1
+asm/image.prg	image 3.1
 asm/rs232.prg	ml.rs232
 asm/post.prg	++ post
 asm/path.prg	++ path

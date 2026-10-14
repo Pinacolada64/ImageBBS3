@@ -309,9 +309,10 @@
 {:3452}
 ' call for &,19 also
 ' returns:
-' lp: major/minor (1.3)
-' a%: revision (1)
-' a$: date (e.g., "12/29/91  1:18p")
+' lp: major.minor (3.1; Image 1.3: 1.3)
+' a%: revision (0; Image 1.3: 1)
+' a$: the git commit the ML was built from, 8 characters (Image 1.3: the
+'     date, "12/29/91  1:18p"); shows "Image BBS 64 v3.1.0: f9850df0"
 	v=lp:&"Image BBS 64 v{pound}!v.{pound}%a{colon} "+a$+"{f6}"
 	return
 

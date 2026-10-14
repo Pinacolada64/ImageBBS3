@@ -21,7 +21,7 @@ C1541       ?= c1541
 # 8-Bit Boyz release 231231: its Disk 1 is the starting point for the boot disk
 RELEASE_ZIP ?= $(HOME)/Documents/c64/image30-231231.zip
 RELEASE_D81 ?= MASTER D1 231231.d81
-# chr/scn/col.imagelogo for image.prg ("image 3.0"); copied from Image 2.0's contrib/
+# chr/scn/col.imagelogo for image.prg ("image 3.1"); copied from Image 2.0's contrib/
 LOGO_DIR    ?= source
 
 BUILD := build
@@ -63,7 +63,7 @@ $(BUILD)/asm/rs232.prg: $(BUILD)/asm/rs232_user.prg $(BUILD)/asm/rs232_swift.prg
 
 # the current git commit, shown as the ML version string
 source/stamp.s: FORCE
-	echo '.var version_string ="'`git log -1 --format='%H' | cut -c 1-16`'"' > $@
+	echo '.var version_string ="'`git log -1 --format='%H' | cut -c 1-8`'"' > $@
 
 $(BUILD)/asm/image.prg: $(addprefix $(LOGO_DIR)/,chr.imagelogo scn.imagelogo col.imagelogo)
 
