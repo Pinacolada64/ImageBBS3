@@ -1,6 +1,6 @@
 # TODO list
 
-- Improve loading time of sub.* modules at startup. The normal call to load a sub.* file pushes the file on a "module stack," and when the newly-loaded sub.* file is done, it is popped off the stack, reloading the sub.* file previously in RAM. In the case of a few sub.* files, I don't think it is necessary to reload the previous file. I think by changing the line used (`im 110` is looking like the best candiate for testing) it will improve startup performance.
+- Improve loading time of sub.* modules at startup. The normal call to load a sub.* file pushes the file on a "module stack," and when the newly-loaded sub.* file is done, it is popped off the stack, reloading the sub.* file previously in RAM, but only when one sub.* file has loaded another: at startup nothing is reloaded that way, so `im 110` wouldn't help there. The one module loaded twice at startup was `sub.modem` (`sub.info` replaced it in memory); `i/lo.idle` now calls `sub.info` first (10/13/2026). See "Speed" below for what's left.
 
 - Move RTC read/set methods in `sub.clocks` or some such similarly-named module. Add a i.IM/RTC module that uses this. I could add a method for reading/setting via the Dallas Semiconductor RTC which is emulated in VICE.
   - [x] `core/sub.clocks.lbl`, including the DS12C887 (see the follow-ups below)
@@ -213,7 +213,12 @@ only items not already here are listed from it. Locations are
 ### Dead or duplicate code
 
 - [ ] `i/lo.idle`: duplicate of 4042, orphaned code, duplicate writes
-  (`core/i_lo.idle.lbl:6`, `:22`, `:28`).
+  (`core/i_lo.idle-2022.lbl:6`, `:22`, `:28`).
+- [ ] `i/lo.idle2`: no longer used. `i/lo.idle` now draws its stats box
+  (New Messages in place of Calls/Log) when lightbar flag 55 is checked, and
+  `i.lo` always loads `i/lo.idle` (10/13/2026). Leave it off the release disk
+  and remove it from existing BBSes once the merged `i/lo.idle` has been
+  tried; it's already gone from the run disk.
 - [ ] `sub.editor`: an unreferenced line (`core/sub.editor.lbl:115`).
 - [ ] `sub.display`: code also in `i/lo.on`; remove it from there
   (`core/sub.display.lbl:166`).
@@ -225,9 +230,15 @@ only items not already here are listed from it. Locations are
 
 ### Speed
 
-- [ ] Load `sub.*` modules through `im` line 110 at boot, so the previous
-  module isn't reloaded (see the first item at the top;
-  `core/im.lbl:208`).
+- [ ] `im` line 110 (load a `sub.*` module without reloading the previous
+  one, `core/im.lbl:208`): nothing at boot needs it. `im` 102 only reloads
+  when one `sub.*` module has loaded another (`is` > 1); `sub.handles` and
+  `sub.info` at boot, and `sub.bar` from `i/lo.idle`, each run with `is`
+  going 0 > 1 > 0. The start-up reload that did happen was `sub.modem`,
+  pushed out of memory by `sub.info` in `i/lo.idle`; done 10/13/2026 by
+  calling `sub.info` first. Most of the boot time is loading about 290
+  blocks over the serial bus (`ml` 100, `im` 63, `i/lo.idle` 27, `i.lo`
+  20...); a fast loader would help most.
 - [ ] ML: swap each module in separately (`source/intro.s:24`, also in
   Image-128).
 - [ ] `&,14,2` instead of a `for...next` loop (`core/im.lbl:826`).

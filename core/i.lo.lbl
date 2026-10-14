@@ -1,0 +1,126 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.lo" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps out of this module, which 3_0-preface.lbl doesn't assign:
+{assign:4480	=4480	} ' i/lo.idle: modem flags (loaded at 4000 with i.lo)
+{crunch:on}
+
+3000 k%=.:rs=.:&,52,46,3:am=a%:close 2:close 5
+3001 rem:&"f1="+str$(f1)+"‹mm="+str$(mm)+"‹"
+3002 on mmgoto,3422,3420,3080,3022,3040,3400,3231,3116,3118,3234,3114,3050,3115
+3004 on f1goto 3200,3220,3230,3118,3122:goto 3100
+3022 im=3:gosub 446:gosub 3024:poke 2033,.:return
+3024 on-((peek(2033) and 128)=128) goto 3040:cm$="Clearing Line":gosub 9:im=1:gosub 446:return
+3040 b$="modem reset":x=11:gosub 3080:ti$="000000":im=1:gosub 446:im=9:goto 446
+3050 a$=a$+str$(nl):if ll%=80 then a$=a$+" 80"
+3051 goto 14
+3052 &,52,37,3:on-(a%=.or nl<1) goto 999:a$=a$+"+":return
+3080 p=x:gosub 30:i=t1:t1=mn%:i=t1-i:i=i-1440*(i<.):st(x)=i:gosub 17
+3081 if ithen x=x+11:gosub 16:x=x+16:gosub 16:close 2
+3082 c$="e.idle "+left$(d1$,1)+",s"
+3083 dr=3:a$=c$+",a":gosub 4:if e%then a$=c$+",w":gosub 4
+3084 print# 2,d1$"," mid$("idleused",1-4*(p=10),4) "," i"," b$:close 2
+3085 z%=.:y%=.:a=st(21)+st(22)+.5:if a>1 then z%=100*st(21)/a:y%=100-z%
+3086 an$=left$("U="+mid$(str$(z%),2)+" I="+mid$(str$(y%),2)+"     ",10)
+3087 &,69,14,22,an$,$81:return
+3100 &,28,1:&,52,34,.:poke 970,.:poke 971,.:poke 2042,.:poke 53248,1:&"{lt. red}{clear}":gosub 12
+3102 poke 53248,.:b$="connect":x=11:gosub 3080:&,52,5,zz:&,25:gosub 33:x=43:gosub 1
+3103 &,2,2:an$=mid$(a$,cn-int(cn/len(a$))*len(a$)+1,1):&,15,2:poke 17138,asc(an$)
+3104 close 2:&,52,2,3:a=a%:&,52,4,3:a=a+a%:&,52,6,3:a=a+a%:if athen:&,52,4,4
+3106 tr%=4:on-(zz=.) goto 3114:qb$="Local Console":nl=1:ll%=40:gosub 90:&,52,16,.:&"{f6}"
+3107 &,22,5
+3108 &"{f6} Press RETURN For Normal Login or{f6} Press {f5}I{f5} For Instant Login: {pound}g1"
+3110 a=-(an$="I"):&mid$("InstantNormal",8-a*7,7)+"{f6}":on agoto 3234:goto 3116
+3114 im=7:gosub 446:lm=1
+3115 goto 3500
+3116 gosub 3594:dr=1:a$="s.login":gosub 3050:a$="lo."+"login":gosub 3052:goto 72
+3118 b$="logon":x=10:gosub 3080:a$="lo."+"on":gosub 72
+3119 a$="lo."+"mail":gosub 72:if a=.then 3122
+3120 a$="EM":goto 70
+3122 goto 300
+3200 &,52,51,3:on-(a%=.) goto 3201:a$="lo."+"lof":gosub 72:on f1goto 3202:goto 3004
+3201 &"{f6}Leave Feedback? : ":gosub 94:on agosub 3418
+3202 &,52,$22,.:an$=ff$:&,15,1:&"{f6:2} {green}Bye {lt. green}{pound}v7{green}!{f6:2}":dr=1:a$="s.end":gosub 3050
+3203 on i%or k%goto 3204:im=3:gosub 446:ll%=40:gosub 90
+3204 if i%or k%then:&"{f6}{lt. blue}Update User File?:{white} ":gosub 96:im=1:on agosub 445
+3220 &,52,$22,.:on-(ac%=16) goto 3230:im=3:gosub 446:im=1:gosub 446
+3222 a$="lo."+"off":gosub 72
+3230 lm=1
+' 10/13/2026: always i/lo.idle; it now checks lightbar flag 55 itself (4400)
+' to show New Messages instead of Calls/Log, which was all i/lo.idle2 did
+'3231 &,52,$37,3:a$="lo."+"idle":if a%then a$=a$+"2"
+3231 a$="lo."+"idle"
+3232 goto 72
+3233 gosub 4480:print# 131,"ath1":poke 2042,.:poke 53248,1:a$="lo."+"vf":goto 70
+3234 a$="lo."+"instant":goto 72
+3400 poke 53248,1:&"{clear}":cm$="Auto-Maint":gosub 9
+3401 a$="lo."+"automaint":gosub 72:b$="automaint":x=11:gosub 3080
+3402 gosub 304:br=.:a$="e.maintmods,s,r":dr=3:gosub 4:if e%then close 2:goto 3416
+' 10/13/2026: no modules listed in e.maintmods went to 3216, which doesn't
+' exist (?undef'd statement error); 3416 records the run and goes back to
+' idle, as 3402 does when e.maintmods is missing
+'3404 &,2,2:br=val(a$):on-(br<1) goto 3216:dim lm$(br),mt$(br)
+3404 &,2,2:br=val(a$):on-(br<1) goto 3416:dim lm$(br),mt$(br)
+3406 for i=1 to br:&,2,2:lm$(i)=a$:&,2,2:mt$(i)=a$:next:close 2:rk=1
+3408 a=val(left$(mt$(rk),3)):z=val(left$(d1$,1)):a=(aand 2^z)<>.or a=.
+3410 a$=mid$(mt$(rk),4,2):b=mid$(d1$,4,2)=a$or a$="00"
+3412 a$=mid$(mt$(rk),6,2):c=mid$(d1$,6,2)=a$or a$="00"
+3413 if aand band cthen a$="lo/"+lm$(rk):cm$=a$:gosub 9:gosub 72
+3414 an$=d1$:&,15:a$=" "+lm$(rk)+" Completed{f6} "+an$+"M{f6} {pound}o{$c0}{pound}o{$c0}":gosub 50
+3415 rk=rk+1:on-(rk<=br) goto 3408
+3416 &,28,1:am$=d1$+"":gosub 33:x=35:gosub 1:print# 2,am$:close 2:mm=.:f1=3:goto 3000
+3418 dr=3:gosub 61:x=2:on-(bf<35) goto 390:im=1:goto 444
+3420 new 4000:b$="net send":gosub 304:x=11:gosub 3080:a$="NM/auto":nt=1:f1=1:goto 70
+3422 new 4000:gosub 304:b$="net recv":x=10:gosub 3080:a$="NM/auto":nt=1:f1=2:goto 70
+3424 &,40
+3426 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+3500 rem"was FirstImage (c)1995 NISSA"
+3502 on lmgoto 3536,3530:return
+3504 lp=1:&"{f6}Sorry, the system is reserved for network maintenance.{f6}":goto 3508
+3506 &"{f6:2}SORRY, NO CALLS LESS{shft space}THAN 1200 BPS{f6}ARE CURRENTLY BEING{shft space}ACCEPTED.{f6:2}"
+3508 im=3:gosub 446:tr%=.:mm=.:f1=3:goto 3000
+3510 print# 131,chr$(27)+"[6"+chr$(110):b=.:for x=.to 8:&,4:a%=peek(780) and 127:&,22,1
+3512 b=-(a%=27):x=x-(9-x)*(b=1):next:on-(b=.) goto 999:&,52,18,1:&,52,19,1:nl=2
+3514 a$=r$+chr$(27)+"[1;3;5;7;46m":print# 131,a$
+3516 &" ANSI/Graphics Detected {f6}":return
+3520 mm=2:goto 3000
+3526 gosub 3600:mm=9:goto 3000
+3530 &,52,16,.:&,52,17,1:&,52,18,.:&,52,19,.:cm$="ASCII Re-Detect":gosub 9
+3532 goto 3546
+3536 poke 2033,.:&,52,16,1:&,52,17,1:&"{f6}":&,52,16,.:&"{pound}b1":&,52,16,1:&,22,5
+3538 cm$="Call Connected":gosub 9:tr%=7:gosub 12
+3542 gosub 82:&,40:a$="{f6}CONNECTION{shft space}CONFIRMED: "+str$(qb)+"{f6}":&"{pound}$a"
+3544 a%=.:if qb<1200 then:&,52,3,3:if a%then 3506
+3546 mp%=.:ll%=80:poke 971,mp%:poke 970,.:poke 951,ll%
+3548 gosub 3510:on bgoto 3568:&"{f6}HIT YOUR BACKSPACE/DELETE KEY 1 TIME 1"
+3550 &,52,16,.:&"{pound}b1: ":&,52,16,1
+3552 &,22,5:&,4:a=peek(780) and 127:if (peek(2033) and 128)<>128 or tr%<1 then 3508
+3553 &,52,42,3:if a%=1 then tr%=.
+3554 on-(a=13)-2*(a=.) goto 3548,3552
+3556 &,52,28,3:if a%then on-(a=1) goto 3520
+3560 on-(a<>8 and a<>20 and a<>127) goto 3548:nl=-(a=20):&,52,16,1-nl
+3562 &,52,47,3:if a%then dr=1:a$="s.detect":mm=13:gosub 3000:goto 3568
+3564 b$="ASCII":if nlthen b$="Commodore Graphics":&"{pound}k7"
+3566 &"{f6:2}{pound}$b {pound}k0{cyan}Mode Detected{yellow}.{pound}q0{f6:2}":on-(tr%<1) goto 3508
+3568 tr%=5:on-(nl>.) goto 3574:&,52,17,1:&,52,18,.:&,52,19,.
+3570 &"{f6}{lt. blue}Does Your Terminal Support{cyan}:{f6} {lt. blue}ANSI Color{cyan}?: ":gosub 96:&,52,18,a:b=a
+3572 &" {lt. blue}IBM Style Graphics{cyan}?: ":gosub 96:&,52,19,a:nl=-2*(a+b=2)
+3574 &"{lt. blue}Are You in 80 Columns{cyan}?: ":a=-(nl=1):on a+1 gosub 96,94:ll%=40+(40*a):l9%=ll%
+3575 poke 951,ll%:j$=ak$
+3576 &,52,41,3:on a%goto 3504:&,52,40,3:on 1-a%goto 3526
+3578 a=.:b$="":if l2=1 then b$="Temporarily "
+3580 &"{f6}{green}The System is {pound}$bReserved{lt. green}.{f6:2}{green}Enter Password{lt. green}: {white}":&,6:if an$=l2$then 3586
+3582 &"{f6}{green}Sorry{lt. green}, {green}That Password is Not Valid{lt. green}.":a=a+1
+3584 on-(a<3 and tr%>.) goto 3580:goto 3508
+3586 &"{f6}{green}Password Accepted{lt. green}.{f6}":on-(l2<>1) goto 3526:l2=.:&,52,40,.
+3588 gosub 33:x=21:gosub 1:print# 2," 0Off":close 2:goto 3526
+3594 a$="":for a=1 to ll%-2:a$=a$+"{$c0}":next:ak$=" "+a$+"{f6}":return
+3600 gosub 90:dr=1:on-(mid$(d1$,4,2)="12") goto 3604
+3602 a$="s.logo"+str$(int(rnd(.)*7)+1):gosub 13:&"{pound}u0":return
+3604 a$="s.logo"+str$(int(rnd(.)*6)+8):gosub 13:&"{pound}u0":return
+3999 rem:"i.lo (c)nissa 230313 lh-ad-rs"ready.

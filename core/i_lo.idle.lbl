@@ -105,9 +105,15 @@
 4288 next:if a=1 then:&"{pound}{back arrow}38{blue}{rvrs off}{$a1}{f6}"
 4290 &"{cyan}{$bc}{blue}{rvrs on}{pound}o{$a2}{pound}o{$a2}{pound}h1{rvrs off}{$be}{f6}":poke 53248,.:poke 2042,.:k=50:return
 4300 a$="":goto 4270:rem"GM Will be here"
-4400 f3=1:poke 53248,1:poke 2042,1:x%=st(20):y%=st(24):z%=st(23):w%=st(29)
-4402 &"{clear}{f6}{pound}{back arrow}22{lt. red}{rvrs on} Feedback   {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}22{rvrs on} SysOp Mail {pound}#3{pound}# {pound}%y {gray1} {f6}"
-4404 &"{pound}{back arrow}22{lt. red}{rvrs on} Calls/Log  {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}22{lt. red}{rvrs on} New Users  {pound}#3{pound}# {pound}%w {gray1} {f6}"
+' 10/13/2026: i/lo.idle2's stats box merged in: lightbar flag 55 (Alt, right)
+' shows New Messages (4403-4404) instead of Calls/Log (4401-4402). i.lo
+' used to load i/lo.idle2 for that, a copy of this module but for these lines
+'4400 f3=1:poke 53248,1:poke 2042,1:x%=st(20):y%=st(24):z%=st(23):w%=st(29)
+4400 f3=1:poke 53248,1:poke 2042,1:y%=st(24):z%=st(23):w%=st(29):&,52,$37,3:on a% goto 4403
+4401 x%=st(20):&"{clear}{f6}{pound}{back arrow}22{lt. red}{rvrs on} Feedback   {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}22{rvrs on} SysOp Mail {pound}#3{pound}# {pound}%y {gray1} {f6}"
+4402 &"{pound}{back arrow}22{lt. red}{rvrs on} Calls/Log  {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}22{lt. red}{rvrs on} New Users  {pound}#3{pound}# {pound}%w {gray1} {f6}":goto 4406
+4403 x%=st(15)+st(16):&"{clear}{f6}{pound}{back arrow}20{lt. red}{rvrs on} Feedback     {pound}#3{pound}# {pound}%z {f6}{pound}{back arrow}20{rvrs on} SysOp Mail   {pound}#3{pound}# {pound}%y {gray1} {f6}"
+4404 &"{pound}{back arrow}20{lt. red}{rvrs on} New Messages {pound}#3{pound}# {pound}%x {gray1} {f6}{pound}{back arrow}20{lt. red}{rvrs on} New Users    {pound}#3{pound}# {pound}%w {gray1} {f6}"
 4406 &"{pound}{back arrow}23{rvrs on}                {f6}{up}":&,27,3:dim l%(30,9):dr=3:gosub 3
 4408 &,60,2,.,l%(.,.),dr$+"e.last",dv%:gosub 5:if e%then 4416
 4409 &,52,$36,3:for i=.to 9:m$=" "+right$("  "+str$(l%(7,i)),3)+" Min"

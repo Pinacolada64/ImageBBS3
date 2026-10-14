@@ -498,7 +498,11 @@ Display the last ten callers on the idle screen in different colors.
 
 | `54&#160;Alt&#160;55`
 
-| _Undefined_
+| *Alternate Idle Screen*
+
+The idle screen's stats box shows *New Messages* (`st(15)+st(16)`) instead of *Calls/Log*.
+`i/lo.idle` checks it each time it draws the stats box (line 4400).
+(In the 2023-12-31 release, `i.lo` loaded a second module, `i/lo.idle2`, when this was checked.)
 
 // row 5
 
