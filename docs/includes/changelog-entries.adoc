@@ -2,6 +2,10 @@
 // Reference Guide (prg-appendix-changelog.adoc) and by CHANGELOG.adoc.
 // Add new entries at the top, under a === YYYY-MM-DD heading.
 
+=== 2026-10-14
+
+* `im` routines: lines 79 and 100 don't read the DOS status after loading a module; line 100 adds the `sub.` prefix, not `i.`.
+
 === 2026-10-13
 
 * Function keys: `f1$`-`f8$` hold up to 75 characters (and don't need to end in a null byte); `fkeybuf` (`$02A7`) is in the memory map. kbd:[Ctrl]/kbd:[C=] + function key could lock up the BBS; the ML now reads them from the right place.

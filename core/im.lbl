@@ -161,7 +161,12 @@
 	a$="sub."+a$:p2$=a$+"":new 60000
 {:79}
 ' 6/23/2021: remove gosub 20, "L:", add error check (goto 5)
-	cm$=a$:gosub {:9}:gosub {:2}:load dr$+a$,dv%:goto {:5}
+'	cm$=a$:gosub {:9}:gosub {:2}:load dr$+a$,dv%:goto {:5}
+' 10/14/2026: no goto 5 (return, as the release does): 5 reads channel 15,
+' which gosub 2 doesn't open, so loading a module could stop with ?file not
+' open error. Opening it here (gosub 3) would make the drive close every
+' file the caller has open on it
+	cm$=a$:gosub {:9}:gosub {:2}:load dr$+a$,dv%:return
 {:80}
 	a$=z$:z$=mid$(p1$,3):gosub {:72}:a$=z$:dr=5:on -(lc<>1) goto {:77}:return
 {:82}
@@ -203,7 +208,10 @@
 ' moved 'p2$="sub."+a$' to 110
 '	gosub {:110}:is=is+1:im$(is)=im$
 ' 10/13/2026: check the DOS error status after loading (gosub 5), as line 79 does
-	gosub {:110}:gosub {:5}:is=is+1:im$(is)=im$
+'	gosub {:110}:gosub {:5}:is=is+1:im$(is)=im$
+' 10/14/2026: no gosub 5 after all, for the same reason as line 79: channel 15
+' may not be open (?file not open error)
+	gosub {:110}:is=is+1:im$(is)=im$
 {:102}
 ' moved 'p2$="sub."+a$' to 110
 	gosub 60000:new 60000:is=is-1:if is then a$=im$(is):gosub {:110}

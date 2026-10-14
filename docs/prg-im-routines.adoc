@@ -541,15 +541,12 @@ Falls through to line 79 <<line-79>>, which loads it from device/drive `dr`.
 | [[line-79,Load module in a$]]gosub&#160;79
 |
 | Loads the module in `a$` (with its prefix) from device/drive `dr`.
-Sets `cm$` to the module name and shows it in the sysop window (`gosub 9` <<line-9>>), sets the device and drive (`gosub 2` <<line-2>>), ``load``s the module, then reads the DOS error status (`goto 5` <<line-5>>) and ``return``s.
+Sets `cm$` to the module name and shows it in the sysop window (`gosub 9` <<line-9>>), sets the device and drive (`gosub 2` <<line-2>>), ``load``s the module, and ``return``s.
 
 Lines 70-75 go through lines 76-78 to this line, then on to the module's first line (3000, 4000 or 60000).
 
-_Exit:_
-
-`e%`: DOS error status (`0` if the module loaded).
-
-`a$`: the DOS status, as a message (`Status: ...`), from line 5.
+NOTE: It doesn't read the DOS error status afterwards (line 5 <<line-5>>): that needs the command channel (15) open, which `gosub 2` doesn't do, so it would stop with `?file not open error`.
+Opening it (`gosub 3` <<line-3>>) would make the drive close every file the caller has open on it.
 
 | [[line-80,Run i/* file as a subroutine]]gosub&#160;80
 | _n/a_
@@ -635,13 +632,13 @@ _Exit:_
 | Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (`dr`=5), then ``return``s from routine.
 This routine also stores the filename in `cm$`, and does `gosub 9` <<line-9>>.
 
-The drive number and `i.` filename prefixes are automatically added by the subroutine.
+The drive number and `sub.` filename prefixes are automatically added by the subroutine.
 
 The subroutine filename is added to a "`module stack`" so that if a ``sub.*`` file loads another ``sub.*`` file, the previous ``sub.*`` file is reloaded on exit.
 
 `is` is the stack depth, and `im$(is)` is the module name.
 
-Otherwise, this routine exits to line 5 <<line-5>> to check the DOS error status.
+Like line 79 <<line-79>>, it doesn't read the DOS error status afterwards.
 
 | gosub&#160;110
 | _n/a_
