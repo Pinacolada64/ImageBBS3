@@ -174,7 +174,9 @@
 ' lm: 1 saved method (im=0), 2 manual (im=1), 3 choose. A 2-second pause, so
 ' the result shows before the menu comes back
 3287 if q1=1 and lm>1 then lm=lm+1
-3288 on lm-2 goto 3289:im=lm-1:a$="clocks":gosub 74:&,22,20:goto 3282
+' 10/13/2026: on -(lm>2), not on lm-2: on with a negative value (lm=1, A) is
+' ?illegal quantity; only 0 falls through
+3288 on -(lm>2) goto 3289:im=lm-1:a$="clocks":gosub 74:&,22,20:goto 3282
 ' B: the menu order is sub.clocks' method number (ck)
 3289 &,28,1:n=8:dim m%(22,n)
 3290 &,16,.,46,m%(.,1),"A","","Manual Entry"
@@ -210,18 +212,19 @@
 ' q5 -> h$, 4 hex digits. Dividing by 16 is exact; 16^n (and "and", above
 ' 32767) wouldn't be
 3334 h$="":q4=4096:for i=1 to 4:q3=int(q5/q4):q5=q5-q3*q4:q4=q4/16:h$=h$+mid$("0123456789ABCDEF",q3+1,1):next:return
-' record 37 -> q1 (method), q2 (its setting) and b$ (its name), as sub.clocks
+' record 37 -> q1 (method), q2 (its setting) and b$ (its name, at most 16
+' characters: after "Set Clock Using ", a menu item shows 32), as sub.clocks
 ' reads it (sub.from_record_37); see sub.clocks for the record's format
 3336 gosub 33:x=37:gosub 1:&,2,2:close 2:v=val(a$):q1=1:q2=.
 3337 if v=2 or v=3 then q1=3:q2=v-1
 3338 if v>4 then q1=2:q2=v
 3339 if v=4 then c$=mid$(a$,3,1):q1=4-(c$="u")-2*(c$="t")-3*(c$="a"):q2=val(mid$(a$,5)):if q1=4 and q2=. then q2=54528
 3340 b$="Manual Entry":if q1=2 then b$="CMD Device"+str$(q2)
-3341 if q1=3 then b$="Lt. Kernal Port"+str$(q2)
-3342 if q1=4 then q5=q2:gosub 3334:b$="DS12C887 at $"+h$
+3341 if q1=3 then b$="LtK Port"+str$(q2)
+3342 if q1=4 then q5=q2:gosub 3334:b$="DS12C887 $"+h$
 3343 if q1=5 then b$="Ultimate"
 3344 if q1=6 then b$="TeensyROM"
-3345 if q1=7 then b$="Last AutoMaint Date"
+3345 if q1=7 then b$="AutoMaint Date"
 3346 return
 3348 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
 3350 &"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
