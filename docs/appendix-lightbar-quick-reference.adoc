@@ -250,7 +250,8 @@ Normally this is only used for debugging.
 
 | *Time: Reset Clock*
 
-Poll CMD RTC every few hours to correct BBS clock drift, if running in emulation.
+Re-read the clock source every few hours, to correct the BBS clock's drift: whichever clock `IM`'s Set Time is set to use (a CMD device, DS12C887, Ultimate, ...; see <<im-set-clock-automatically>>).
+It does nothing if the clock source is Manual Entry or the last AutoMaint date.
 
 This is handled by an alarm. If you don't want this behavior, disable `At1` (Alarm Trigger 1).
 

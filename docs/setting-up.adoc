@@ -368,9 +368,8 @@ kbd:[8] `Last AutoMaint Date`
 The date and time of the last AutoMaintenance.
 This is not a real clock: check the time, and set it in `IM` if it is wrong.
 
-NOTE: Options 5-8 are read by `sub.clocks`, which the boot program `im` doesn't call yet.
-Until it does, the BBS treats them like option 1 (Manually) at boot.
-You can try each method with the `i.test clocks` test program.
+Every option except kbd:[1] sets the clock automatically each time the BBS starts (see <<im-set-clock-automatically>>).
+You can change the method later in `IM`, option kbd:[K] (Set Time), and try each method with the `i.test clocks` test program.
 
 [start=7]
 . Part III: Device/Drive Settings

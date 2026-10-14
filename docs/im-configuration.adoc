@@ -412,6 +412,16 @@ If the clock source is a CMD device or a DS12C887, you're then asked _Also set t
 
 The choice is saved in `e.data` (record 37), and _Set Clock Using_ then uses it.
 
+==== Setting the Clock Automatically [[im-set-clock-automatically]]
+
+Unless the clock source is Manual Entry, the BBS also uses it by itself:
+
+* *When it starts:* during "`Reading System Info`", the boot screen shows "`Setting Clock...`", then "`Clock Set.`".
+If the clock doesn't answer, the BBS starts anyway, and the clock on the status line flashes until it's set.
+With the Last AutoMaint Date as the source, the clock starts from the date and time of the last AutoMaint run.
+* *Every few hours:* when the lightbar's `Trc` right check (_Time: Reset Clock_) is set, which alarm trigger `At1` does, the idle screen reads the clock source again, to correct the drift of the C64's clock.
+It does this without a word, and does nothing for the Last AutoMaint Date, which would set the clock back.
+
 ==== From the Idle Screen
 
 Option kbd:[1], Set Time, on the idle screen does the same as kbd:[A]: it sets the clock from the clock source, or asks for the date and time if that's Manual Entry.
