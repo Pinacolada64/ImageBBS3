@@ -28,7 +28,7 @@ Many new features have been added and improvements have been made in existing fe
 
 ** Access group data changes no longer require a reboot
 
-** Programmable function keys: kbd:[Ctrl] or kbd:[C=] with a function key types its definition (eight keys: kbd:[Ctrl+f1], kbd:[C=+f1], kbd:[Ctrl+f3] ... kbd:[C=+f7]); see <<im-function-keys>>
+** Programmable function keys: kbd:[Ctrl] or kbd:[C=] with a function key types its definition (eight keys: kbd:[Ctrl+f1], kbd:[C=+f1], kbd:[Ctrl+f3] ... kbd:[C=+f7]); see <<function-keys>>
 
 * Configurable time zones for both the BBS and the caller show the caller`'s local time if the BBS is in a different time zone
 

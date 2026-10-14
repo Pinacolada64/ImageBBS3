@@ -29,6 +29,8 @@ include::convert-20.adoc[]
 
 include::boot-up.adoc[]
 
+include::new-features.adoc[]
+
 include::lightbar.adoc[]
 
 include::modules.adoc[]
