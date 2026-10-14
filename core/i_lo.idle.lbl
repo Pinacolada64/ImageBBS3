@@ -156,9 +156,10 @@
 4498 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:a$="lo."+"rf":goto 70
 4499 gosub 4480:print# 131,"ath1":tr%=101:poke 2042,.:poke 53248,1:zz=1:a$="lo."+"im":goto 70
 ' 10/14/2026: lightbar Trc right (Time: Reset Clock) re-reads the clock with
-' sub.clocks im=10, whatever the method saved in e.data record 37 (CMD device,
+' sub.clocks im=11, whatever the method saved in e.data record 37 (CMD device,
 ' DS12C887, Ultimate, TeensyROM, Lt. Kernal), and quietly; nothing for manual.
 ' It replaced CMD-only code (4500-4528), which skipped every other method.
 ' sub.clocks takes sub.modem's place at 60000; the idle loop loads it again
-4500 &,52,25,.:b$="update time":x=11:gosub 3080:close 2:im=10:a$="clocks":gosub 74:return
+' 10/14/2026: im=11, not 10: like 10, but not the last AutoMaint date
+4500 &,52,25,.:b$="update time":x=11:gosub 3080:close 2:im=11:a$="clocks":gosub 74:return
 4530 rem:"i/lo.idle (c)nissa 230711 lh rs"
