@@ -1,0 +1,148 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.netfile" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 rem "i/SM.netfile"
+4002 v=1.2:gosub 4062:im=1:gosub 443:return
+4004 dr=2:a$=f$+",s,w":gosub 4:if e%then a$=f$+",s,a":gosub 4
+4006 return
+4008 gosub 4038:if e%then tt$="":return
+4010 &"{f6}":p$="{f6}{yellow}Destination Node ({rvrs on}{cyan}? List{rvrs off}{yellow})":gosub 6:if an$="{f2}" then gosub 4020:goto 4010
+4012 a%=val(an$):a$=an$:if a%<1 then:&,16,2
+4014 if a%<1 then:&"{f6}No Node Found.{f6}":tt$="":return
+4016 gosub 4026:x=a%+1:gosub 4018:tt$=a$+"/"+zn$:return
+4018 gosub 1:&,2,2:return
+4020 gosub 4026:for i=1 to n:a%=i:x=i+1:gosub 1:input# 2,a$,b$,b$,c$,b
+4022 if b=.then:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+4024 i=i+rc*n:next:close 2:return
+4026 dr=2:a$="nm.nodes":gosub 4:input# 2,n:return
+4028 poke 53252,2:e%=0:&"{f6}{lt. green}Device: {white}{pound}i1":d1%=val(an$):if d1%>0 and d1%<7 then dr=d1%:goto 4034
+4030 dr=0:if d1%<7 or d1%>32 then e%=1:return
+4032 poke 53252,3:&"{lt. green}Drive : {white}{pound}i1":d2%=val(an$):if d2%<.or d2%>255 then e%=1:return
+4034 gosub 3:d1%=dv%:d2%=val(dr$):close 15:if stthen e%=1:&"{f6}{lt. red}Device Not Present!{f6}"
+4036 goto 3
+4038 a$="path":gosub 28:if e%then return
+4040 gosub 4054:if e%=0 then return
+4042 dr=2:a$="nm.nodes":gosub 4:if e%then:&:goto 4054
+4044 close 3:open 3,dv%,3,dr$+"nm.nodelist,p,w":print# 3,chr$(0) chr$(194);
+4046 input# 2,n:print# 3,chr$(n);:if n=0 then 4054
+4048 for i=1 to n:x=i+1:gosub 1:input# 2,a$,b$,b$,b$,b$,a,b,c,d
+4050 print# 3,left$(a$+"---",3) chr$(0) chr$(a) chr$(b) chr$(c) chr$(d);
+4052 next
+4054 close 3:close 2:dr=2:gosub 3:a$=dr$+"nm.nodelist":&,16:goto 5
+4056 close 2:&"{white}Network {lt. red}Not Configured!{f6:2}":return
+4058 close 2:&"{lt. red}Configuration Error!{f6:2}":return
+4060 &"{f6:2}{lt. red}Only {white}the SysOp can use this!{f6}":return
+4062 &"{clear}{f6:2}{white}NetFile Utility:  {lt. blue}Reading Nodes":if id>1 then 4060
+4064 dr=2:a$="nm.config":gosub 4:if e%then 4056
+4066 &,2,2:nn=val(a$):nh=nn:close 2:dr=2:a$="nm.nodes":gosub 4:if e%then 4056
+4068 &,2,2:n=val(a$):if nn>nthen 4058
+4070 x=nn+1:gosub 1:&,2,2:nn$=a$:close 2
+4072 yy=0:dr=2:a$="nm.F.*,s,r":gosub 4:close 2:if e%then 4080
+4074 open 2,dv%,0,"$"+dr$+"nm.F."+nn$+"*":get#2,a$,a$:&,8,2,1
+4076 &,8,2,1:if mid$(a$,7,1)=chr$(34) then yy=yy+1:tt$(yy)=a$:goto 4076
+4078 close 2
+4080 n%=nn:n$=nn$:zn$=n$:&"{home}{f6:2}{white}NetFile Utility: {lt. blue}{pound}$n{pound}{back arrow}39 {f6}"
+4082 s$="":q$="is":if yy<>1 then s$="s":q$="are"
+4084 if yy=0 then 4092
+4086 a%=yy:&"There {pound}$q {pound}%a {f5}nm.F.{f5} file{pound}$s waiting:{f6:2}"
+4088 for z=1 to yy:a$=left$(tt$(z),24)
+4090 &"{pound}$a Dissolve? ":gosub 94:a$=tt$(z):on agosub 4132:next z
+4092 &"{f6:2}{cyan}Want to send files? {yellow}":gosub 94:on agosub 4100
+4094 return
+4096 gosub 4008:if tt$="" then 4124
+4098 ml$="":a=2:a$="2":gosub 28:d1%=yy:d2%=yz:goto 4108
+4100 gosub 4008:if tt$="" then 4124
+4102 ml$="":a=2:a$="2":gosub 28
+4104 gosub 4028:if e%then 4124
+4106 dr=0:gosub 4190:if kk=0 then 4124
+4108 dr=2:f$="nm.F."+tt$:gosub 4004:if e%then:&:goto 4124
+4110 d$=mid$(str$(d2%),2)+":"
+4112 for i=1 to kk:o$=tt$(i):print# 2,o$r$"(" ed$(i) ")"
+4114 close 3:open 3,d1%,3,d$+o$+",r":&"{clear}{pound}no{pound}n6Scanning File...":sys 49155
+4116 close 3:open 3,d1%,3,d$+o$+",r":&"Copying...":sys 49152:close 3:next:close 2
+4118 b$=tt$+"/A/"+f$:f$="nm.list":gosub 4004:if e%then 4124
+4120 print# 2,b$:close 2
+4122 gosub 4222
+4124 on-(kk=.) goto 4128:tt$="":&"{f6:2}Send same file(s) to another node? {yellow}":gosub 94
+4126 on-(a=.) goto 4128:goto 4096
+4128 &"{f6:2}{cyan}Send More Files? {yellow}":gosub 94:if athen 4100
+4130 return
+4132 ml$="":a=2:a$="2":gosub 28:o$=mid$(tt$(z),8,12)
+4134 gosub 4028:if e%then return
+4136 dr=0:gosub 3
+4138 dr=2:gosub 2:close 3:open 3,dv%,3,dr$+o$+",s,r":kk=.
+4140 &"{clear}{lt. green}":kk=kk+1:&,2,3:f$=a$:ed$(kk)=f$:&,2,3:d$=a$:on-(st<>.) goto 4158:&"{f5}{pound}$f{f5}:"
+4142 dr=.:gosub 2:close 2:open 2,dv%,2,dr$+f$+",w":gosub 5:&"{yellow}{pound}$e{f6:2}":if e%=.then 4156
+4144 &"{white}1.  {lt. blue}Change Name{f6}{white}2.  {lt. blue}Replace{f6}{white}3.  {lt. blue}Abort{f6}"
+4146 &"{pound}g1":on tr%+1 goto 4158:on val(an$) goto 4150,4148,4176:goto 4146
+4148 print# 15,"s" dr$+f$:goto 4142
+4150 q=16:gosub 4264:&"{f6}New Filename:  "
+4152 &"{pound}i0":on-(tr%<1) goto 4158:if an$="" then 4152
+4154 f$=an$+right$(f$,2):goto 4142
+4156 &"{clear}{pound}n0{pound}n6{f5}{pound}$f{f5}{pound}{back arrow}16{pound}$d":sys 49158:close 2:goto 4140
+4158 close 3:if tr%<1 then return
+4160 dr=2:gosub 3:print# 15,"s" dr$o$
+4162 &"{clear}{yellow}Sending receipt...."
+4164 gh$=right$(o$,3):gosub 4178:zy$=gh$+"/"+zn$:f$="nm.M."+zy$:gosub 4248
+4166 l$="[{rvrs on}NM/file{rvrs off}]":n$=str$(nh-1):gosub 4252
+4168 print# 2,"The following files were dissolved:" r$r$
+4170 for x=1 to kk:print# 2,ed$(x):next:print# 2,"{^}"
+4172 close 2:e1$=zy$+"/A/nm.M."+zy$
+4174 f$="nm.list":gosub 4248:print# 2,e1$:close 2
+4176 return
+4178 dr=2:a$="nm.config":gosub 4:if e%then 4246
+4180 x=1:gosub 1:&,2,2:nh=val(a$)+1
+4182 dr=2:a$="nm.nodes":gosub 4
+4184 x=1:gosub 1:&,2,2:nn=val(a$)
+4186 for x=2 to nn+1:gosub 1:&,2,2:if a$=gh$then:&,2,2:&,2,2:&,2,2:z$=a$:x=nn+1
+4188 next:return
+4190 poke 53252,16:&"{lt. blue}{f6}Pattern: ":gosub 289:py$=an$
+4192 gosub 4258:&"{f6}"
+4194 close 1:open 1,dv%,0,"$"+dr$+py$:get#1,a$,a$:&,8,1,1:lp=1:&a$+"{f6}":kk=.
+4196 &,8,1,1:s=st:if mid$(a$,7,1)="b" then b$=a$:&"{f6}{pound}$b{f6}":goto 4210
+4198 b%=val(a$):f$=mid$(a$,8):t$=mid$(a$,26,1):g$=t$:if g$<>"p" and g$<>"s" then 4196
+4200 for i=2 to 17:if mid$(f$,i,1)=qt$then f$=left$(f$,i-1)
+4202 next:hn=hn+1:on-(hn<hm) goto 4196:&" {pound}#4{pound}# {pound}%b: {f5}{pound}$f,{pound}$g{f5} {pound}{back arrow}30?: {pound}g1":a$=an$
+4204 x=-(a$="Y")-2*(a$="S")-3*(a$="A"):&mid$("No   Yes  StartAbort",x*5+1,5)
+4206 &"{f6}":on x+1 goto 4212,4208,4210,4210
+4208 kk=kk+1:tt$(kk)=f$+","+g$:goto 4212
+4210 s=1:if x=3 then kk=.
+4212 on-(s=.and kk<100) goto 4196:close 1:if kk=.then return
+4214 &"{f6:2}":for i=1 to kk:b$=tt$(i):b%=i:&"{pound}#2{pound}# {pound}%b-{pound}$b{f6}":next
+4216 &"{f6:2}Correct? ":gosub 94:if a=0 then kk=0:return
+4218 for i=1 to kk:a%=i:a$=tt$(i):&"Describe {f5}{pound}$a{f5}: "
+4220 q=30:gosub 4264:&"> {pound}i0":ed$(i)=an$:next:yy=d1%:yz=d2%:return
+4222 dr=2:a$="nm.config":gosub 4:if e%then 4246
+4224 x=1:gosub 1:&,2,2:nh=val(a$)+1
+4226 dr=2:a$="nm.nodes":gosub 4
+4228 x=1:gosub 1:&,2,2:nn=val(a$)
+4230 for x=2 to nn+1:gosub 1:&,2,2:gh$=a$:&,2,2:&,2,2:&,2,2:z$=a$:&,2,2:dy$=a$
+4232 if gh$=left$(tt$,3) then f$="nm.M."+gh$+"/":f$=f$+zn$:tt$=right$(f$,7):x=nn+1
+4234 next
+4236 &"{f6:2}{white}Mail for:  {lt. blue}{pound}$z":gosub 4248
+4238 l$="*[{rvrs on}NM/file{rvrs off}]":n$=str$(nh-1):gosub 4252
+4240 for x=1 to i-1
+4242 print# 2,tt$(x) r$ed$(x):next:print# 2,"{^}":close 2:e1$=tt$+"/A/nm.M."+tt$
+4244 dr=2:a$="nm.list,s,a":gosub 4:print# 2,e1$
+4246 for x=1 to 15:close x:next:return
+4248 dr=2:a$=f$+",s,w":gosub 4:if e%then a$=f$+",s,a":gosub 4
+4250 return
+4252 tt$(.)="!"+left$(n$+"    ",4):j$="                    "
+4254 tt$(.)=tt$(.)+left$(bn$+j$,20)+l$
+4256 print# 2,z$r$na$r$" 0";r$d1$r$tt$(.) r$:return
+4258 &"{f6}Skip how many? ":poke 53252,4
+4260 hm=.:&"{pound}i1":on tr%+1 goto 4267
+4262 hm=int(abs(val(an$))):return
+4264 if v=1.3 then:&,59,1,q:return
+4266 poke 53252,q:return
+4267 return
+4268 rem "(c) ACT 940214"
+4270 rem"converted from 1.2 x-tec 171226
+4272 rem:"i/SM.netfile (c)nissa 230409 lh"

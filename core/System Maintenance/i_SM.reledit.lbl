@@ -1,0 +1,347 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.reledit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+
+4000 gosub304:rem +.reledit
+4002 &,5:v=lp:re$="79007309123":z$="":op$="Open  ":cl$="Closed":gosub4024:goto4138
+4004 a$="e."+sy$:dr=3:goto4
+4006 f2=.:ifleft$(a$,1)="."andmid$(a$,3,1)="."thenf2=val(mid$(a$,2,1)):a$=mid$(a$,4)
+4008 ifright$(a$,1)="?"thenf2=f2or8:a$=left$(a$,len(a$)-1)
+4010 return
+4012 if(f2and8)=8thena$=a$+"?":f2=f2and7
+4014 iff2thena$="."+mid$(str$(f2),2,1)+"."+a$
+4016 return
+4018 a$="e."+sy$+",l,<":dr=3:gosub4:x=1:gosub1:print#2,0;r$;re$:return
+4020 poke53252,q:return
+4022 a=int(abs(val(mid$(an$,a,4)))):return
+4024 a$="nm.config":dr=2:gosub4:ife%thennn=.:goto4028
+4026 x=1:gosub1:&,2,2:nn=val(a$):ifnnthengosub4320
+4028 sy$="Sig":gosub4004:ife%thensg=.:close2:goto4038
+4030 x=1:gosub1:&,2,2:sg=val(a$):close2:goto4038
+4032 q=a:gosub4022:fori=qtolen(an$):ifmid$(an$,i,1)<>"{f1}"andmid$(an$,i,1)<>"-"then4036
+4034 q=a:a=i+1:gosub4022:i=a:a=q:q=i:fori=1to1:next:goto4038
+4036 next:q=.
+4038 sb=0:sy$="Sub":gosub4004:ife%=0thenx=1:gosub1:&,2,2:sb=val(a$)
+4040 ud=0:sy$="U/D":gosub4004:ife%=0thenx=1:gosub1:&,2,2:ud=val(a$)
+4042 ux=0:sy$="U/X":gosub4004:ife%=0thenx=1:gosub1:&,2,2:ux=val(a$)
+4044 return
+4046 ifsg+sb+ud+ux+nn=.then:&"Nothing Configured.{f6:2}":return
+4048 a$="":l=.:ifsgthena%=sg:&"{pound}#0{pound}%a SIGs":a$=", ":l=l+9
+4050 ifsbthena%=sb:&:a=10:gosub4060:&"{pound}#0{pound}%a Subs":a$=", ":l=l+10
+4052 ifudthena%=ud:&:a=10:gosub4060:&"{pound}#0{pound}%a U/Ds":a$=", ":l=l+10
+4054 ifuxthena%=ux:&:a=10:gosub4060:&"{pound}#0{pound}%a U/Xs":a$=", ":l=l+10
+4056 ifnnthena%=nn:&:a=8:gosub4060:&"Network ":l=l+8:a=10:gosub4060:&"(Node {pound}#0{pound}%a)":l=l+10
+4058 &" ":a=11:gosub4060:&"Configured{f6:2}":return
+4060 on-(l+a<ll%)goto4010:&"{f6}":l=.:return
+4062 s=a:gosub4022:q=a:forx=stolen(an$):ifmid$(an$,x,1)<>"-"andmid$(an$,x,1)<>"{f1}"thennext:q=.:return
+4064 a=x+1:gosub4022:s=q:q=a:a=s:forx=1to1:next:return
+4066 &"{f6}(RETURN) To Keep The Same.{f6:2}"
+4068 q=a:gosub4020:b$=w$:pl=b:&,1,32:&"{f6}"
+4070 ifan$=""thenan$=b$
+4072 ifbthena=val(an$)
+4074 p$="":return
+4076 f$="":b=(f2and7):ifsy$="Sub"then4080
+4078 l$=mid$("CredDO-CFreeDO-FPwCrPwDCPwFrPwDF",b*4+1,4):return
+4080 b=b-(b=.)-1:l$=mid$("Std AnonN-AnPswdPswdP-AnP-NA",b*4+1,4)
+4082 f$=" ":if(f2and8)=8thenf$="N"
+4084 return
+4086 p%=.:&"{f6}":fori=0to9:a%=i:&"Group {pound}#0{pound}%a?:":gosub94:p%=p%+a*(2^i):next:return
+4088 &"{clear}{pound}q0{f6}":sh=.:rc=.:y=.:gosub4004:ife%thengosub4018:close2:s=0:e=0:return
+4090 x=1:gosub1:&,2,2:e=val(a$):ife=0thens=0:close2:return
+4092 ifs>eors<1thens=1
+4094 ifq<sorq>ethenq=e
+4096 ifsy$="Sig"then:&" # Name{pound}{back arrow}39    Accs SIGOp{pound}{back arrow}15Sub    U/D    U/X  {f6}{pound}vz"
+4098 ifsy$<>"Sig"then:&" ## Title{pound}{back arrow}31Type O/C{pound}{back arrow}39     Dv:Drv SubOp"
+4100 ifsy$<>"Sig"then:&"{pound}{back arrow}18Password{pound}{back arrow}33Accs{f6}{pound}vz"
+4102 fora=stoq:x=a+1:gosub1:forx=1to7+3*(sy$="Sig"):&,2,2:tt$(x)=a$:next
+4104 a%=a:b%=val(tt$(4)):d$=tt$(1):p%=val(tt$(2)):ifb%<1thenb%=0
+4106 j$=op$:ifsy$="Sig"and(val(tt$(3))and1)=1thenj$=cl$
+4108 k$=op$:ifsy$="Sig"and(val(tt$(3))and2)=2thenk$=cl$
+4110 l$=op$:ifsy$="Sig"and(val(tt$(3))and4)=4thenl$=cl$
+4112 ifsy$<>"Sig"thenb$="Opn":ifval(tt$(7))thenb$="Cls"
+4114 c$=tt$(3):a$="":ifsy$="Sig"thenc$=tt$(1)
+4116 ifsy$<>"Sig"thend$=tt$(1):d%=val(tt$(5)):g%=val(tt$(6)):a$=c$:gosub4006:gosub4076
+4118 ifa$="---"orc$="---"then:&"{pound}#3{pound}# {pound}%a (EMPTY RECORD)":goto4132
+4120 ifsy$<>"Sig"then4126
+4122 &"{pound}#2{pound}# {pound}%a {pound}$c{pound}{back arrow}39    {pound}#4{pound}# {pound}%p {pound}vn{pound}#0{pound}%b {pound}{back arrow}15{pound}$j {pound}$k {pound}$l"
+4124 y=sh+rc:goto4132
+4126 gosub4076
+4128 &"{pound}#3{pound}# {pound}%a {pound}$a{pound}{back arrow}31{pound}$l {pound}$b{pound}{back arrow}39     {pound}#2{pound}# {pound}%d:{pound}#0{pound}%g{pound}{back arrow}11{pound}vn":y=sh+rc
+4130 &"{pound}#0{pound}%b{pound}{back arrow}18{pound}$d{pound}{back arrow}33{pound}#4{pound}# {pound}%p {pound}$f":y=y+sh+rc
+4132 &"{f6}{pound}vz":y=y+sh+rc
+4134 ifythena=e
+4136 next:close2:return
+4138 &,5:a$=mid$(str$(v),2):lp=.:&"{clear}{f6}{pound}{back arrow}09RELEDIT V{pound}$a (Rev. {pound}#0{pound}%a){f6:2}"
+4140 &"{pound}{back arrow}11(C)1990 New Image{f6:2}":gosub4046
+4142 &"{f6}Edit: S - Sub{f6}{pound}{back arrow}06U - U/D{f6}{pound}{back arrow}06X - U/X{f6}{pound}{back arrow}06G - SIG{f6}":ifnnthen:&"{pound}{back arrow}06N - NetSubs{f6}"
+4144 &"{f6}RELEDIT: {pound}g1"
+4146 a=-(an$="S")-4*(an$="U")-7*(an$="X")-10*(an$="G")-13*(an$="N"andnn>.)
+4148 ifa=.thensg=.:&"Quit{f6}":sb=.:ud=.:ux=.:sg=.:nn=.:gosub304:return
+4150 sy$=mid$("SubU/DU/XSigNetSubs",a,3-4*(a=13)):s=1:q=.:&sy$+"{f6}"
+4152 ifsy$="NetSubs"then4324
+4154 gosub4088:q=8:gosub4020:a%=e:&"{f6}Edit (":ifa%>1then:&"1-{pound}#0{pound}%a, L to List"
+4156 ifa%=1then:&"1, L to List"
+4158 a=30-30*(sy$="Sig")-870*(sy$<>"Sig"andsg<>0):ife<athen:&left$(", ",-2*(e>.))+"A to Add"
+4160 &"): {pound}i1":ifan$=""ortr%=.then4138
+4162 a=1:gosub4022:ifa>0anda<=ethen4170
+4164 a=2:gosub4062:ifleft$(an$,1)="L"thens=a:goto4154
+4166 z=0:ifleft$(an$,1)="A"then4426
+4168 s=1:q=.:goto4154
+4170 ifsy$="Sig"then4238
+4172 z=a:gosub4004:x=a+1:gosub1:forx=1to7:&,2,2:tt$(x)=a$:next:close2
+4174 a$=tt$(3):gosub4006
+4176 c$=a$:ifc$="---"then4426
+4178 p%=val(tt$(2)):d%=val(tt$(5)):g%=val(tt$(6)):d$=tt$(1):b%=val(tt$(4))
+4180 oc=val(tt$(7)):ifb%<1thenb%=.
+4182 m$="(None)":ifb%thengosub35:x=b%:gosub1:&,2,2:m$=a$:ifa$="{^}"thenm$="(None)":b%=.
+4184 gosub4076:b$=op$:ifoc=1thenb$=cl$
+4186 a$=sy$:a%=z:&"{clear}{f6}    {pound}$a #{pound}#0{pound}%a:{f6:2}"
+4188 &" 1)  Title: {pound}$c{f6} 2) Access: {pound}#0{pound}%p{f6} 3)  SubOp: {pound}$m-{pound}vn{pound}%b{f6} 4) Device: {pound}%d{f6}"
+4190 &" 5)  Drive: {pound}%g{f6} 6) Status: {pound}$b{f6} 7)   Type: {pound}$l{f6} 8) Passwd: {pound}$d{f6} 9)  Scrns:{f6}"
+4192 if(f2and8)=8then:&"{f6}{pound}{back arrow}09This Sub is Networked{f6}"
+4194 q=2:gosub4020:&"{f6}  {pound}$a Edit: {pound}i1{f6}":a=1:gosub4022:ifa<1ora>9then4236
+4196 onagoto4200,4202,4206,4210,4214,4216,4218,4232,4234
+4198 goto4184
+4200 p$="Title":w$=c$:a=27:b=0:gosub4066:c$=an$:goto4184
+4202 p$="Access":w$=mid$(str$(p%),2):a=4:b=1:gosub4066:ifan$="{f2}"thengosub4086:goto4184
+4204 a=1:gosub4022:on-(a<1ora>1023)goto4184:p%=a:goto4184
+4206 p$="SubOp":w$=mid$(str$(b%),2):a=20:b=1:gosub4066:a=1:gosub4022
+4208 on-(a<.ora>ur)goto4184:i=a:on-(a=.)gosub505:b%=i:goto4182
+4210 p$="Device":w$=mid$(str$(d%),2):a=2:b=1:gosub4066:a=1:gosub4022
+4212 on-(a<8+(sy$="U/X")ora>15)goto4184:d%=a:goto4184
+4214 p$="Drive":w$=mid$(str$(g%),2):a=3:b=1:gosub4066:a=1:gosub4022:g%=a:goto4184
+4216 oc=-(oc=.):goto4184
+4218 ifsy$="Sub"then4226
+4220 f2=(f2and8):&"{f6}Downloads Only?: ":gosub94:f2=f2+a
+4222 &"Free Downloads?: ":gosub94:f2=f2+a*2
+4224 &"      Password?: ":gosub94:f2=f2+a*4:goto4184
+4226 f2=(f2and8):&"{f6}Non-Anonymous?: ":gosub94:f2=f2+a*3:ifathen4230
+4228 &"All Anonymous?: ":gosub94:f2=f2+a+1
+4230 &"     Password?: ":gosub94:f2=f2+4*a:goto4184
+4232 p$="Password":w$=d$:a=14:b=1:gosub4066:d$=an$:goto4184
+4234 gosub4640:goto4184
+4236 goto4448
+4238 z=a:gosub4004:x=a+1:gosub1:forx=1to4:&,2,2:tt$(x+10)=a$:next
+4240 c$=tt$(11):p%=val(tt$(12)):oc=val(tt$(13)):b%=val(tt$(14))
+4242 ifb%<.thenb%=.
+4244 m$="(None)":ifb%thengosub35:x=b%:gosub1:&,2,2:m$=a$:ifa$="{^}"thenm$="(None)":b%=.
+4246 j$=op$:if(ocand1)=1thenj$=cl$
+4248 k$=op$:if(ocand2)=2thenk$=cl$
+4250 l$=op$:if(ocand4)=4thenl$=cl$
+4252 a%=z:&"{clear}{f6}    SIG #{pound}#0{pound}%a:{f6:2}"
+4254 &" 1)  Title: {pound}$c{f6} 2) Access: {pound}#0{pound}%p{f6} 3)  SIGOp: {pound}$m-{pound}vn{pound}%b{f6}"
+4256 &" 4)   Subs: {pound}$j{f6} 5)   U/Ds: {pound}$k{f6} 6)   U/Xs: {pound}$l{f6} 7) SB Lst:{f6} 8) UD Lst:{f6}"
+4258 &" 9) UX Lst:{f6}10)  Scrns:{f6:2}"
+4260 q=2:gosub4020:&"  SIG Edit: {pound}i1{f6}":a=1:gosub4022:ifa<1ora>10then4432
+4262 onagoto4264,4266,4270,4274,4276,4278,4282,4282,4282,4280
+4264 p$="Title":w$=c$:a=25:b=0:gosub4066:c$=an$:goto4246
+4266 p$="Access":w$=mid$(str$(p%),2):a=4:b=1:gosub4066:ifan$="{f2}"thengosub4086:goto4246
+4268 a=1:gosub4022:on-(a<1ora>1023)goto4246:p%=a:goto4246
+4270 p$="SIGOp":w$=mid$(str$(b%),2):a=20:b=1:gosub4066:a=1:gosub4022
+4272 on-(a<.ora>ur)goto4242:i=a:ifa=.thenim=10:gosub445
+4273 b%=i:goto4242
+4274 oc=(ocand6)-((ocand1)=.):goto4246
+4276 oc=(ocand5)-2*((ocand2)=.):goto4246
+4278 oc=(ocand3)-4*((ocand4)=.):goto4246
+4280 gosub4640:goto4246
+4282 a=-(a=7)-4*(a=8)-7*(a=9)
+4284 tt$(11)=c$:tt$(12)=str$(p%):tt$(13)=str$(oc):tt$(14)=str$(b%)
+4286 sy$=mid$("SubU/DU/X",a,3):s=1:a$=sy$:&"{f6}Reading {pound}$a Config..."
+4288 z%=30:z$="SIG"
+4290 se=.:bn=.:gg$=".Sig"+str$(z):a$="e"+gg$+",s,r":dr=3:gosub4:ife%then4312
+4292 &,2,2
+4294 &,2,2:a=-(st=.):ifleft$(a$,3)=sy$thense=se+1:a%(se)=val(mid$(a$,4))
+4296 onagoto4294:close2:bz=se
+4298 onse+1goto4312:gosub4004:on-(e%<>.)goto4316:x=1:gosub1:&,2,2:a=val(a$):ifa=.then4316
+4300 fori=1tose:on-(a%(i)>a)goto4310:x=a%(i)+1:gosub1:&,2,2:&,2,2:&,2,2
+4302 ifa$="---"then4310
+4304 bn=bn+1:c%(bn)=a%(i):gosub4006:gosub4076:ifz$="NetSub"thenf$="N"
+4306 ed$(bn)=l$+" "+f$+" "+a$
+4308 if(f2and8)=0andz$="NetSub"thenii=c%(bn):gosub4356:gosub4004
+4310 next
+4312 ifbn>z%thenbn=z%
+4314 s=1:q=.:goto4496
+4316 a$=sy$:&"{f6:2}{pound}$as Not Configured!{f6:2}"
+4318 on-(z$="NetSub")goto4420:sy$="Sig":goto4240
+4320 a$="netlist":gosub28:ife%thennn=.
+4322 return
+4324 &"{clear}{f6}Reading NetSub Configuration{f6:2}Please Wait...":s=.:q=.:sy$="Sub":gosub4320
+4326 dr=2:gosub3:fori=1to60:a$=dr$+"nm.netsub"+str$(i):&,16,2,dv%
+4328 gosub5:ife%thenr%=i-1:i=60:next:goto4332
+4330 &".":&,16:nn$(i)=a$:next:r%=60
+4332 &"{clear}{pound}q0{f6} # - NetSub ID{f6}{pound}vz":sh=.:rc=.:onr%+1goto4338:ifs>r%ors<1thens=1
+4334 ifq<sorq>r%thenq=r%
+4336 fora=stoq:e%=a:a$=nn$(a):&"{pound}#2{pound}# {pound}%e - {pound}$a{f6}":a=a-60*(rc+sh>.):next
+4338 q=8:gosub4020:&"{pound}vz{f6}Edit (":ifr%>1then:&"1-{pound}#0{pound}%r, L to List"
+4340 ifr%=1then:&"1, L to List"
+4342 a$="":ifr%<60thena$="A to Add":ifr%>0thena$=", A to Add"
+4344 &"{pound}$a): {pound}i1":ifan$=""ortr%=.then4138
+4346 a=1:gosub4022:ifa>0anda<=r%then4388
+4348 a=2:gosub4062:ifleft$(an$,1)="L"thens=a:goto4332
+4350 ifleft$(an$,1)="A"andr%<60then4380
+4352 s=.:q=.:goto4332
+4354 z$="NetSub":se=a%(0):bn=.:z%=60:goto4298
+4356 x=ii+1:gosub4362:ifright$(tt$(3),1)="?"then4366
+4358 ifright$(tt$(3),1)="{^}"thentt$(3)=left$(tt$(3),len(tt$(3))-1)
+4360 tt$(3)=tt$(3)+"?":x=ii+1:goto4364
+4362 gosub4004:gosub1:forx=1to7:&,2,2:tt$(x)=a$:next:return
+4364 gosub1:a$=tt$(1):forx=2to7:a$=a$+r$+tt$(x):next:print#2,a$
+4366 close2:return
+4368 fori=1to60:a%(i)=.:next:fori=1tobn:a%(i)=c%(i):next:a%(0)=bn:goto4392
+4370 ifz$<>"NetSub"thenreturn
+4372 fori=atoa+q-1:gosub4374:next:return
+4374 x=c%(i)+1:gosub4362:ifright$(tt$(3),1)<>"?"then4366
+4376 tt$(3)=left$(tt$(3),len(tt$(3))-1):x=c%(i)+1:goto4364
+4378 ona%(0)+1goto4010:fori=1toa%(0):c%(i)=a%(i):gosub4374:next:return
+4380 fori=0to60:dt$(i)="---":a%(i)=0:next:gg$="nm.netsub"+str$(r%+1):q%=16
+4382 p$="NetSub ID":w$=dt$(0):a=20:b=1:gosub4066
+4384 a=1:ifan$="---"then:&"Delete This NetSub{f6:2}Are you Sure? ":gosub94:an$=""
+4386 ona+1goto4392:dt$(0)=an$:goto4392
+4388 dr=2:gosub3:gg$="nm.netsub"+str$(a):a$=dr$+gg$:&,16,2,dv%
+4390 &,16:dt$(0)=a$:fori=1tolen(an$)step3:dt$(i/3+1)=mid$(an$,i,3):next:q%=len(an$)/3
+4392 a$=dt$(0):on-(a$="")goto4420:&"{clear}{f6} 1) NetSub ID: {pound}$a{f6}":fori=1toq%:a%=i+1:b$=dt$(i)
+4394 c$=chr$(192+i):&"{pound}#2{pound}# {pound}%a)    Link {pound}$c: {pound}$b{f6}":next:a%=i+1
+4396 &"{pound}#2{pound}# {pound}%a) Edit Subs:{f6:2}    Edit: {pound}i1":a=1:gosub4022:bn=a
+4398 onagoto4382:on-(a=q%+2)goto4354:ifa>1anda<q%+2thenbn=a:goto4402
+4400 goto4416
+4402 p$="Link "+chr$(191+bn):w$=dt$(bn-1):a=3:b=1:gosub4066:ifan$="{f2}"then4406
+4404 dt$(bn-1)=an$:goto4392
+4406 dr=2:a$="nm.nodes":gosub4:ife%thenclose2:goto4402
+4408 &,2,2:n=val(a$):ifn=.thenclose2:goto4402
+4410 sh=.:rc=.:&"{f6:2}Node  Node  Board{f6} No.   ID   Name{f6:2}":fori=1ton
+4412 a%=i:x=i+1:gosub1:&,2,2:b$=a$:&,2,2:&,2,2:&"{pound}#3{pound}# {pound}%a   {pound}$b  {pound}$a{f6}"
+4414 i=i-n*(sh+rc<>.):next:&"{f6}":close2:goto4402
+4416 on-(dt$(0)="")goto4420:an$="":fori=1toq%:iflen(dt$(i))=3anddt$(i)<>"---"thenan$=an$+dt$(i)
+4418 next:a$=dt$(0):&,16,1:dr=2:a$=gg$:gosub19:a$=dr$+gg$:&,16,3,dv%:goto4324
+4420 gosub4378:dr=2:a$=gg$:gosub19:i=0
+4422 dr=2:gosub3:print#15,"s"dr$"nm.P.track"mid$(gg$,10)str$(i):gosub5:ift%theni=i+1:goto4422
+4424 on-(val(mid$(gg$,10))<r%)goto4660:goto4324
+4426 ifz=0thenz=e+1
+4428 c$="---":p%=.:oc=.:b%=.:d%=8:g%=.:f2=.:d$="PASS":ifsy$="Sig"then4242
+4430 goto4182
+4432 ifp%=.thenc$="---"
+4434 ifc$="---"thena$="e.Sig"+str$(z):dr=3:gosub19:p%=.:oc=.:b%=-1
+4436 ifc$="---"thenforx=0to1:a$="s.Sig"+str$(z)+str$(x):dr=1:gosub19:next
+4438 ifb%=.thenb%=-1
+4440 gosub4004:x=1:gosub1:&,2,2:e=val(a$):ifc$="---"andz>ethen4446
+4442 x=z+1:gosub1:print#2,c$r$p%r$oc;r$b%
+4444 ifz>ethenx=1:gosub1:print#2,z;r$;re$:e=z
+4446 sg=e:close2:close15:s=z-1:q=z+2:goto4154
+4448 ifc$<>"---"andp%>.then4452
+4450 p%=.:oc=.:b%=.:d%=.:g%=.:f2=.:d$="PASS"
+4452 ifb%<1thenb%=-1
+4454 gosub4004:x=1:gosub1:&,2,2:a=val(a$):ifz>aandc$="---"then4494
+4456 ifz>aandc$<>"---"thenx=1:gosub1:print#2,z;r$;re$:a=z
+4458 a$=c$:gosub4012:c$=a$:x=z+1:gosub1
+4460 print#2,d$r$p%r$c$r$b%r$d%r$g%r$mid$(str$(oc),2,1)
+4462 ifsy$="Sub"thensb=a
+4464 ifsy$="U/D"thenud=a
+4466 ifsy$="U/X"thenux=a
+4468 close2:ifsg=.orp%>.then4494
+4470 l$="Library":ifsy$="Sub"thenl$="Board"
+4472 a$=sy$:&"{f6:2}Removing This {pound}$a {pound}$l From the SIG lists...{f6:2}Working On SIG #  "
+4474 an$=sy$+mid$(str$(z),2,1)
+4476 forii=1tosg:a%=ii:&"{pound}h2{pound}#2{pound}# {pound}%a":&,11,.
+4478 a$="e.Sig"+str$(ii)+",s,r":dr=3:gosub4:ife%then4492
+4480 &,2,2:a=val(a$):kk=.:ifa=.then4486
+4482 forx=1toa:&,2,2:ifa$<>an$thenkk=kk+1:tt$(kk)=a$
+4484 next
+4486 close2:a$="e.Sig"+str$(ii):dr=3:gosub19
+4488 onkk+1goto4492:a$="e.Sig"+str$(ii)+",s,w":dr=3:gosub4:print#2,kk
+4490 forx=1tokk:print#2,tt$(x):next:close2
+4492 close2:next:&"{f6:2}Done!{f6}"
+4494 s=z-1:q=z+2:goto4154
+4496 gosub4548
+4498 q=8:gosub4020:a%=bn:a$=sy$:&"{pound}#0{pound}%a {pound}$as In This {pound}$z.{f6:2}Edit (? = Menu): {pound}i1"
+4500 a$=left$(an$,1):a=2:gosub4062:on-(a$="{f2}")-2*(a$="A")-3*(a$="D")goto4658,4508,4536
+4502 on-(a$="S")-2*(a$="I")-3*(a$="M")goto4530,4558,4586
+4504 ifa$="L"thengosub4532:&"{f6}Press A Key {pound}g1":s=bn-9:q=.:goto4496
+4506 goto4614
+4508 on-(a<>.)goto4512:on-(bn=>z%)goto4534:a$=sy$:&"{f6}Add Which{f6}(L = List {pound}$as): {pound}i1"
+4510 a=1:gosub4062:ifleft$(an$,1)="L"thengosub4532:a=0:goto4508
+4512 on-(bn=>z%)goto4534:ifa<1thens=bn-9:q=0:goto4496
+4514 gosub4004:x=1:gosub1:&,2,2:b=val(a$):ifa>bthen4526
+4516 x=a+1:gosub1:&,2,2:&,2,2:&,2,2:ifa$="---"then:&"{f6}Empty Record!":goto4528
+4518 ifright$(a$,1)="?"andz$="NetSub"then:&"{f6}Already Networked!":goto4528
+4520 bn=bn+1:gosub4006:gosub4076:ifz$="NetSub"thenf$="N":ifright$(a$,1)="{^}"thena$=left$(a$,len(a$)-1)
+4522 ed$(bn)=l$+" "+f$+" "+a$:c%(bn)=a:&"{f6}{f5}{pound}$a{f5} Added!"
+4524 ii=a:on-(z$="NetSub")gosub4356:goto4528
+4526 &"{f6}Out of Range!":a=q+1
+4528 a=a+1:on-(q>=aandbn<z%)goto4512:&"{f6:2}Press a Key {pound}g1":s=bn-9:q=0:goto4496
+4530 a=2:gosub4062:s=a:goto4496
+4532 a=2:gosub4062:s=a:goto4088
+4534 a$=sy$:&"{f6}Sorry, Only {pound}%z {pound}$as Max{f6}Press A Key {pound}g1":s=bn-9:q=0:goto4496
+4536 on-(a>.)goto4542:a$=sy$:&"{f6}Delete Which{f6}(S = Scan List of {pound}$as): {pound}i1"
+4538 ifleft$(an$,1)="S"thena=2:gosub4062:s=a:gosub4548:a=.:goto4536
+4540 a=1:gosub4062
+4542 q=-q*(q<=bn)-bn*(q>bn):q=-q*(q>=a)-a*(q<a):ifa<1ora>bnthenq=.:goto4546
+4544 q=q-a+1:gosub4370:fori=atobn-q:c%(i)=c%(i+q):ed$(i)=ed$(i+q):next:bn=bn-q
+4546 a%=q:a$=sy$:&"{f6}{pound}#0{pound}%a {pound}$as Deleted!{f6:2}Press A Key {pound}g1":s=bn-9:q=.:goto4496
+4548 &"{clear}{f6}## TYPE NAME{f6}{pound}vz":sh=.:rc=.:ifs>bnors<1thens=1
+4550 ifbn=.then4556
+4552 ifq<sorq>bnthenq=bn
+4554 fori=stoq:a%=i:&"{pound}#2{pound}# {pound}%a "+ed$(i)+"{f6}":i=i-bn*(sh+rc<>.):next
+4556 &"{pound}vz":return
+4558 on-(a>.orbn=.)goto4564:a$=sy$:&"{f6}Insert Before Which{f6}(S = Scan List of {pound}$as): {pound}i1"
+4560 ifleft$(an$,1)="S"thena=2:gosub4062:s=a:gosub4548:a=.:goto4558
+4562 a=1:gosub4022
+4564 a%=0:ifa>bnora<1then4584
+4566 se=a:a$=sy$:&"{f6}Insert Which {pound}$a{f6}(L = List of {pound}$as): {pound}i1"
+4568 ifleft$(an$,1)="L"thena=2:gosub4062:s=a:gosub4532:a=se:goto4566
+4570 a%=0:a=1:gosub4062:q=-q*(q>=a)-a*(q<a):ifa<1then4584
+4572 gosub4004:forii=atoq:x=ii+1:gosub1:&,2,2:&,2,2:&,2,2
+4574 ifa$="---"or(right$(a$,1)="?"andz$="NetSub")thennext:goto4584
+4576 gosub4006:gosub4076:bn=bn+1:ifbn>z%thenbn=z%:close2:forii=1to1:next:goto4584
+4578 forx=bn-1tosestep-1:c%(x+1)=c%(x):ed$(x+1)=ed$(x):next
+4580 c%(se)=ii:ifz$="NetSub"thenf$="N"
+4582 ed$(se)=l$+" "+f$+" "+a$:&"{f6}{f5}{pound}$a{f5} Inserted!":on-(z$="NetSub")gosub4356:se=se+1:a%=a%+1:next
+4584 a$=sy$:&"{f6}{pound}#0{pound}%a {pound}$as Inserted.{f6:2}Press A Key {pound}g1":s=bn-9:q=.:goto4496
+4586 a%=.:onbn+1goto4612:ifa>.then4594
+4588 a$=sy$:&"{f6}Move Which{f6}(S = Scan List of {pound}$as): {pound}i1"
+4590 ifleft$(an$,1)="S"thena=2:gosub4062:s=a:gosub4548:a=.:goto4586
+4592 a=1:gosub4062
+4594 q=-q*(q>=a)-a*(q<a):ifa<1thena%=.:goto4612
+4596 se=a:qq=q:a$=sy$:&"{f6}Move to After Which{f6}(S = Scan List of {pound}$as): {pound}i1"
+4598 ifleft$(an$,1)="S"thena=2:gosub4062:s=a:gosub4548:a=se:q=qq:goto4596
+4600 a=1:gosub4022:ifa<1ora>bnor(a>=se-1anda<=qq)thena%=.:goto4612
+4602 ii=qq-se+1:a%=.:&"{f6}Moving...":ifa>qqthen4608
+4604 a$=ed$(qq):r=c%(qq):forx=qqtoa+1step-1:c%(x)=c%(x-1):ed$(x)=ed$(x-1):next
+4606 ed$(a+1)=a$:c%(a+1)=r:a%=a%+1:&".":on-(a%<ii)goto4604:goto4612
+4608 a$=ed$(se):r=c%(se):forx=setoa:c%(x)=c%(x+1):ed$(x)=ed$(x+1):next
+4610 ed$(a)=a$:c%(a)=r:a%=a%+1:&".":ifa%<iithen4608
+4612 a$=sy$:&"{f6:2}{pound}#0{pound}%a {pound}$as Moved{f6:2}Press A Key {pound}g1":s=bn-9:q=.:goto4496
+4614 on-(z$="NetSub")goto4368:a$=sy$:&"{f6:2}Saving {pound}$a List...":z$=""
+4616 tz=.:a$="t"+gg$:dr=3:gosub18:close3:open3,dv%,3,dr$+"e"+gg$+",s,r"
+4618 gosub5:ife%thenclose3:a=.:goto4624
+4620 &,2,3:a=-(st=.):print#2,val(a$)-bz+bn:goto4624
+4622 &,2,3:a=-(st=.):ifleft$(a$,3)<>sy$thenprint#2,a$:tz=1
+4624 onagoto4622:close2:a$="e"+gg$:dr=3:gosub19
+4626 iftzthendr=3:gosub3:print#15,"r"+dr$+"e"+gg$+"="+dr$+"t"+gg$
+4628 close15:onbn+1goto4634:tz=1:a$="e"+gg$+",s,a":dr=3:gosub4
+4630 ife%thenclose2:a$="e"+gg$+",s,w":dr=3:gosub4:print#2,bn
+4632 forx=1tobn:print#2,sy$+mid$(str$(c%(x)),2):next:close2
+4634 iftz=.thena$="e"+gg$:dr=3:gosub19
+4636 a$="t"+gg$:dr=3:gosub19
+4638 goto4318
+4640 &"[A]scii or [C]/G: {pound}g1":a=-(an$="A")-2*(an$="C")-1
+4642 ifa<0ora>1then:&"Abort{f6}":return
+4644 a$="Ascii{f6}":ifathena$="C/G{f6}"
+4646 &:gg$="s."+sy$+str$(z)+str$(a):a$=gg$+",s,r"
+4648 &,11,0:kk=0:dr=1:gosub4:ife%thenkk=1:goto4652
+4650 &,2,2:kk=kk+1:tt$(kk)=a$:ifa$<>"{^}"andst=.then4650
+4652 close2:im=2:gosub440:on-(kk=.)goto4010:&"{f6}Saving..."
+4654 a$=gg$:dr=1:gosub18:forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}"
+4656 close2:close15:return
+4658 b$=sy$:dr=1:a$="s.m.reledit":gosub13:s=bn-9:q=.:goto4496
+4660 fori=val(mid$(gg$,10))tor%-1:xx=0
+4662 print#15,"r"dr$"nm.netsub"str$(i)"="dr$"nm.netsub"str$(i+1)
+4664 print#15,"r"dr$"nm.P.track"str$(i)str$(xx)"="dr$"nm.P.track"str$(i+1)str$(xx)
+4666 gosub5:ife%=0thenxx=xx+1:goto4664
+4668 next:goto4324
+4670 copr.1990 new image 12/06/90 11:55p
+4672 rem:"i/SM.reledit (c)nissa 210307 lh

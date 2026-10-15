@@ -1,0 +1,23 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.scan netlog" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 poke 53252,4:gosub 4016:gosub 4002:&"{f6}{rvrs on} Scan Another? {rvrs off}":gosub 96:on agoto 4000:return
+4002 dr=2:a$="nm.log "+an$+",s,r":gosub 4:a%=.:sh=.:if e%then 4014
+4004 a%=a%+1:input# 2,a$,b$:&"{f6}{white}#{pound}%a:{rvrs on}{yellow} {pound}$a {rvrs off}{f6}    {green}{$04}"+right$(b$,11)
+4006 if len(b$)>11 then:&"{f6} To {green}{$04}"+left$(b$,11)
+4008 &"{f6}{white}Files Transferred:":&,3,2:if st=.and sh=.then 4004
+4010 close 2
+4012 close 2:return
+4014 &"{f6:2}{white}No Log Found":goto 4012
+4016 &"{clear}{f6}{green}Scan which log?{f6}{white}(Enter ? for list){f6}nm.log {pound}i0":on-(an$="{f2}") goto 4020
+4018 return
+4020 dr=2:gosub 2:close 1:open 1,dv%,0,"$"+dr$+"nm.log*":&"{f6}{white}":&,8,1:close 1
+4022 &"{pound}{back arrow}10{f6}{rvrs on}Any Key{rvrs off}{pound}g1":goto 4016
+4100 rem:"i/SM.scan netlog (c)nissa 211202 lh"

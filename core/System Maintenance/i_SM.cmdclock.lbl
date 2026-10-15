@@ -1,0 +1,109 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.cmdclock" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 rem  set hd clock by doug cotton      (c)1990 by creative micro designs, inc.
+4002 &,28,1:dim wd$(6)
+4004 wd$(0)="sun.":wd$(1)="mon."
+4006 wd$(2)="tue.":wd$(3)="wed."
+4008 wd$(4)="thu.":wd$(5)="fri."
+4010 wd$(6)="sat."
+4012 tb$="{right:9}"
+4014 &"{clear}{f6}{gray3}What is the device number of your{f6}CMD Hard-Drive{cyan}:{lt. green} {pound}i1"
+4016 hd=val(an$):if hd<8 or hd>29 then 4188
+4018 close 15:open 15,hd,15
+4020 print# 15,"m-r" chr$(160) chr$(254) chr$(6)
+4022 c$="":for i=1 to 6:get#15,b$:c$=c$+b$:next
+4024 rem:ifc$="cmd hd"then4028
+4026 rem:&"‹œThat šis noŸt a C™MD Hažrd-dr–ive...‹‹\w4":goto4014
+4028 print# 15,"t-rd"
+4030 get#15,wd$:wd=asc(wd$+chr$(0))
+4032 get#15,yr$:yr=asc(yr$+chr$(0))
+4034 get#15,mo$:mo=asc(mo$+chr$(0))
+4036 get#15,da$:da=asc(da$+chr$(0))
+4038 get#15,hr$:hr=asc(hr$+chr$(0))
+4040 get#15,mn$:mn=asc(mn$+chr$(0))
+4042 get#15,se$:se=asc(se$+chr$(0))
+4044 get#15,ap$:ap=asc(ap$+chr$(0))
+4046 close 15
+4047 if wd$="3" then 4187
+4048 gosub 4140
+4050 &,52,4,3:on a%+1 goto 4052:&,18,0
+4052 &"{f6}{uppercase}{clear}{down:2}             {gray3}{rvrs on} set hd clock {rvrs off}"
+4054 &"{f6}{down}  {cyan}U{$c0:34}I"
+4056 &"{f6}  {cyan}{$dd}                                  {cyan}{$dd}"
+4058 &"{f6}  {cyan}{$dd}        {purple}d{lt. blue}a{cyan}t{lt. green}e           {purple}c{lt. blue}l{cyan}o{lt. green}c{yellow}k      {cyan}{$dd}"
+4060 &"{f6}  {cyan}{$dd}  {gray3}U{$c0:13}I  U{$c0:11}I  {cyan}{$dd}"
+4062 &"{f6}  {cyan}{$dd}  {gray3}{$dd}             {$dd}  {$dd}           {$dd}  {cyan}{$dd}"
+4064 &"{f6}  {cyan}{$dd}  {gray3}J{$c0:13}K  J{$c0:11}K  {cyan}{$dd}"
+4066 &"{f6}  {cyan}{$dd}                                  {cyan}{$dd}"
+4068 &"{f6}  {cyan}J{$c0:34}K"
+4070 &"{f6}":&tb$:&"{down}{purple}use {lt. blue}<+> o{cyan}r <{lt. green}-> {yellow}to ad{lt. red}just"
+4072 &"{f6}":&tb$:&" {purple}an{lt. blue}d <r{cyan}etu{lt. green}rn> {yellow}to a{lt. red}ccept"
+4074 gosub 4120
+4076 f=1:v=wd:ll=0:ul=6:gosub 4176
+4078 f=2:v=mo:ll=1:ul=12:gosub 4176
+4080 f=3:v=da:ll=1:ul=31
+4082 if mo=4 or mo=6 or mo=9 or mo=11 then ul=30
+4084 if mo=2 then ul=29
+4086 gosub 4176
+4088 f=4:v=yr:ll=0:ul=99:gosub 4176
+4090 f=5:v=hr:ll=1:ul=12:gosub 4176
+4092 f=6:v=mn:ll=0:ul=59:gosub 4176
+4094 f=7:v=se:ll=0:ul=59:gosub 4176
+4096 f=8:v=ap:ll=0:ul=1:gosub 4176
+4098 open 15,hd,15
+4100 td$="t-wa"+wd$+" "+mo$+"/"+da$+"/"+yr$+" "+hr$+":"+mn$+":"+se$+" "+ap$
+4102 &"{f6}{home}{down:13}{yellow}          press <return> to set  "
+4104 &"{f6}":&tb$:&"{lt. green} or <space> to change. "
+4106 &"{pound}g1":k$=an$:on tr%+1 goto 4188:if k$<>" " and k$<>r$then goto 4106
+4108 if k$=r$then print# 15,td$:close 15:goto 4112
+4110 close 15:goto 4050
+4112 &"{clear}{lowercase}{f6:2}{lt. green}Basic File{purple}: {lt. blue}Doug Cotton for{f6}Creative Micro Designs, Inc. (CMD){f6:2}"
+4114 &"{lt. green}Image File{purple}: {lt. blue}Rod Serling for{f6}Zone Electronics, (Z*TRONICS){f6:2}"
+4116 &,52,4,3:on a%goto 4118:&,18,1
+4118 &"{f6}{gray3}Great!! Another CMD Owner!!{f6:2}{$07:3}":close 15:open 15,hd,15:goto 4188
+4120 &"{f6}{home}{down:8}"
+4122 &"{white}{right:6}":if f=1 then:&"{rvrs on}"
+4124 &wd$:&"{rvrs off} ":if f=2 then:&"{rvrs on}"
+4126 &mo$:&"{rvrs off}/":if f=3 then:&"{rvrs on}"
+4128 &da$:&"{rvrs off}/":if f=4 then:&"{rvrs on}"
+4130 &yr$:&"{rvrs off}{right:4}":if f=5 then:&"{rvrs on}"
+4132 &hr$:&"{rvrs off}:":if f=6 then:&"{rvrs on}"
+4134 &mn$:&"{rvrs off}:":if f=7 then:&"{rvrs on}"
+4136 &se$:&"{rvrs off} ":if f=8 then:&"{rvrs on}"
+4138 &ap$:&"{rvrs off}{f6}":return
+4140 yr$=right$("0"+right$(str$(yr),len(str$(yr))-1),2)
+4142 wd$=wd$(wd)
+4144 mo$=right$("0"+right$(str$(mo),len(str$(mo))-1),2)
+4146 da$=right$("0"+right$(str$(da),len(str$(da))-1),2)
+4148 hr$=right$("0"+right$(str$(hr),len(str$(hr))-1),2)
+4150 mn$=right$("0"+right$(str$(mn),len(str$(mn))-1),2)
+4152 se$=right$("0"+right$(str$(se),len(str$(se))-1),2)
+4154 ap$="pm":if ap=0 then ap$="am"
+4156 return
+4158 on fgoto 4160,4162,4164,4166,4168,4170,4172,4174:return
+4160 wd=v:return
+4162 mo=v:return
+4164 da=v:return
+4166 yr=v:return
+4168 hr=v:return
+4170 mn=v:return
+4172 se=v:return
+4174 ap=v:return
+4176 gosub 4158:gosub 4140:gosub 4120
+4178 &"{pound}g1":k$=an$:on tr%+1 goto 4188:if k$<>"+" and k$<>"-" and k$<>chr$(13) then goto 4178
+4180 if k$="+" then v=v+1:if v>ulthen v=ll
+4182 if k$="-" then v=v-1:if v<llthen v=ul
+4184 if k$=r$then return
+4186 goto 4176
+4187 &"{f6}{white}Sorry, RTC module not installed. {pound}w3"
+4188 &,28,1:return
+4190 rem - "Z*TRONICS mods for Image"
+4192 rem:"i/SM.cmdclock (c)nissa 200722 lh"

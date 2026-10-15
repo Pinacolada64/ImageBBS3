@@ -1,0 +1,111 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.sigedit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+' (by hand, after detok.sh --keep-spaces: the {assign:4650} and the {$3a} below)
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+' 4632 jumps to 4650, which isn't in this module (nor in im): an error if it
+' is ever run. the assign keeps the jump as it was in the release.
+{assign:4650	=4650	}
+
+4000 onlmgoto4100,4300:goto4100:rem return
+4100 &,28,1:dimx1%(17,60),x3%(60,2):gosub4118:&,28,1:return
+4102 dr=3:gosub3:&,60,2,0,x1%(0,0),dr$+"e.Siglist",dv%:goto5
+4104 dr=3:gosub3:&,60,2,0,x3%(0,0),dr$+"e.Siglist"+str$(x),dv%:goto5
+4106 a$="e.Siglist":gosub4110:&,60,3,0,x1%(0,0),2196,dr$+a$,dv%:goto5
+4108 a$="e.Siglist"+str$(x):gosub4110:&,60,3,0,x3%(0,0),366,dr$+a$,dv%:goto5
+4110 dr=3:gosub3:print#15,"s"dr$a$:return
+4112 a%=i:&,60,1,30,x1%(3,i),a$:b%=x1%(1,i):c%=x1%(2,i):a=x1%(0,i)
+4114 b$=chr$(48+sgn(aand1))+chr$(48+sgn(aand2))+chr$(48+sgn(aand4))
+4116 &"{pound}#2{pound}# {pound}%a) {pound}$a{f6}    {pound}#5{pound}# Ac:{pound}%b Op:{pound}%c Fl:{pound}$b{f6}":return
+4118 tz=0:gosub4102:ife%thenx1%(0,0)=0
+4120 a%=x1%(0,0):&"{clear}SigEdit 2.0: {pound}%a Sigs Defined.{f6:2}"
+4122 ifa%thenfori=1toa%:gosub4112:next
+4124 &"{f6}Edit Which (A=Add): {pound}i1":x=abs(int(val(an$)))
+4126 ifan$="A"thengosub4134:goto4120
+4128 ifx>0andx<=x1%(0,0)thengosub4138:goto4120
+4130 iftzthen:&"Save changes? ":gosub94:onagosub4106
+4132 return
+4134 x=x1%(0,0)+1:x1%(0,0)=x:&,60,0,30,x1%(3,x),"---"
+4136 x1%(0,x)=7:x1%(1,x)=1023:x1%(2,x)=1
+4138 x3%(0,0)=0:x3%(0,1)=0:x3%(0,2)=0:gosub4104
+4140 &"{clear}Sig #{pound}!x{f6:2}":&,60,1,30,x1%(3,x),a$:b%=x1%(1,x):c%=x1%(2,x):a=x1%(0,x)
+4142 &"1. Name: {pound}$a{f6}"
+4144 &"2. Accs: {pound}%b{f6}"
+4146 &"3. Oper: {pound}%c{f6}"
+4148 &"4. Subs: ";mid$("YesNo ",4-3*sgn(aand1),3):a%=x3%(0,0):&" ({pound}%a){f6}"
+4150 &"5. U/Ds: ";mid$("YesNo ",4-3*sgn(aand2),3):a%=x3%(0,1):&" ({pound}%a){f6}"
+4152 &"6. U/Xs: ";mid$("YesNo ",4-3*sgn(aand4),3):a%=x3%(0,2):&" ({pound}%a){f6}"
+4154 &"{f6}Change which?: {pound}g1{pound}v7{f6}":a=val(an$)
+4156 ifathenonagosub4166,4170,4176,4160,4162,4164:goto4140
+4158 return
+4160 xx=0:goto4182
+4162 xx=1:goto4182
+4164 xx=2:goto4182
+4166 &,60,1,30,x1%(3,x),w$:poke53252,30:p$="Name":pl=0:&,1,32:ifan$=""thenreturn
+4168 &,60,0,30,x1%(3,x),an$:tz=1:return
+4170 w$=mid$(str$(x1%(1,x)),2):poke53252,5:p$="Accs":pl=1:&,1,32
+4172 ifan$=""thenreturn
+4174 x1%(1,x)=val(an$):tz=1:return
+4176 w$=mid$(str$(x1%(2,x)),2):poke53252,5:p$="Oper":pl=1:&,1,32
+4178 ifan$=""thenreturn
+4180 x1%(2,x)=val(an$):tz=1:return
+4182 s$=mid$("SubU/DU/X",xx*3+1,3):&"Have {pound}$ss? ":gosub94
+4184 b=2^xx:ifa=0thenx1%(0,x)=x1%(0,x)andnotb:tz=1:return
+4186 x1%(0,x)=x1%(0,x)orb
+4188 a%=x3%(0,xx):&"{clear}Sig {pound}!x: {pound}%a {pound}$ss{f6:2}"
+4190 ifa%thenfori=1toa%:b%=x3%(i,xx):&"{pound}#4{pound}# {pound}%b":next:&"{f6:2}"
+4192 &"Add Delete Insert: {pound}g1":a=-(an$="A")-2*(an$="D")-3*(an$="I")
+4194 ifathenonagosub4198,4204,4212:goto4188
+4196 goto4108
+4198 ifx3%(0,xx)=60thenreturn
+4200 &"Add #{pound}i1":a=val(an$):ifa<1ora>999thenreturn
+4202 i=x3%(0,xx)+1:x3%(i,xx)=a:x3%(0,xx)=i:return
+4204 ifx3%(0,xx)=0thenreturn
+4206 &"Delete #{pound}i1":a=val(an$):ifa<1ora>999thenreturn
+4208 j=0:fori=1tox3%(0,xx):ifx3%(i,xx)<>athenj=j+1:x3%(j,xx)=x3%(i,xx)
+4210 next:x3%(0,xx)=j:return
+4212 return
+4300 &,28,1:sy$="SB":fi$="e.Sub":t$="Sub-Board"
+4302 dr=3:a$=fi$:gosub4:one%+1goto4310:gosub61:x=2:on-(bf<40)goto390:gosub60
+4304 gosub60:x=2:onagoto390:&"{f6:2}{gray3}Creating {white}{f5}{cyan}"+fi$+"{white}{f5}{gray3}..."
+4306 a$=fi$+",l,<":gosub4:x=1:gosub1:print#2,"0"r$"0"r$"X":x=2:gosub1:close2
+4308 &"{white}Done!"
+4310 &"{clear}{f6:2}{purple}  Getting Message Base Setup{lt. blue}..":a$=fi$:gosub4:&,2,2:br=val(a$)
+4312 &,2,2:it=val(a$):&,2,2:fd=216:ifval(a$)<>.thenfd=val(a$)
+4314 close2:&"{lt. green}Done!{f6:2}"
+4320 &"{lt. blue}Please Select{cyan}:{f6:2} {lt. green}1) {yellow}Add/Edit {pound}$ts{f6}"
+4322 &" {lt. green}2) {yellow}Change Message Base Settings{f6:2}{lt. red}--> {purple}{pound}g1":ontr%+1goto999
+4324 on(val(an$))goto4370,4330:&"Exit{f6}":return
+4330 &"{clear}{f6:2}{lt. blue}Edit SB Settings{cyan}:{f6:2} {lt. green}1) {yellow}Allow":a$=str$(it):b$="Extra Minutes"
+4332 ifit>100thena$=" Unlimited":b$="Time"
+4334 &"{white}{pound}$a {yellow}{pound}$b.{f6} {lt. green}2) {yellow}Default Sub-Board Flags{f6:2}{lt. red}--> {purple}{pound}g1":ontr%+1goto999
+4336 onval(an$)goto4338,4344:goto4320
+4338 &"Edit Time{f6:2}{lt. blue}Enter New Time (0=Disable/101=U/L){f6}{cyan}: {white}{pound}i1":ontr%+1goto999
+4340 on-(an$=""orval(an$)>101orval(an$)<0)goto4330:it=val(an$)
+4342 a$=fi$:gosub4:print#2,br+r$it+r$+chr$(fd):close2:goto4330
+4344 &"Not yet implemented..{pound}w2":goto4330
+4370 gosub4600:goto4300
+4600 rk=1
+4602 gosub12:&"{clear}{f6}":ifbr=.then:&"No {pound}$ts Defined.{f6:2}":goto4610
+4603 &str$(br)+" {pound}$ts Defined{f6}### Name{pound}{back arrow}27Password{pound}{back arrow}39 Accs SubOp  Fls A>-A<{pound}vj"
+4604 a$=fi$:dr=3:gosub4:forx=rk+1tobr+1:gosub1:fori=1to6:&,2,2:tt$(i)=a$:next
+4605 &mid$(str$(x-1),2)+"{pound}{back arrow}05"
+4606 &tt$(3)+"{pound}{back arrow}27"+tt$(1)+"{pound}{back arrow}39 "+tt$(2)+"{pound}{back arrow}06"+ii$+tt$(4)
+4608 a=0:iftt$(5)<>""thena=asc(tt$(5))
+4610 &"{pound}{back arrow}13{pound}!a{pound}{back arrow}17"+str$(asc(left$(tt$(6),1)))+" -"+str$(asc(right$(tt$(6),1)))
+4612 &"{pound}vj":next
+4614 &"{f6}#-Edit, A-Add, L-List, RETURN to End.{f6}"+sy$+" Edit: {pound}i1"
+4616 on-(val(an$)>.)-2*(an$="A")-3*(left$(an$,1)="L")goto,4630,4620
+4618 return
+4620 rk=val(mid$(an$,2)):rk=rk-(rk=.):goto4602
+4630 j=br+1:tt$(1)="{^}":tt$(2)="1023":tt$(3)="{^}":tt$(4)="0":tt$(5)=str$(fd)
+4632 tt$(6)="{$01:2}":gosub4650:iftt$(3)="{^}"thenrk=1-(br-2)*(br>1):goto4602
+4634 br=br+1:dr=3:a$=fi$:gosub4:x=br:gosub1:fori=1to6:print#2,tt$(i):next:close2
+4636 rk=1-(br-2)*(br>1):goto4602
+' the release ends this line with a ":", which C64List leaves out unless it's {$3a}
+4640 j=val(an$):dr=3:a$=fi${$3a}
+4642 rem:"i/SM.sigedit (c)nissa 190124 lh"

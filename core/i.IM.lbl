@@ -110,7 +110,10 @@
 3189 a$="access":gosub 3198:goto 3006
 3190 a$="filelist":gosub 3198:goto 3006
 3191 a$="macros":gosub 3198:goto 3006
-3192 a$="SM":goto 70
+' 10/14/2026: check that i.SM is there first: line 76 clears this module
+' (new 3000) before loading it, so a missing i.SM left IM gone from memory
+3192 dr=5:a$="i.SM":gosub 4:close 2:if e% then:&"{f6}i.SM Not Found.{pound}w3":goto 3006
+3193 a$="SM":goto 70
 3194 a$="NetSubEdit":gosub 3198:goto 3044
 3198 &"{f6}Loading {pound}$a module.."
 3200 if lm$<>"IM."+a$then dr=5:gosub 3:lm$="IM."+a$:a$=dr$+"i/"+lm$:load a$,dv%

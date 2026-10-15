@@ -1,0 +1,38 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.menuedit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem +.menuedit 11/27/2017 - pinacolada
+4002 pr$="":&,28,1:dimjm%(29,59),fd%(60):gosub4012:&,28,1:return
+4004 fori=0to59:jm%(0,i)=0:next:tz=0
+4006 dr=3:gosub3:m$=dr$+"e.menu"+str$(m):&,60,2,0,jm%(0,0),m$,dv%:goto5
+4008 dr=3:gosub3:print#15,"s"m$:&,60,3,0,jm%(0,0),3600,m$,dv%:goto5
+4010 &"Changes made-- Save? ":gosub94:onagosub4008:return
+4012 &"{f6}Edit Which Menu: {pound}i1":m=val(an$):iftr%=0orm=0thenreturn
+4014 gosub4004
+4016 forx=0to59:&,60,1,30,jm%(5,x),a$:a%=x:b%=jm%(1,x)and32767
+4018 &"{white}{pound}#2{pound}%a:{pound}#5{pound}%b {pound}$a{f6}":x=x+rc*50:next
+4020 &"{f6}Options: List Edit Quit{f6:2}>"
+4022 &"{pound}g1":iftr%=0thenreturn
+4024 on-(an$="Q")-2*(an$="L")-3*(an$="E")goto4026,4028,4032:goto4022
+4026 &"Quit{f6:2}":ontzgosub4010:goto4012
+4028 &"List{f6:2}":goto4016
+4030 &,28,1:return
+4032 poke53252,2:&"Edit #{pound}i1{f6}":x=val(an$):ifx<0orx>59then4020
+4034 &"{clear}Item#{pound}!x:{f6:2}":a%=jm%(1,x)and32767
+4036 &"1. Access: {pound}%a{f6}":a%=jm%(0,x)and255
+4038 &"2. Flags: {pound}%a{f6}"
+4040 &"3. Text:{f6}":&,60,1,50,jm%(5,x),a$
+4042 &:&"{f6}>{pound}g1":a=val(an$):ifathenonagosub4046,4048,4050:goto4034
+4044 goto4020
+4046 poke53252,5:&"Access: {pound}i1":jm%(1,x)=val(an$):tz=1:return
+4048 poke53252,3:&"Flags: {pound}i1":jm%(0,x)=val(an$):tz=1:return
+4050 &"{f6}":poke 53252,50:p$="Text":&,60,1,50,jm%(5,x),w$:pl=0:&,1,32
+4052 if an$<>"" or an$<>w$ then:&,60,0,50,jm%(5,x),an$:tz=1
+4054 return
+4056 rem:"i/SM.menuedit (c)nissa 190424 lh"

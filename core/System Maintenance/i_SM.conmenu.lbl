@@ -1,0 +1,20 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.conmenu" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 &,28,1:dim jm%(29,59)
+4002 &"Menu #: {pound}i1":m=val(an$):if m<>0 then gosub 4006:goto 4002
+4004 &,28,1:return
+4006 n=0:dr=1:a$="s.menu"+str$(m)+",s,r":gosub 4:if e%then close 2:&:return
+4008 &,2,2:s=st:on-(a$="{^}") goto 4012:lp=1:&:&,60,0,50,jm%(5,n),a$
+4010 jm%(0,n)=1:jm%(1,n)=1023:jm%(2,n)=-1:n=n+1:on-(s=0 and n<60) goto 4008
+4012 if n<60 then jm%(0,n)=0:jm%(1,n)=0:n=n+1:goto 4012
+4014 close 2:dr=3:gosub 3:a$=dr$+"e.menu"+str$(m)
+4016 print# 15,"s" a$:&,60,3,0,jm%(0,0),3600,a$,dv%:gosub 5:&:return
+4018 rem:"i/SM.conmenu (c)nissa 190124 lh"

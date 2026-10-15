@@ -1,0 +1,47 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.bu" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 gosub 4006
+4002 return
+4004 rem lt.k backups 201027
+4006 &"{f6:2}{white}Performing Backups{f6:2}"
+4008 restore:read dv%,dr$
+4010 read b$:if b$="-1" then 4022
+4012 close 15:open 15,dv%,15,b$:gosub 5:if e%then close 15:&:goto 4010
+4014 d$=dr$+":"+mid$(b$,3)+left$(d1$,1)
+4016 print# 15,"s" d$:&"{f6}{lt. red}Scratch{white}: "+d$:&"{f6}{lt. green}Copying{white}: "+b$+" {lt. green}To {white}"+d$
+4018 print# 15,"c"+d$+"="+b$
+4020 goto 4010
+4022 &"{f6:2}{white}Done!{f6:2}":return
+4024 data 8,"9"
+4026 data "1:u.config"
+4028 data "1:e.data"
+4030 data "1:e.stats"
+4032 data "1:e.cr.pool1"
+4034 data "1:e.daily stats"
+4036 data "1:u.index"
+4038 data "1:u.weedinfo"
+4040 data "1:e.nark"
+4042 data "1:e.top ten"
+4044 data "1:e.log1"
+4046 data "1:e.log2"
+4048 data "1:e.log3"
+4050 data "1:e.log4"
+4052 data "1:e.log5"
+4054 data "1:e.log6"
+4056 data "1:e.log7"
+4058 data "-1"
+4100 rem:"Edit line 4024 for the device number and LU of the backup destination"
+4102 rem:"Edit, add to or remove lines 4026-4056 for the source LU and filename"
+4104 rem:"The last data statement must be -1 as in line 4058"
+4106 rem:"A number corresponding to the day of the week will be added to the end"
+4108 rem:"of the filename providing 7 days worth of backups"
+4198 rem"Backups for Lazy Sysops by X-Tec v3.0 201027
+4199 rem:"i/SM.bu (c)nissa 201027 lh"

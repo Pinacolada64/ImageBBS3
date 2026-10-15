@@ -1,0 +1,85 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.SM" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+3000 rem sysop maintenance program
+3002 &,52,44,3:mm=a%:&,52,45,3:mm=mmand a%
+3004 a$="menu2":gosub 28
+3006 &,28,1
+3008 n=11
+3010 dim m%(16,n)
+3012 &,16,.,34,m%(.,1),"A","","Find Access"
+3014 &,16,.,34,m%(.,2),"B","","Fix BA Count"
+3016 &,16,.,34,m%(.,3),"C","","Make Anagram"
+3018 &,16,.,34,m%(.,4),"D","","Scan Netlog"
+3020 &,16,.,34,m%(.,5),"E","","Run Alpha/Ind"
+3022 &,16,.,34,m%(.,6),"F","","Lt.K Utils"
+3024 &,16,.,34,m%(.,7),"G","","Editor Utils"
+3025 &,16,.,34,m%(.,8),"H","","Set Time Dv #"
+3026 &,16,.,34,m%(.,9),"I","","Set CMD Clock"
+3028 &,16,.,34,m%(.,10),"J","","Netfiles"
+3030 &,16,.,34,m%(.,11),"K","","Quit"
+3032 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}            Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3034 &"{rvrs on} {cyan}        Base Editor Programs{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3036 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}"
+3038 if tr%<1 or lm=nor lm=.then 3130
+3040 on lmgoto 3044,3052,3054,3056,3058,3064,3090,3059,3060,3062
+3042 goto 3130
+3044 a$="find acs":gosub 3046:goto 3006
+3046 &"{f6}Loading {pound}$a module.."
+3048 a$="SM."+a$:goto 72
+3050 &"{f6}":goto 4000
+3052 a$="fixer":gosub 3046:goto 3006
+3054 a$="make anagra":gosub 3046:goto 3006
+3056 a$="scan netlog":gosub 3046:goto 3006
+3058 a$="alpha/ind":gosub 3046:goto 3000
+3059 a$="setdev":gosub 3046:goto 3006
+3060 a$="cmdclock":gosub 3046:goto 3006
+3062 a$="netfile":gosub 3046:goto 3000
+3064 on lk%+1 goto 3128:&"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}            Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3066 &"{rvrs on} {cyan}         Lt. Kernal Programs{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3068 &,28,1:n=3
+3070 dim m%(16,n)
+3072 &,16,.,34,m%(.,1),"A","","Run Backups"
+3074 &,16,.,34,m%(.,2),"B","","Lt.K File Utils"
+3076 &,16,.,34,m%(.,3),"C","","Quit"
+3078 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}"
+3080 if tr%<1 or lm=nor lm=.then 3000
+3082 on lmgoto 3084,3086
+3084 a$="bu":gosub 3046:goto 3064
+3086 a$="lk util":gosub 3046:goto 3000
+3088 goto 3000
+3090 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}            Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3092 &"{rvrs on} {cyan}            Editor Programs{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3094 &,28,1:n=8
+3096 dim m%(16,n)
+3098 &,16,.,34,m%(.,1),"A","","Run Reledit"
+3099 &,16,.,34,m%(.,2),"B","","Run Sigedit"
+3100 &,16,.,34,m%(.,3),"C","","Convert Menu"
+3102 &,16,.,34,m%(.,4),"D","","Edit Menus"
+3104 &,16,.,34,m%(.,5),"E","","Edit Text Msg"
+3106 &,16,.,34,m%(.,6),"F","","Edit B.A.R."
+3107 &,16,.,34,m%(.,7),"G","","Edit Sayings"
+3108 &,16,.,34,m%(.,8),"H","","Quit"
+3110 &,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}"
+3112 if tr%<1 or lm=nor lm=.then 3000
+3114 on lmgoto 3116,3132,3119,3120,3122,3124,3125
+3116 a$="reledit":gosub 3046
+3117 a$="consig1":gosub 3046:a$="consig2":gosub 3046:gosub 304:goto 3000
+3118 a$="sigedit":gosub 3046:goto 3090
+3119 a$="conmenu":gosub 3046:goto 3090
+3120 a$="menuedit":gosub 3046:goto 3090
+3122 a$="textedit":gosub 3046:goto 3090
+3124 a$="baredit":gosub 3046:goto 3090
+3125 a$="sayedit":gosub 3046:goto 3090
+3126 goto 3000
+3128 &"{f6}{yellow}Sorry, these utilities are for {f6}Lt. Kernal use only.{pound}w3{f6}":goto 3000
+3130 a$="IM":goto 70
+3132 &"{f6}This function for future use.{pound}w3":goto 3090
+3999 rem:"i.SM (c)nissa 230715 lh"

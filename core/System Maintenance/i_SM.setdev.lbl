@@ -1,0 +1,30 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.setdev" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 gosub 4150:gosub 4100:return
+4002 &"Manually":return
+4004 &"from CMD Device #{pound}%y":return
+4006 &"from Lt. Kernal Port 1":return
+4008 &"from Lt. Kernal Port 2":return
+4100 &"{clear}{f6}Image Time Set Utility{f6}":b=y%+1
+4102 if y%>3 then b=2
+4104 &"{f6}Your Image System currently sets Image{f6}time "
+4106 on bgosub 4002,4004,4006,4008
+4108 &"{f6:2}Do you wish to change it? ":gosub 94:on agoto 4270
+4110 return
+4150 gosub 33:x=37:gosub 1:&,2,2:y%=val(a$):close 2:return
+4270 &"{f6}{lt. blue}Set the Image 2.0 System Clock:{f6:2}{blue}({lt. blue}1{blue}) {cyan}Manually{f6}{blue}({lt. blue}2{blue}) {cyan}CMD{shft space}Device w/RTC Option{f6}"
+4271 &"{blue}({lt. blue}3{blue}){cyan} Lt. Kernal Port 1{f6}{blue}({lt. blue}4{blue}){cyan} Lt. Kernal Port 2{f6:2}{lt. blue}]> {white}{pound}i1{f6:2}":y%=val(an$)-1:if y%<.or y%>3 then y%=.
+4272 if val(an$)=2 then 4274
+4273 gosub 4276:return
+4274 &"{lt. blue}Which Device has the CMD{f6}RTC Option Installed?{f6:2}":p$="{cyan}CMD Device{white}":&,1,32:a=val(an$):if a<8 or a>16 then a=8
+4275 y%=a
+4276 gosub 33:x=37:gosub 1:print# 2,y%:close 2:gosub 5:&:return
+4278 rem:"i/SM.setdev (c)nissa 190125 lh"

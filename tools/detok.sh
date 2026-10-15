@@ -3,6 +3,7 @@
 #
 #   tools/detok.sh "<C64 filename>" <out.lbl>   take the file from the release disk
 #   tools/detok.sh <file.prg> <out.lbl>          or from a .prg file
+#   tools/detok.sh --keep-spaces ...             keep the original's spacing
 #
 #   e.g. tools/detok.sh "i/MM.load" core/i_MM.load.lbl
 #
@@ -10,6 +11,13 @@
 # (C64List -autospace). It starts with {uses:3_0-preface.lbl} so jumps into im
 # resolve, {alpha:alt}, and {crunch:on} so the build removes the added spaces
 # again (the Makefile passes -crunch for files using {crunch:on}).
+# For a listing in a subdirectory of core/, the {uses:} path is relative to it
+# ({uses:../3_0-preface.lbl}).
+#
+# --keep-spaces is for a program typed with some spaces in its code (for
+# example "poke 53252,50"), which -crunch would remove: the listing is left
+# spaced as the original is, without -autospace or {crunch:on}, so it rebuilds
+# identically.
 #
 # Shifted PETSCII capitals ($c1-$da) in rem text are copied by C64List as raw
 # bytes, which editors can't show; they're converted to ASCII A-Z. C64List
@@ -32,8 +40,10 @@ C1541=${C1541:-c1541}
 RELEASE_ZIP=${RELEASE_ZIP:-$HOME/Documents/c64/image30-231231.zip}
 RELEASE_D81=${RELEASE_D81:-MASTER D1 231231.d81}
 
+keep_spaces=0
+[ "${1:-}" = --keep-spaces ] && { keep_spaces=1; shift; }
 if [ $# -ne 2 ]; then
-	echo "usage: $0 \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
+	echo "usage: $0 [--keep-spaces] \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
 	exit 2
 fi
 src=$1
@@ -41,17 +51,21 @@ out=$2
 [ -e "$out" ] && { echo "$out already exists; not overwriting it" >&2; exit 1; }
 
 repo=$(cd "$(dirname "$0")/.." && pwd)
+# {uses:} names the preface relative to where the listing goes
+preface=$(python3 -I -c 'import os, sys; print(os.path.relpath(sys.argv[1], os.path.dirname(os.path.abspath(sys.argv[2]))))' "$repo/core/3_0-preface.lbl" "$out")
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT
 
 c64list() { (cd "$tmp" && WINEDEBUG=-all "$WINE" "$C64LIST" "$@" -ovr); }
 
 # -autospace puts a space before each ":"; turn " :" into ":" in program code,
-# but not inside "quoted strings" or after rem, where it would change the text.
+# but not inside "quoted strings" or after rem, where it would change the text
+# (not with --keep-spaces, where every space is the original's).
 # In rem text, also turn PETSCII capitals ($c1-$da) into ASCII A-Z.
 tidy_listing() {
 	python3 -I -c '
 import sys
+keep = sys.argv[1] == "1"
 for line in sys.stdin.buffer:
     out = bytearray(); quoted = False; i = 0
     while i < len(line):
@@ -60,13 +74,13 @@ for line in sys.stdin.buffer:
             out += bytes(b - 0x80 if 0xc1 <= b <= 0xda else b for b in line[i:]); break
         if c == 0x22:
             quoted = not quoted
-        if not quoted and c == 0x20 and line[i+1:i+2] == b":":
+        if not keep and not quoted and c == 0x20 and line[i+1:i+2] == b":":
             i += 1; continue
         if c in (0x0d, 0x0a):
             quoted = False
         out.append(c); i += 1
     sys.stdout.buffer.write(bytes(out))
-'
+' "$keep_spaces"
 }
 
 # 1. get the tokenized program
@@ -82,21 +96,28 @@ fi
 
 # 2. detokenize: C64List writes jumps to lines outside this file as [n];
 #    the brackets would be kept as text when tokenizing, so remove them
-c64list orig.prg -txt:orig.txt -autospace -keycase -varcase -alpha:alt > "$tmp/detok.log" 2>&1 \
+if [ $keep_spaces = 1 ]; then
+	detok_opts=(-keycase -varcase -alpha:alt); crunch_line=; crunch_opt=
+else
+	detok_opts=(-autospace -keycase -varcase -alpha:alt); crunch_line="{crunch:on}"; crunch_opt=-crunch
+fi
+c64list orig.prg -txt:orig.txt "${detok_opts[@]}" > "$tmp/detok.log" 2>&1 \
 	|| { cat "$tmp/detok.log" >&2; exit 1; }
 
+# (written with {uses:3_0-preface.lbl} for the test build in $tmp; the path is
+# set for where it goes when it's copied there)
 {
 	printf '%s\r\n' \
 		"' imported from $origin with:" \
-		"'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)" \
+		"'   tools/detok.sh (C64List4_04.exe -txt ${detok_opts[*]})" \
 		"' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)" \
 		"' resolve through 3_0-preface.lbl. unchanged, this builds a program identical" \
 		"' to the original, except that capitals in rem text are \$61-\$7a, not \$c1-\$da." \
 		"" \
 		"{uses:3_0-preface.lbl}" \
-		"{alpha:alt}" \
-		"{crunch:on}" \
-		""
+		"{alpha:alt}"
+	[ -n "$crunch_line" ] && printf '%s\r\n' "$crunch_line"
+	printf '\r\n'
 	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
 } > "$tmp/new.lbl"
 
@@ -126,7 +147,7 @@ open(dst, "wb").write(p); print(n)
 
 # 3. build it again and compare
 cp "$repo/core/3_0-preface.lbl" "$tmp/"
-c64list new.lbl -prg:new.prg -crunch > "$tmp/build.log" 2>&1 \
+c64list new.lbl -prg:new.prg $crunch_opt > "$tmp/build.log" 2>&1 \
 	|| { cat "$tmp/build.log" >&2; exit 1; }
 # C64List's -crunch drops a line's trailing ":" (an empty statement), which
 # shifts every later byte. If that is the only difference (compared as
@@ -146,5 +167,5 @@ if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 fi
 [ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
 
-cp "$tmp/new.lbl" "$out"
+sed "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" "$tmp/new.lbl" > "$out"
 echo "$out: $(grep -c '' "$out") lines; $same"

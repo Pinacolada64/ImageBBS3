@@ -1,0 +1,164 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.lk util" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "Lt. Kernal Utility"
+4002 cm$="LK Util":gosub9:goto4060
+4004 on-(val(d$)<10)goto4018
+4006 ifd$="10"thend$="a"
+4008 ifd$="11"thend$="b"
+4010 ifd$="12"thend$="c"
+4012 ifd$="13"thend$="d"
+4014 ifd$="14"thend$="e"
+4016 ifd$="15"thend$="f"
+4018 return
+4020 m$="l"+mid$(str$(dv%),2)+mid$(str$(dr),2)+d$
+4022 close15:open15,dv%,15:print#15,m$:close15:return
+4024 close15:open15,dv%,15:print#15,"l800":close15:return
+4026 &"{lt. blue}{f6}Pattern: ":gosub289:b$="*":&"{f6:2}     [Y]es [N]o [S]tart [A]bort{f6}"
+4028 fori=1tolen(an$):ifmid$(an$,i,1)="*"thenb$=""
+4030 next:an$=an$+b$:&"{f6}"
+4032 close1:open1,dv%,0,"$"+dr$+an$:get#1,a$,a$:&,8,1,1:lp=1:&a$+"{f6}":kk=0
+4034 &,8,1,1:s=st:ifmid$(a$,7,1)="b"thenb$=a$:&"{f6}{pound}$b{f6}":goto4050
+4036 b%=val(a$):f$=mid$(a$,8):t$=mid$(a$,26,1):g$=t$:ifmo=1thenifg$<>"s"then4034
+4038 ifmo=2thenifg$<>"p"then4034
+4040 fori=2to17:ifmid$(f$,i,1)=qt$thenf$=left$(f$,i-1)
+4042 next:&" {pound}#4{pound}# {pound}%b: {f5}{pound}$f,{pound}$g{f5} {pound}{back arrow}30?: {pound}g1":a$=an$
+4044 x=-(a$="Y")-2*(a$="S")-3*(a$="A"):&mid$("No   Yes  StartAbort",x*5+1,5)
+4046 &"{f6}":onx+1goto4052,4048,4050,4050
+4048 kk=kk+1:tt$(kk)=f$:goto4052
+4050 s=1:ifx=3thenkk=.
+4052 on-(s=.andkk<250)goto4034:close1:ifkk=0thenreturn
+4054 &"{f6:2}":fori=1tokk:b$=tt$(i):b%=i:&"{pound}#2{pound}# {pound}%b-{pound}$b{f6}":next
+4056 &"{f6:2}Correct?: ":gosub94:ifa=0thenkk=0
+4058 return
+4060 rem **** main menu ****
+4062 &"{pound}f1":g=dv%:poke53252,16
+4064 &"{f6:2}{lt. blue} Lt. Kernal File Utility{f6}{lt. red}      (c)NISSA 1992"
+4066 &"{f6:2}{white}1. {lt. blue}Directory{f6}{white}2. {lt. blue}Copy File{f6}{white}3. {lt. blue}Disk Command"
+4068 &"{f6}{white}4. {lt. blue}Multi-File Copy{f6}{white}5. {lt. blue}Multi-File Scratch"
+4070 &"{f6}{white}6. {lt. blue}Read Sequential Files{f6}{white}7. {lt. blue}Read Basic Program Files"
+4072 &"{f6}{white}8. {lt. blue}Quit{f6:2}{white}Choice {pound}g1"
+4074 onval(an$)goto4082,4096,4144,4162,4198,4222,4244,4080
+4076 iftr%<1then4080
+4078 goto4060
+4080 gosub4024:return
+4082 rem **** directory ****
+4084 &"{f6:2}{white} Disk Directory"
+4086 &"{f6} On (user#): {pound}i0":on-(tr%<1)goto4094:d$=an$:gosub4004:gosub349
+4088 gosub4020
+4090 gosub557
+4092 &"{f6:2} Press any key to continue...{pound}g1":on-(tr%<1)goto4094
+4094 gosub4024:goto4064
+4096 rem **** copy files ****
+4098 &"{f6}{white}Copy File"
+4100 &"{f6}From (dev,lu,user): {pound}i1":on-(tr%<1)goto4080
+4102 f=val(left$(an$,1)):c$=mid$(an$,3,1):d$=mid$(an$,5)
+4104 iff<>dv%then:&"{f6}Illegal Device{f6}":goto4100
+4106 &"          Filename: {pound}i0":on-(tr%<1)goto4080:g$=an$:ifg$=""then4064
+4108 f$=c$+":"+d$+":"+g$
+4110 &"  To (dev,lu,user): {pound}i1":on-(tr%<1)goto4080
+4112 t=val(left$(an$,1)):c$=mid$(an$,3,1):d$=mid$(an$,5)
+4114 ift<>dv%then:&"{f6}Illegal Device{f6}":goto4110
+4116 &"          Filename: {pound}i0":on-(tr%<1)goto4080:t$=an$:ift$=""thent$=g$
+4118 t$=c$+":"+d$+":"+t$
+4120 ift<>fthen:&"{f6}Sorry, must be same device{f6}":goto4096
+4122 &"{f6:2}Copy "+f$+"{f6}  To "+t$+" ?":on-(tr%<1)goto4080
+4124 gosub94:onagoto4128
+4126 goto4064
+4128 ft$="c"+t$+"="+f$
+4130 close15:open15,dv%,15,ft$:gosub5:&:ife%thenon-(e%=63)goto4140:close15:goto4064
+4132 close15
+4134 &"{f6}Copied "+f$+"{f6}    To "+t$+"{f6}"
+4136 close15:open15,dv%,15,t$:gosub5:&
+4138 close15:goto4064
+4140 &"{f6}Replace File? ":gosub94:onagoto4142:goto4064
+4142 print#15,"s"+t$:goto4130
+4144 rem **** disk command ****
+4146 &"{f6:2}{white} Disk Command"
+4148 &"{f6} On (user#): {pound}i0":on-(tr%<1)goto4080:d$=an$:gosub4004
+4150 gosub4020
+4152 gosub350:x=6:onagoto390:&"{f6}Disk Command?: ":poke53252,58
+4154 gosub289:z$=an$:ifz$=""orz$="@"thengosub3:gosub5:&:goto4160
+4156 b$=left$(z$,1):ifb$="n"orb$="s"thengosub93:ifa=.then4160
+4158 gosub3:print#15,z$:gosub5:&
+4160 gosub4024:goto4064
+4162 rem **** multi-copy ****
+4164 &"{f6:2}{white} Multi-Copy"
+4166 &"{f6} From (user#): {pound}i0":on-(tr%<1)goto4080:d$=an$:e$=d$:gosub4004:gosub349
+4168 dr$=mid$(an$,5)+":":fd$=dr$+e$+":"
+4170 gosub4020
+4172 gosub4026:ifkk=0then4196
+4174 &"{f6}{lt. blue} To (dev,lu,user): {pound}i1":on-(tr%<1)goto4080
+4176 t=val(left$(an$,1)):c$=mid$(an$,3,1):d$=mid$(an$,5):td$=c$+":"+d$+":"
+4178 ift<>dv%then:&"{f6}Illegal Device{f6}":goto4174
+4180 fori=1tokk:t$=td$+tt$(i):f$=fd$+tt$(i):ft$="c"+t$+"="+f$
+4182 close15:open15,dv%,15,ft$:gosub5:&:ife%thenon-(e%=63)goto4192
+4184 close15
+4186 &"{f6}Copied "+f$+"{f6}    To "+t$+"{f6}"
+4188 close15:open15,dv%,15,t$:gosub5:&
+4190 close15:next:goto4196
+4192 &"{f6}Replace File? ":gosub94:onagoto4194:goto4190
+4194 print#15,"s"+t$:goto4182
+4196 gosub4024:goto4064
+4198 rem **** multi-scratch ****
+4200 &"{f6:2}{white} Multi-Scratch"
+4202 &"{f6} From (user#): {pound}i0":on-(tr%<1)goto4080:d$=an$:e$=d$:gosub4004:gosub349
+4204 dr$=mid$(an$,5)+":":fd$=dr$+e$+":"
+4206 gosub4020
+4208 gosub4026:ifkk=0then4220
+4210 fori=1tokk:f$=fd$+tt$(i):fs$="s"+f$
+4212 close15:open15,dv%,15,fs$:gosub5:&
+4214 close15
+4216 &"Scratched "+f$+"{f6}"
+4218 next:goto4220
+4220 gosub4024:goto4064
+4222 rem **** multi-read seq ****
+4224 &"{f6:2}{white} Multi-Read Sequential"
+4226 &"{f6} From (user#): {pound}i0":on-(tr%<1)goto4080:d$=an$:e$=d$:gosub4004:gosub349
+4228 gosub350
+4230 gosub4020
+4232 mo=1:gosub4026:mo=.:ifkk=0then4242
+4234 fori=1tokk:&"{f6}{rvrs on} "+tt$(i)+" {rvrs off}{f6}":a$=tt$(i)+",s,r":gosub4:ife%then:&:goto4240
+4236 &,2,2:s=st:lp=-(len(a$)<>80):&:on-(rc+s=.)goto4236
+4237 poke144,sand255:a=rc:gosub12:rc=a
+4238 &"{f6:2} <Key...>{pound}g1
+4240 next
+4242 gosub4024:goto4064
+4244 rem **** multi-read prg ****
+4246 a$="read":poke53252,16
+4248 gosub28:ife%then:&"Error Loading {f5}++ read{f5}:":&:goto4288
+4250 &"{f6:2}{white} Multi-Read Program"
+4252 &"{f6} From (user#): {pound}i0":on-(tr%<1)goto4080:d$=an$:e$=d$:gosub4004:gosub349
+4254 gosub350
+4256 gosub4020
+4258 mo=2:gosub4026:mo=.:ifkk=0then4288
+4260 fori=1tokk
+4262 a$=tt$(i)+",p,r":&"{f6}{rvrs on} "+tt$(i)+" {rvrs off}{f6}"
+4264 dr=.:gosub4:ife%then:&:goto4270
+4266 gosub4274:gosub4282:&,16,x,y:&"{f6:2}{pound}#0{pound}%a Blocks Read{f6:2} << Key...>>{pound}g1"
+4268 close2:close15
+4270 next:goto4288
+4272 &"{f6}Device Not Present{f6}":goto4264
+4274 &,52,16,3:ifa%=.then4280
+4276 &,52,18,3:ifa%=.thenx=.:return
+4278 &,52,19,3:ifa%=.thenx=.:return
+4280 &"{f6}Display Control Codes in{f6}Expanded Form (BASIC ONLY)?: ":gosub94:x=a:return
+4282 a%=ll%:&"{f6}Screen Width (RETURN={pound}#0{pound}%a): {pound}i1":y=val(an$):ify<22ory>80theny=ll%
+4284 return
+4286 copr.1990 image 02/08/90
+4288 gosub4024:goto4064
+4290 rem "Lt. Kernal Fast File Utility
+4292 rem "by X-TEC
+4294 rem "Commodore Image BBS
+4296 rem "cib.dyndns.org:6400
+4298 rem "(c)NISSA '92
+4300 rem "Holiday Disk '92
+4302 rem "Do Not Remove Credits
+4304 rem "10/15/92 2.0 conversion 01/18/18
+4306 rem:"i/SM.lk util (c)nissa 200625 lh"

@@ -1,0 +1,56 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.fixer" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 &"{clear}{f6} Image Stats Fixer{f6:2}"
+4002 &"1. Count Posts/Resps{f6}"
+4004 &"2. Count Uploads{f6}"
+4006 &"3. Count User Mail{f6}"
+4008 &"4. Count Sysop Mail/Feedback/New Users{f6}"
+4010 &"5. Scan User List for First Empty Slot{f6}"
+4012 &"A. Do ALL of the above{f6:2}"
+4014 &"> {pound}g1":z=val(an$):if an$="A" then for z=1 to 5:gosub 4018:next:goto 4000
+4016 on-(z=0) goto 4020:gosub 4018:goto 4000
+4018 on zgoto 4022,4042,4058,4068,4084:return
+4020 &"{f6:2}Now type {f5}BA{f5} to check new stats.{f6}":return
+4022 p=0:r=0:dr=3:a$="e.Sub":gosub 4:if e%then:&:return
+4024 &,2,2:bz=val(a$):close 2
+4026 for i=1 to bz:a%=i:&"Sub {pound}%a:"
+4028 dr=4:a$="d.sub"+str$(i):gosub 4:if e%then:&"{pound}$e{f6}":goto 4036
+4030 &,2,2:rn=val(a$):b%=rn:c%=0:if rn=0 then 4034
+4032 for x=2 to rn+1:gosub 1:input# 2,a$,a$,a$,a$,a$:c%=c%+val(a$):next
+4034 p=p+b%:r=r+c%:&"{pound}%b Posts, {pound}%c Resps{f6}"
+4036 close 2:next
+4038 a%=p:b%=r:&"{f6}Totals:{pound}%a Posts{f6}       {pound}%b Responses{f6}"
+4040 gosub 30:x=26:st(x)=p:gosub 17:x=27:st(x)=r:gosub 17:close 2:return
+4042 u=0:dr=3:a$="e.U/D":gosub 4:if e%then:&:return
+4044 &,2,2:bz=val(a$):close 2
+4046 for i=1 to bz:a%=i:&"U/D {pound}%a:"
+4048 dr=4:a$="d.u/d"+str$(i):gosub 4:if e%then:&"{pound}$e{f6}":goto 4052
+4050 &,2,2:a%=val(a$):u=u+a%:&"{pound}%a Files{f6}"
+4052 close 2:next
+4054 a%=u:&"{f6}Total:{pound}%a Files{f6}"
+4056 gosub 30:x=28:st(x)=u:gosub 17:close 2:return
+4058 nt=.:for i=1 to ur:gosub 35:x=i:gosub 1:&,2,2:tt$=a$:an$=a$:&,15,1:&an$"'s Mail:"
+4060 dr=2:a$=left$("m."+tt$,15)+",s,r":gosub 4078:nt=nt+n:next
+4066 close 2:st(25)=nt:gosub 30:x=25:gosub 17:close 2:return
+4068 gosub 35:&,2,2:close 2:tt$=a$:an$=a$:&,15,1:&an$"'s Mail: "
+4070 dr=2:a$=left$("m."+tt$,15)+",s,r":gosub 4078:st(24)=n
+4072 &"{f6}Feedback: ":dr=3:a$="e.fback,s,r":gosub 4078:st(23)=n
+4074 &"{f6}New Users: ":dr=3:a$="e.new,s,r":gosub 4078:st(29)=n
+4076 gosub 30:x=23:gosub 17:x=24:gosub 17:x=29:gosub 17:close 2:return
+4078 gosub 4:n=0:if e%then 4082
+4080 &,2,2:s=st:on-(a$<>"{^}" and s=0) goto 4080:n=n+1:on-(s=0) goto 4080:close 2
+4082 &"{pound}!n{f6}":return
+4084 l=ur+1:gosub 35:&"Scanning User List"
+4086 for x=1 to ur:if x/5=int(x/5) then:&"."
+4088 gosub 1:&,2,2:if a$="{^}" then l=x:x=ur
+4090 next:l1=l
+4092 gosub 33:x=31:gosub 1:print# 2,l1:close 2:return
+4194 rem:"i/SM.fixer (c)nissa 211217 lh"

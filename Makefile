@@ -1,10 +1,14 @@
 # Image BBS 3.0 build
 #
 #   make asm      assemble source/*.s with KickAssembler    -> build/asm/
-#   make basic    build core/*.lbl with C64List             -> build/basic/
+#   make basic    build core/*.lbl and core/System Maintenance/*.lbl
+#                 with C64List                              -> build/basic/
 #   make tests    build core/tests/*.lbl with C64List       -> build/tests/
-#   make disk     copy the release boot disk (Disk 1) and replace the
-#                 files listed in disk.manifest              -> build/image30.d81
+#   make disk     copy the release boot disk (Disk 1), replace the files
+#                 listed in disk.manifest and scratch the ones in
+#                 sm.manifest                                -> build/image30.d81
+#   make sm-disk  the System Maintenance (SM) system editors, on a disk
+#                 of their own                               -> build/image30-sm.d81
 #   make test-disk the release boot disk, unchanged except for the test
 #                 programs in tests.manifest           -> build/image30-tests.d81
 #   make pdf      build the Programmer's Reference Guide PDF -> build/prg-master.pdf
@@ -30,12 +34,13 @@ LOGO_DIR    ?= source
 BUILD := build
 DISK  := $(BUILD)/image30.d81
 TEST_DISK := $(BUILD)/image30-tests.d81
+SM_DISK   := $(BUILD)/image30-sm.d81
 
 # wine prints a lot of debug noise; C64List needs Windows-style paths for output
 RUN_C64LIST = WINEDEBUG=-all $(WINE) $(C64LIST)
 winpath = Z:$(abspath $(1))
 
-.PHONY: all asm basic tests disk test-disk pdf sysop-pdf book-pdf clean
+.PHONY: all asm basic tests disk test-disk sm-disk pdf sysop-pdf book-pdf clean
 
 all: asm basic tests
 
@@ -85,7 +90,7 @@ FORCE:
 
 define build_lbl_dir
 	@mkdir -p $(2); fail=0; \
-	for f in $(1)/*.lbl; do \
+	for f in "$(1)"/*.lbl; do \
 		b=$$(basename "$$f" .lbl); \
 		case "$$b" in 3_0-preface|quoters) continue;; esac; \
 		out="$(2)/$$b.prg"; \
@@ -101,6 +106,7 @@ endef
 
 basic:
 	$(call build_lbl_dir,core,$(BUILD)/basic)
+	$(call build_lbl_dir,core/System Maintenance,$(BUILD)/basic)
 
 tests:
 	$(call build_lbl_dir,core/tests,$(BUILD)/tests)
@@ -114,12 +120,11 @@ tests:
 #
 #   disk.manifest   your builds: ML, BASIC modules and test programs
 #   tests.manifest  only the test programs, so the rest stays as released
+#   sm.manifest     the SM modules: scratched from the boot disk ("make disk"),
+#                   written to a new, empty disk ("make sm-disk")
 
-# $(call make_disk,<manifest>,<output .d81>)
-define make_disk
-	@test -f "$(RELEASE_ZIP)" || { echo "Release zip not found: $(RELEASE_ZIP)"; exit 1; }
-	@mkdir -p $(BUILD)
-	unzip -p "$(RELEASE_ZIP)" "$(RELEASE_D81)" > $(2)
+# $(call write_files,<manifest>,<.d81>)
+define write_files
 	@grep -v -e '^#' -e '^[[:space:]]*$$' $(1) | \
 	while IFS='	' read -r file name; do \
 		if [ ! -f "$(BUILD)/$$file" ]; then echo "  skipped (not built): $$file"; continue; fi; \
@@ -127,11 +132,30 @@ define make_disk
 		$(C1541) -attach $(2) -delete "$$name" -write "$(BUILD)/$$file" "$$name" > /dev/null 2>&1 \
 			|| { echo "  c1541 failed for $$file"; exit 1; }; \
 	done
+endef
+
+# $(call make_disk,<manifest>,<output .d81>[,<manifest of files to scratch>])
+define make_disk
+	@test -f "$(RELEASE_ZIP)" || { echo "Release zip not found: $(RELEASE_ZIP)"; exit 1; }
+	@mkdir -p $(BUILD)
+	unzip -p "$(RELEASE_ZIP)" "$(RELEASE_D81)" > $(2)
+	$(call write_files,$(1),$(2))
+	$(if $(3),@grep -v -e '^#' -e '^[[:space:]]*$$' $(3) | \
+	while IFS='	' read -r file name; do \
+		echo "  scratch \"$$name\""; \
+		$(C1541) -attach $(2) -delete "$$name" > /dev/null 2>&1; \
+	done)
 	@$(C1541) -attach $(2) -list 2>/dev/null | tail -1
 endef
 
 disk:
-	$(call make_disk,disk.manifest,$(DISK))
+	$(call make_disk,disk.manifest,$(DISK),sm.manifest)
+
+sm-disk:
+	@mkdir -p $(BUILD)
+	$(C1541) -format "image 3.0 sm,sm" d81 $(SM_DISK) > /dev/null
+	$(call write_files,sm.manifest,$(SM_DISK))
+	@$(C1541) -attach $(SM_DISK) -list 2>/dev/null | tail -1
 
 test-disk: tests
 	$(call make_disk,tests.manifest,$(TEST_DISK))

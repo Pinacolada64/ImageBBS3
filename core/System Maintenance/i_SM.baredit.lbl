@@ -1,0 +1,35 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.baredit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 &"{clear}{f6:2}Bar Edit Written By Breaker {f6:2}{pound}{back arrow}13{yellow}{rvrs on}DeathStar BBS{rvrs off}{f6}{white}"
+4006 cm$="Bar Edit":gosub 9
+4008 &"{white}{f6:2}Select Number From Menu Below and Then{f6}Enter Value Desired To"
+4010 &" Be Written To{f6}BAR{shft space}Stats!{f6:2}{cyan}(Hit A Key): {pound}g1"
+4012 &"{f6:2}{red}{pound}{back arrow}13Last{f6}{pound}{back arrow}13Call  Log   Curr Syst{f6}"
+4014 &"{white}Feedback  :{yellow}{pound}{back arrow}141{pound}{back arrow}1912{pound}{back arrow}2623{pound}{back arrow}3130{f6}"
+4016 &"{white}Sysop Mail:{yellow}{pound}{back arrow}142{pound}{back arrow}1913{pound}{back arrow}2624{pound}{back arrow}3131{f6}"
+4018 &"{white}User Mail :{yellow}{pound}{back arrow}143{pound}{back arrow}1914{pound}{back arrow}2625{pound}{back arrow}3132{f6}"
+4020 &"{white}Posts     :{yellow}{pound}{back arrow}144{pound}{back arrow}1915{pound}{back arrow}2626{pound}{back arrow}3133{f6}"
+4022 &"{white}Responses :{yellow}{pound}{back arrow}145{pound}{back arrow}1916{pound}{back arrow}2627{pound}{back arrow}3134{f6}"
+4024 &"{white}Uploads   :{yellow}{pound}{back arrow}146{pound}{back arrow}1917{pound}{back arrow}2628{pound}{back arrow}3135{f6}"
+4026 &"{white}Downloads :{yellow}{pound}{back arrow}147{pound}{back arrow}1918{pound}{back arrow}26--{pound}{back arrow}3136{f6}"
+4028 &"{white}New Users :{yellow}{pound}{back arrow}148{pound}{back arrow}1919{pound}{back arrow}2629{pound}{back arrow}31--{f6}"
+4030 &"{white}Calls/Log :{yellow}{pound}{back arrow}149{pound}{back arrow}1920{pound}{back arrow}26--{pound}{back arrow}31--{f6}"
+4032 &"{white}Time Used :{yellow}{pound}{back arrow}1410{pound}{back arrow}1921{pound}{back arrow}26--{pound}{back arrow}3137{f6}"
+4034 &"{white}Time Idle :{yellow}{pound}{back arrow}1411{pound}{back arrow}1922{pound}{back arrow}26--{pound}{back arrow}3138{f6}"
+4036 &"{f6}{red}Enter Desired Number To Change,{f6}{lt. blue}RETURN to End: {pound}i1"
+4038 b=val(an$):on-(an$="") goto 4048:on-(b<1 or b>38) goto 4036
+4040 gosub 30:x=b:gosub 1:&,2,2:st(x)=val(a$)
+4042 b$=str$(st(b)):&"{f6}{cyan}Current Value ={pound}$b"
+4044 &"{f6:2}{yellow}Please Enter New Value Desired!{f6:2} : {pound}i1":c=val(an$):on-(an$="") goto 4012
+4046 x=b:st(x)=c:gosub 17:goto 4012
+4048 close 2:return
+4050 rem:edit bar stats by breaker-deathstar bbs.
+4052 rem:"i/SM.baredit (c)nissa 190124 lh"

@@ -1,0 +1,20 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.consig1" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 &,28,1:dim x%(17,60):gosub 4002:&,28,1:return
+4002 dr=3:a$="e.Sig":gosub 4:if e%then close 2:&:return
+4004 &,2,2:x%(0,0)=val(a$):if x%(0,0)=0 then close 2:return
+4006 for i=1 to x%(0,0):x=i+1:gosub 1:&,2,2:input# 2,x%(1,i),x%(0,i),x%(2,i)
+4008 if x%(2,i)<0 then x%(2,i)=0
+4009 x%(0,i)=abs((x%(0,i)) or not 7)-1
+4010 &,60,0,30,x%(3,i),a$:next:close 2
+4011 dr=3:gosub 3:a$="e.Siglist":print# 15,"s" dr$a$:close 15:dr=3:gosub 3
+4012 &,60,3,0,x%(0,0),36+x%(0,0)*36,dr$+"e.Siglist",dv%:gosub 5:&:return
+4014 rem:"i/SM.consig1 (c)nissa 190124 lh"

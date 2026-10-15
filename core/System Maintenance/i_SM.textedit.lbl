@@ -1,0 +1,39 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.textedit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 &"{clear}{f6:2}{pound}{back arrow}10{white}Text Message Editor{f6}{lt. green}{f6}Instructions? ":gosub 94:if athen 4034
+4002 &"{clear}{f6} 1) List Text Messages{f6:2} 2) Edit{f6:2} 3) Quit{f6:2} ME: {pound}g1{pound}v7{f6}":on tr%+1 goto 4054
+4004 a=val(an$):if a<1 or a>3 then 4054
+4006 on agoto 4008,4016,4054:goto 4002
+4008 a$="e.text":dr=3:gosub 4:if e%then 4052
+4010 for x=1 to 6:gosub 1:&,2,2
+4012 b%=x:&"{f6}({pound}%b)":&
+4014 next:&"{f6:2} Any Key {pound}g1":goto 4002
+4016 &"{f6:2} Edit Which? {pound}i1":if tr%<1 goto 4054
+4018 on-(an$="") goto 4002:x=val(an$):if x<1 or x>6 then 4016
+4020 a$="e.text":dr=3:gosub 4:if e%then 4052
+4022 gosub 1:&,2,2:&"{f6}Edit {f6}":&
+4024 pl=.:poke 53252,254:p$="{f6:2}Enter new text, 254 Character Max.{f6} ":&,1,43
+4026 n$=an$:&"{f6}{pound}$n{f6:2} Ok? {pound}g1":if tr%<1 then 4054
+4028 if an$<>"Y" then 4016
+4030 gosub 1:print# 2,n$:gosub 5:if e%then 4050
+4032 goto 4002
+4034 &"{clear}{f6:2}{pound}{back arrow}13{rvrs on} INSTRUCTIONS {rvrs off}"
+4036 &"{f6}The text messages are the messages that{f6}your users see when they try"
+4038 &"{f6}to do something they do not have the{f6}proper access for or have not been"
+4040 &"{f6}cleared to do.  The text messages{f6}may be edited to a certain extent"
+4042 &"{f6}and this file will help you do that.{f6:2}It is self prompting and will"
+4044 &"{f6}request verification before writing{f6}to your text file.{f6}"
+4046 &"{f6}We recommend that you make a backup of{f6}your original file before you{f6}"
+4048 &"proceed.{f6:2}(Any Key) {pound}g1":on tr%+1 goto 4054:goto 4002
+4050 &"{f6:2}Error writing to {f5}e.text{f5}{pound}w3":goto 4054
+4052 &"{f6:2}Error opening {f5}e.text{f5}{pound}w3"
+4054 &,28,1:return
+4056 rem:"i/SM.textedit (c)nissa 190124 lh"

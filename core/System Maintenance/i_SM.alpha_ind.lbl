@@ -1,0 +1,48 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.alpha/ind" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 pr=-1:a=4:pr=a:a$="4":gosub 28:poke 53252,20
+4002 &"{clear}{f6:2}1.Clear{f6}2.Load{f6}3.Search{f6}4.Insert{f6}5.Delete{f6}6.Save{f6}7.List{f6}8.Make{f6}9.Kill{f6}"
+4004 &"{f6}0.Quit{f6:2} =>{pound}g1{pound}v7{f6}":a=val(an$):if athen on agosub 4012,4014,4018,4024,4034,4016,4044,4058,4068:goto 4002
+4006 pr$="":pr=-1:close 2:return
+4008 dr=6:a$="u.config":goto 4
+4010 rem 3/24/89
+4012 &"Cleared...{f6}":&,16,3:return
+4014 &"Loading...":dr=6:gosub 3:a$=dr$+"u.index":&,16,1:&"{pound}%a Users.{pound}w1{f6}":return
+4016 &"Saving...":dr=6:gosub 3:a$=dr$+"u.index":print# 15,"s" a$:&,16,2:return
+4018 gosub 4008
+4020 &"HANDLE:{pound}i1":if an$="" then close 2:return
+4022 &,16:&"{f6}a%={pound}%a,b%={pound}%b{f6}":goto 4020
+4024 gosub 4008
+4026 &"Insert:ID={pound}i1":a=val(an$):if a=.then close 2:return
+4028 x=a:gosub 1:&,2,2:an$=a$:lp=1:&
+4030 &,16:&"{f6}a%={pound}%a,b%={pound}%b{f6}":if a%then:&"Already There!{f6}":goto 4026
+4032 &"Adding at {pound}%b.{f6}":a%=a:&,16,4:goto 4026
+4034 gosub 4008
+4036 &"Delete:ID={pound}i1":a=val(an$):if a=.then close 2:return
+4038 x=a:gosub 1:&,2,2:an$=a$:lp=1:&
+4040 &,16:&"{f6}a%={pound}%a,b%={pound}%b{f6}":if a%=.then:&"Not There!{f6}":goto 4036
+4042 &"Deleting #{pound}%b.{f6}":a%=a:&,16,5:goto 4036
+4044 gosub 4008
+4046 open 3,dv%,3,dr$+"u.index,p,r":get#3,a$,a$:z$=chr$(0)
+4048 get#3,a$,b$:n%=asc(b$+z$)+asc(a$+z$)*256:&"{f6}{pound}%n Users.{f6}":if n%=.then 4056
+4050 for i=1 to n%:get#3,a$,b$:a%=asc(b$+z$)+asc(a$+z$)*256
+4052 x=a%:gosub 1:input# 2,a$:&"{pound}%a - {pound}$a{f6}"
+4054 i=i+rc*n%:next
+4056 close 3:&"Press A Key {pound}g1{f6}":close 2:return
+4058 gosub 4008:for i=1 to ur:x=i:gosub 1:input# 2,a$
+4060 if a$="{^}" or a$="RES" then 4066
+4062 a%=i:an$=a$:&"{pound}#3{pound}# {pound}%a. {pound}$a{pound}{back arrow}30":&,16:if a%then:&"Dupe={pound}%a{f6}":goto 4066
+4064 a%=i:&,16,4:&"At {pound}%b{f6}"
+4066 next:close 2:return
+4068 &"Kill  :Pos={pound}i1":a=val(an$):if a=.then close 2:return
+4070 b%=a:&"Deleting #{pound}%b.{f6}":a%=a:&,16,5:goto 4068
+4072 rem copr.1989 new image
+4074 rem:"i/SM.alpha/ind (c)nissa 190124 lh"

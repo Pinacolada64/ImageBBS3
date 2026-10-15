@@ -1,0 +1,24 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/SM.find acs" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:../3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+4000 gosub 4012:gosub 35:gosub 4016
+4002 for x=1 to ur:gosub 1:&,2,2:an$=a$:&,15,1
+4004 for i=1 to 6:&,2,2:next:a=val(left$(a$,1))
+4006 if a=cthen:&"ID:{pound}!x ({pound}!a) {pound}v7{f6}"
+4008 a=rc:&".{left}":if rcor athen x=ur
+4010 next:close 2:goto 4020
+4012 &"{clear}{f6:2}Access Group Finder. This Program Will{f6}Look Through Your User Files"
+4014 &" And Find{f6}All Users With Any Specified Access{f6}Group.":return
+4016 &"{f6:2}Find Which Access Group?: {pound}g1{pound}v7{f6}":c=val(an$):if c=0 then 4024
+4018 return
+4020 &"{f6}Run again? ":gosub 96:on agoto 4000
+4022 return
+4024 &"{f6}These users are unvalidated or{f6}have not called back...{f6:2}":return
+4026 rem"i/SM.find acs (c)nissa 190124 lh"

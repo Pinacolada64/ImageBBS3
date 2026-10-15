@@ -123,6 +123,8 @@
 
 {assign:505	=505	} ' im.find_id
 {assign:542	=542	} ' im: im=1, then line 440 (sub.editor)
+' 10/14/2026: 557 for i/SM.lk util, which jumps to it
+{assign:557	=557	} ' im: im=9, then line 448 (sub.local)
 {assign:563	=563	} '
 
 {assign:999	=999	} ' im.genericReturn

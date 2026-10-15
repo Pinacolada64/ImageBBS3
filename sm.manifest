@@ -1,0 +1,26 @@
+# sm.manifest: System Maintenance (SM), IM's N (Base Editors): i.SM and its
+# i/SM.* modules, a group of system editors. The boot disk is short of blocks,
+# so "make sm-disk" puts them on a disk of their own (build/image30-sm.d81),
+# and "make disk" scratches these files from the boot disk. Same format as
+# disk.manifest.
+
+basic/i.SM.prg	i.SM
+basic/i_SM.alpha_ind.prg	i/SM.alpha/ind
+basic/i_SM.baredit.prg	i/SM.baredit
+basic/i_SM.bu.prg	i/SM.bu
+basic/i_SM.cmdclock.prg	i/SM.cmdclock
+basic/i_SM.conmenu.prg	i/SM.conmenu
+basic/i_SM.consig1.prg	i/SM.consig1
+basic/i_SM.consig2.prg	i/SM.consig2
+basic/i_SM.find acs.prg	i/SM.find acs
+basic/i_SM.fixer.prg	i/SM.fixer
+basic/i_SM.lk util.prg	i/SM.lk util
+basic/i_SM.make anagra.prg	i/SM.make anagra
+basic/i_SM.menuedit.prg	i/SM.menuedit
+basic/i_SM.netfile.prg	i/SM.netfile
+basic/i_SM.reledit.prg	i/SM.reledit
+basic/i_SM.sayedit.prg	i/SM.sayedit
+basic/i_SM.scan netlog.prg	i/SM.scan netlog
+basic/i_SM.setdev.prg	i/SM.setdev
+basic/i_SM.sigedit.prg	i/SM.sigedit
+basic/i_SM.textedit.prg	i/SM.textedit
