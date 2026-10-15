@@ -1,7 +1,10 @@
 :experimental:
-:toc:
+:icons: font
 
-=== Convert a 1.2 System
+== Converting a 1.2 System [[convert-12]]
+
+This chapter upgrades an Image BBS 1.2 system to 3.0, from start to finish.
+Read <<setting-up>> up to <<install-methods>> first: it explains the six Image drives and what goes on each.
 
 NOTE: This is the recommended way of converting 1.2 to 3.0. Other ways may work but have not been tested.
 
@@ -33,7 +36,7 @@ Either use `fcopy+` (included on the 3.0 UTILITIES disk), or log onto your 1.2 s
 
 If you want to keep your existing news files and canned message files, copy the ``n.\*`` and ``s.can*`` files from your 1.2 system drive to your 3.0 System disk.
 
-=== Edit `bd.data`
+=== Edit `bd.data` [[convert-12-bd-data]]
 
 Here you`'ll change your device/drive assignments.
 
@@ -55,11 +58,13 @@ Lines 1 through 12 identify your Image drive assignments.
 IMPORTANT: Use kbd:[DC] to scratch the file `e.last` from your 1.2 system. (3.0`'s `e.last` file is in a different format.)
 
 [start=9]
+include::includes/sub_modem-config.adoc[]
+
+[start=10]
 . Shut down your computer and reboot the BBS.
 
-=== Installation
 
-include::includes/sub_modem-config.adoc[]
+=== Run the Conversion
 
 include::includes/boot-command.adoc[]
 
@@ -76,3 +81,85 @@ You can change that later during further configuration.
 It reads the Image drive assignments and access group information from `d.data`, and uses that information to create a new `bd.data` file on its own Program Disk, modify the existing `e.data` file with expanded 3.0 information, and create a new file called `e.access`.
 
 When finished, Image reboots to the System Idle screen.
+
+=== First Logon
+
+. At the System Idle screen, press kbd:[1] to set the time (see <<set-the-clock>>).
+Image performs AutoMaintenance, and returns to the Idle screen.
+. Start a console login: put the left check mark on `Loc` (see <<console-login>>), then press kbd:[I] for Instant Login (see <<instant-login>>).
+. If asked, type your password.
+The BBS greets you with a welcome message, then asks for your time zone.
+. Select your time zone (kbd:[7] Eastern, kbd:[6] Central, kbd:[5] Mountain, kbd:[4] Pacific; there are others in the list).
+. Enter the number of lines per screen (23 is suggested).
+. At the Main Prompt, type kbd:[EP] to edit your parameters:
+.. Select kbd:[P]arameters.
+Set your Computer Type and any other terminal parameters you want; `Cursor Menu Mode` On is suggested.
+kbd:[Return] goes back.
+.. Select kbd:[I]nfo.
+Change your phone number to your E-mail address: 3.0 keeps an E-mail address where 1.2 kept a phone number.
+kbd:[Return] goes back.
+. Log off with the kbd:[O] command, and answer `Update User File?` with kbd:[Y]es.
+This saves your new parameters to your account.
+
+IMPORTANT: Always log off with the kbd:[O], kbd:[O!] or kbd:[O%!] commands.
+Logging off by unchecking `Loc` with kbd:[f7] bypasses the module which updates the last 10 callers, and causes errors in the time used.
+
+=== Configure the BBS in `IM`
+
+. Log back on, and type kbd:[IM] at the Main Prompt to go to the Configuration Editor (see <<im-configuration>>).
+. Select kbd:[E] `Access Groups`.
+The group names and flags are the same as your 1.2 system's.
+Edit any you like (see <<im-access-groups>>); kbd:[Return] goes back, asking whether to save your changes.
+. Select kbd:[I] `Misc. Features` (see <<im-misc>>):
+.. At minimum, set kbd:[G] `Time Zone` and kbd:[J] `System ID`.
+.. On a Lt. Kernal hard drive, set kbd:[A] `Lt. Kernal Device`.
+.. _Optional:_ select kbd:[M] `Chat Messages` to set your entering and leaving chat messages.
+.. Edit any other settings you wish, then select kbd:[N] `Quit`.
+. Select kbd:[J] `Modem Config`, then kbd:[B] `Setup/Import Modem Config` and kbd:[1] `Setup New Modem Config`, and answer both questions kbd:[Y]es.
+Set up your modem as for a new BBS (see <<gglabs-example>> and <<im-modem>>).
+When finished, select kbd:[X] `Exit Modem Config`, and answer `Update Modem Flags?` with kbd:[Y]es.
+. Select kbd:[D] `Logon Editor`:
+.. Select kbd:[A] `Login Mods`, and type kbd:[H]elp for instructions on configuring your login modules (see <<im-login-mods>>).
+.. Select kbd:[B] `Maint Mods` to configure your nightly AutoMaintenance modules (see <<im-maint-mods>>).
+.. Configure any other items you need to get started.
+
+IMPORTANT: It's highly recommended you include `i/lo-email` as a forced module in your login modules.
+It asks any user whose account still has a phone number to change it to an E-mail address.
+
+=== RELedit
+
+. In the Configuration Editor, select kbd:[N] `Base Editors`, then kbd:[G] `Editor Utils`, then kbd:[A] `Run RELedit` (see <<im-reledit>>).
+. Your Subs, U/Ds, U/Xs and SIGs are there as they were configured in Image 1.2a.
+Check that everything is right, or change it as needed.
+. If your 1.2 system was networked, go into each netsub you have defined.
+No changes need to be made, but as you leave each one, it's saved in Image 3.0's _structure file_ format.
+. When finished, leave RELedit with kbd:[Return].
+The BBS converts all your 1.2 SIGs to 3.0 format, and you go back to the `Base Editor` menu.
+
+TIP: If a CMD device's real-time clock will set the BBS clock at boot, now is a good time to set it up: kbd:[H] `Set Time Dv #` and kbd:[I] `Set CMD Clock`, or kbd:[K] `Set Time` in `IM` (see <<im-set-time>>).
+
+[start=5]
+. Select kbd:[K] `Quit` to go back to the Configuration Editor, then kbd:[Q] `Quit` to go back to the Main Prompt.
+
+=== Macros
+
+If you had macros in your 1.2 system and don't want to keep them, scratch the file `e.macros` (kbd:[DC]).
+
+To keep them, change the first record of `e.macros` to 3.0's macro count:
+
+// FIXME: more exact steps.
+
+. Type kbd:[RD] at the Main Prompt, and read the SEQ file `e.i.macros`.
+It holds the number of macros you have.
+. Type kbd:[RF] at the Main Prompt (the REL file editor), and read `e.macros`.
+. kbd:[V]iew record 1.
+
+TIP: You might want to copy this record to the end of the file first, since record 1 is going to be replaced by the macro count.
+
+[start=4]
+. Edit record 1, replacing it with a number 1 less than the number in `e.i.macros`.
+. Scratch `e.i.macros` with kbd:[DC]: it isn't needed any more.
+
+See <<im-macros>> for editing the macros afterwards.
+
+From here, see <<final-notes>>.

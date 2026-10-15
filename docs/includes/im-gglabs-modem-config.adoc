@@ -5,10 +5,6 @@
 
 The following will guide you through how to set up a GGLabs GLink232 (or SwiftLink) modem interfaced to BBS Server.
 
-[start=1]
-
-. Type `IM` at the Main Prompt.
-
 NOTE: If the BBS is configured for a Lt. Kernal, entering the modem configuration will allow you to configure not only the port your host adapter is set for but any other ports which might be multiplexed. 
 
 ----
@@ -44,8 +40,7 @@ Then hit any key to return to the `Modem Config` page.
 Review your settings.
 If any changes need to be made, type the corresponding number (such as if you want to change DTR Hang-Up to ESCape Code Hang-Up, type kbd:[2] and select kbd:[E]).
 
-NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in item 6 under <<setting-up.adoc#configure-a-new-bbs>>
-// Configure a New BBS>>.
+NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in <<modem-escape>>.
 
 When finished configuring your modem, type kbd:[X] to `Exit Modem Config`. Answer `Update Modem Flags?` with kbd:[Y]es.
 

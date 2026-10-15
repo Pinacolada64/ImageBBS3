@@ -1,7 +1,10 @@
 :experimental:
-:toc:
+:icons: font
 
-== Convert a 2.0 System
+== Converting a 2.0 System [[convert-20]]
+
+This chapter upgrades an Image BBS 2.0 system to 3.0, from start to finish.
+Read <<setting-up>> up to <<install-methods>> first: it explains the six Image drives and what goes on each.
 
 NOTE: This is the recommended way of converting 2.0 to 3.0.
 Other ways may work but have not been tested.
@@ -16,23 +19,27 @@ NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in 
 
 . Make a complete backup of all your Image 2.0 drives.
 . Copy `bd.data` from your programs drive to your Etcetera Disk.
-. Remove all your 2.0 boot and program files from your Program Disk.
+. Move your 2.0 boot and program files off your Program Disk, to another disk or partition: don't scratch them.
+You'll want them if you go back to 2.0, and they include any modules you've written or installed.
 . Copy all the files from IMAGE 3.0 D1 to your Program Disk.
 . Copy `bd.data` from the Etcetera Disk to the Program Disk, but rename it to `d.data`.
 . Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your Etcetera Disk, replacing the existing files.
-. Remove all the Image 2.0 `s.*` files from your System Disk.
+. Copy the Image 2.0 `s.*` files you've customized (your login and welcome screens, board entry screens, and so on) to another disk or partition, to put back afterwards.
+. Copy all the `s.*` files from `IMAGE 3.0 D2` to your System Disk, replacing the 2.0 files of the same name.
+Your other 2.0 `s.` files are left as they are.
+. Copy back the customized screens you set aside in step 7, if you want to keep them.
+3.0's menus (`s.menu` _n_) and its `s.m.*` files list 3.0's commands and options, so keep 3.0's versions of those.
 
-CAUTION: What if you`'ve written custom board entry files or login screens?
-
-[start=8]
-. Copy all the `s.*` files from `IMAGE 3.0 D2` to your System Disk.
+NOTE: Disk 2's ``+s.*+`` files are the menus (``s.menu`` _n_), the login, welcome, start and end screens (``s.login``, ``s.welcome``, ``s.start``, ``s.end``), the screens for entering each section (``s.SB``, ``s.UD``, ``s.UX``, ``s.EM``, ``s.GF``, ``s.Sig``, ``s.VF`` ...), and the setup files (``+s.m.*+``).
 
 ****
 If you want to run the "`Today in History`" login module in 3.0, copy all the `today.*` files from IMAGE 3.0 D2 to your Etcetera Disk.
 ****
 
-[start=9]
+[start=10]
 include::includes/sub_modem-config.adoc[]
+
+=== Run the Conversion
 
 include::includes/boot-command.adoc[]
 
@@ -49,37 +56,29 @@ You can fix this in a later step.
 . Log on to your BBS from the console.
 . Type kbd:[IM] to go to the Configuration Editor.
 
-Continue to the <<setting-up.adoc#_shared_image_bbs_3_0_setup,Shared Image BBS 3.0 Setup>> section.
+=== Configure the BBS in `IM`
 
-////
-. Configure your modem.
+The Configuration Editor's options are described in <<im-configuration>>.
 
-. Configure any items not already configured in `Misc. Features`.
+[start=8]
+. Configure your modem: kbd:[J] `Modem Config`, then kbd:[B] `Setup/Import Modem Config` and kbd:[1] `Setup New Modem Config` (see <<gglabs-example>> and <<im-modem>>).
+When finished, select kbd:[X] `Exit Modem Config`, and answer `Update Modem Flags?` with kbd:[Y]es.
+. Configure anything not already configured in kbd:[I] `Misc. Features` (see <<im-misc>>).
+. Go into kbd:[D] `Logon Editor` and configure your kbd:[A] `Login Mods` (login modules).
+Its kbd:[H]elp explains how (see <<im-login-mods>>).
+. Configure your new kbd:[B] `Maint Mods` (nightly AutoMaintenance modules; see <<im-maint-mods>>).
+. Configure your kbd:[H] `Lightbar/Alarms`, kbd:[A] `LightBar Defs` (the lightbar's defaults at boot; see <<lightbar-defaults>>).
+. Select kbd:[N] `Base Editors`.
+This is the menu that 2.0's kbd:[SM] command used to show, if you've installed it from the SM disk (see <<im-base-editors>>).
+You shouldn't have to do anything there, but you can look around if you want to.
+. Select kbd:[K] `Quit` to go back to the Configuration Editor, then kbd:[Q] `Quit` to go back to the Main Prompt.
 
-. Go into the `Logon Editor` and configure your `Login Mods` (login modules).
-There is a Help function which will explain how to do it.
+=== News and General Files
 
-. Configure your new `Maint Mods` (Nightly AutoMaintenance modules).
-
-. Configure your `Lightbar Defs` (lightbar defaults).
-
-. When back at the IM Configuration Editor, select the option for `Base Editors`.
-
-****
-This takes you to the menu page that used to be called by the kbd:[SM] command in 2.0, if you've installed it from the SM disk (see <<im-base-editors>>).
-You shouldn’t have to do anything here, but you can look around if you want to.
-****
-
-When done, use the `Quit` option to go back to the Configuration Editor.
-Then `Quit` from there back to the Main Prompt.
-
-20. Enter kbd:[NF] to go to the News files and configure any news files needing to be edited, added or configured.
-(`n.$Welcome!`, perhaps?)
+[start=15]
+. Type kbd:[NF] to go to the News files, and edit, add or configure any that need it (`n.$Welcome!`, perhaps).
 kbd:[Q]uit back to the Main Prompt when done.
+. Type kbd:[GF] to go to the General Files section (see <<general-files>>).
+Nothing is configured there yet: 2.0's General Files don't carry over, because 3.0's files are in a different format, so set your libraries up again.
 
-21. Type kbd:[GF] to go to the General Files section.
-Notice that nothing is configured.
-You will need to reconfigure your GF section due to the incompatibility between 3.0 and 2.0 file formats.
-
-#TODO:# Converter should be possible...
-////
+From here, see <<final-notes>>.
