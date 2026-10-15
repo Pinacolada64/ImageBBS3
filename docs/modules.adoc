@@ -55,7 +55,7 @@ Each type of module uses a different variable within the BASIC code to control w
 | 5     | `im`
 |====================
 
-#TODO#: There is a module listing and jump table in the _Image 3.0 Programmer`'s Reference Guide_.
+The _Image 3.0 Programmer`'s Reference Guide_ has a module listing and jump table.
 
 If there is no DOS error, the module should execute.
 

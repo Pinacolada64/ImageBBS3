@@ -49,4 +49,4 @@ NOTE: If using ESCape codes, you will need to modify `sub.modem` as stated in it
 
 When finished configuring your modem, type kbd:[X] to `Exit Modem Config`. Answer `Update Modem Flags?` with kbd:[Y]es.
 
-#TODO#: More details will be available in the relevant `IM` documentation.
+For more details, see <<im-modem>>.

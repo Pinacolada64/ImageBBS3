@@ -597,7 +597,7 @@ They just type the number of the account to log on, type their password, and the
 
 The command path is kbd:[IM], kbd:[D] `Logon Editor`, kbd:[D] `Quicklist`.
 
-#TODO#: For more information, see the relevant `IM` documentation.
+For more information, see <<im-quicklist>>.
 ****
 
 [start=2]
@@ -768,7 +768,7 @@ You can create and maintain SIGs (Special Interest Groups), defining how related
 
 Networked message bases are also configured here, if your BBS is part of a network.
 
-#TODO#: For more information, see the chapter on RELedit.
+For more information, see <<im-reledit>>.
 
 . Select kbd:[N] `Base Editors`.
 
@@ -781,7 +781,7 @@ You _must_ define at least one SIG and add your SB, UD and UX assignments.
 
 When finished with RELedit, exit with kbd:[Return] until you end up back at the `Base Editor` menu.
 
-#TODO#: Refer to the IM Configuration Editor chapter for further information.
+For more about RELedit and the other Base Editors, see <<im-base-editors>>.
 
 The remaining items in the `Base Editor` menu are sysop utilities for maintaining the BBS.
 

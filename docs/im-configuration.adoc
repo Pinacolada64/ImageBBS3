@@ -785,7 +785,7 @@ kbd:[G] (Editor Utils) shows the Editor Programs menu:
 | kbd:[H] | Quit | Back to the Base Editor Programs menu |
 |===
 
-==== Reledit
+==== Reledit [[im-reledit]]
 
 Edits the REL files that define the message bases: kbd:[S] sub-boards (`e.Sub`), kbd:[U] U/D areas (`e.U/D`), kbd:[X] U/X areas (`e.U/X`), kbd:[G] SIGs (`e.Sig`), and kbd:[N] NetSubs when the BBS is networked.
 Choose one, then an entry's number (kbd:[L] lists them).
