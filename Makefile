@@ -87,6 +87,10 @@ FORCE:
 # these are shell loops: each file is rebuilt only if its .lbl is newer.
 # Modules that fail to build are reported, and the loop carries on.
 # C64List 4.04 ignores {crunch:on}, so -crunch is passed for files that use it.
+# 4.04 also can't find named assigns (gosub {:im.rel_record} with
+# {assign:im.rel_record=1}), so tools/lbl-assigns.py first writes a copy with
+# their numbers, .<name>.pp.lbl next to the file (so {uses:} paths still work),
+# which is built instead and removed; it does nothing for files without them.
 
 define build_lbl_dir
 	@mkdir -p $(2); fail=0; \
@@ -97,9 +101,14 @@ define build_lbl_dir
 		[ "$$out" -nt "$$f" ] && [ "$$out" -nt core/3_0-preface.lbl ] && continue; \
 		echo "C64List: $$f"; \
 		crunch=; grep -q -i '{crunch:on}' "$$f" && crunch=-crunch; \
-		( cd "$$(dirname "$$f")" && $(RUN_C64LIST) "$$b.lbl" -prg:"$(call winpath,$(2))/$$b.prg" $$crunch -ovr ) \
+		src="$$b.lbl"; pp="$$(dirname "$$f")/.$$b.pp.lbl"; \
+		python3 -I tools/lbl-assigns.py "$$f" "$$pp"; rc=$$?; \
+		if [ $$rc = 0 ]; then src=".$$b.pp.lbl"; \
+		elif [ $$rc != 3 ]; then echo "  FAILED: tools/lbl-assigns.py"; fail=1; continue; fi; \
+		( cd "$$(dirname "$$f")" && $(RUN_C64LIST) "$$src" -prg:"$(call winpath,$(2))/$$b.prg" $$crunch -ovr ) \
 			> "$(2)/$$b.log" 2>&1 \
 			|| { echo "  FAILED: see $(2)/$$b.log"; rm -f "$$out"; fail=1; }; \
+		rm -f "$$pp"; \
 	done; \
 	[ $$fail = 0 ] || echo "Some files failed to build (listed above)."
 endef

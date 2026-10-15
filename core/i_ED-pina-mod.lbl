@@ -6,6 +6,11 @@
 {uses:3_0-assigns.lbl}
 
 {quoter:32=space}
+' 10/14/2026: 1.x im lines changed to 3.0's, as im.emul13 maps them and the
+' release i.ED calls them: 1902 -> 94 (yes/no, default no), 1063 -> 33
+' (open e.data), 1811 -> 300 (main prompt), 1034 -> im=7:gosub 445 and
+' 1038 -> im=8:gosub 445 (sub.misc: take the handle in an$ out of u.index,
+' or add it); and 546 (not in the release im) -> im=10:gosub 445 (find it)
 ' TODO: add weedinfo routines from 2.0's +.ED
 
 ' wine c64list4_04.exe i_ED-pina-mod.lbl -d64:test.d64::I.ed -ovr -verbose
@@ -135,7 +140,7 @@
 ' show new date:
 	gosub {:_934}
 {:_932}
-	&"{f6}Change time?: ":gosub 1902:if a=. then return
+	&"{f6}Change time?: ":gosub 94:if a=. then return
 {:_936}
 	&"{f6}Enter time in this format:{f6:2}Example:  9:20 AM--920A{f6}"
 {:_938}
@@ -204,9 +209,9 @@
 {:got_param}
 	gosub {:sub.str_to_int}:x=a:if x<=ur and x>. then {:_110}
 ' look up user
-	gosub 546:x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{pound}w2":goto {:_102}
+	im=10:gosub 445:x=i:if i=. then:&"{f6}{f5}{pound}v7{f5} not found.{pound}w2":goto {:_102}
 {:_110}
-	gosub 35:gosub {im.rel_record}:for i=1 to 24:&,2,2:if asc(a$+nl$)=32 then a$=mid$(a$,2)
+	gosub 35:gosub {:im.rel_record}:for i=1 to 24:&,2,2:if asc(a$+nl$)=32 then a$=mid$(a$,2)
 ' handle copied into tt$ to check if changed
 	tt$(i)=a$:next:tt$=tt$(1):close 2
 	gosub {:sub.get_access_group_name}
@@ -338,7 +343,7 @@
 ' 2) carrier drop flag may not exist yet, as with conversion from 1.2
 	an$=left$(tt$(a),11):gosub {:sub.time_date_edit}:if c%=. then {:header}
 	&"Carrier drop flag: "+mid$("YesNo",cd%*3-2,3)
-	&", toggle?: ":gosub 1902:if a then cd%=1-cd%
+	&", toggle?: ":gosub 94:if a then cd%=1-cd%
 	tt$(op)=tt$(op)+chr$(48+cd%):goto {:header}
 
 {:computer_type}
@@ -367,7 +372,7 @@
 ' handle or access group edited:
 	tt$(a)=an$:tz=.:on-(a=1)-(a=7)*2 goto {:_148},{:_154}:goto {:header}
 {:_132}
-	on tz goto {:_102}:&"{f6}Save changes? ":gosub 1902:if a=. then {:_102}
+	on tz goto {:_102}:&"{f6}Save changes? ":gosub 94:if a=. then {:_102}
 	&"{clear}{f6}Writing to user data files..."
 	if tt$(1)<>"{up arrow}" and tt$(1)<>"RES" and tt$(1)<>tt$ then gosub {:_206} ':gosub {:sub.write_stats}:goto {:_102}
 	gosub {:sub.write_stats}:if tt$(1)="RES" and tt$<>"{up arrow}" and tt$<>"RES" then {:_166}
@@ -392,7 +397,7 @@
 
 {:_148}
 ' deleted (^) or REServed users:
-	on -(an$="{f8}")-(an$="RES")*2 goto {:_160},{:res_pw}:g=x:gosub 546:x=g
+	on -(an$="{f8}")-(an$="RES")*2 goto {:_160},{:res_pw}:g=x:im=10:gosub 445:x=g
 ' FIXME: always reports used by DE23 - 546 above destroys i and a%
 	if i then:&"{f6:2}Handle already used by {pound}vn{pound}!i{pound}w2":tt$(1)=tt$
 	goto {:header}
@@ -408,11 +413,11 @@
 {:_160}
 ' 94 calls "Are You Sure?: [No]" routine:
 	b$=tt$:&"{f6:2}Delete {f5}{pound}$b{f5}{f6}":gosub 94:if a=. then {:_102}
-	an$=tt$:gosub 1034
+	an$=tt$:im=7:gosub 445
 	tt$(1)="{up arrow}":tt$(2)="d":for i=3 to 24:tt$(i)="0":next:gosub {:sub.write_stats}
 ' 1063: open e.data, adjust next available user account (L1):
 	on -(x>l1) goto {:_166}:&"(Updating next available user account)"
-	l1=x:x=31:gosub 1063:gosub 1:print# 2,l1:close 2
+	l1=x:x=31:gosub 33:gosub 1:print# 2,l1:close 2
 {:_166}
 ' if user email exists, decrease current total # of emails in BAR stats:
 	a$="r":gosub 32:close 2:if e%=. then gosub 30:i=-1:x=25:gosub 16:close 2
@@ -446,7 +451,7 @@
 	b$=mid$("YesNo",(1-a)*3+1,3)
 {:_186}
 	&"{pound}#2{pound}# {pound}%a) {pound}$c{pound}{back arrow}21: {pound}$b{f6}":next:gosub {:sub.change_prompt}
-	i=a:on -(tr%<1) goto 1811:if a<1 or a>20 then return
+	i=a:on -(tr%<1) goto 300:if a<1 or a>20 then return
 ' credit ratio:
 '	if a=2 then b$=mid$(tt$(23),2,1)+"/1":goto {:edit_access_flags}
 ' max editor lines=multiple of 10:
@@ -458,7 +463,7 @@
 	tt$(23)=left$(tt$(23),a-1)+b$+mid$(tt$(23),a+1)
 {:edit_access_flags}
 ' TODO: change to yes/no for most options?
-	&"{f6}":p$=ed$(i+23):w$=b$:&,1,32:on -(tr%<1)-2*(an$="") goto 1811,{:edit_access_flags}
+	&"{f6}":p$=ed$(i+23):w$=b$:&,1,32:on -(tr%<1)-2*(an$="") goto 300,{:edit_access_flags}
 '	b$=left$(an$,1):on-(a<>6)goto {:_196}:b$=mid$(str$(int(val(an$)/10)-1),2,1)
 	b$=left$(an$,1):if a<>6 then b$=mid$(str$(int(val(an$)/10)-1),2,1)
 	goto {:_196}
@@ -512,9 +517,9 @@
 	dr=2:gosub 3:a$="f.":for i=1 to 2
 	print# 15,"r"dr$a$left$(tt$(1),13)"="a$left$(tt$,13):a$="m.":next
 ' check error channel, TODO: delete old handle an$ from alphabetical user index:
-	gosub 5:an$=tt$:kk=id:id=x:gosub 1034:an$=tt$(1)
+	gosub 5:an$=tt$:kk=id:id=x:im=7:gosub 445:an$=tt$(1)
 ' TODO: insert new handle into alphabetical user index:
-	on -(an$<>"{f8}"and an$<>"RES") gosub 1038:id=kk:return
+	im=8:on -(an$<>"{f8}"and an$<>"RES") gosub 445:id=kk:return
 
 {nice:10}
 {:sub.show_user_flags}
