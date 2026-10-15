@@ -275,6 +275,8 @@ However, they may also need a linefeed character to move the cursor to the next 
 
 TIP: Once online, a user can select kbd:[EP], Edit kbd:[P]arams, option kbd:[5] to resolve this problem.
 
+New in 3.1: callers can also fix it before they log on, with kbd:[L] (Toggle Linefeeds) on the Login Options menu.
+
 '''
 
 `Ans` left: _ANSI Color Enable_
