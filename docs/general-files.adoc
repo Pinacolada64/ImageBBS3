@@ -21,7 +21,7 @@ At a library's prompt, kbd:[?] lists the commands:
 | Command | Does
 
 | a number | select that item
-| kbd:[S] | Scan Items
+| kbd:[S] | Scan Items: list them with their details (see <<gf-list-scan>>)
 | kbd:[L] | List Items
 | kbd:[Q] | Quit to the main prompt
 | kbd:[M] | Return to the Main Directory (`GF.Main`)
@@ -32,6 +32,38 @@ At a library's prompt, kbd:[?] lists the commands:
 |===
 
 The help screen also lists kbd:[A], kbd:[E]__x__ and kbd:[K]__x__ as sysop commands, but typing them at the prompt doesn't work: use kbd:[Z].
+
+=== Listing and Scanning a Library [[gf-list-scan]]
+
+kbd:[L] (List Items) lists the library's items, one to a line: the item's number, its type (`Dir`, `Prg`, ... see <<gf-items>>) and its title.
+
+kbd:[S] (Scan Items) lists them with more about each one.
+kbd:[S]__x__ starts at item _x_, _e.g._ kbd:[S5].
+Under each item's line it shows:
+
+[%autowidth]
+[%header]
+|===
+| Line | Shows | Shown
+
+| `File:` ... `Accs:`
+| The item's file, with the prefix its type adds (`i.tests`, `d.GF.games`), and its access number (see <<gf-maintenance>>)
+.2+| to the sysop or the library's subop only: someone with user flag 13 (Files Maint Access) or 8 (Remote Maint Access), or the library's subop
+
+| `Dev:` ... `Drv:`
+| The device and drive the file is on (not for a `Dir` item)
+
+| `Credits:`
+| What it costs to use
+| when it costs anything
+
+| `Used` ... `Times`, `Last:`
+| How many times it has been used, and the date and time it was last used
+| when it has been used at least once (not for a `Dir` item)
+|===
+
+Aborting stops either list.
+Both work only at the text prompt: in Graphic Menu mode, the items are on the screen already.
 
 === Items [[gf-items]]
 
