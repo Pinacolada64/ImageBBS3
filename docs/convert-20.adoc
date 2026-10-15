@@ -66,7 +66,7 @@ There is a Help function which will explain how to do it.
 . When back at the IM Configuration Editor, select the option for `Base Editors`.
 
 ****
-This takes you to the menu page that used to be called by the kbd:[SM] command in 2.0.
+This takes you to the menu page that used to be called by the kbd:[SM] command in 2.0, if you've installed it from the SM disk (see <<im-base-editors>>).
 You shouldn’t have to do anything here, but you can look around if you want to.
 ****
 

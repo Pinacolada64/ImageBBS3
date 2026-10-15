@@ -439,4 +439,188 @@ The Netmail Config option has its own menu: Local Info, Modem Specs, Calling Hou
 
 === Base Editors [[im-base-editors]]
 
-#TODO#
+Loads `i.SM`, the menu of utilities that 2.0 ran with the kbd:[SM] command.
+Its kbd:[K] (Quit) goes back to `IM`.
+
+System Maintenance (SM), `i.SM` and its `i/SM.` modules, comprises a group of system editors.
+To save room on the boot disk, they come on a disk of their own, `image30-sm.d81`: copy its files to your Plus-File drive (Image drive 5, the Program Disk), where the BBS loads modules from.
+If `i.SM` isn't there, kbd:[N] says "`i.SM Not Found.`" and goes back to the `IM` menu.
+
+.Base Editor Programs Menu
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Find Access
+| kbd:[B] | Fix BA Count
+| kbd:[C] | Make Anagram
+| kbd:[D] | Scan Netlog
+| kbd:[E] | Run Alpha/Ind
+| kbd:[F] | Lt.K Utils (Lt. Kernal only)
+| kbd:[G] | Editor Utils (below)
+| kbd:[H] | Set Time Dv #
+| kbd:[I] | Set CMD Clock
+| kbd:[J] | Netfiles
+| kbd:[K] | Quit
+|===
+
+#TODO#: what each one does.
+
+kbd:[G] (Editor Utils) shows the Editor Programs menu:
+
+.Editor Programs Menu
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Run Reledit
+| kbd:[B] | Run Sigedit ("`This function for future use`")
+| kbd:[C] | Convert Menu (see <<im-menus>>)
+| kbd:[D] | Edit Menus (see <<im-menu-editor>>)
+| kbd:[E] | Edit Text Msg
+| kbd:[F] | Edit B.A.R.
+| kbd:[G] | Edit Sayings
+| kbd:[H] | Quit, back to the Base Editor Programs menu
+|===
+
+==== Access-Aware Menus [[im-menus]]
+
+When a caller types kbd:[?], the BBS shows the menu for where they are: menu 1 at the main prompt, menu 7 in General Files, and so on.
+After a subsystem's menu, it shows menu 1 too, unless the caller aborts.
+
+A menu can come from either of two files:
+
+`s.menu` _n_ (SEQ, System drive)::
+Plain text, shown as it is, to everyone.
+Its MCI commands work as in any text file.
+
+`e.menu` _n_ (PRG, Etcetera drive)::
+The same lines, each with its own access number.
+A caller sees only the lines their access group may see, so they don't read about commands they can't use.
+
+If `e.menu` _n_ is there, the BBS uses it, and ignores `s.menu` _n_.
+
+.Menus Shown by kbd:[?]
+[%autowidth]
+[%header]
+|===
+| Menu | Where
+
+| 1 | Main prompt
+| 2 | Message bases (`SB`)
+| 5 | Up/download libraries (`UD`)
+| 6 | E-mail (`EM`)
+| 7 | General Files (`GF`) and News (`NF`)
+| 9 | Exchange libraries (`UX`)
+|===
+
+Some `s.menu` files are always read as text, so an `e.menu` file for them would never be used: 3 (the text editor's help), 4 (local-mode commands), 8 (end-of-message commands), 10 (Which day), 12 (log-in commands) and `t1` to `t4`.
+
+===== Converting a Menu
+
+kbd:[C] (Convert Menu) makes `e.menu` _n_ from `s.menu` _n_.
+At "`Menu #:`", type the menu's number; each line shows as it's converted.
+It asks for another, until you press kbd:[Return].
+
+* Each line of `s.menu` _n_ becomes one item, up to 60 lines and 50 characters to a line.
+A line that is only kbd:[↑] ends the menu early.
+* Every item starts with access `1023` (every group), so the converted menu looks the same to everyone until you edit it.
+
+WARNING: Converting replaces `e.menu` _n_ without asking, and every line's access goes back to `1023`.
+To change a menu's text after setting the access numbers, change the text in the menu editor instead of in `s.menu` _n_.
+
+To go back to the plain text menu, scratch `e.menu` _n_.
+
+===== Editing a Menu [[im-menu-editor]]
+
+kbd:[D] (Edit Menus) loads `i/SM.menuedit`.
+At "`Edit Which Menu:`", type the number of a menu you've converted (kbd:[Return] goes back to the Editor Programs menu).
+The editor lists the menu's items, one to a line:
+
+----
+ 0: 1023 ...the first 30 characters of the line...
+ 1: 1023 ...
+----
+
+The first number is the item number (0 to 59), the second its access number.
+Then:
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[L] | List the items again
+| kbd:[E] | Edit an item: asks "`Edit #`", the item number
+| kbd:[Q] | Quit: if you changed anything, asks "`Changes made-- Save?`", then asks for another menu
+|===
+
+Editing an item shows its settings:
+
+----
+Item#12:
+
+1. Access: 1023
+2. Flags: 1
+3. Text:
+...the line...
+----
+
+Type kbd:[1], kbd:[2] or kbd:[3] to change one, or kbd:[Return] to go back to the list.
+
+[%autowidth]
+[%header]
+|===
+| Setting | What it is
+
+| Access
+| Which access groups see the line, added up as for a General Files item: 1 for group 0, 2 for group 1, 4 for group 2, and so on to 512 for group 9.
+`1023` shows the line to everyone, `512` to group 9 only, and `0` to nobody.
+
+| Flags
+| `1` for a line made by converting, `0` for an unused item.
+Showing the menu doesn't use it.
+
+| Text
+| The line itself, up to 50 characters, with its colors and MCI commands.
+|===
+
+WARNING: Each prompt sets the setting to what you type, even if that's nothing.
+kbd:[Return] at "`Access:`" or "`Flags:`" sets it to `0` (so at "`Access:`" it hides the line), and kbd:[Return] at "`Text:`" blanks the line.
+If you change one by mistake, quit without saving.
+
+====== Lines Only the Sysop Sees in Local Mode
+
+A line is also shown in pseudo-local mode (`zz`) when its access number includes 32768.
+The editor can't take a number that large: subtract 65536 from it.
+For example, `-32768` shows the line only in pseudo-local mode, and `-31745` (`1023` + `32768` - `65536`) shows it to everyone and in pseudo-local mode.
+Typing `32768` or more stops the editor with `?ILLEGAL QUANTITY ERROR`.
+
+The list and the item screen leave 32768 out of the number they show.
+
+====== Example: Hiding Lines from the General Files Menu
+
+The General Files menu (menu 7) ends with its sysop commands:
+
+----
+           Sysop Commands
+  A  Add Items      Ex Edit Item #x
+  Kx Kill Item #x
+----
+
+To hide those lines from callers, or to remove the Add and Edit line altogether:
+
+. In `IM`, choose kbd:[N] (Base Editors), then kbd:[G] (Editor Utils).
+. If `e.menu 7` isn't there yet, choose kbd:[C] (Convert Menu) and type kbd:[7], then kbd:[Return].
+. Choose kbd:[D] (Edit Menus) and type kbd:[7].
+. Find the line in the list, type kbd:[E] and its item number, then kbd:[1] (Access), and type the new number: `0` hides it from everyone, `512` shows it to group 9 only.
+Do the same for each line to hide, including the "`Sysop Commands`" heading and its underlines.
+. Type kbd:[Q] and kbd:[Y] to save.
+
+==== The `MENU` Command
+
+kbd:[MENU] at the main prompt runs `i.menuedit`, an older version of the same editor.
+It only edits items 0 to 49, and it saves just those, so items 50 to 59 are lost.
+Use kbd:[D] (Edit Menus) instead.

@@ -33,6 +33,7 @@ Many new features have been added and improvements have been made in existing fe
 * Configurable time zones for both the BBS and the caller show the caller`'s local time if the BBS is in a different time zone
 
 * "`Graphic`" menus with hotkey item selection
+* Access-aware command menus: each line of a kbd:[?] menu can be shown only to the access groups that may use it (see <<im-menus>>)
 * "`General Files`" (`GF`) section replaces Image 1.2`'s separate `MF`, `PF`, `RF` and `TF` subsystems
 ** A single directory can include multiple file types or sub-boards
 ** Subdirectory level is now remembered and returned to after executing a module
