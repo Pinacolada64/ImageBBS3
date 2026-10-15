@@ -520,13 +520,18 @@ Some `s.menu` files are always read as text, so an `e.menu` file for them would 
 
 ===== Converting a Menu
 
-kbd:[C] (Convert Menu) makes `e.menu` _n_ from `s.menu` _n_.
-At "`Menu #:`", type the menu's number; each line shows as it's converted.
-It asks for another, until you press kbd:[Return].
+kbd:[C] (Convert Menu) loads `i/SM.conmenu`, which makes `e.menu` _n_ (Etcetera drive) from `s.menu` _n_ (System drive).
 
-* Each line of `s.menu` _n_ becomes one item, up to 60 lines and 50 characters to a line.
-A line that is only kbd:[↑] ends the menu early.
-* Every item starts with access `1023` (every group), so the converted menu looks the same to everyone until you edit it.
+. At "`Menu #:`", type the menu's number.
+Only numbered menus can be converted: `s.menu t1` to `t4` can't.
+. Each line shows as it's converted.
+Each line of `s.menu` _n_ becomes one item, up to 60 lines and 50 characters to a line; a line that is only kbd:[↑] ends the menu early.
+. Every item starts with access `1023` (every group) and flags `1`, so the converted menu looks the same to everyone until you edit it.
+The rest of the 60 items are left empty (access and flags `0`).
+. `e.menu` _n_ is saved, and the drive's status shows (error 0 if all went well).
+. "`Menu #:`" asks for another menu; kbd:[Return] goes back to the Editor Programs menu.
+
+If there's no `s.menu` _n_, the drive's error shows (62, file not found), and "`Menu #:`" asks again.
 
 WARNING: Converting replaces `e.menu` _n_ without asking, and every line's access goes back to `1023`.
 To change a menu's text after setting the access numbers, change the text in the menu editor instead of in `s.menu` _n_.
@@ -537,7 +542,7 @@ To go back to the plain text menu, scratch `e.menu` _n_.
 
 kbd:[D] (Edit Menus) loads `i/SM.menuedit`.
 At "`Edit Which Menu:`", type the number of a menu you've converted (kbd:[Return] goes back to the Editor Programs menu).
-The editor lists the menu's items, one to a line:
+The editor lists all 60 items, one to a line:
 
 ----
  0: 1023 ...the first 30 characters of the line...
@@ -545,7 +550,14 @@ The editor lists the menu's items, one to a line:
 ----
 
 The first number is the item number (0 to 59), the second its access number.
-Then:
+Empty items are listed too, with access `0` and no text.
+Then it asks:
+
+----
+Options: List Edit Quit
+
+>
+----
 
 [%autowidth]
 [%header]
@@ -553,9 +565,15 @@ Then:
 | Key | Option
 
 | kbd:[L] | List the items again
-| kbd:[E] | Edit an item: asks "`Edit #`", the item number
-| kbd:[Q] | Quit: if you changed anything, asks "`Changes made-- Save?`", then asks for another menu
+| kbd:[E] | Edit an item: "`Edit #`" asks for its number (up to 2 digits).
+kbd:[Return] edits item 0; a number over 59 goes back to "`Options:`".
+| kbd:[Q] | Quit: if you changed anything, "`Changes made-- Save?`" asks whether to save (kbd:[Y]; anything else doesn't), then "`Edit Which Menu:`" asks for another
 |===
+
+Other keys do nothing.
+
+WARNING: Convert a menu before editing it.
+Between menus, the editor only clears the items' flags: if there's no `e.menu` _n_, the list shows the menu you edited last, and saving would make `e.menu` _n_ a copy of it.
 
 Editing an item shows its settings:
 
@@ -566,9 +584,12 @@ Item#12:
 2. Flags: 1
 3. Text:
 ...the line...
+
+>
 ----
 
-Type kbd:[1], kbd:[2] or kbd:[3] to change one, or kbd:[Return] to go back to the list.
+Type kbd:[1], kbd:[2] or kbd:[3] to change one; the item's settings show again afterwards.
+Any other key goes back to "`Options:`".
 
 [%autowidth]
 [%header]
@@ -578,27 +599,38 @@ Type kbd:[1], kbd:[2] or kbd:[3] to change one, or kbd:[Return] to go back to th
 | Access
 | Which access groups see the line, added up as for a General Files item: 1 for group 0, 2 for group 1, 4 for group 2, and so on to 512 for group 9.
 `1023` shows the line to everyone, `512` to group 9 only, and `0` to nobody.
+Up to 5 characters (see below for pseudo-local mode).
 
 | Flags
-| `1` for a line made by converting, `0` for an unused item.
-Showing the menu doesn't use it.
+| Not used: Convert sets it to `1` for a line and `0` for an empty item, and changing it makes no difference.
+Up to 3 digits.
 
 | Text
 | The line itself, up to 50 characters, with its colors and MCI commands.
+"`Text:`" shows the line as it is, for you to edit with the cursor keys.
 |===
 
 WARNING: Each prompt sets the setting to what you type, even if that's nothing.
-kbd:[Return] at "`Access:`" or "`Flags:`" sets it to `0` (so at "`Access:`" it hides the line), and kbd:[Return] at "`Text:`" blanks the line.
+kbd:[Return] at "`Access:`" or "`Flags:`" sets it to `0` (so at "`Access:`" it hides the line), and kbd:[Return] at "`Text:`" without changing anything blanks the line.
 If you change one by mistake, quit without saving.
 
-====== Lines Only the Sysop Sees in Local Mode
+====== Lines for Pseudo-Local Mode
 
-A line is also shown in pseudo-local mode (`zz`) when its access number includes 32768.
-The editor can't take a number that large: subtract 65536 from it.
-For example, `-32768` shows the line only in pseudo-local mode, and `-31745` (`1023` + `32768` - `65536`) shows it to everyone and in pseudo-local mode.
-Typing `32768` or more stops the editor with `?ILLEGAL QUANTITY ERROR`.
+A line is also shown in pseudo-local mode (`zz`) when its access number has bit 15 (32768) set.
+Only bits 0-9 (the groups) and bit 15 matter, so the easiest way to set bit 15 is to subtract 1024 from the access number:
 
-The list and the item screen leave 32768 out of the number they show.
+[%autowidth]
+[%header]
+|===
+| Type | Shows the line to | Listed as
+
+| `-1024` | nobody, except in pseudo-local mode | `31744`
+| `-1` | everyone, and in pseudo-local mode | `32767`
+| `-512` | group 9, and in pseudo-local mode | `32256`
+|===
+
+The list and the item screen leave out bit 15, so these show as the numbers in the last column.
+The editor takes at most 5 characters, and a number from 32768 up stops it with `?ILLEGAL QUANTITY ERROR`.
 
 ====== Example: Hiding Lines from the General Files Menu
 

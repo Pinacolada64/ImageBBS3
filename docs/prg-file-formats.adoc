@@ -134,6 +134,47 @@ This is a file which describes the file transfer protocols available to a user.
 | Protocol display name | `d4$`
 |====================
 
+==== `e.menu` _n_ [[e-menu]]
+
+An access-aware command menu: when it's there, `sub.menus` shows it instead of the text file `s.menu` _n_, one line at a time, only the lines the user's access group may see.
+`i/SM.conmenu` makes it from `s.menu` _n_, and `i/SM.menuedit` edits it (see the Sysop Guide's "`Access-Aware Menus`").
+
+It's a PRG file on the Etcetera drive (`dr=3`): a struct of 60 records of 60 bytes (3600 bytes), loaded into `jm%(29,59)` with <<prg-structures.adoc#load-struct,`&,60,2` Load Struct from Disk>> and saved with <<prg-structures.adoc#_603_save_a_struct_to_disk,`&,60,3` Save a Struct to Disk>>.
+Record _r_ is menu line _r_ (0-59).
+Integers are high byte first, as in any integer array.
+
+[%autowidth]
+[%header]
+[cols="1m,1m,4"]
+|===
+| Bytes | Field | Purpose
+
+| 0-1
+| jm%(0,r)
+| Flags.
+Not used: `i/SM.conmenu` sets it to `1` for a line and `0` for an empty record, and nothing reads it apart from the editors, which show it and let you change it.
+Other structs keep a flags word here for <<prg-structures.adoc#scan-struct,`&,60,6` Scan Struct>> to set; `sub.menus` tests the access field directly instead.
+
+| 2-3
+| jm%(1,r)
+| Access: bit _n_ (0-9) for access group _n_, so `1023` is every group and `0` nobody.
+Bit 15 (`32768`) shows the line in pseudo-local mode (`zz`) too.
+`sub.menus` picks the lines with <<prg-structures.adoc#scan-numbers,`&,60,8` Scan Numbers>>: `&,60,8,60,60,2^ac%+zz*32768,jm%(1,.),fd%(1),.`, which keeps a record when this field ``and``ed with the bits isn't `0`.
+
+| 4-5
+| jm%(2,r)
+| Not used: `i/SM.conmenu` sets it to `-1` for a line, and nothing reads it.
+
+| 6-9
+| jm%(3-4,r)
+| Not used (`0`).
+
+| 10-59
+| jm%(5-29,r)
+| The line's text, up to 50 characters (<<prg-structures.adoc#put-string,`&,60,0` Put String>>, <<prg-structures.adoc#_601_get_string,`&,60,1` Get String>>), with its colors and MCI commands.
+`sub.menus` prints it with `&` after `q$`.
+|===
+
 ==== nm.P.count
 
 // Larry:
