@@ -60,11 +60,15 @@ $(BUILD)/asm:
 	mkdir -p $@
 
 # -o: output file (KickAssembler 5.25 takes it relative to the current
-# directory, not -odir); -odir: where the .sym file goes; -libdir: where
-# .import finds files, so rs232.s can find rs232_user.prg and rs232_swift.prg
+# directory, not -odir); -odir: where the .sym and .vs files go; -libdir:
+# where .import finds files, so rs232.s can find rs232_user.prg and
+# rs232_swift.prg. -vicesymbols writes <name>.vs (VICE labels), which
+# tools/vice-labels.py turns into <name>.labels, without equat.s's constants:
+# load it in the VICE monitor with  ll "build/asm/<name>.labels"
 $(BUILD)/asm/%.prg: source/%.s source/equat.s | $(BUILD)/asm
 	$(JAVA) -jar $(KICKASS) $< -odir $(abspath $(BUILD)/asm) -o $(abspath $@) \
-		-libdir $(abspath $(BUILD)/asm) -libdir $(abspath $(LOGO_DIR))
+		-libdir $(abspath $(BUILD)/asm) -libdir $(abspath $(LOGO_DIR)) -vicesymbols
+	@python3 tools/vice-labels.py $(BUILD)/asm/$*.vs $(BUILD)/asm/$*.labels
 
 $(BUILD)/asm/ml.prg: $(ML_PARTS:%=source/%.s) source/stamp.s
 $(BUILD)/asm/rs232.prg: $(BUILD)/asm/rs232_user.prg $(BUILD)/asm/rs232_swift.prg
