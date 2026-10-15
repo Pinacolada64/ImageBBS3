@@ -284,8 +284,9 @@
 ' max baud, hang-up D/E, answer A/M, ATH after esc H/N, local mode N/H,
 ' ATH0 0/space, ATH in init H/N, ATX, DTR N/R, B0/B1, RS232 0/1, caller ID
 4900 data "nimodem.dat"
-' tcpser (VICE's ip232 modem), 19200 (the fastest the current RS-232 ML
-' handles), SwiftLink: result codes from tcpser's source (modem_core.h)
+' tcpser (VICE's ip232 modem), 19200, SwiftLink: result codes from tcpser's
+' source (modem_core.h). 10/14/2026: 19200 is a safe rate, not the ML's
+' limit: rs232_swift.s goes to 38400 (rs232_user.s to 4800)
 4902 data "tcpser (VICE)","Jim Brain","6DMNH0H4N11000","{^}",5
 4904 data 1,7,"CONNECT",2,1,"RING",3,0,"NO CARRIER",4,0,"ERROR",14,7,"CONNECT 19200"
 ' standard Hayes 2400 codes; m0&c1&d2: speaker off, real DCD, DTR hang-up

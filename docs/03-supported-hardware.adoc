@@ -183,7 +183,7 @@ It is capable of up to 230,400 BPS, thanks to a faster clock crystal.
 It is backwards-compatible with the SwiftLink cartridge, and "`Turbo232`" can be substituted wherever you see "`SwiftLink.`"
 
 ====
-NOTE: 38.4K is the highest BPS rate that the Image 3.0 RS232 routines support.
+NOTE: 38.4K is the highest BPS rate that the Image 3.0 RS232 routines support, with a SwiftLink or Turbo232; with a user port interface, it's 4800.
 ====
 
 icon:check[role=green] This hardware is emulated within VICE.

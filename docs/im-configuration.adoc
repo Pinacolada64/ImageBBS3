@@ -349,7 +349,8 @@ CONNECT 19200
 
 In VICE, `tcpser` can stand in for a Hayes modem: callers telnet to `tcpser`, which "`rings`" the BBS.
 
-NOTE: The Image BBS 3.0 RS-232 routines handle up to 19200 bps, so run `tcpser` and VICE's RS-232 device at 19200.
+NOTE: With a SwiftLink, the Image BBS 3.0 RS-232 routines go up to 38.4k bps (the user port's go up to 4800).
+These steps use 19200, a rate that's safe for `tcpser` and VICE's RS-232 device; you can try 38400.
 
 . Start `tcpser` before VICE, _e.g._ `tcpser -s 19200 -v 127.0.0.1:25238 -p 6400`: 19200 bps, VICE connects on port 25238, and callers on port 6400.
 . Start VICE with a SwiftLink connected to it: `x64sc -acia1 -acia1mode 1 -acia1irq 1 -myaciadev 2 -rsdev3 127.0.0.1:25238 -rsdev3ip232 -rsdev3baud 19200`.
