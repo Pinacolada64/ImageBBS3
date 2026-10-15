@@ -35,7 +35,7 @@
 ' on entry:
 ' m=1: print M)ain Menu option
 ' q=1: print ?) Help
-' l, h: low - high values in range of menu options (e.g., l=0, h=70: 0-70)
+' l, h: low - high values in range of menu options (e.g., l=0, h=69: 0-69)
 
 ' on exit:
 ' m=1: M)ain menu chosen
@@ -222,9 +222,10 @@
 	if an=26 then gosub {:4500}:goto {:prompt}
 	if an=65 then gosub {:sub.convert}:goto {:prompt}
 	if an=67 then gosub {:sub.copyright}:goto {:prompt}
-	if an>15 then:&"& calls 16-70 not finished yet.{f6}":goto {:prompt}
+	if an>15 then:&"& calls 16-69 not finished yet.{f6}":goto {:prompt}
 ' &,66,1: calcgosub: routines start on 50-line increments
-	a%=3200+an*50:&"[& line] a%{equal}{pound}%a{f6}":&,66,1:goto {:prompt}
+	a%=3200+an*50:if db then:&"[& line] a%{equal}{pound}%a{f6}"
+	&,66,1:goto {:prompt}
 
 {:3200} ' &,0: output a$
 	gosub {:sub.todo}:return
