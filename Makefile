@@ -96,7 +96,7 @@ define build_lbl_dir
 	@mkdir -p $(2); fail=0; \
 	for f in "$(1)"/*.lbl; do \
 		b=$$(basename "$$f" .lbl); \
-		case "$$b" in 3_0-preface|quoters) continue;; esac; \
+		case "$$b" in 3_0-preface|3_0-assigns|quoters) continue;; esac; \
 		out="$(2)/$$b.prg"; \
 		[ "$$out" -nt "$$f" ] && [ "$$out" -nt core/3_0-preface.lbl ] && continue; \
 		echo "C64List: $$f"; \

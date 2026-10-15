@@ -484,25 +484,25 @@
 	if b$="0" then b$="No"
 {:_3212}
 	a%=i:c$=dt$(i+23):&"{pound}#2{pound}# {pound}%a) {pound}$c{pound}{back arrow}20: {pound}$b{f6}"
-{:3214}
+{:_3214}
 	next:gosub {:sub.change_prompt}:a=val(an$):if tr%<1 or a<1 or a>20 then return
-	on -(a=16 or a=17 or a=20)-2*(a=18) goto {:3232},{:3236}
+	on -(a=16 or a=17 or a=20)-2*(a=18) goto {:_3232},{:_3236}
 	if a=19 then:&"Flag 18 is two bytes. Cannot edit.{f6}":goto {:_3196}
-	on-(a=2 or a=6)goto {:3222}:b$=mid$(str$(1-val(mid$(q$,a,1))),2):goto {:3230}
-{:3222}
+	on-(a=2 or a=6)goto {:_3222}:b$=mid$(str$(1-val(mid$(q$,a,1))),2):goto {:_3230}
+{:_3222}
 ' credit ratio
 	if a=2 then b$=mid$(q$,2,1)+"/1"
 ' editor lines
 	if a=6 then b$=mid$(str$((val(mid$(q$,6,1))+1)*10),2)
 	p$=dt$(a):w$=b$:&,1,32:if an$="" then {:_3196}
 	b$=left$(an$,1):if a=6 then b$=mid$(str$(int(val(an$)/10)-1),2,1)
-{:3230}
+{:_3230}
 	q$=left$(q$,a-1)+b$+mid$(q$,a+1):&"{f6}":goto {:_3196}
-{:3232}
+{:_3232}
 ' edit 1 char flag
 '	p$=dt$(a):b$=mid$(q$,a,1):w$=b$:poke 53252,1:pl=1:&,1,32:if an$<>""then b$=an$
-	poke 53252,1:gosub {:sub.edit_flag}:goto {:3230}
-{:3236}
+	poke 53252,1:gosub {:sub.edit_flag}:goto {:_3230}
+{:_3236}
 ' edit 2 char flag
 '	p$=dt$(a):b$=mid$(q$,a,2):w$=b$:poke 53252,2:pl=1:&,1,32:if an$<>""then b$=an$
 	poke 53252,2:gosub {:sub.edit_flag}:if len(b$)=1 then b$="0"+b$
@@ -531,7 +531,10 @@
 {:sub.edit_tz}
 	an$=mid$(tt$(44),6):&,27,1:dim bb$(50)
 	dr=1:a$="s.timezones,s,r":gosub 4:n=.:if e% then:&:goto {:tz_done}
-	&,2,2:if a$<>"{up arrow}" then n=n+1:tt$(n)=a$:if st=. then {:60020}
+' 10/14/2026: read the next time zone: this went to 60020, sub.info's line
+' in the version it was copied from (60086 in the release), not a line here
+{:tz_read}
+	&,2,2:if a$<>"{up arrow}" then n=n+1:tt$(n)=a$:if st=. then {:tz_read}
 	close 2:&"{f6}Select User's Time Zone:{f6:2}"
 {:tz_list}
 	for i=1 to n:b$=left$(tt$(i),3):c$=mid$(tt$(i),8):a%=i:&"{pound}%a) ({pound}$b) {pound}$c{f6}":next
