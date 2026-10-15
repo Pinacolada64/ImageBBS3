@@ -1,21 +1,24 @@
 {alpha:alt}
-	goto{:60016}
-{:60002}
-	&"{f6}Turbo Changer. This Program Will Allow you to turn Turbo Mode ON/OFF"
-	a=peek(53432)and192:rem:a%=int(a):&"‹\%a"
-	ifa=192then:&"{f6}{white}(Turbo is currently OFF){f6}"
-	ifa<100then:&"{f6}{white}(Turbo is currently ON){f6}"
-{:60010}
-	&"{f6:2}{yellow}Enter 1 to turn Turbo OFF{f6}Enter 2 to turn Turbo ON{f6:2}{green}Enter 1 or 2 :{pound}g1"
-	c=val(an$):ifc<1orc>2then{:60010}
-	oncgoto{:60020},{:60022}
-{:60016}
-	&,52,$34,3:ona%goto{:60002}
-	&"{f6}This computer is not SuperCPU equiped{f6}":goto{:60024}
+{include:quoters.lbl}
+{step:2}
+{:60000}
+	&,52,$34,3:on a% goto {:60004}
+	&"{f6}This computer is not SuperCPU equipped.{f6}":return
+{:60004}
+	&"{f6}Turbo Changer{f6}{$c0:13}{f6}This program will allow you to turn Turbo Mode ON/OFF.{f6:2}"
+' 10/15/2026: b$ starts as Unknown: peek(53432) and 192 can also be 128,
+' which set nothing, so the line below showed whatever b$ held before
+	b$="Unknown":a=peek(53432) and 192:if a=192 then b$="Off"
+	if a<100 then b$="On"
+	&"{f6}{white}(Turbo is currently {pound}$b){f6}"
+{:60012}
+' 10/15/2026: one character: {pound}i1 takes as many as the last prompt allowed
+	poke 53252,1:&"{f6:2}{yellow}Enter 1 to turn Turbo OFF{f6}Enter 2 to turn Turbo ON{f6:2}{green}Enter 1 or 2{colon} {pound}i1"
+	if an$="" then:&"Unchanged.{f6}":return
+	c=val(an$):if c<1 or c>2 then {:60012}
+	b$="{f6}{cyan}Turbo{colon} ":on c goto {:60020},{:60022}
 {:60020}
-	poke(53370),0:&"{f6}{cyan}Turbo: {lt. red}Off":&,52,$35,.:tm=.:goto{:60024}
+	poke 53370,0:&"{pound}$b{lt. red}Off":&,52,$35,.:tm=.:return
 {:60022}
-	poke(53371),0:&"{f6}{cyan}Turbo: {green}On":&,52,$35,1:tm=1:goto{:60024}
-{:60024}
-	return
-	rem:"sub.turbo (c)nissa 200306 lh"
+	poke 53371,0:&"{pound}$b{green}On":&,52,$35,1:tm=1:return
+	rem sub.turbo (c)nissa 2020-03-06 lh 2026-10-15 rs
