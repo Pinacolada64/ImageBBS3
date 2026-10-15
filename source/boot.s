@@ -22,6 +22,8 @@ boot:
 
 // kernal messages off
 
+		lda #$00	// ryan added this: actually turn kernal messages off
+				// (A was $93 from the clear screen: bit 7 turned them on)
 		jsr $ff90
 
 // load the ml
