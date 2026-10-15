@@ -652,8 +652,10 @@
 	z3$="Reading System Info...":gosub {:3404}
 	gosub {:35}:if e% then close2:gosub {:3250}:goto {:3102}
 	x=1:gosub {:1}:&,2,2:bs$=a$:close2
-	im=.:gosub {:441}:uh=a%:z2$=left$(z2$,22)+"  ("+mid$(str$(a%),2)+" Users)":b$=z2$
-	&"{home}{f6:4}{gray3}{rvrs on}{right:3}{pound}$b{f6}"
+' 10/15/2026: add the user count to the line showing (z2$ starts with a space
+' now, so 23, not 22), and redraw it in place (3405), as the frame is drawn now
+	im=.:gosub {:441}:uh=a%:z2$=left$(left$(z2$,23)+"  ("+mid$(str$(a%),2)+" Users)"+s$,36)
+	gosub {:3405}
 	dr=3:gosub {:3}:z3$="Loading Preset Definitions...":gosub {:3414}:gosub {:3404}
 	&"{lt. blue}{f6}ECS Defs: ":a$=dr$+"e.ecs.main":&,42,4:gosub {:5}:&"{cyan}Done.{f6}"
 	&"{lt. blue}Print Mode Defs: ":a$=dr$+"e.printmodes":&,7,dv%,7:gosub {:5}:&"{cyan}Done.{f6}"
@@ -696,8 +698,10 @@
 '	if y%>4 then gosub {:3348}:gosub {:3170}:goto {:3158}
 ' 3160: clock set method <in larry's im>:
 '	on y% gosub {:3348},{:3358},{:3366}:gosub {:3170}
-	if y% then z3$="Setting Clock...":gosub {:3404}:im=10:a$="clocks":gosub {:74}:if e%=. then z3$="Clock Set.":gosub {:3404}
-; FIXME: line # off by two; should be
+' 10/15/2026: "Clock Set." on the same line, as the user count is above: change
+' z2$ and redraw it (3405), not scroll a second line in (3404)
+	if y% then z3$="Setting Clock...":gosub {:3404}:im=10:a$="clocks":gosub {:74}:if e%=. then z2$=left$(" "+z3$+" Clock Set."+s$,36):gosub {:3405}
+' FIXME: line # off by two; should be
 {:3158}
 	poke 970,.:poke 971,23:mp$=" ...More? (Y/n) "+"":im=5:gosub {:447}:gosub {:3250}
 	gosub {:30}:forx=1to38:gosub {:1}:&,2,2:st(x)=val(a$):next:close2
@@ -723,7 +727,7 @@
 
 	read b$:&"{f6}{rvrs off}{pound}{back arrow}05{lt. blue}"+left$(b$+" Disk...............",20)+": "+str$(a):next:q=.:return
 {:3200}
-	&,27,1:z1$="Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN     "
+	&,27,1:z1$=" Insert All System Disks In Correct ":z2$="      Drives, And Press RETURN      "
 	&"{home}{f6:7}{green}OR: {lt. green}Press {yellow}({white}1{yellow}) {lt. green}to Configure a New BBS{f6}"
 	&"{pound}{back arrow}10{yellow}({white}2{yellow}) {lt. green}to Convert from Image 1.2{f6}"
 	&"{pound}{back arrow}10{yellow}({white}3{yellow}) {lt. green}to Convert from Image 2.0{f6}{pound}{back arrow}10{yellow}({white}4{yellow}) {lt. green}to Reset C64{f6:3}"
@@ -761,25 +765,33 @@
 ' sub.clocks does it now
 
 {:3400}
-' TODO: overhaul this, see "/core/tests/test frame.lbl"
-	z1$="":z2$="":&"{home}{f6:2} {gray2}{$b0}{$c0:36}{$ae}{f6}"
-	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
-	&" {gray2}{$dd}{gray3}{rvrs on}                                    {rvrs off}{gray2}{$dd}{f6}"
-	&" {gray2}{$ad}{$c0:36}{$bd}{f6}":return
+' 10/15/2026: the boot frame, from core/tests/i.test frame.lbl: drawn with &,70
+' and &,69, and flashed by the jiffy clock (ti), half a second even on a SuperCPU,
+' instead of a count. 3400: draw it; 3404: scroll z3$ in; 3408: flash z1$ and z2$
+' until a key, returned in an$ (any key: the caller checks it); 3414: clear the
+' lines under it. Uses z (the text color, $8f gray or $87 yellow), i, and s$
+	s$="{space:36}":z1$="":z2$="":&,70,1,2:&"{gray2}{$b0}"+mid$(ak$,2,36)+"{$ae}"
+	for i=3 to 4:&,70,1,i:&"{gray2}{$dd}{gray3}{rvrs on}{pound}$s{rvrs off}{gray2}{$dd}":next
+	&,70,1,5:&"{gray2}{$ad}"+mid$(ak$,2,36)+"{$bd}":return
 {:3404}
-	z1$=z2$:z2$=z3$:fori=1to(34-len(z2$)):z2$=z2$+" ":next
-	b$=z1$:&"{home}{f6:3}{right:3}{gray3}{rvrs on}{pound}$b":b$=z2$:&"{f6}{right:3}{gray3}{rvrs on}{pound}$b":&"{f6:2}":return
+	z1$=z2$:z=$8f:z2$=left$(" "+z3$+s$,36)
+{:3405}
+' 10/15/2026: then the cursor to row 6, column 0, as the old 3404 left it ({f6:2}):
+' what's printed after a message starts there
+	&,69,2,3,z1$,z:&,69,2,4,z2$,z:&,70,.,6:return
 {:3408}
-	c$="{yellow}{gray3}":i=i+1:if i>2 then i=1
-	b$=mid$(c$,i,1)+"{rvrs on} "+z1$:&"{home}{f6:3}{right:2}{pound}$b":b$=mid$(c$,i,1)+"{rvrs on} "+z2$:&"{f6}{right:2}{pound}$b"
+	z=$8f:gosub {:3405}
+{:3409}
+	i=ti+30
 {:3410}
-	getan$:z=z+1:if an$<>""then z2$="":z=.:goto {:3400}
-	if z=20then z=.:goto {:3408}
-	goto {:3410}
-' NOTE: Immutable line number, called from i/su.config
+' sgn(): with two keys waiting, "on peek(198)" wouldn't jump. "ti>i-31" ends the
+' wait if the jiffy clock wraps at midnight
+	on sgn(peek(198)) goto {:3412}:if ti<i and ti>i-31 then {:3410}
+	z=278-z:gosub {:3405}:goto {:3409}
+{:3412}
+	get an$:z=$8f:z1$="":z2$="":goto {:3405}
 {:3414}
-	&"{home}{f6:6}":fori=1to17:&"{pound}{back arrow}38 {f6}":next:&"{home}{f6:6}":return
-'	for i=8 to 24:&,70,.,i:&"{pound}{back arrow}39":next:&,70,.,5:return
+	for i=6 to 23:&,70,.,i:&"{pound}{back arrow}38":next:&,70,.,6:return
 
 ' 10/13/2026: back to steps of 2 (see 3072)
 {step:2}
