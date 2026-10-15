@@ -315,7 +315,9 @@ include::includes/sub_modem-config.adoc[]
 
 ==== Installation
 
-#TODO#: Intro here
+These steps set up a new Image BBS 3.0 from the release disks.
+After booting, you choose _Configure a New BBS_, and `i/su.config` asks for what it needs in four parts: sysop information, the clock, the device and drive of each Image drive (see <<_image_drive_numbers>>), and the BBS's information.
+It then writes the configuration files, and you finish in the `IM` configuration editor.
 
 include::includes/boot-command.adoc[]
 
@@ -696,10 +698,8 @@ TIP: Shared Image BBS 3.0 Setup
 Select kbd:[E] `Access Groups`.
 The BBS loads the access group editor, then access group information.
 
-#TODO#: Why not change `i/su.config` to do this:
-
-The Group 9 flags should already be set for full sysop access.
-Type kbd:[9] and change the group name to `Sysop`.
+On a new BBS, group 9 is already named `Sysop`, with full sysop access.
+If you upgraded, your previous version's group names and flags are kept: you may want to name group 9 `Sysop` (type kbd:[9]).
 
 Edit any access group name and flags per your preference.
 kbd:[Return] exits, prompting you to save changes if any modifications were made.
@@ -919,15 +919,16 @@ Cross-reference [[cross-reference]] set.
 a <<cross-reference,cross-reference>> mentioned.
 ////
 
-More information is provided in the #TODO# Sysop Guide section, but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible.
+More information is provided in the rest of this guide (the `IM` configuration editor is in <<im-configuration>>), but one of the main objectives of Image 3.0 is to make it as sysop- and user-friendly as possible.
 
 As in previous versions of Image BBS software, menus are displayed with kbd:[?] and a Local Command menu is displayed to level 9 users with pseudo-Local mode access by typing kbd:[??].
 
 - Included in the Image 3.0 package is a games disk containing several ready-to-install games converted to Image 3.0 format.
 
 - Also included in the Image 3.0 package is a weed mod disk.
-
-#TODO:# Explain what this is.
+Its AutoMaint modules _weed_ the BBS: they take out users who haven't called in a while, and old messages, U/D files and mail, after cutoffs you set with its `WD` command (`i.WD`).
+They were converted from Grunt's `+.am` modification for Image 1.2.
+Most BBSes won't need them until they've been online for some time.
 
 Load and run the `run me` file (Image SEQ Reader) which allows you to read the installation instructions for all the files included on the disk.
 
