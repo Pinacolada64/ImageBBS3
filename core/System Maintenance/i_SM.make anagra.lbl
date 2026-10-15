@@ -21,7 +21,9 @@
 4020 x=val(an$):if x<1 or x>5 then 4014
 4022 on xgoto 4024,4064,4028,4082,4117:goto 4014
 4024 &"{clear}{cyan}{rvrs on}Create Word File!{f6:2}{lt. blue}Continue{white}? ":gosub 94:if a=.then 4014
-4026 gosub 4004:for x=1 to 20:gosub ub1:print# 2,"{^}":next:close 2:&"{f6:2}{lt. green}Created{yellow}!!":goto 4012
+' 10/14/2026: gosub 1, not "gosub ub1" (which BASIC runs as gosub 0: im line 0
+' jumps away, usually to the main prompt, so no records were written)
+4026 gosub 4004:for x=1 to 20:gosub 1:print# 2,"{^}":next:close 2:&"{f6:2}{lt. green}Created{yellow}!!":goto 4012
 4028 &"{clear}{purple}{yellow}Edit Words.{f6:2}":gosub 4006:x=y+1:if y=.then y=1
 4030 if x=.then:&"{f6:2}{yellow}No Words!!":goto 4012
 4032 &"{f6}{lt. green}No. {green}Word           {gray3}Used    {white}Right{f6}{pound}{back arrow}26 {lt. red}1st {lt. blue}2nd"
