@@ -696,22 +696,76 @@ If `i.SM` isn't there, kbd:[N] says "`i.SM Not Found.`" and goes back to the `IM
 [%autowidth]
 [%header]
 |===
-| Key | Option
+| Key | Option | What it does | Module
 
-| kbd:[A] | Find Access
-| kbd:[B] | Fix BA Count
-| kbd:[C] | Make Anagram
-| kbd:[D] | Scan Netlog
-| kbd:[E] | Run Alpha/Ind
-| kbd:[F] | Lt.K Utils (Lt. Kernal only)
-| kbd:[G] | Editor Utils (below)
-| kbd:[H] | Set Time Dv #
-| kbd:[I] | Set CMD Clock
-| kbd:[J] | Netfiles
-| kbd:[K] | Quit
+| kbd:[A] | Find Access | Lists every user in an access group, by ID and handle (group 0: the unvalidated users, and those who haven't called back) | `i/SM.find acs`
+| kbd:[B] | Fix BA Count | Counts the BBS's statistics again from the files (below) | `i/SM.fixer`
+| kbd:[C] | Make Anagram | Edits the words for the `i/lo-anagram` logon game (below) | `i/SM.make anagra`
+| kbd:[D] | Scan Netlog | Shows a NetMail transfer log, `nm.log` _name_, on the E-Mail drive: each call's node, date and the files sent (kbd:[?] lists the logs) | `i/SM.scan netlog`
+| kbd:[E] | Run Alpha/Ind | Repairs `u.index`, the index of handles (below) | `i/SM.alpha/ind`
+| kbd:[F] | Lt.K Utils | Lt. Kernal only: backups and a file utility (below) | `i/SM.bu`, `i/SM.lk util`
+| kbd:[G] | Editor Utils | The Editor Programs menu (below) |
+| kbd:[H] | Set Time Dv # | Sets where the clock is set from: by hand, a CMD device's clock (device 8-16), or a Lt. Kernal port (1 or 2) | `i/SM.setdev`
+| kbd:[I] | Set CMD Clock | Sets the real-time clock of a CMD HD: asks for its device number, then kbd:[+] and kbd:[-] change each part of the date and time, and kbd:[Return] goes on to the next | `i/SM.cmdclock`
+| kbd:[J] | Netfiles | Sends files to other NetMail nodes, and unpacks the `nm.F.` files sent here (the sysop only) | `i/SM.netfile`
+| kbd:[K] | Quit | Back to `IM` |
 |===
 
-#TODO#: what each one does.
+TIP: `IM`'s kbd:[K] Set Time does what kbd:[H] Set Time Dv # does, and more: it can also use a DS12C887, an Ultimate or a TeensyROM (see <<im-set-time>>).
+Set Time Dv # shows one of those as "`CMD Device #4`".
+
+==== Fix BA Count
+
+Each count is saved in `e.stats`, for kbd:[BA] (BBS activity) to show:
+
+[%autowidth]
+|===
+| kbd:[1] | Count Posts/Resps | The posts and responses in every sub-board (`d.sub` _n_)
+| kbd:[2] | Count Uploads | The files in every U/D area (`d.u/d` _n_)
+| kbd:[3] | Count User Mail | The mail waiting for every user
+| kbd:[4] | Count Sysop Mail/Feedback/New Users | The sysop's mail, `e.fback` and `e.new`
+| kbd:[5] | Scan User List for First Empty Slot | The first free user record, where the next new user goes (`e.data` record 31)
+| kbd:[A] | Do ALL of the above |
+|===
+
+Then type kbd:[BA] to see the new figures.
+
+==== Make Anagram
+
+The words are in `e.anagram` on the Etcetera drive.
+kbd:[1] (Create Word File) makes a new, empty one: use it first, and only once, as it replaces the file.
+kbd:[2] adds words, kbd:[3] edits one, and kbd:[4] lists them with how often each has been used and guessed right on the first and second tries; kbd:[?] is help.
+
+TIP: Typing kbd:[?] at the anagram's prompt shows the answer, on the first try only.
+
+==== Run Alpha/Ind
+
+`u.index` is the alphabetical index of users' handles that the BBS searches to find a user.
+If a user can't be found by handle, rebuild it: kbd:[1] (Clear), kbd:[8] (Make: index every user record), then kbd:[6] (Save).
+
+[%autowidth]
+|===
+| kbd:[1] | Clear | Empty the index in memory
+| kbd:[2] | Load | Load `u.index`
+| kbd:[3] | Search | Look a handle up
+| kbd:[4] | Insert | Add user _n_
+| kbd:[5] | Delete | Take user _n_ out
+| kbd:[6] | Save | Save `u.index`
+| kbd:[7] | List | List the index, in order
+| kbd:[8] | Make | Add every user (not empty or reserved records), noting duplicates
+| kbd:[9] | Kill | Take out entry _n_ of the index
+| kbd:[0] | Quit |
+|===
+
+==== Lt.K Utils
+
+On a Lt. Kernal (otherwise "`Sorry, these utilities are for Lt. Kernal use only.`"):
+
+kbd:[A] Run Backups::
+Copies a list of files to a backup LU, adding the weekday's number to each name, so there are seven days of backups.
+The list (`u.config`, `e.data`, `e.stats`, `u.index`, the logs ...) and the backup's device and LU are in `i/SM.bu`'s DATA lines: edit them for your system.
+kbd:[B] Lt.K File Utils::
+A file utility for the Lt. Kernal's user areas: directory, copy, disk command, multi-file copy and scratch (choosing files by pattern), and reading SEQ and BASIC files.
 
 kbd:[G] (Editor Utils) shows the Editor Programs menu:
 
@@ -719,17 +773,34 @@ kbd:[G] (Editor Utils) shows the Editor Programs menu:
 [%autowidth]
 [%header]
 |===
-| Key | Option
+| Key | Option | What it does | Module
 
-| kbd:[A] | Run Reledit
-| kbd:[B] | Run Sigedit ("`This function for future use`")
-| kbd:[C] | Convert Menu (see <<im-menus>>)
-| kbd:[D] | Edit Menus (see <<im-menu-editor>>)
-| kbd:[E] | Edit Text Msg
-| kbd:[F] | Edit B.A.R.
-| kbd:[G] | Edit Sayings
-| kbd:[H] | Quit, back to the Base Editor Programs menu
+| kbd:[A] | Run Reledit | Edits the sub-boards, U/D and U/X areas, SIGs and NetSubs (below) | `i/SM.reledit`
+| kbd:[B] | Run Sigedit | "`This function for future use`" | `i/SM.sigedit`
+| kbd:[C] | Convert Menu | See <<im-menus>> | `i/SM.conmenu`
+| kbd:[D] | Edit Menus | See <<im-menu-editor>> | `i/SM.menuedit`
+| kbd:[E] | Edit Text Msg | Edits the six messages in `e.text`, which users see when they try something their access doesn't allow (up to 254 characters each) | `i/SM.textedit`
+| kbd:[F] | Edit B.A.R. | Sets any of the BBS activity statistics by hand (below) | `i/SM.baredit`
+| kbd:[G] | Edit Sayings | Edits the sayings in `e.say`: four lines each, centered between a border character on each side; list, add, replace, delete and edit | `i/SM.sayedit`
+| kbd:[H] | Quit | Back to the Base Editor Programs menu |
 |===
+
+==== Reledit
+
+Edits the REL files that define the message bases: kbd:[S] sub-boards (`e.Sub`), kbd:[U] U/D areas (`e.U/D`), kbd:[X] U/X areas (`e.U/X`), kbd:[G] SIGs (`e.Sig`), and kbd:[N] NetSubs when the BBS is networked.
+Choose one, then an entry's number (kbd:[L] lists them).
+
+* A sub-board, U/D or U/X area has a title, access, subop, device and drive, status, type, password and screens.
+For a sub-board, the type is whether posts are anonymous; for a U/D area, whether it's downloads only, free, or needs a password.
+* A SIG has a title, access, SIGOp, and the sub-boards, U/D and U/X areas in it.
+
+kbd:[Return] at a prompt keeps the setting.
+When you quit, Reledit makes the SIG lists from `e.Sig` again (`e.Siglist` and `e.Siglist` _n_, with `i/SM.consig1` and `i/SM.consig2`).
+
+==== Edit B.A.R.
+
+Shows the BBS activity statistics' numbers: for each one (Feedback, Sysop Mail, User Mail, Posts, Responses, Uploads, Downloads, New Users, Calls, Time Used, Time Idle) the _Last Call_, _Log_, _Current_ and _System_ (total) figures, numbered 1 to 38.
+Type a number, see its value, then type the new one; kbd:[Return] ends.
 
 ==== Access-Aware Menus [[im-menus]]
 
