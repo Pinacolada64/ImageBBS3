@@ -100,7 +100,7 @@ include::includes/prg-im-return.adoc[]
 
 This routine continues to line 5.
 
-| gosub&#160;5
+| [[line-5,Read error channel]]gosub&#160;5
 | gosub&#160;1012
 | Read error channel of currently active device/drive.
 
@@ -302,7 +302,7 @@ This routine continues to line 17.
 Note that `e.stats` should be opened first (`gosub 30`), prior to calling this routine, on LFN 2.
 
 | gosub&#160;28
-|
+| gosub&#160;1750
 | Loads a `++` (protocol) file from Plus File drive--if it isn`'t already loaded--and checks the DOS error status.
 
 _Enter:_
@@ -332,7 +332,7 @@ _Exit:_
 | Opens REL file `e.stats` on Etcetera drive on LFN 2.
 
 | [[line-31,Open e.access]]gosub&#160;31
-| _n/a_
+| gosub&#160;1061
 | Opens REL file `e.access` on Etcetera drive on LFN 2.
 
 | [[line-32,Open m.* mail file]]gosub&#160;32
@@ -442,7 +442,7 @@ _Exit:_
 `goto 13` <<line-13>>, which clears the screen and displays the file.
 
 | [[line-43,Display record from e.say]]gosub&#160;43
-| gosub&#160;1096
+| gosub&#160;1910
 | Display a random saying from the RELative file `e.say`.
 
 _Exit:_
@@ -457,7 +457,7 @@ If so, it exits via `return`.
 This routine continues to line 51.
 
 | [[line-51,Print a$ to daily log]]gosub&#160;51
-| gosub&#160;1490
+| gosub&#160;1096
 | Writes `a$` to the daily log regardless of instant mode (`i%=1`).
 
 | [[line-60,Check for free directory entry]]gosub&#160;60
@@ -564,17 +564,17 @@ _Enter:_
 // ^
 
 | gosub&#160;82
-| _n/a_
+| gosub&#160;1093
 | Clear arrays `1`-`4` [`bb$()`, `dt$()`, `ed$()`, and `nn$()`] in the xref:prg-ampersand-calls.adoc#table-array-numbers[array table].
 
 This routine falls through to line 83.
 
 | gosub&#160;83
-| _n/a_
+| gosub&#160;1094
 | Clear array `0` [`tt$()`] in the xref:prg-ampersand-calls.adoc#table-array-numbers[array table].
 
 | [[line-93,Display "Are You Sure? "]]gosub&#160;93
-| gosub 1902
+| gosub&#160;1901
 | Display ``Are You Sure?: ``, and fall through to line 94.
 
 | [[line-94,Wait for Yes/No hotkey, default No]]gosub&#160;94
@@ -591,21 +591,21 @@ _Exit:_
 ! Variable ! Purpose
 
 ! a=0
-! If kbd:[Y] is typed.
+! If kbd:[Y] is not typed.
 
 ! a=1
-! If kbd:[Y] is not typed.
+! If kbd:[Y] is typed.
 
 ! a$/an$
 ! the key typed.
 !===
 
 | [[line-95,Display "Are You Sure? "]]gosub&#160;95
-| gosub 1902
+| _n/a_
 | Display ``Are You Sure?: ``, and fall through to line 96.
 
 | [[line-96,Wait for Yes/No hotkey, default Yes]]gosub&#160;96
-| gosub&#160;1902
+| gosub&#160;1907
 | Display `[Yes]`, then wait for Yes/No hotkey.
 The answer defaults to `Yes` if kbd:[N] is not typed.
 
@@ -618,10 +618,10 @@ _Exit:_
 ! Variable ! Purpose
 
 ! a=0
-! If kbd:[Y] is not typed.
+! If kbd:[N] is typed.
 
 ! a=1
-! If kbd:[Y] is typed.
+! If kbd:[N] is not typed.
 
 ! a$/an$
 ! the key typed.
@@ -744,7 +744,7 @@ If `pf` isn't `0`, `i.GF` is loaded instead (line 300), and the user is back in 
 Otherwise line 301 loads `i.main`.
 
 | 302
-|
+| goto&#160;1700
 | Loads `i.lo` file and executes with `mm` set to `0` (init).
 Action is dependent on the value of `f1`:
 
@@ -773,7 +773,7 @@ Action is dependent on the value of `f1`:
 "`Emulating`" 1.2 is not the only use--this routine is helpful to save space and quickly ``dim``ension common variables to be used in a program.
 
 | [[line-310,Check for command history]]gosub&#160;310
-| _n/a_
+| gosub&#160;1260
 | Check for `^?`, the command history.
 If so, `goto 315` <<line-315>>.
 
@@ -809,7 +809,7 @@ Line 324 also gets three settings from the user flags: the lines allowed in the 
 This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3.0, since newer versions have more user flags per account.
 
 | gosub&#160;330
-| gosub&#160;1096
+| gosub&#160;1930
 | Outputs a random macro from file `e.macros`.
 
 | gosub&#160;442

@@ -102,7 +102,7 @@ Module: i.test calls
 Sub Module: i.test calls.structs
 ----
 
-=== Conversion and Backward Compatibility
+=== Conversion and Backward Compatibility [[conversion-and-backward-compatibility]]
 
 Image v3.0 is a major change in design and programming style from previous versions.
 Your first reaction might be to assume that you can no longer use legacy modules created under Image v1.2a and below.
@@ -116,5 +116,5 @@ This mode greatly reduces available memory, but allows a program to make the sam
 The best method for using legacy modules is to convert them to v3.0 compliant modules.
 
 This section is provided to help you as you attempt to convert such modules.
-The v1.2a <--> v3.0 cross-reference will be your best tool, but please take time to read the notes regarding making the modules truly Image v3.0 compliant rather than just "`compatible.`"
+The v1.2a <--> v3.0 cross-reference (<<appendix-im-cross-reference>>) will be your best tool, but please take time to read the notes regarding making the modules truly Image v3.0 compliant rather than just "`compatible.`"
 You will want to take careful note of the theory and structure of a v3.0 compliant program, found in the <<programming-etiquette,Programming Etiquette>> section of this guide.

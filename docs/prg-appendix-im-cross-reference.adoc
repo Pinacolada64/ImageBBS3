@@ -1,0 +1,167 @@
+:icons: font
+:experimental:
+
+== Image 1.x to 3.0 `im` Line Cross-Reference [[appendix-im-cross-reference]]
+
+Image 1.2 and 1.3 numbered the `im` routines from 1000 up; 3.0 numbers them from 1 to 999, and moved many of them into `sub.` modules.
+To convert a 1._x_ module, change each jump to a 1._x_ `im` line to its 3.0 equivalent below (see <<conversion-and-backward-compatibility>>).
+
+The table is worked out from `im.emul13`, the 1.3 emulation layer: most of its lines at 1000-1999 just `goto` the 3.0 line, or set `im` and go to a `sub.` module.
+Where the release modules make the same call, they use the 3.0 form shown (`i.ED`, for example: `im=7:gosub 445`).
+
+TIP: Jumps to lines from 3000 on are the module's own lines, and need no change.
+
+=== Lines With a 3.0 Equivalent
+
+[%header]
+[cols="1m,2m,5a"]
+[frame="none"]
+[grid="rows"]
+|===
+| 1._x_ | 3.0 | What it does
+
+| 1001 | gosub 1 | <<line-1>>
+| 1002 | gosub 10 | <<line-10>>
+| 1004 | gosub 11 | <<line-11>>
+| 1006 | gosub 6 | Input a line (`p$` the prompt)
+| 1007 | gosub 7 | Wait for a key
+| 1009 | gosub 2 | <<line-2>>
+| 1010 | gosub 3 | <<line-3>>
+| 1011 | gosub 4 | Open the file in `a$` on drive `dr`
+| 1012 | gosub 5 | <<line-5>>
+| 1019 | gosub 84 | Work out whether it's prime time (`pt%`)
+| 1023 | gosub 18 | Scratch, then open the SEQ file in `a$` to write
+| 1024 | gosub 19 | Scratch the file in `a$` on drive `dr`
+| 1025 | gosub 16 | Adjust a BAR statistic
+| 1026 | gosub 17 | <<line-17>>
+| 1027 | gosub 36 | Open `e.` + `b$` (`a$`: `r`, `w` or `a`)
+| 1060 | gosub 30 | <<line-30>>
+| 1061 | gosub 31 | <<line-31>>
+| 1062 | gosub 32 | <<line-32>>
+| 1063 | gosub 33 | <<line-33>>
+| 1064 | gosub 34 | <<line-34>>
+| 1065 | gosub 35 | <<line-35>>
+| 1068 | gosub 37 | Append to `e.` + `b$`, or create it
+| 1069 | gosub 38 | Write the user's record (`print#2`)
+| 1074 | gosub 39 | Write `tt$()` to the open file, then close it
+| 1075 | gosub 13 | <<line-13>>
+| 1076 | gosub 14 | <<line-14>>
+| 1079 | gosub 61 | <<line-61>>
+| 1081 | gosub 62 | Read the blocks free from the drive (not the saved figure)
+| 1085 | gosub 60 | <<line-60>>
+| 1093 | gosub 82 | Clear arrays 1-4
+| 1094 | gosub 83 | Clear `tt$()`
+| 1095, 1490 | gosub 50 | <<line-50>>
+| 1096 | gosub 51 | <<line-51>>
+| 1260 | gosub 310 | <<line-310>>
+| 1348 | gosub 40 | <<line-40>>
+| 1349 | gosub 41 | <<line-41>>
+| 1350 | gosub 42 | <<line-42>>
+| 1360 | gosub 9 | <<line-9>>
+| 1678 | gosub 85 | Ask "`Would You Like To Leave Feedback?`"
+| 1700 | goto 302 | Load `i.lo` (log off), as `f1` says
+| 1750 | gosub 28 | Load a `++` protocol file
+| 1811, 1812 | goto 300 | <<line-300>>
+| 1901 | gosub 93 | <<line-93>>
+| 1902 | gosub 94 | <<line-94>>
+| 1904 | gosub 97 | Print the Yes or No answer (`a`)
+| 1907 | gosub 96 | <<line-96>>
+| 1910 | gosub 43 | <<line-43>>
+| 1914 | gosub 12 | Reset output to the defaults
+| 1920 | gosub 92 | Print "`Canceled!`"
+| 1930 | gosub 330 | Show a random macro from `e.macros`
+| 1980 | gosub 390 | Show message `x` from `e.text`
+| 1995 | x=6:gosub 390 | Show message 6 from `e.text`
+|===
+
+=== Lines Now in `sub.` Modules
+
+Set `im`, then `gosub` the line that loads the module (<<line-74>>).
+Some calls also have a 3.0 `im` line of their own, which does both: `gosub 546`, for example, is `im=10:goto 445`.
+Those lines aren't in the 12/31/2023 release `im` unless the table says so, so prefer the `im=`_n_`:gosub` form.
+
+[%header]
+[cols="1m,2m,1,4a"]
+[frame="none"]
+[grid="rows"]
+|===
+| 1._x_ | 3.0 | Module | What it does
+
+| 1070 | im=1:gosub 445 | `sub.misc` | Write the user's record to `u.config`
+| 1071 | im=2:gosub 445 | `sub.misc` | Read the user's record from `u.config`
+| 1640 | im=4:gosub 445 | `sub.misc` | Request a chat with the sysop (`gosub 534` in the release)
+| 1656 | im=5:gosub 445 | `sub.misc` | Show the time and date, and the minutes left (`gosub 535` in the release)
+| 1034 | im=7:gosub 445 | `sub.misc` | Find the handle in `an$` in `u.index`, and take it out
+| 1038 | im=8:gosub 445 | `sub.misc` | Add the handle in `an$` to `u.index` (user `id`), unless it's there
+| 1040 | im=9:gosub 445 | `sub.misc` | `&,16,6` on `u.index`, loading it first unless `pr` is 4
+| 1046 | im=10:gosub 445 | `sub.misc` | Find the handle in `an$` in `u.index`: `i` is the user's ID, `0` if not found
+| 1045 | im=11:gosub 445 | `sub.misc` | Load `u.index` (`uh` is the number of users)
+| 1047 | im=13:gosub 445 | `sub.misc` | Read the user's access group (`ag$`) from `e.access` (`gosub 533` in the release)
+| 1634 | im=13:gosub 445 | `sub.misc` | Read the user's access group (`ag$`) from `e.access`: `sub.misc` says it "`replaces line 1634`"
+| 1039 | im=1:gosub 449 | `sub.misc2` | (`gosub 567` in the release)
+| 1041 | im=2:gosub 449 | `sub.misc2` | (`gosub 565` in the release)
+| 1042 | im=3:gosub 449 | `sub.misc2` | (`gosub 566` in the release)
+| 1460 | im=1:gosub 448 | `sub.local` | Add credits to the user (`gosub 549` in the release)
+| 1352 | im=2:gosub 448 | `sub.local` | (`gosub 550` in the release)
+| 1305 | im=3:gosub 448 | `sub.local` | (`gosub 551` in the release)
+| 1354 | im=4:gosub 448 | `sub.local` | (`gosub 552` in the release)
+| 1088 | im=5:gosub 448 | `sub.local` | (`gosub 553` in the release)
+| 1670 | im=6:gosub 448 | `sub.local` | (`gosub 554` in the release)
+| 1330 | im=7:gosub 448 | `sub.local` | (`gosub 555` in the release)
+| 1332 | im=8:gosub 448 | `sub.local` |
+| 1604 | im=1:gosub 440 | `sub.editor` | Enter the editor, clearing `tt$()` (`gosub 542` in the release)
+| 1610 | im=2:gosub 440 | `sub.editor` | Enter the editor, keeping the text in `tt$()`
+| 1642-1648 | im=1:gosub 428 ... im=4:gosub 428 | `sub.comm1` | 1642 is `im=1`, 1644 `im=2`, 1646 `im=3`, 1648 `im=4` (`gosub 511` is `im=2`)
+| 1650-1654 | im=1:gosub 429 ... im=3:gosub 429 | `sub.comm2` | 1650 is `im=1`, 1652 `im=2`, 1654 `im=3` (`gosub 544` is `im=1`)
+| 1662, 1666, 1667 | im=2:gosub 430, im=4:..., im=5:... | `sub.param1` | 1.3's `params` (`gosub 512` is `im=2`, `gosub 514` `im=4`)
+| 1661 | gosub 502 | `sub.param1`, `sub.info` | Edit the info (`a=1`) or the parameters (`a=2`); line 501 asks which.
+1.3 had these the other way around: `a=1` parameters, `a=2` info.
+| 1198 | im=4:gosub 447 | `sub.info` | (`gosub 516` in the release)
+| 1664 | im=2:gosub 447 | `sub.info` | (`gosub 503` in the release)
+| 1073 | im=1:gosub 443 | `sub.display` | Show the "`user online`" screen mask (see <<line-443>>)
+| 1681 | im=1:gosub 444 | `sub.feedback` |
+| 1049 | im=1:gosub 438 | `sub.stats` | (`gosub 528` in the release)
+| 1050 | im=1:gosub 439 | `sub.bar` |
+| 1351 | im=1:gosub 436 | `sub.menus` | Show menu `lc`, then the main menu (see the Sysop Guide's "`Access-Aware Menus`")
+| 1450 | im=1:gosub 437 | `sub.sysdos` | Disk command: asks "`Disk Command?`" (`gosub 540` in the release)
+| 1035 | | | 1.3's `nodes` module (`im=1`): there's no 3.0 equivalent
+|===
+
+=== Lines With No Single 3.0 Equivalent
+
+`im.emul13` has its own code for these, which a converted module needs to do some other way:
+
+[%header]
+[cols="1m,5a"]
+[frame="none"]
+[grid="rows"]
+|===
+| 1._x_ | What it does
+
+| 1003 | `&,53,a`, then `im=2+a` into `sub.display`
+| 1005 | `pl=0`, then line 1028: `poke 53249,pl:lp=0:&,1`
+| 1008 | Ask "`Device,Drive:`"
+| 1013-1016 | Load the 1._x_ module in `a$` (`+.` prefix) from the Plus-File drive; 1016 then runs it at 3000.
+Use <<line-70>> in 3.0.
+| 1086 | Like 1085 (<<line-60>>), but scratching with line 1024
+| 1300, 1301 | Load the 1._x_ module in `z$` and run it as a subroutine (1300) or at 3000 (1301).
+In 3.0, see <<line-80>>.
+| 1903, 1905 | The rest of 1902: `a=-(a$="Y")`, and print the answer
+| 1906 | Clear `pr$`, print `a$`, then go to the main prompt (1812)
+| 1908, 1909, 1915 | Print the time, and the minutes left if fewer than 100
+| 1911, 1912 | The rest of 1910 (<<line-43>>): a random `e.say` saying
+| 1982, 1985 | Print "`Sorry, Time Limit Exceeded.`"
+| 1989 | Print "`Unknown Command. Enter ? For Help!`"
+| 1990-1993 | Work out a NetMail node's address from `an$`
+|===
+
+=== Notes on `im.emul13` [[im-emul13-notes]]
+
+The sub-module calls above are how 3.0 _should_ answer them.
+In the 12/31/2023 release, `im.emul13` itself gets several of them wrong, so a 1._x_ module run through it misbehaves.
+`core/im.emul13.lbl` has these fixed (10/14/2026), except for the modules 3.0 doesn't have:
+
+* Its jumps into `sub.misc`, `sub.editor`, `sub.feedback`, `sub.display` and `sub.info` (lines 2400, 2402, 2422, 2426 and 2428) go to `im` lines 45, 40, 44, 43 and 47.
+In the release `im`, those modules load from lines 445, 440, 444, 443 and 447; 40 to 47 show `s.new user`, `s.config` and `e.say` sayings.
+* Its calls to `sub.misc2`, `sub.local`, `sub.param1`, `sub.comm1`, `sub.comm2`, `sub.stats`, `sub.bar` and `sub.menus` (and to `nodes`, `screens` and `trans`, which 3.0 doesn't have) go to line 2500, which prints "`System Sub-Routine File Error!`".
+* 1450 (Disk Command) goes to line 360, which isn't in the release `im`.

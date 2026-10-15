@@ -1,5 +1,9 @@
 {uses:3_0-preface.lbl}
 {alpha:alt}
+' 10/14/2026: {:nnnn} labels added wherever the next line number wasn't
+' simply one more, so every line has its 1.3 number, as in the release: 1.x
+' modules call these lines by number (1902, 1034, ...), and without them most
+' lines from 1020 on built one or more numbers too low
 {:1000}
 	poke 829,0:goto {:2004}
 {:1001}
@@ -30,6 +34,7 @@
 	gosub {:1013}:goto 3000
 {:1019}
 	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+{:1023}
 	goto 18
 {:1024}
 	goto 19
@@ -42,19 +47,23 @@
 	sh=.:rc=.:poke 2038,.:poke 2024,-(qe=.andrq=1)*255
 	&,3,sr:s=st
 	poke 144,sand255:a=rc:gosub {:1914}:rc=a:return
+{:1034}
 	im=7:goto {:2400}
 	im=1:goto {:2403}
+{:1038}
 	im=8:goto {:2400}
 	im=1:goto {:2401}
 	im=9:goto {:2400}
 	im=2:goto {:2401}
 	im=3:goto {:2401}
+{:1045}
 	im=11:goto {:2400}
 	im=10:goto {:2400}
 	im=13:goto {:2400}
 	pr$="":im$="":lm$="":return
 	im=1:goto {:2412}
 	im=1:goto {:2414}
+{:1060}
 	goto 30
 {:1061}
 	goto 31
@@ -62,6 +71,7 @@
 	goto 33
 	goto 34
 	goto 35
+{:1067}
 	cm$=a$:gosub {:1360}:gosub {:1014}:f1=sgn(e%):goto 3000
 	goto 37
 	goto 38
@@ -73,32 +83,44 @@
 {:1075}
 	goto 13
 	goto 14
+{:1078}
 	close5:return
 	goto 61
+{:1081}
 	goto 62
+{:1085}
 	goto 60
 	a$="{black}":gosub {:1024}:a=-sgn(e%):return
+{:1088}
 	im=5:goto {:2404}
 	gosub {:1470}:onagoto {:1995}:&"{f6}Pattern: ":gosub {:1499}
 	close1:open1,dv%,.,"$"+dr$+an$:&"{f6}":&,8,1:close1:return
+{:1093}
 	goto 82
 	goto 83
 	goto 50
 	goto 51
+{:1098}
 	cm$=p$:gosub {:1360}:gosub {:1100}
 	cm$=left$(p$,11)+":"+left$(an$,4):gosub {:1360}:cm$=p$:return
 {:1100}
 	s=.:sh=.:gosub {:1914}:poke 53252,38:gosub {:1908}:&"{f6:2}":goto {:1006}
+{:1196}
 	if dv%=lk%then print#15,"l800"
 	return
 	im=4:goto {:2428}
+{:1260}
 	goto 310
+{:1264}
 	&p$+": {pound}v7{f6}":return
 	forct=1to10:a%=10-ct:a$=hs$(ct):&"{f8}{pound}%a: {pound}$a{f6}":next:an$="":uu$="":return
+{:1300}
 	a$=z$:y$=pr$:gosub {:1016}:a$=y$:on-(lc<>1)goto {:1013}:return
 {:1301}
 	a$=z$:goto {:1016}
+{:1305}
 	im=3:goto {:2404}
+{:1318}
 	br=.:mm=.:a=9:gosub {:1004}:on-(a<>.)goto {:1301}:x=4:gosub {:1980}:goto {:1812}
 {:1320}
 	&,52,14,3:if a%then x=1:gosub {:1980}:goto {:1812}
@@ -106,12 +128,19 @@
 	&,52,15,3:if b=.or(pt%anda=.)or(a%<>.andqb<1200)then x=4:gosub {:1980}:goto {:1812}
 {:1323}
 	f1=.:a$=z$+str$(nl):gosub {:1350}:a$=z$:goto {:1301}
+{:1330}
 	im=7:goto {:2404}
+{:1332}
 	im=8:goto {:2404}
+{:1335}
 	&,5:a=lp:lp=1:&"{f6}Image BBS 64 V{pound}!a.{pound}%a: {pound}$a{f6}":return
+{:1340}
 	bn=.:r=int(val(mid$(an$,3))):if r<1then r=1
+{:1342}
 	on-(z$="UD"orz$="UX")goto {:1320}:goto {:1323}
+{:1345}
 	gosub {:1351}:goto {:1812}
+{:1348}
 	a$="new user":goto {:1350}
 	a$="config"
 {:1350}
@@ -125,6 +154,7 @@
 	goto 9
 {:1370}
 	&,69,c,22,right$(str$(a+1e5),b),$81:return
+{:1372}
 	&,40
 	z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
 	a=ca:b=5:c=2:gosub {:1370}:a=cn:b=3:c=10:goto {:1370}
@@ -132,10 +162,14 @@
 {:1376}
 	an$=a$:&,9:return
 	a$="                ":goto {:1376}
+{:1400}
 	fora=1to6:if dv%(a)=dv%anddr%(a)=val(dr$)then bf(a)=bf
+{:1402}
 	next:a=bf:return
-' FIXME (10/13/2026): there's no im line 360 (nor in the release im)
-	goto 360
+' 10/14/2026: disk command: 3.0's is in sub.sysdos (im=1); there's no im line 360
+{:1450}
+	im=1:goto 437
+{:1460}
 	im=1:goto {:2404}
 {:1470}
 	a=int(val(mid$(an$,3,2))):if a>.then ifa<7then dr=a:goto {:1474}
@@ -143,15 +177,19 @@
 	&,15,6,133:d2%=val(an$):d1%=a:dr=.:dv%(.)=d1%:dr%(.)=d2%
 {:1474}
 	gosub {:1010}:close15:a=-(st<>.):return
+{:1490}
 	goto 50
 {:1499}
 	&"{pound}i0":if an$=""then return
 	&,15,2:return
+{:1520}
 	a=mn%:return
+{:1530}
 	&,25,.,x:return
 {:1603}
 	return
 	im=1:goto {:2402}
+{:1610}
 	im=2:goto {:2402}
 {:1630}
 	f1=.:gosub {:1920}:goto {:1812}
@@ -163,26 +201,43 @@
 	a=6:gosub {:1004}:le=(a+1)*10:a=16:gosub {:1004}:poke 830,a:a=20:gosub {:1004}:da%=a
 	return
 	im=4:goto {:2400}
+{:1642}
 	im=1:goto {:2408}
+{:1644}
 	im=2:goto {:2408}
+{:1646}
 	im=3:goto {:2408}
+{:1648}
 	im=4:goto {:2408}
+{:1650}
 	im=1:goto {:2410}
+{:1652}
 	im=2:goto {:2410}
+{:1654}
 	im=3:goto {:2410}
+{:1656}
 	im=5:goto {:2400}
+{:1660}
 	&"{f6}Edit (I)nfo{f6}  or (P)arameters? {pound}g1{pound}v7{f6}":a=-(an$="P")-2*(an$="I")
 	im=1:onagoto {:2406},{:2428}:return
 	im=2:goto {:2406}
+{:1664}
 	im=2:goto {:2428}
+{:1666}
 	im=4:goto {:2406}
 	im=5:goto {:2406}
 	im$="":pr$="":lm$="":return
+{:1670}
 	im=6:goto {:2404}
+{:1678}
 	goto 85
+{:1681}
 	im=1:goto {:2422}
+{:1690}
 	f4=.:if right$(an$,1)<>"!"then:&"{f6:2}{green}Time to Fly? ":gosub {:1907}:if a=.then return
+{:1692}
 	f4=1.3:return
+{:1694}
 	a=1:if right$(an$,1)<>"!"then:&"{f6:2}{red}Must {green}You Leave{white}?: ":gosub {:1907}
 	if a=.then f1=-3*(x=2):onxgoto {:1630},3000,3000
 	cd%=.:if mid$(z$,2,1)<>"%"then ld$=lt$
@@ -190,18 +245,25 @@
 	f1=1:if tr%<1then b$="Time":gosub {:1985}:f1=2
 {:1700}
 	goto 302
+{:1736}
 	remif a=prthen 1740
+{:1738}
 	pr=a:dr=5:gosub {:1009}
 	a$=dr$+"++"+str$(a):&,7,dv%,2
 	d4$="++"+str$(a):return
+{:1750}
 	goto 28
+{:1811}
 	goto 300
 {:1812}
 	goto 300
+{:1850}
 	on-(ac%<>ao%)gosub {:1634}:an$=an$+"":rs=1:a$=left$(an$,1):z$=left$(an$,2)
 	&,52,20,3:em=a%:&,52,5,3:zz=a%
 	rs=.:return:rem**" Command Scan Not Yet Implemented - JLF "
+{:1885}
 	poke 970,mp%:&"{f6}":return
+{:1901}
 	goto 93
 	goto 94
 	a=-(a$="Y")
@@ -220,16 +282,21 @@
 	goto 12
 {:1915}
 	&"{f6:2} - {pound}$bM":a%=tr%:if a%<100then:&" - {pound}%a Min. Left":return
+{:1917}
 	return
 {:1920}
 	goto 92
+{:1930}
 	goto 330
+{:1978}
 	x=2
 {:1980}
 	goto 390
+{:1982}
 	b$="Time"
 {:1985}
 	&"{f6}Sorry, {pound}$b Limit Exceeded.{f6}":return
+{:1989}
 	&"{f6:2}{red}Unknown {green}Command{white}. {green}Enter {white}{f5}{red}?{white}{f5} {green}For Help!":return
 	ni=val(an$):n1$=cc$+mid$(str$(ni),2):b$="-"+n1$:n2$=""
 	if left$(an$,1)="!"then ni=-1:n1$=mid$(an$,2,3):b$=" @ "+n1$
@@ -237,55 +304,66 @@
 	an$=a$:n0$=a$:&,15,1:an$=an$+b$:return
 {:1995}
 	x=6:goto {:1980}
+{:2000}
 	poke 22,25:fori=2topeek(152):closepeek(603):next:poke 2031,.
+{:2002}
 	x=peek(780):y=peek(781)+peek(782)*256
 {:2004}
 	&,11:&,28,1:poke 53248,.
+{:2006}
 	dr$=mid$(str$(dr%(5)),2)+":":dv%=dv%(5):loaddr$+"im",dv%,2
+{:2100}
 	&,28,1:gosub {:2110}:&,27:return
+{:2102}
 	goto {:2110}
 	im=4:goto {:2426}
 	im=5:goto {:2426}
 {:2110}
 	goto 306
 	goto 308
+' 10/14/2026: the 3.0 im's sub. module loaders (lines 428-449) for 1.3's
+' modules: these went to lines 40-47 (s.new user, s.config, e.say), or to
+' 2500's error message. 1.3's params is sub.param1; nodes, screens and trans
+' have no 3.0 module, so they still give the error
 {:2400}
-	goto 45:rem**misc
+	goto 445:rem**misc
 {:2401}
-	a$="misc2":goto {:2500}
+	goto 449:rem**misc2
 {:2402}
-	goto 40:rem**editor
+	goto 440:rem**editor
 {:2403}
 	a$="nodes":goto {:2500}
 {:2404}
-	a$="local":goto {:2500}
+	goto 448:rem**local
 {:2406}
-	a$="params":goto {:2500}
+	goto 430:rem**params
 {:2408}
-	a$="comm1":goto {:2500}
+	goto 428:rem**comm1
 {:2410}
-	a$="comm2":goto {:2500}
+	goto 429:rem**comm2
 {:2412}
-	a$="stats":goto {:2500}
+	goto 438:rem**stats
 {:2414}
-	a$="bar":goto {:2500}
+	goto 439:rem**bar
+{:2418}
 	a$="screens":goto {:2500}
 {:2422}
-	goto 44:rem**feedback
+	goto 444:rem**feedback
+{:2424}
 	a$="trans":goto {:2500}
 {:2426}
-' FIXME (10/13/2026): 43 shows an e.say saying; sub.display is 443
-	goto 43:rem**display
+	goto 443:rem**display
 {:2428}
-' FIXME (10/13/2026): there's no im line 47; sub.info is 447
-	goto 47:rem**info
+	goto 447:rem**info
 {:2430}
-	a$="menus":goto {:2500}
+	goto 436:rem**menus
 {:2500}
 	&"{f6:2}System Sub-Routine File Error!{f6:2}":return
+{:2600}
 	gosub {:2610}:gosub 4000:new4000:return
 {:2610}
 	lm$=left$(pr$,2)+"."+a$:dr=5:gosub {:1010}:a$=dr$+"+/"+lm$:loada$,dv%:return
+{:2620}
 	gosub {:2630}:gosub 4000:new4000:return
 {:2630}
 	lm$=a$+"":dr=5:gosub {:1010}:a$=dr$+"+/"+lm$:loada$,dv%:return
@@ -299,5 +377,7 @@
 	dr=5:gosub {:1010}:a$=dr$+an$:loada$,dv%:goto {:2900}
 {:2910}
 	c=peek(a)-peek(b)+(peek(a+1)-peek(b+1))*256:&"{pound}$a:{pound}{back arrow}10{pound}!c{f6}":return
+{:2912}
 	goto 90
+{:2999}
 	copr. 1996 new image 1/2/99 jlf
