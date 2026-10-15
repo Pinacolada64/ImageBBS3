@@ -81,7 +81,7 @@ See <<_copier>>.
 | _none_
 
 | `i.test string`
-| Storing a string in an integer array with <<prg-structures.adoc#put-string,`&,60,0` Put String>> (PutString) and reading it back with <<prg-structures.adoc#_601_get_string,`&,60,1` Get String>> (GetString).
+| Storing a string in an integer array with <<prg-structures.adoc#put-string,`&,60,0` Put String>> (PutString) and reading it back with <<prg-structures.adoc#get-string,`&,60,1` Get String>> (GetString).
 kbd:[Return] on its own quits.
 | _none_
 

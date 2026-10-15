@@ -139,7 +139,7 @@ This is a file which describes the file transfer protocols available to a user.
 An access-aware command menu: when it's there, `sub.menus` shows it instead of the text file `s.menu` _n_, one line at a time, only the lines the user's access group may see.
 `i/SM.conmenu` makes it from `s.menu` _n_, and `i/SM.menuedit` edits it (see the Sysop Guide's "`Access-Aware Menus`").
 
-It's a PRG file on the Etcetera drive (`dr=3`): a struct of 60 records of 60 bytes (3600 bytes), loaded into `jm%(29,59)` with <<prg-structures.adoc#load-struct,`&,60,2` Load Struct from Disk>> and saved with <<prg-structures.adoc#_603_save_a_struct_to_disk,`&,60,3` Save a Struct to Disk>>.
+It's a PRG file on the Etcetera drive (`dr=3`): a struct of 60 records of 60 bytes (3600 bytes), loaded into `jm%(29,59)` with <<prg-structures.adoc#load-struct,`&,60,2` Load Struct from Disk>> and saved with <<prg-structures.adoc#save-struct,`&,60,3` Save a Struct to Disk>>.
 Record _r_ is menu line _r_ (0-59).
 Integers are high byte first, as in any integer array.
 
@@ -171,7 +171,7 @@ Bit 15 (`32768`) shows the line in pseudo-local mode (`zz`) too.
 
 | 10-59
 | jm%(5-29,r)
-| The line's text, up to 50 characters (<<prg-structures.adoc#put-string,`&,60,0` Put String>>, <<prg-structures.adoc#_601_get_string,`&,60,1` Get String>>), with its colors and MCI commands.
+| The line's text, up to 50 characters (<<prg-structures.adoc#put-string,`&,60,0` Put String>>, <<prg-structures.adoc#get-string,`&,60,1` Get String>>), with its colors and MCI commands.
 `sub.menus` prints it with `&` after `q$`.
 |===
 

@@ -379,7 +379,7 @@ If _string$_ is longer than _length_, it is cut off; if shorter, the rest of the
 
 '''
 
-=== `&,60,1` Get String
+=== `&,60,1` Get String [[get-string]]
 
 This copies data from a field in a struct into a specified string variable.
 
@@ -508,7 +508,7 @@ It could load starting at `(0,5)`--record `5`, field `0`--or anywhere else you w
 
 '''
 
-=== `&,60,3` Save a Struct to Disk
+=== `&,60,3` Save a Struct to Disk [[save-struct]]
 
 This saves a struct to a specified disk file.
 
