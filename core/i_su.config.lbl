@@ -101,7 +101,8 @@
 	for i=. to 8:x=i+1:gosub 1
 	print#2,"Group"+str$(i)+r$+"01001100000000021151":next
 ' FIXME: group 10? changed to group 9
-	print#2,"Group"+str$(i)+r$+"19111911111111190000"
+' 10/14/2026: group 9 is named Sysop, so the sysop needn't rename it
+	print#2,"Sysop"+r$+"19111911111111190000"
 ' gosub 3300 was 3210
 	close 2:&"{white}Done!{f6}":z3$="Starting Daily Log...":gosub 3404:gosub 3300
 
