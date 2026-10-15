@@ -580,7 +580,7 @@ Equivalent to `co$(co%)`.
 | BBS
 |
 | Programmable function key definitions: the text kbd:[Ctrl+f1] (`f1$`), kbd:[C=+f1] (`f2$`), kbd:[Ctrl+f3] (`f3$`) and so on type at the console, up to 75 characters (longer is cut).
-`im` reads them from `e.fkeys` at boot, and `IM`'s Function Key Editor (`i/IM.macros`) sets them; both turn a `_` at the end into a carriage return.
+`im` reads them from `e.fkeys` at boot, and ``IM``'s Function Key Editor (`i/IM.macros`) sets them; both turn a `←` (the back-arrow key, `_` in ASCII) at the end into a carriage return.
 The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and keyboard input takes it from there.
 
 | `ff$`

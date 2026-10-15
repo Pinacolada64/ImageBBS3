@@ -36,7 +36,7 @@ Each menu option loads its own module (`i/IM.access`, `i/IM.modem`, and so on), 
 
 _Macros_ are short sayings: when the lightbar's `Mac` left checkmark is set, one picked at random shows before each prompt.
 This option loads `i/IM.macros`, which keeps them in `e.macros` on the Etcetera drive: a REL file whose first record is the number of macros, then one record (up to 78 characters) for each.
-Keyboard colors work in a macro, and kbd:[_] stands for kbd:[Return].
+Keyboard colors work in a macro, and kbd:[←] (the back-arrow key) stands for kbd:[Return].
 
 [%autowidth]
 [%header]
@@ -254,8 +254,8 @@ The Function Key Editor lists F1 to F8, showing the first 35 characters of each.
 . Type the number of a key, kbd:[1]-kbd:[8], to edit it.
 Its text is shown for you to change; kbd:[Return] keeps it.
 +
-End the text with kbd:[_] (back arrow, kbd:[←]) to have the key press kbd:[Return] after it.
-Only a kbd:[_] at the very end does this.
+End the text with kbd:[←] (the back-arrow key, `_` in ASCII) to have the key press kbd:[Return] after it.
+Only a kbd:[←] at the very end does this.
 . Press any other key to finish.
 . If you changed anything, `IM` asks:
 ** _Save Changes?_: kbd:[Y] saves the keys to `e.fkeys`, so they're there the next time the BBS starts.
@@ -649,7 +649,7 @@ If nobody answers within 5 minutes, the idle screen comes back with the clock un
 
 === System Drives [[im-system-drives]]
 
-Lists the six Image drives (see <<setting-up.adoc#_image_drive_numbers,Image Drive Numbers>>), each with its device and drive: System, E-Mail, Etcetera, Directory, Program (the Plus-File drive) and User.
+Lists the six Image drives (see <<image-drive-numbers>>), each with its device and drive: System, E-Mail, Etcetera, Directory, Program (the Plus-File drive) and User.
 Choose one to change it:
 
 * _Device_: 7-31
@@ -711,7 +711,7 @@ If `i.SM` isn't there, kbd:[N] says "`i.SM Not Found.`" and goes back to the `IM
 | kbd:[K] | Quit | Back to `IM` |
 |===
 
-TIP: `IM`'s kbd:[K] Set Time does what kbd:[H] Set Time Dv # does, and more: it can also use a DS12C887, an Ultimate or a TeensyROM (see <<im-set-time>>).
+TIP: ``IM``'s kbd:[K] Set Time does what kbd:[H] Set Time Dv # does, and more: it can also use a DS12C887, an Ultimate or a TeensyROM (see <<im-set-time>>).
 Set Time Dv # shows one of those as "`CMD Device #4`".
 
 ==== Fix BA Count
