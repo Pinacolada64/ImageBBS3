@@ -362,7 +362,7 @@ _(BBS controlled)_ If enabled, an alarm has occurred to perform NetMail processi
 When enabled, users can see "`macros,`" or a random short saying presented before the main prompt.
 
 ====
-The command path to edit the macros is kbd:[IM], kbd:[N] `Base Editors`, kbd:[G] `Editor Utils`, kbd:[G] `Edit Sayings`.
+The command path to edit the macros is kbd:[IM], kbd:[A] `Macros Editor` (see <<im-macros>>).
 
 ====
 

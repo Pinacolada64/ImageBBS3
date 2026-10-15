@@ -34,27 +34,213 @@ Each menu option loads its own module (`i/IM.access`, `i/IM.modem`, and so on), 
 
 === Macros Editor [[im-macros]]
 
-#TODO#
+_Macros_ are short sayings: when the lightbar's `Mac` left checkmark is set, one picked at random shows before each prompt.
+This option loads `i/IM.macros`, which keeps them in `e.macros` on the Etcetera drive: a REL file whose first record is the number of macros, then one record (up to 78 characters) for each.
+Keyboard colors work in a macro, and kbd:[_] stands for kbd:[Return].
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[C] | Create: make a new `e.macros` and type the macros in, one after another
+| kbd:[E] | Edit: shows macro _n_, then "`Change It?`" asks whether to type a new one (kbd:[Return] leaves it as it was)
+| kbd:[L] | List the macros, from the number you give (kbd:[Return]: from the first)
+| kbd:[A] | Add a macro at the end
+| kbd:[Q] | Quit
+|===
+
+CAUTION: Create asks for one macro fewer than the number you give it, and the last one is left empty; and kbd:[Return] on a blank line doesn't end the list, as its prompt says, it just leaves that macro empty.
+It's easiest to create one macro, then use kbd:[A]dd for the rest.
+Macros are numbered from 1: don't edit macro 0, which is where the count is kept.
 
 === Command Set [[im-command-set]]
 
-#TODO#
+Edits the _Extended Command Set_ (ECS): the commands typed at the prompts, and what each one runs.
+This option loads `i/IM.ecs`, which edits the table the BBS is using, in memory, and the copy on disk, `e.ecs.main` on the Etcetera drive.
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Add a command (below)
+| kbd:[D] | Delete command _n_
+| kbd:[E] | Edit command _n_ (below)
+| kbd:[F] | Find a command by name, and edit it
+| kbd:[V] | View the commands, from number _n_
+| kbd:[L] | Load: read `e.ecs.main` from disk into the editor
+| kbd:[S] | Save: write the editor's table to `e.ecs.main`, and make it the one in use
+| kbd:[G] | Get: read the table in use, in memory, into the editor (undoing changes)
+| kbd:[P] | Put: make the editor's table the one in use, without saving it
+| kbd:[Q] | Quit: if you changed anything, asks "`Save Changes?`"
+|===
+
+View shows each command with what it runs (`i.` _name_ for a module, or a line in `im`), GOTO or GOSUB, its access (`Ac`), credits (`Cr`), flags (`Fl`) and password (`Pw`); a `*` marks an inactive command.
+
+Add asks, in turn:
+
+[%autowidth]
+[%header]
+|===
+| Prompt | What it is
+
+| Command | What's typed, up to 7 characters
+| Location | kbd:[1] a file (a module, `i.` _name_), or kbd:[2] a line in `im`
+| Filename or Line Number | The module's name without `i.` (up to 14 characters), or the line (up to 999)
+| Method | kbd:[1] GOTO or kbd:[2] GOSUB
+| Access | The access groups that may use it, added up as elsewhere (1 for group 0 ... 512 for group 9); kbd:[?] asks about each group in turn.
+Anything outside 1-1023 is `1023`, every group.
+| Credits | What it costs to use
+| Password | One the caller has to type (not asked for some commands)
+| ZZ Locked? | Only in pseudo-local mode (`zz`)
+| Ignore Extra? | Ignore anything typed after the command
+|===
+
+Edit shows the same settings, numbered, plus _Active_ (kbd:[8] turns the command on or off) and _Storage_ (Short, for a command and location of 2 characters and no password, or Long): type a number to change one, kbd:[2] and kbd:[7] switch between the choices.
+
+CAUTION: At Access's kbd:[?], answering No for every group gives `1023`, every group, not none.
+In Edit, kbd:[Return] at "`Password`" clears the password.
 
 === Payroll Editor [[im-payroll]]
 
-#TODO#
+The _payroll_ gives users a number of credits regularly: the AutoMaint module `i/lo/payroll` adds each user's credits, sends them an e-mail ("`You have received _n_ credits for this week's paycheck`"), and writes "`Payroll Completed`" to the log.
+Add it as a maintenance module (see <<im-logon>>) on the days it should run.
+
+This option lists the payroll, `u.payroll` on the User drive: one line per user, with their ID and credits.
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Add: asks for the user's ID and the credits
+| kbd:[D] | Delete entry _n_
+| kbd:[E] | Edit entry _n_'s ID and credits
+| kbd:[Q] | Quit: if you changed anything, asks "`Save Changes?`"
+|===
+
+NOTE: IDs are kept as 3 digits, so the payroll only works for users 1 to 999.
 
 === Logon Editor [[im-logon]]
 
-#TODO#
+Sets what happens when a caller logs on, and during AutoMaint.
+It has its own menu, and loads `i/IM.logon` for each option:
+
+[%autowidth]
+[%header]
+|===
+| Key | Option | Edits
+
+| kbd:[A] | Login Mods | `e.loginmods`
+| kbd:[B] | Maint Mods | `e.maintmods`
+| kbd:[C] | Wall Ads | `e.walladds`
+| kbd:[D] | Quicklist | `e.sysoplist`
+| kbd:[E] | Quit |
+|===
+
+All are on the Etcetera drive, and each asks "`Save Changes?`" when you quit if you changed anything.
+
+==== Login Mods [[im-login-mods]]
+
+The `i/lo-` modules that run as a caller logs on, in order (up to 40).
+The list shows each one's number, access and description; `>` marks a forced one.
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Add a module: its name after `i/lo-` (kbd:[$] lists them), a description or question (up to 16 characters), its access (kbd:[?] asks about each group), and kbd:[1] Optional (the caller is asked) or kbd:[2] Forced (it always runs)
+| kbd:[D] | Delete one
+| kbd:[E] | Edit one's description, access, and Optional or Forced
+| kbd:[I] | Insert a module before another
+| kbd:[M] | Move one to another position
+| kbd:[O] | Options: ask about the optional modules with kbd:[1] Yes/No questions, or kbd:[2] a menu (Graphic Menu), in one or two columns
+| kbd:[H] | Help (`s.logon info`)
+| kbd:[Q] | Quit
+|===
+
+==== Maint Mods [[im-maint-mods]]
+
+The `i/lo/` modules that AutoMaint runs, in order, each on the days you choose.
+The list shows each one's days (`SMTWTFS`, a `-` for a day it doesn't run), month and date.
+
+[%autowidth]
+[%header]
+|===
+| Key | Option
+
+| kbd:[A] | Add a module (its name after `i/lo/`), then when it runs (below)
+| kbd:[D] | Delete one
+| kbd:[E] | Edit one's name and when it runs (a number also edits that one)
+| kbd:[I] | Insert a module before another
+| kbd:[M] | Move one before another
+| kbd:[Q] | Quit
+|===
+
+When it runs is asked in three steps; kbd:[Return] means every one:
+
+* _Days To Activate_: 1 (Sunday) to 7 (Saturday); type several, _e.g._ `246`
+* _Month To Activate_: 1-12
+* _Date To Activate_: 1-31
+
+==== Wall Ads [[im-wall-ads]]
+
+Other BBSes to advertise: up to 9, each a name (up to 24 characters) and a telnet address.
+kbd:[A]dd, kbd:[D]elete, kbd:[E]dit and kbd:[Q]uit.
+
+==== Quicklist [[im-quicklist]]
+
+Up to 15 accounts the BBS treats specially, _e.g._ the sysops for immediate logon.
+kbd:[A]dd adds your own account, to edit; kbd:[E]dit (or the entry's number), kbd:[D]elete, kbd:[L]ist and kbd:[Q]uit.
+Each entry has:
+
+. _Name_: the account's handle (its ID is looked up)
+. _Flags_, each Yes or No: _In Feedback List_, _Feedback To `e.fback`_, _Feedback Shadow_, _Remote Instant Logon_, _Console Instant Logon_, and three more not named yet (Flags #6-8)
+. _Description_: up to 36 characters
 
 === Access Groups [[im-access-groups]]
 
-#TODO#
+Names the ten access groups, 0 to 9, and sets each one's user flags: what a user in that group may do.
+This option loads `i/IM.access`, which keeps them in `e.access` on the Etcetera drive.
+Changes take effect at once: a user's flags are read again from `e.access` when their access group changes.
+
+The list shows each group's name and flags.
+Type the group's number (kbd:[0]-kbd:[9]) to edit it: its name (up to 20 characters), then its flags.
+kbd:[L] lists the groups again; any other key asks "`Save Changes?`" and quits.
+
+The flags screen lists the 20 user flags with their values (_Yes_/_No_, or a number); type a flag's number to change it, or kbd:[Return] when you're done:
+
+[%autowidth]
+[%header]
+|===
+| # | Flag | # | Flag
+
+| 1 | Non-Weed Status | 11 | B.A.R./Log View
+| 2 | Credit Ratio (_n_ to 1) | 12 | Submaint
+| 3 | Local Maint | 13 | Files Maint
+| 4 | Post/Respond | 14 | MCI Access
+| 5 | U/D Access | 15 | UDs At Primetime
+| 6 | Max. Editor Lines (in tens) | 16 | Max Idle Time
+| 7 | Unlimited D/Ls | 17 | Calls/Day
+| 8 | Remote Maint | 18-19 | Time/Call (2 digits, edited as flag 18)
+| 9 | EMail | 20 | Download/Call
+| 10 | User List | |
+|===
 
 === File Lists [[im-file-lists]]
 
-#TODO#
+Sets up to 10 _file lists_: each one a filename, the U/D area it goes in (its _destination_), and up to 10 U/D areas whose files it lists.
+This option loads `i/IM.filelist`, which keeps them in `e.filelists` on the Etcetera drive, and takes the U/D areas' names from `e.U/D`.
+
+Type a list's number to edit it:
+
+. _Filename_: up to 16 characters
+. _Destination UD_: the U/D area's number (kbd:[?] lists them)
+. _Edit UD List_: the U/D areas to list, 1-10, each by number
+
+NOTE: No module in the 12/31/2023 release reads `e.filelists` yet: setting the lists up doesn't make them.
 
 === Function Keys [[im-function-keys]]
 
@@ -98,7 +284,30 @@ Loads `i/IM.lightbar`, which has three options:
 
 === Misc. Features [[im-misc]]
 
-#TODO#
+A menu of settings, each shown with its value; choose one to change it.
+This option loads `i/IM.misc`; unless the table says otherwise, the setting is saved in `e.data` (the record in brackets) as soon as you change it.
+kbd:[Return] leaves a setting as it was ("`(No Change.)`").
+
+[%autowidth]
+[%header]
+|===
+| Key | Setting | What it is
+
+| kbd:[A] | Lt. Kernal Device | The Lt. Kernal's device number, 7-32, or 0 if there's none (38)
+| kbd:[B] | Autoweed Cutoff | How many months (0-48) before AutoMaint weeds out an account that hasn't called (39)
+| kbd:[C] | Default Color | The text color, 1-15, from the list shown (40)
+| kbd:[D] | Printer Address | The printer's secondary address, 0-32 (41)
+| kbd:[E] | Printer Linefeeds | Whether to send linefeeds to the printer (42)
+| kbd:[F] | Password Masks | The characters shown in place of a password as it's typed, up to 30: each call uses one of them, in turn by the call number (43). `X` to start with.
+| kbd:[G] | Time Zone | The BBS's time zone, chosen from a list
+| kbd:[H] | Main Prompt | The main prompt's text, up to 20 characters (`bd.data`)
+| kbd:[I] | BBS Name | Up to 30 characters (47)
+| kbd:[J] | System ID | 2 characters, before each user's ID (51)
+| kbd:[K] | New User Credits | The credits a new user starts with, 1-65000 (58)
+| kbd:[L] | Prime Time | The minutes a call may last during prime time (0 for no prime time), and when it starts and ends: an hour and kbd:[A] or kbd:[P], _e.g._ `4P` (20)
+| kbd:[M] | Chat Messages | The messages a caller sees when you enter chat (_Entry_) and leave it (_Exit_), up to 30 characters each (48, 49)
+| kbd:[N] | Quit |
+|===
 
 === Modem Config [[im-modem]]
 
@@ -440,13 +649,39 @@ If nobody answers within 5 minutes, the idle screen comes back with the clock un
 
 === System Drives [[im-system-drives]]
 
-#TODO#
+Lists the six Image drives (see <<setting-up.adoc#_image_drive_numbers,Image Drive Numbers>>), each with its device and drive: System, E-Mail, Etcetera, Directory, Program (the Plus-File drive) and User.
+Choose one to change it:
+
+* _Device_: 7-31
+* _Drive/LU_: 0-254 (a drive, partition or Lt. Kernal LU)
+
+Each prompt shows the current value, to edit; kbd:[Return] keeps it.
+The change is used at once, and saved in `e.data` (records 52-57).
+
+CAUTION: Make sure the files are on the new device and drive first: the BBS looks for them there straight away.
 
 === Netmail Config [[im-netmail]]
 
-#TODO#
+Sets up NetMail, the network that passes e-mail between Image BBSes.
+It has its own menu, and loads `i/IM.netmail` for each option; its files (`nm.`) are on the E-Mail drive.
+Without pseudo-local mode (`zz`) set, it says "`Sorry, This is a SYSOP ONLY program.`"
 
-The Netmail Config option has its own menu: Local Info, Modem Specs, Calling Hours, Make nm.create, Connections, Fwd. List and Netwall/Grf.
+The first time, it needs `nm.create`, from your network's administrator, and asks for the node number you were assigned; it then makes `nm.nodes`.
+
+[%autowidth]
+[%header]
+|===
+| Key | Option | Sets
+
+| kbd:[A] | Local Info | Which access groups may use NetMail (each Yes or No), and this node's password, city and state
+| kbd:[B] | Modem Specs | The fastest rate to call at (300-19200), and the modem's off-hook, on-hook and dial commands
+| kbd:[C] | Calling Hours | Ten time slots (0-9), each from one hour to another, for calls to other nodes
+| kbd:[D] | Make nm.create | Write `nm.create` from this node's settings
+| kbd:[E] | Connections | The nodes this one calls: for each, its password, hours (a time slot, `-` for none or `+` for all day), dial prefix and calls per day, and the calls and minutes so far, which can be reset; "`Short-Cuts`" are edited the same way
+| kbd:[F] | Fwd. List | E-mail forwarding: a handle here, and the handle and node to send its mail to
+| kbd:[G] | Netwall/Grf | The commands for the NetWall and Net Graffiti, 8 each
+| kbd:[H] | Quit |
+|===
 
 === Base Editors [[im-base-editors]]
 
