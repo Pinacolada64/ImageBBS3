@@ -50,7 +50,8 @@ New to Image BBS v3.0, you can view the history of commands issued at most major
 This command history is also included in each BBS error log entry (`e.errlog`, viewable with the kbd:[VF] command).
 This sometimes helps trace what the user was doing that led to the error.
 
-#FIXME# do commands in the stack get entered into command history?
+Stacked commands go into the history one at a time, as each is carried out: typing kbd:[SB4^R3^Q] adds `SB4`, then `R3`, then `Q`.
+A command carried out from the history (below) isn't added to it again.
 
 === Viewing Command History
 

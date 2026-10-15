@@ -5,7 +5,7 @@
 
 Image BBS`'s familiar lightbar has been expanded, as compared to previous versions, in both scope and utility. The first two pages remain virtually unchanged from Image 1.2, but the addition of six new lightbar pages adds the ability to monitor and change new features which have been added to this new version.
 
-=== Lightbar Defaults
+=== Lightbar Defaults [[lightbar-defaults]]
 
 During boot-up, lightbar check mark defaults are read. This allows you to configure your BBS more easily than in previous versions of Image BBS. Maybe you want to disable the `...More? (Y/n)` prompt, or debug some code with the on-screen trace function, at startup.
 
@@ -140,7 +140,7 @@ Prevent 300 baud users from logging in. When one tries, they are told:
 Log in to the BBS from the C64.
 This is a true local login, with Sysop access enabled--as compared to a "`pseudo-local`" login, or kbd:[ZZ] mode being enabled at a prompt, where the caller is given local mode access to perform maintenance tasks.
 
-#TODO#: See _Logging On From the Console_ for more information.
+See <<console-login>> for more information.
 
 [.text-right]
 [underline]#Related Checkmark:#
@@ -405,7 +405,7 @@ The `...More? (Y/n)` prompt is output.
 * If kbd:[Y]es (or any other key than kbd:[Y], uppercase indicates it`'s the default) is hit, text will continue to output.
 * If another key is hit, the BBS attempts to abort text output. (This might not always work, there may not be code present to handle aborting output.)
 
-#TODO#: Cross-reference kbd:[MP] command.
+Callers can turn the `...More?` prompt on or off for themselves with the kbd:[MP] command.
 
 `Mor` right: _More Prompt Not Available_
 
@@ -678,7 +678,7 @@ If you do not need this feature, disable this alarm.
 The command path is kbd:[IM], kbd:[H] `Lightbar/Alarm`, kbd:[B] `Alarms`.
 ====
 
-=== NetMail Alarms
+=== NetMail Alarms [[netmail-alarms]]
 
 _NetMail Alarms_ define up to 24 times of the day or night that NetMaint takes place.
 
@@ -697,5 +697,6 @@ Mode 5 reads checkmarks in ML routines, and is discussed in the accompanying _Im
 | `1` | set checkmark at _position_
 | `2` | toggle checkmark at _position_
 | `3` | read checkmark at _position_, return status in `a%`: 0=off, 1=on
-| `4` | move "`lit`" portion of lightbar to position 0-55 [#FIXME#: or 1-56?]
+| `4` | move the "`lit`" portion of the lightbar to _position_ 0-63: (page - 1) × 8 + the position on the page, 0-7 from the left (page 1 is 0-7, page 2 is 8-15...).
+Only the low 6 bits count, so 64 is 0 again.
 |====================

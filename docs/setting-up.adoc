@@ -5,7 +5,22 @@
 
 === Image Drive Numbers
 
-(((Image drive))) Image drive numbers are #FIXME#
+(((Image drive))) Image BBS keeps its files on six _Image drives_, numbered 1 to 6.
+Each one is a device and drive you choose during setup (see <<storage-terms>>), and several can be the same device and drive.
+Modules ask for an Image drive by number, so they work no matter where the files really are.
+
+[%autowidth]
+[%header]
+|===
+| Image drive | Name | Holds | Prefixes
+
+| 1 | System | System text files | `s.`, `n.`
+| 2 | E-Mail | E-mail and NetMail | `m.`, `nm.`
+| 3 | Etcetera | Configuration and statistics files | `e.`
+| 4 | Directory | Directories of the file areas and General Files | `d.`
+| 5 | Plus-File | Modules and protocols | `i.`, `i/`, `sub.`, `++`
+| 6 | User | User files | `u.`
+|===
 
 === Boot Disk
 
@@ -106,11 +121,10 @@ Read the following information carefully to help you in this regard.
 It is possible to run Image BBS v3.0 using only two 1581 disk drives.
 We highly recommend you use higher capacity drives, since you will find that disk space and directory space gets used quickly.
 
+[[storage-terms]]
 .Some Commodore Storage Terminology
 ****
-_Device_ refers to either the physical unit, or the device number(s) assigned to the particular device (_i.e._ one device online is usually set to 8, two devices to 8 and 9, etc.).
-
-#FIXME# - is this a decent description?
+_Device_ refers to a disk drive (or other unit) on the serial bus, and the number it answers to: one drive is usually device 8, a second one 9, and so on.
 
 _Drive_ refers to the number of available separate storage spaces available on a device.
 (These are like _volumes_ on Windows or Linux operating systems.)
@@ -307,7 +321,7 @@ include::includes/boot-command.adoc[]
 
 [start=4]
 
-. When you are prompted #FIXME#
+. When you are prompted:
 
 ....
 Insert All System Disks In Correct
@@ -533,7 +547,7 @@ Press kbd:[T] on the idle screen, or set the `DCD` left lightbar check (_Invert 
 (Image BBS 1.2 programs do this with `poke 53258,16-peek(53258)`.)
 ====
 
-=== Console Login
+=== Console Login [[console-login]]
 
 A _console login_ is when you`'re sitting in front of the C64 at the Idle Screen.
 Here`'s how to do that.

@@ -820,7 +820,7 @@ Page 7 is undefined and is available for your own use.
 Page 8 consists of 16 Alarm Triggers.
 Alarms can modify lightbar checkmarks, and more.
 
-#TODO:# For more information, see the section _IM: Lightbar Alarms_.
+For more information, see <<alarm-triggers>>.
 
 [%header]
 // col 1: 45% width, col 2: 10% width, col 3: 45% width = 100% width

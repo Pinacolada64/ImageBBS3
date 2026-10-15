@@ -84,7 +84,17 @@ The BBS reads it when it starts (the "`Enabling Function Keys...`" step); withou
 
 === Lightbar/Alarms [[im-lightbar]]
 
-#TODO#
+Loads `i/IM.lightbar`, which has three options:
+
+[%autowidth]
+[%header]
+|===
+| Key | Option | Saved in | See
+
+| kbd:[A] | LightBar Defs: the checkmarks the BBS starts with | `e.lightdefs` | <<lightbar-defaults>>
+| kbd:[B] | Alarms: times to set, clear or toggle checkmarks | `e.alarms` | <<alarm-triggers>>
+| kbd:[C] | NetMail Alarms: times for NetMaint | | <<netmail-alarms>>
+|===
 
 === Misc. Features [[im-misc]]
 
