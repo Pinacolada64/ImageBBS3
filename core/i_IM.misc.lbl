@@ -14,10 +14,9 @@
 	gosub {:sub.check_change}:if tz then x=39:gosub {:sub.write_e_data}:a%(2)=n
 	return
 {:4010}
-	&"{f6}(0 If None){f6}":p$="Lt. Kernal Device"+"":w$=str$(lk%):l=7:h=32:t=1:gosub {:sub.input_range}
-' FIXME: allow '0' to be entered, too
-'	if nand(n<7orn>32)then:&"{f6}7 to 32 Please. Press RETURN to Abort.{f6}":goto {:4010}
-	gosub {:sub.check_change}:if tz then x=38:gosub {:sub.write_e_data}:lk%=n
+' 10/14/2026: 0 (none) or 7-32: the range is 0-32, and 1-6 are turned down here
+	&"{f6}(0 If None){f6}":p$="Lt. Kernal Device"+"":w$=str$(lk%):l=.:h=32:t=1:gosub {:sub.input_range}:if tz and n>. and n<7 then:&"{f6}7 to 32, or 0 for none.{f6}":goto {:4010}
+	if tz then x=38:gosub {:sub.write_e_data}:lk%=n
 	return
 {:4016}
 ' FIXME: show colors in 2 columns, 1-8, 9-14=5
@@ -37,7 +36,8 @@
 	&"{f6}Send Linefeeds to the printer? ":gosub 94:n=.:if a then n=10
 	an$=str$(n):x=42:gosub {:sub.write_e_data}:a%(5)=n:poke 17136,n:return
 {:4040}
-	poke 53252,30:pl=.:p$="{gray3}Mask{white}"+"":w$=mm$:&,1,41 ' 32+8+1
+' 10/14/2026: t=. (no range check) for sub.check_change, here and below
+	poke 53252,30:pl=.:t=.:p$="{gray3}Mask{white}"+"":w$=mm$:&,1,41 ' 32+8+1
 '	if an$="" or an$=w$ or an$=r$ or tr%<1 then:&"(No Change.)":return
 	gosub {:sub.check_change}:if tz then:&,15,2:x=43:gosub {:sub.write_e_data}:mm$=an$
 	return
@@ -48,7 +48,7 @@
 {:4052}
 	return
 {:4054}
-	poke 53252,30:pl=.:w$=bn$:p$="BBS Name"+"":&"{f6}":&,1,32
+	poke 53252,30:pl=.:t=.:w$=bn$:p$="BBS Name"+"":&"{f6}":&,1,32
 	gosub {:sub.check_change}:if tz then x=47:gosub {:sub.write_e_data}:bn$=an$
 	return
 {:4062}
@@ -56,11 +56,11 @@
 	poke 53252,30:&" {green}Which? {pound}i1{f6}":if tr%<1 then return
 	gosub {:4100}:on a goto {:4068},{:4074}:return
 {:4068}
-	pl=.:w$=mid$(c1$,4,len(c1$)-5):p$="{gray3}Entry{white}"+"":&"{f6}":&,1,32
+	pl=.:t=.:w$=mid$(c1$,4,len(c1$)-5):p$="{gray3}Entry{white}"+"":&"{f6}":&,1,32
 	gosub {:sub.check_change}:if tz then x=48:gosub {:sub.write_e_data}:c1$="{clear}{f6}{$07}"+an$+"{f6:2}"
 	goto {:4062}
 {:4074}
-	pl=.:w$=mid$(c2$,3,len(c2$)-4):p$="{gray3}Exit{white}"+"":&"{f6}":&,1,32
+	pl=.:t=.:w$=mid$(c2$,3,len(c2$)-4):p$="{gray3}Exit{white}"+"":&"{f6}":&,1,32
 	gosub {:sub.check_change}:if tz then x=49:gosub {:sub.write_e_data}:c2$="{f6:2}"+an$+"{f6:2}"
 	goto {:4062}
 
@@ -124,8 +124,10 @@
 {:4162}
 	&,1,32
 {:sub.check_change}
-	tz=1:if an$="" or an$=w$ or an$=r$ or tr%<1 then tz=.:&"(No Change.)"
-	return
+' 10/14/2026: the range checks below never ran (a return came first), so
+' ranges weren't enforced, and n wasn't set from what was typed: callers then
+' set e.g. lk%=n from a stale n. t=0: no check
+	tz=1:if an$="" or an$=w$ or an$=r$ or tr%<1 then tz=.:&"(No Change.)":return
 ' ----+----+----+----+----+----+----+----+
 ' 1-10 Please. (RETURN aborts.)
 ' t=1: numeric
