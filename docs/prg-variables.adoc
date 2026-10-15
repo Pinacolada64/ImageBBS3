@@ -661,7 +661,7 @@ Used to determine whether a message is new or not.
 | `mp$`
 | BBS
 | icon:times-circle[role=red]
-| More prompt text: ``...More (Y/n)?`` (hard-coded in `im`, line #FIXME#)
+| More prompt text: ``...More? (Y/n)`` (hard-coded in `im`, line `3158`)
 
 | `mt$`
 | BBS
