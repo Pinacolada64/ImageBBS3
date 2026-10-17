@@ -9,6 +9,17 @@ lowercase on the C64 and don't match keypress tests such as `an$="C"` the way
 the release does (`$C1`-`$DA`). Put `{alpha:alt}` after a new file's header
 comments. Not in include-only files (`3_0-preface.lbl`, `quoters.lbl`).
 
+### Detokenizing a `.prg`: space it out for reading
+
+Import BASIC programs with `tools/detok.sh` in its default mode, which
+spaces out keywords (C64List `-autospace`: `gosub 3001:goto 300`, not
+`gosub3001:goto300`) and adds `{crunch:on}` so the build takes the spaces
+out again. Don't use `--keep-spaces` just to get past the rebuild check: if
+the original has its own spaces in code, `detok.sh` accepts the listing, says
+how many lines differ, and notes in the header that the rebuilt program runs
+the same but isn't byte-for-byte identical. Say so when reporting the import.
+Use `--keep-spaces` only when the original's exact bytes matter.
+
 ### Capital letters in `rem` text: use ASCII, not PETSCII bytes
 
 C64List (`-txt -alpha:alt`, as used by `tools/detok.sh`) copies text after `rem` byte for

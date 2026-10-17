@@ -14,10 +14,11 @@
 # For a listing in a subdirectory of core/, the {uses:} path is relative to it
 # ({uses:../3_0-preface.lbl}).
 #
-# --keep-spaces is for a program typed with some spaces in its code (for
-# example "poke 53252,50"), which -crunch would remove: the listing is left
-# spaced as the original is, without -autospace or {crunch:on}, so it rebuilds
-# identically.
+# A program typed with some spaces in its code (for example "poke 53252,50")
+# loses them to -crunch; that doesn't change how it runs, so the listing is
+# still spaced out (see the check below), and its header says so.
+# --keep-spaces leaves the listing spaced as the original is, without
+# -autospace or {crunch:on}, for when those bytes must be kept.
 #
 # Shifted PETSCII capitals ($c1-$da) in rem text are copied by C64List as raw
 # bytes, which editors can't show; they're converted to ASCII A-Z. C64List
@@ -26,8 +27,9 @@
 #
 # Afterwards, the listing is built again and compared with the original (with
 # the same rem capitals changed to $61-$7a): the script fails unless the two
-# are byte-for-byte identical, or differ only by trailing ":"s, which C64List's
-# -crunch removes.
+# are byte-for-byte identical, or differ only by trailing ":"s and spaces
+# outside strings and rem text (in code, and at line ends), which C64List
+# drops or -crunch removes.
 #
 # Environment (defaults as in the Makefile): C64LIST, WINE, C1541, RELEASE_ZIP,
 # RELEASE_D81
@@ -153,19 +155,59 @@ c64list new.lbl -prg:new.prg $crunch_opt > "$tmp/build.log" 2>&1 \
 # shifts every later byte. If that is the only difference (compared as
 # listings, with trailing colons ignored), the program still behaves the same.
 caps=$(remcaps "$tmp/orig.prg" "$tmp/want.prg")
+# a listing without the spaces outside "strings" and rem text, and without
+# trailing ":"s
+codeonly() {
+	python3 -I -c '
+import sys
+for line in sys.stdin:
+    out = []; q = False; i = 0; line = line.rstrip("\n")
+    while i < len(line):
+        c = line[i]
+        if not q and line[i:i+3] == "rem":
+            out.append(line[i:]); break
+        if c == "\"":
+            q = not q
+        if not (c == " " and not q):
+            out.append(c)
+        i += 1
+    print("".join(out).rstrip(":"))
+'
+}
+
 same="rebuilds byte-for-byte identical"
+note=
 if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
-	if ! command -v petcat > /dev/null \
-		|| ! diff -q <(listing "$tmp/want.prg" | sed 's/:*$//') \
+	if ! command -v petcat > /dev/null; then
+		echo "The listing doesn't rebuild identically, and petcat isn't there to compare listings; not writing $out" >&2
+		exit 1
+	fi
+	if diff -q <(listing "$tmp/want.prg" | sed 's/:*$//') \
 			<(listing "$tmp/new.prg" | sed 's/:*$//') > /dev/null; then
+		n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
+		same="rebuilds identically except for $n trailing \":\" removed by -crunch"
+	elif diff -q <(listing "$tmp/want.prg" | codeonly) \
+			<(listing "$tmp/new.prg" | codeonly) > /dev/null; then
+		n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
+		same="rebuilds the same except for spaces in code (and trailing \":\"s) on $n lines, which -crunch removes"
+		note="' the original has spaces in code on $n lines, which -crunch removes: the rebuilt
+' program runs the same, but isn't byte-for-byte identical to it."
+	else
 		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/want.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
 		exit 1
 	fi
-	n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
-	same="rebuilds identically except for $n trailing \":\" removed by -crunch"
 fi
 [ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
 
-sed "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" "$tmp/new.lbl" > "$out"
+# the header's last comment line is followed by the note, if there is one
+python3 -I -c '
+import sys
+src, dst, preface, note = sys.argv[1:5]
+text = open(src, "rb").read().replace(b"{uses:3_0-preface.lbl}", ("{uses:" + preface + "}").encode(), 1)
+if note:
+    marker = b"not $c1-$da.\r\n"
+    text = text.replace(marker, marker + note.replace("\n", "\r\n").encode() + b"\r\n", 1)
+open(dst, "wb").write(text)
+' "$tmp/new.lbl" "$out" "$preface" "$note"
 echo "$out: $(grep -c '' "$out") lines; $same"
