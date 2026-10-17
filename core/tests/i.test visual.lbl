@@ -9,6 +9,8 @@
 ' lines used in $03fe ("lines"), not kk. ASCII callers without ANSI get
 ' $ff there instead: the editor can't run, so the line editor (gosub 542)
 ' is used. ASCII callers' help key is Ctrl-Y (Ctrl-H arrives as Delete).
+' Typing {pound} (MCI, e.g. {pound}r1, {pound}c2; \ from ASCII) follows
+' $03fe bit 3, as in the line editor: set from MCI Access and lightbar 31.
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
@@ -19,6 +21,8 @@
 	&"{pound}r1Ctrl-V{pound}r0 re-prints the lines typed so far{f6}"
 	&"{pound}r1Ctrl-X{pound}r0 saves the lines and exits{f6:2}Press any key to begin{colon} {pound}g1{f6}"
 	a$="visual":gosub 28:if e% then:&:goto {:finish}
+	rem modes as sub.editor sets them: 8 = typing MCI if MCI Access, and not lightbar 31 (MCI disable)
+	poke 1023,.:a=14:gosub 11:&,52,31,3:if a%=. then poke 1023,a*8
 	&,18,0:&,16:&,18,1:kk=peek(1022)
 	if kk=255 then gosub 542:&"{f6}{lt. blue}Line editor lines{colon}{white}"+str$(kk)+"{f6}":goto {:list}
 	&"{f6}{lt. blue}$03fe (lines){colon}{white}"+str$(kk)+"{f6}"

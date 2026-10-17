@@ -47,7 +47,7 @@
 .label numy = $15
 
 // state from the 2.0 source, not used yet:
-//	modes = $03ff, cline = $03fb (current line?),
+//	cline = $03fb (current line?),
 //	flags = $03fa, comm = $03f9, mline = $03f8, temp3 = $03f7,
 //	case1 = $03f4, flag1 = $03f3
 
@@ -81,7 +81,9 @@ vstart:
 // visual31 doesn't exist, and visual2 re-prints the lines)
 
 visual:
-		lda #1
+		lda modes	// the line editor's modes ($03ff, as sub.editor
+		and #editor_allow_mci	// sets them): typing £ (MCI) if
+		ora #editor_allow_cursor_controls	// they allow it
 		sta editor
 		ldy #0
 // fill buf2 with 39 columns of {rvrs off}{white}" "
@@ -403,6 +405,16 @@ khelp1:
 		ldx #<helptext
 		ldy #>helptext
 		jsr prtext
+		lda editor
+		and #editor_allow_mci
+		beq khelp2
+		ldx #<mcihelp
+		ldy #>mcihelp
+		jsr prtext
+khelp2:
+		ldx #<helpend
+		ldy #>helpend
+		jsr prtext
 		jsr xgetin
 		jmp visual2
 
@@ -508,7 +520,20 @@ helptext:
 		.text "Ctrl-"
 helpkey:
 		.text "H       this help"	// H, or Y for ASCII (khelp)
-		.byte 13, 13
+		.byte 13, 0
+// shown if typing £ is allowed (ASCII callers see £ as \, and type it so)
+mcihelp:
+		.byte $5c
+		.text "r1 "
+		.byte $5c
+		.text "r0      reverse on/off (MCI)"
+		.byte 13, $5c
+		.text "c1-"
+		.byte $5c
+		.text "cj      colours (MCI)"
+		.byte 13, 0
+helpend:
+		.byte 13
 		.text "Press a key to go back."
 		.byte 0
 
