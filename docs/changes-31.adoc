@@ -20,7 +20,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `++ copier`; the ML (`ml 3.1`)
 
 | New
-| `sub.clocks`, `++ visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
+| `sub.clocks`, `++ visual`, `i.PS visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
 
 | Renamed
 | `boot 3.0`, `image 3.0`, `ml 3.0` are `boot 3.1`, `image 3.1`, `ml 3.1`
@@ -68,6 +68,8 @@ ASCII callers without ANSI are told the editor needs it, and get the line editor
 * MCI commands (kbd:[&#163;], or kbd:[\] from ASCII) can be typed if the line editor would allow them: the user has MCI Access, and the lightbar's `Mac` right check (MCI disable in editor) is off.
 Then kbd:[Ctrl+V] first shows the lines with their MCI commands acted on, as the line editor's kbd:[.M]CI Read does.
 * A lost carrier or the time running out saves the lines and leaves; the sysop's chat key starts chat, then shows the lines again.
+* `i.PS visual` is PS (the Personal Multi-Sig Maker, from `i.misc2`) with taglines edited in the visual editor, new or changed; it falls back to the line editor if the visual editor can't run.
+It's on the Test Programs menu.
 
 ==== Other Changes
 
@@ -91,7 +93,7 @@ Then kbd:[Ctrl+V] first shows the lines with their MCI commands acted on, as the
 * `++ copier` has `&,16,3`, which compares two files.
 * `sub.clocks`: reads (and for CMD and DS12C887, writes) every supported clock; `im=0`-`11`.
 * `++ visual` (alpha testing): the visual editor.
-Load it as an ML module and start it with `&,16`; it starts with 23 empty lines (in `tt$(1)`-`tt$(23)`, so their text is lost), leaves the text typed in `tt$(1)` on, and puts the number of lines used in `$03fe` (`peek(1022)`), or 255 if it couldn't run (ASCII without ANSI: use the line editor, `gosub 542`).
+Load it as an ML module and start it with `&,16`, which starts with 23 empty lines (in `tt$(1)`-`tt$(23)`, so their text is lost), or `&,16,1`, which edits the text already there (as the line editor's `&,54,1`; empty the lines after it first). It leaves the text typed in `tt$(1)` on, and puts the number of lines used in `$03fe` (`peek(1022)`), or 255 if it couldn't run (ASCII without ANSI: use the line editor, `gosub 542`).
 Set bit 3 of `$03ff` (`poke 1023,8`) first to allow typing MCI, as `sub.editor` does: `i.test visual` shows how.
 * `im`:
 ** Line 28 copies `a$` into `cm$` (`cm$=a$+""`); modules set `pr$`, `cm$` and `p$` as copies, not pointers into the program.
