@@ -1,0 +1,106 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.misc2" with:
+'   tools/detok.sh (C64List4_04.exe -txt -autospace -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+' the original has spaces in code on 27 lines, which -crunch removes: the rebuilt
+' program runs the same, but isn't byte-for-byte identical to it.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{crunch:on}
+
+3000 gosub 3001:goto 300
+3001 lg=1:on imgoto 3002,3068,3172:return
+3002 fl=.:a=9:gosub 11:if a=.then x=4:goto 390
+3004 x=abs(val(mid$(an$,3))):if xthen:&"{f6:2}":goto 3014
+3006 &"{f6}{pound}v5 NotePad.{f6:2}"
+3008 p$="":&"{f6:2}{lt. red}Enter User Handle Or ID#.{f6:2}":gosub 6:x=abs(val(an$)):if xthen 3014
+3010 on tr%+1 goto 3048:on-(an$="") goto 3048:gosub 505:x=i:if xthen nn$=an$:goto 3022
+3012 &"{f6:2}{white}{f5}{gray3}{pound}v7{white}{f5} {gray3}Not Found.{f6}":goto 3008
+3014 i=x:if x<1 or x>urthen 3018
+3016 gosub 35:gosub 1:input# 2,nn$:if nn$<>"{^}" and nn$<>"RES" then 3020
+3018 &"{f6}{yellow}Invalid Account Number.{f6}":x=.:goto 3048
+3020 &"{f6}{lt. green}Handle: {rvrs on}":&nn$:&"{f6}{yellow}Is That Correct?: ":gosub 96:if a=.then 3002
+3022 y=i:dr=2:gosub 61:on-(a<20) goto 3044:gosub 60:if athen gosub 390:goto 3048
+3024 on flgoto 3030
+3026 poke 53252,30:&"{f6}":&"Subject: ":pl=.:&,1,5:if an$="" then an$="Note":&"{up}{pound}{back arrow}12{pound}v7{f6}"
+3028 tt$(.)="["+an$+"]":im=1:gosub 440:a=1:if tr%<1 or kk=.then 3048
+3030 &"{f6}Filing Mail For "+nn$+"..."
+3032 if lgthen fd$="Local QuickMail":gosub 3050
+3034 z=1:a$="w":tt$=nn$:gosub 32:if e%then a$="a":z=.:gosub 32
+3036 print# 2,na$r$id;r$d1$r$tt$(0):gosub 39
+3038 if y=1 then gosub 30:x=2:i=1:gosub 16:x=13:gosub 16:x=24:gosub 16:x=31:gosub 16
+3040 on-(y<>1) gosub 30:x=3:i=1:gosub 16:x=14:gosub 16:x=32:gosub 16
+3042 x=25:on zgosub 16:close 2:gosub 62:goto 3046
+3044 x=2:gosub 390
+3046 &"{f6:2}Send to another user? ":gosub 94:if athen fl=1:goto 3008
+3048 return
+3050 a$="a":b$="em log":gosub 36:if e%then a$="w":gosub 36
+3052 print# 2,"{blue}{pound}o{$c0}{pound}o{$c0}{f6}{cyan}{pound}{back arrow}14E-Mail Log{f6}{blue}{pound}o{$c0}{pound}o{$c0}"
+3054 hr$=d1$:&,15
+3056 print# 2,"{cyan}Type:{white} "+fd$
+3058 print# 2,"{cyan}From:{white} "+na$
+3060 print# 2,"{cyan}To  :{white} "+nn$
+3062 print# 2,"{cyan}On  :{white} {$04}"+hr$
+3064 print# 2,"{blue}{pound}o{$c0}{pound}o{$c0}{f6}"
+3066 close 2:return
+3068 cm$="Personal Signatures":gosub 9:dr=1:a$="s.ps":gosub 13:s$="Signature"
+3070 &,52,34,3:ts=a%:if tsthen:&,52,34,.
+3072 if nl=.then 3102
+3074 &"{clear}":gosub 3090:&"{home}{lt. red}{$ba}":a=1
+3076 gosub 7:on-(tr%<1)-2*(an$="{down}")-3*(an$="{up}")-4*(an$=r$) goto 3096,3080,3082,3114
+3078 goto 3076
+3080 &"{left}{white}.{left}{down}{lt. red}{$ba}":a=a+1:goto 3084
+3082 &"{left}{white}.{left}{up}{lt. red}{$ba}":a=a-1
+3084 if a<1 then:&"{home}{white}.{left}{down:3}{lt. red}{$ba}":a=4
+3086 if a>4 then:&"{left} {home}{lt. red}{$ba}":a=1
+3088 goto 3076
+3090 &"{white}. {yellow}{rvrs on}List One {pound}$s{pound}{back arrow}37{f6}{white}. {yellow}{rvrs on}List ALL {pound}$ss{pound}{back arrow}37{gray3} {f6}"
+3092 &"{white}. {yellow}{rvrs on}Create/Edit {pound}$s{pound}{back arrow}37{gray3} {f6}{white}. {yellow}{rvrs on}Quit{pound}{back arrow}37{gray3} {f6}   {gray3}{rvrs on}{pound}{back arrow}38"
+3094 gosub 3164:return
+3096 if tsthen:&,52,34,1
+3098 if nlthen:&"{pound}n4"
+3100 return
+3102 &"{white}1) {yellow}List One {pound}$s{f6}"
+3104 &"{white}2) {yellow}List ALL {pound}$ss{f6}"
+3106 &"{white}3) {yellow}Create/Edit {pound}$s{f6}"
+3108 &"{white}4) {yellow}Quit"
+3110 gosub 3164:&"{white}  Your Selection -=> {pound}i1":a=val(an$)
+3112 if a<1 or a>4 then 3102
+3114 on agoto 3116,3124,3136,3096
+3116 &"{clear}{f6:2}{green}View Which One? {f6:2}{lt. green}Enter (0-9) -=> {white}{pound}i1":if tr%<1 then 3096
+3118 b=val(an$):if b<0 and b>9 then 3116
+3120 gosub 3168:gosub 14:if e%then close 2:gosub 3166
+3122 &"{f6:2}{green}View Another One? ":gosub 96:on tr%+1 goto 3096:on a+1 goto 3072:goto 3116
+3124 &"{clear}{f6:3}":b=.
+3126 &"{green}{pound}$s #{pound}!b:{f6:2}":gosub 3168
+3128 gosub 4:if e%then close 2:gosub 3166:goto 3132
+3130 &,12,2:close 2:gosub 3162:if tr%<1 then 3096
+3132 b=b+1:if b<10 then 3126
+3134 &"{f6:2}{lt. green}View Them Again? ":gosub 94:on a+1 goto 3072:goto 3124
+3136 nn$="{f6}{gray3}The Personal Multi-{pound}$s Maker{f6:2}"
+3138 &"{clear}{f6:3}{lt. green}Enter Number To Change{gray2} -=> {white}{pound}i1":if tr%<1 then 3096
+3140 b=int(val(an$)):if b<0 and b>9 then 3138
+3142 gosub 3168:gosub 4
+3144 if e%then close 2:&"empty buffer{f6}":im=1:gosub 440:goto 3154
+3146 kk=1:&"{f6}Loading..."
+3148 &".":&,2,2
+3150 if a$<>"{^}" then tt$(kk)=a$:kk=kk+1:gosub 3180:if (z%>100 and kk<254 and st=0) then 3148
+3152 close 2:gosub 3170:im=2:gosub 440
+3154 if kk=.then gosub 92:goto 3072
+3156 &"{f6}{white}Filing {pound}$s #{pound}!b...":gosub 3168:gosub 18
+3158 for x=1 to kk-1:print# 2,tt$(x):next:print# 2:close 2:gosub 62:&"{lt. green}Saved!{f6:2}"
+3160 gosub 3162:goto 3072
+3162 &"{yellow}Press A Key {pound}g1{f6:2}":return
+3164 &"{f6:2}  {lt. green}Create Up To 10 {pound}$ss.{white}{f6}":return
+3166 &"{lt. green}{pound}$s #{pound}!b Not Configured!{f6:2}":return
+3168 dr=3:a$=left$("ps."+mid$(str$(b),2,1)+na$,16):return
+3170 &"{f6}{green}Get Ready To Enter Your {pound}$s:{f6}":return
+3172 dr=3:gosub 3:open 2,dv%,2,dr$+"e.top ten,s,r":gosub 3174:close 2:return
+3174 sh=.:rc=.:poke 2038,.:poke 2024,-(qe=.and rq=1)*255
+3176 &,3,sr:s=st
+3178 poke 144,sand 255:a=rc:gosub 12:rc=a:return
+3180 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+3182 copr.1994 new image9/28/94
+3184 rem:"i.misc2 (c)nissa 190307 lh"
