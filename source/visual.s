@@ -27,12 +27,17 @@
 //   ASCII on but ANSI off, cursor movement can't be sent: it says so, puts
 //   $ff in "lines" and returns at once, for the caller to use the line
 //   editor.
+// - &,16,1 keeps the text already in tt$(1)-tt$(23) (as the line editor's
+//   &,54,1), unpacked into columns; &,16 starts with empty lines.
+// - , : " * ? = ^ can be typed: getchr gives them as $85-$8c, which were
+//   taken for control codes and dropped (ischar).
 // - typing £ (MCI) follows modes ($03ff) bit 3, as in the line editor; if
 //   it's allowed, Ctrl-V first shows the lines with MCI acted on (through
 //   a$ and &,0), then shows them for editing again, MCI as typed.
 //
-// Load it as an ML module, then start it with &,16 (sys 49152): see
-// core/tests/i.test visual.lbl. Lines are 3 bytes per column (reverse,
+// Load it as an ML module, then start it with &,16 (sys 49152), or &,16,1
+// to edit the text in tt$(): see core/tests/i.test visual.lbl and
+// core/i.PS visual.lbl. Lines are 3 bytes per column (reverse,
 // colour, character) in the editor's line strings; Ctrl-V re-prints the
 // lines, Ctrl-X stores them (putln), puts the number of lines used in
 // $03fe ("lines"; not kk) and exits. $ff in "lines": it didn't run (ASCII
@@ -57,6 +62,8 @@
 .label colors = $e8da		// KERNAL table of the 16 colour codes
 // varbuf ($61, FAC1; "var" in the 2.0 source): varbuf+1/+2 point at a string
 
+		stx vsub	// the sub-function: &,16,1 keeps the text in
+				// tt$(1)-(23); &,16 ($ff) or &,16,0 starts empty
 		lda flag_asc_addr	// ASCII without ANSI: cursor movement isn't
 		and #flag_asc_l_mask	// sent (outmod drops it), so this can't work
 		beq vstart
@@ -79,15 +86,33 @@ vstart:
 		lda #$ff	// where the cursor is isn't known (++ visual stays
 		sta curx	// in memory between runs); the Clear below sets it
 		sta cury
-		jmp visual
+		lda vsub
+		cmp #1
+		bne visual
+		jmp vkeep
 // (the 2.0 source had "jsr visual31:jmp visual2" here, commented out;
 // visual31 doesn't exist, and visual2 re-prints the lines)
 
+// &,16,1: keep the text in tt$(1)-tt$(23) (as the line editor's &,54,1):
+// unpack each line into columns, then show them
+vkeep:
+		jsr setedit
+		ldx #23
+		stx numx
+vkeep1:
+		ldx numx
+		jsr getdes
+		jsr unpack
+		ldx numx
+		jsr vputlnx
+		dec numx
+		bne vkeep1
+		jsr crsrinit
+		jmp visual2
+
+// start (Clear starts over here): 23 empty lines
 visual:
-		lda modes	// the line editor's modes ($03ff, as sub.editor
-		and #editor_allow_mci	// sets them): typing £ (MCI) if
-		ora #editor_allow_cursor_controls	// they allow it
-		sta editor
+		jsr setedit
 		ldy #0
 // fill buf2 with 39 columns of {rvrs off}{white}" "
 visual0:
@@ -110,15 +135,112 @@ visual1:
 		jsr vputlnx
 		dec numx
 		bne visual1
+		jsr crsrinit
+		lda #$93	// {clear}
+		jsr xchrout
+		jmp visual4
+
+setedit:
+		lda modes	// the line editor's modes ($03ff, as sub.editor
+		and #editor_allow_mci	// sets them): typing £ (MCI) if
+		ora #editor_allow_cursor_controls	// they allow it
+		sta editor
+		rts
+
+// the cursor at the top left, in white with reverse off
+crsrinit:
 		lda #1
 		sta crsrc
 		sta crsrx
 		sta crsry
 		lda #0
 		sta crsrr
-		lda #$93	// {clear}
-		jsr xchrout
-		jmp visual4
+		rts
+
+// a line of text (varbuf: length, varbuf+1/+2: where), as the line editor
+// or a file left it, into buf2 as columns: reverse and colour codes set
+// those of the columns after them (starting with reverse off, white), other
+// control codes are left out, and the line is cut at 39 columns and filled
+// out with spaces; index = 3*39
+unpack:
+		lda #$92	// {rvrs off}
+		sta unr
+		lda #$05	// {white}
+		sta unc
+		lda #0
+		sta unsrc
+		ldx #0
+unpack1:
+		ldy unsrc
+		cpy varbuf
+		bcs unpack8	// the end of the text
+		lda (varbuf+1),y
+		inc unsrc
+		cmp #$12	// {rvrs on}
+		beq unpack6
+		cmp #$92	// {rvrs off}
+		beq unpack6
+		ldy #15
+unpack2:
+		cmp colors,y
+		beq unpack7
+		dey
+		bpl unpack2
+		jsr ischar
+		bcc unpack1	// another control code: left out
+		pha
+		lda unr
+		sta buf2,x
+		inx
+		lda unc
+		sta buf2,x
+		inx
+		pla
+		sta buf2,x
+		inx
+		cpx #3*39
+		bcc unpack1
+		bcs unpack9	// 39 columns: the rest is cut
+unpack6:
+		sta unr
+		jmp unpack1
+unpack7:
+		sta unc
+		jmp unpack1
+unpack8:
+		cpx #3*39	// fill out with {rvrs off}{white}" "
+		bcs unpack9
+		lda #$92
+		sta buf2,x
+		inx
+		lda #$05
+		sta buf2,x
+		inx
+		lda #' '
+		sta buf2,x
+		inx
+		jmp unpack8
+unpack9:
+		stx index
+		rts
+
+// carry set if A is a character that takes a column: not a control code,
+// or one of the quoters $85-$8c (, : " * ? = ^ as getchr gives them, which
+// xchrout prints as those); A is kept
+ischar:
+		cmp #$85
+		bcc ischar1
+		cmp #$8d
+		bcc ischar2
+ischar1:
+		pha
+		and #$7f
+		cmp #32
+		pla
+		rts
+ischar2:
+		sec
+		rts
 
 // Ctrl-V: clear the screen and print lines 1-23
 visual2:
@@ -181,10 +303,7 @@ visual5b:
 		pla
 		jsr escseq	// an ANSI cursor key (ESC [ A-D) becomes the
 		beq visual5	// PETSCII one; 0: part of one, nothing to do yet
-		pha
-		and #$7f
-		cmp #32
-		pla
+		jsr ischar
 		bcc visual9	// a control character
 // a printable character: store reverse, colour and character for this column
 visual6:
@@ -744,8 +863,7 @@ track:
 		beq trackhm
 		cmp #$93	// {clear}
 		beq trackhm
-		and #$7f
-		cmp #32
+		jsr ischar
 		bcc track10	// another control code: doesn't move
 trackrt:
 		inc curx	// a character, or {right}
@@ -1111,6 +1229,14 @@ rstart:
 		.byte 0		// redraw: the first column to redraw
 oldend:
 		.byte 0		// the line's last visible column before an edit
+vsub:
+		.byte 0		// the &,16 sub-function (1: keep the text)
+unr:
+		.byte 0		// unpack: the reverse code in effect
+unc:
+		.byte 0		// unpack: the colour code in effect
+unsrc:
+		.byte 0		// unpack: index into the text
 vlast:
 		.byte 0		// kctrlv: the last line that isn't blank
 savemci:
