@@ -27,6 +27,9 @@
 //   ASCII on but ANSI off, cursor movement can't be sent: it says so, puts
 //   $ff in "lines" and returns at once, for the caller to use the line
 //   editor.
+// - typing £ (MCI) follows modes ($03ff) bit 3, as in the line editor; if
+//   it's allowed, Ctrl-V first shows the lines with MCI acted on (through
+//   a$ and &,0), then shows them for editing again, MCI as typed.
 //
 // Load it as an ML module, then start it with &,16 (sys 49152): see
 // core/tests/i.test visual.lbl. Lines are 3 bytes per column (reverse,
@@ -264,7 +267,7 @@ keys:
 		.byte $08, $19			// Ctrl-H, Ctrl-Y (ASCII: Ctrl-H is Delete)
 keyjmp:
 		.word kup, kdown, kright, kleft
-		.word visual, visual7, visual2, visual25
+		.word visual, visual7, kctrlv, visual25
 		.word krvson, krvsoff
 		.word kdelete, kinsert, kinsert
 		.word kctrld, kctrlb, kctrln, kctrlw
@@ -537,6 +540,73 @@ helpend:
 		.text "Press a key to go back."
 		.byte 0
 
+// Ctrl-V: if typing MCI is allowed, first show the lines with their MCI
+// acted on (as the line editor's .MCI Read), and wait for a key; then
+// show the lines again for editing (visual2), MCI as typed: the editor
+// needs one column on screen for each column of a line
+kctrlv:
+		lda editor
+		and #editor_allow_mci
+		beq kctrlv9
+		ldx #23		// the last line that isn't blank
+kctrlv1:
+		stx numx
+		jsr getdes
+		jsr lastcol
+		bne kctrlv2
+		ldx numx
+		dex
+		bne kctrlv1
+		stx numx	// all blank: 0
+kctrlv2:
+		lda numx
+		sta vlast
+		lda #$93	// {clear}
+		jsr xchrout
+		lda mci
+		sta savemci
+		lda #0		// 0: act on MCI
+		sta mci
+		ldx #1
+		stx numx
+kctrlv3:
+		ldx numx
+		cpx vlast
+		beq kctrlv4
+		bcs kctrlv5
+kctrlv4:
+		jsr getdes
+		jsr lastcol
+		sta pend
+		lda #$92	// {rvrs off}: a carriage return turns reverse off
+		sta lastr
+		lda #$ff	// MCI may have changed the colour: send it
+		sta lastc
+		lda #1
+		jsr pack
+		lda plen	// a$ = the packed line, printed as & does
+		sta varbuf
+		lda #<buffer
+		sta varbuf+1
+		lda #>buffer
+		sta varbuf+2
+		ldx #var_a_string
+		jsr putvar
+		jsr outastr
+		lda #13
+		jsr xchrout
+		inc numx
+		jmp kctrlv3
+kctrlv5:
+		lda savemci
+		sta mci
+		ldx #<helpend
+		ldy #>helpend
+		jsr prtext
+		jsr xgetin
+kctrlv9:
+		jmp visual2
+
 // redraw the line from the cursor (kredraw) or from column 1 (kredraw1)
 kredraw:
 		lda crsrx
@@ -614,6 +684,12 @@ putdes:
 		jmp usetbl1
 xgetin:
 		lda #23		// &,23 xgetin
+		jmp usetbl1
+outastr:
+		lda #0		// &,0 outastr: print a$ (MCI as the mci flag says)
+		jmp usetbl1
+putvar:
+		lda #30		// &,30 putvar: variable X = varbuf
 		jmp usetbl1
 xchrout1:
 		lda #24		// &,24 xchrout1
@@ -1035,6 +1111,10 @@ rstart:
 		.byte 0		// redraw: the first column to redraw
 oldend:
 		.byte 0		// the line's last visible column before an edit
+vlast:
+		.byte 0		// kctrlv: the last line that isn't blank
+savemci:
+		.byte 0		// kctrlv: the mci flag, put back after
 escst:
 		.byte 0		// escseq: 0 nothing, 1 after ESC, 2 after ESC [
 esckey:
