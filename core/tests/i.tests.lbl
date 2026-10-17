@@ -7,7 +7,8 @@
 ' Quitting the menu clears it.
 '
 ' To add a test: a DATA line with its name (without "i.test "), and the
-' exit above in the test.
+' exit above in the test. A name starting with "=" is a module's whole
+' name, without "i." ("=PS visual" loads "i.PS visual").
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
@@ -17,17 +18,18 @@
 {:count}
 	read a$:if a$<>"" then n=n+1:goto {:count}
 	n=n+1:dim m%(16,n),t$(n):restore:for i=1 to n-1:read t$(i)
-	&,16,.,34,m%(.,i),chr$(192+i),"",t$(i):next
+	&,16,.,34,m%(.,i),chr$(192+i),"",mid$(t$(i),1-(left$(t$(i),1)="=")):next
 	&,16,.,34,m%(.,n),"Q","","Quit"
 	&"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS v3.0{pound}{back arrow}37{blue}  {f6}"
 	&"{rvrs on} {cyan}          Test Programs{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
 	&,16,2,34,m%(.,1),n,17,2,n/2+.5,2,6,.:lm=a%+1:&,70,.,n/2+8.5:&"{white}"
 	if tr%<1 or lm=n then {:quit}
-	poke 5988,165:a$="test "+t$(lm):goto 70
+	poke 5988,165:a$="test "+t$(lm):if left$(a$,6)="test =" then a$=mid$(a$,7)
+	goto 70
 {:quit}
 	poke 5988,.:&,18,1:goto 300
 
 ' the tests, without "i.test "; "" ends the list
 	data "calls","clocks","convert","copier","date","frame","string","structs"
-	data "tagscan","visual",""
+	data "tagscan","visual","=PS visual",""
 	rem "i.tests 2026-10-12 rs"

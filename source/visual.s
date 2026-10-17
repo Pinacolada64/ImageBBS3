@@ -62,8 +62,8 @@
 .label colors = $e8da		// KERNAL table of the 16 colour codes
 // varbuf ($61, FAC1; "var" in the 2.0 source): varbuf+1/+2 point at a string
 
-		stx vsub	// the sub-function: &,16,1 keeps the text in
-				// tt$(1)-(23); &,16 ($ff) or &,16,0 starts empty
+		stx vsub	// the sub-function (getaxy: 0 if none): &,16,1
+				// keeps the text in tt$(1)-(23); &,16 starts empty
 		lda flag_asc_addr	// ASCII without ANSI: cursor movement isn't
 		and #flag_asc_l_mask	// sent (outmod drops it), so this can't work
 		beq vstart

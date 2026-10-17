@@ -24,7 +24,7 @@
 	rem modes as sub.editor sets them: 8 = typing MCI if MCI Access, and not lightbar 31 (MCI disable)
 	poke 1023,.:a=14:gosub 11:&,52,31,3:if a%=. then poke 1023,a*8
 	&,18,0:&,16:&,18,1:kk=peek(1022)
-	if kk=255 then gosub 542:&"{f6}{lt. blue}Line editor lines{colon}{white}"+str$(kk)+"{f6}":goto {:list}
+	if kk=255 then gosub 542:kk=kk+(kk>.):&"{f6}{lt. blue}Line editor lines{colon}{white}"+str$(kk)+"{f6}":goto {:list}
 	&"{f6}{lt. blue}$03fe (lines){colon}{white}"+str$(kk)+"{f6}"
 {:list}
 	if kk then for x=1 to kk:&"{pound}#3{pound}!x{colon} "+tt$(x)+"{f6}":next
