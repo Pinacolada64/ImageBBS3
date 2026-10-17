@@ -6,7 +6,9 @@
 ' gosub 28 loads "++ visual" from the Plus-File drive; &,16 (sys 49152)
 ' starts it. In the editor, Ctrl-H shows the keys, Ctrl-V re-prints the
 ' lines typed so far, and Ctrl-X stores them and exits, with the number of
-' lines used in $03fe ("lines"), not kk.
+' lines used in $03fe ("lines"), not kk. ASCII callers without ANSI get
+' $ff there instead: the editor can't run, so the line editor (gosub 542)
+' is used. ASCII callers' help key is Ctrl-Y (Ctrl-H arrives as Delete).
 {alpha:alt}
 {include:../quoters.lbl}
 {:3000}
@@ -17,8 +19,10 @@
 	&"{pound}r1Ctrl-V{pound}r0 re-prints the lines typed so far{f6}"
 	&"{pound}r1Ctrl-X{pound}r0 saves the lines and exits{f6:2}Press any key to begin{colon} {pound}g1{f6}"
 	a$="visual":gosub 28:if e% then:&:goto {:finish}
-	&,18,0:&,16:&,18,1
-	kk=peek(1022):&"{f6}{lt. blue}$03fe (lines){colon}{white}"+str$(kk)+"{f6}"
+	&,18,0:&,16:&,18,1:kk=peek(1022)
+	if kk=255 then gosub 542:&"{f6}{lt. blue}Line editor lines{colon}{white}"+str$(kk)+"{f6}":goto {:list}
+	&"{f6}{lt. blue}$03fe (lines){colon}{white}"+str$(kk)+"{f6}"
+{:list}
 	if kk then for x=1 to kk:&"{pound}#3{pound}!x{colon} "+tt$(x)+"{f6}":next
 {:finish}
 	&"{f6}{yellow}>Hit a Key<{pound}g1":a$="tests":on -(peek(5988)=165) goto 70:goto 300

@@ -21,12 +21,19 @@
 //   the cheaper way: from where it is with cursor keys, or from Home;
 // - a lost carrier or expired time saves the lines and leaves (xgetin then
 //   returns Return forever, which 2.0 obeyed), and the chat key starts chat.
+// - ASCII callers: output is already translated to ANSI (outmod in
+//   modem.s); ANSI cursor keys (ESC [ A-D) are read as cursor keys, and
+//   Ctrl-Y is help too (ASCII backspace, Ctrl-H, arrives as Delete). With
+//   ASCII on but ANSI off, cursor movement can't be sent: it says so, puts
+//   $ff in "lines" and returns at once, for the caller to use the line
+//   editor.
 //
 // Load it as an ML module, then start it with &,16 (sys 49152): see
 // core/tests/i.test visual.lbl. Lines are 3 bytes per column (reverse,
 // colour, character) in the editor's line strings; Ctrl-V re-prints the
 // lines, Ctrl-X stores them (putln), puts the number of lines used in
-// $03fe ("lines"; not kk) and exits.
+// $03fe ("lines"; not kk) and exits. $ff in "lines": it didn't run (ASCII
+// without ANSI).
 //
 // The &,nn calls it uses are reached through usetbl1 (lda #nn:jmp usetbl1).
 
@@ -47,6 +54,21 @@
 .label colors = $e8da		// KERNAL table of the 16 colour codes
 // varbuf ($61, FAC1; "var" in the 2.0 source): varbuf+1/+2 point at a string
 
+		lda flag_asc_addr	// ASCII without ANSI: cursor movement isn't
+		and #flag_asc_l_mask	// sent (outmod drops it), so this can't work
+		beq vstart
+		lda flag_ans_addr
+		and #flag_ans_l_mask
+		bne vstart
+		ldx #<noansi
+		ldy #>noansi
+		jsr prtext
+		lda #$ff	// "lines" $ff: not run, use the line editor
+		sta lines
+		rts
+vstart:
+		lda #0
+		sta escst
 		lda case	// the line editor's "convert to capitals" flag:
 		sta savecase	// save it, and turn it off while editing
 		lda #0
@@ -152,6 +174,8 @@ visual5a:
 		jmp visual2	// show the lines again
 visual5b:
 		pla
+		jsr escseq	// an ANSI cursor key (ESC [ A-D) becomes the
+		beq visual5	// PETSCII one; 0: part of one, nothing to do yet
 		pha
 		and #$7f
 		cmp #32
@@ -235,14 +259,14 @@ keys:
 		.byte $12, $92			// RVS on, RVS off
 		.byte $14, $94, $09		// Delete, Insert, Ctrl-I
 		.byte $04, $02, $0e, $17	// Ctrl-D, Ctrl-B, Ctrl-N, Ctrl-W
-		.byte $08			// Ctrl-H
+		.byte $08, $19			// Ctrl-H, Ctrl-Y (ASCII: Ctrl-H is Delete)
 keyjmp:
 		.word kup, kdown, kright, kleft
 		.word visual, visual7, visual2, visual25
 		.word krvson, krvsoff
 		.word kdelete, kinsert, kinsert
 		.word kctrld, kctrlb, kctrln, kctrlw
-		.word khelp
+		.word khelp, khelp
 
 // cursor keys: move, and send the key itself
 kup:
@@ -367,22 +391,87 @@ kctrlw3:
 		jmp kredraw
 
 // Ctrl-H: show the keys, wait for a key, then show the lines again
+// (an ASCII caller's Ctrl-H arrives as Delete, so they're shown Ctrl-Y)
 khelp:
-		lda #<helptext
-		sta vhelp+1
-		lda #>helptext
-		sta vhelp+2
-vhelp:
-		lda $ffff	// self-modified
-		beq khelp2
-		jsr xchrout
-		inc vhelp+1
-		bne vhelp
-		inc vhelp+2
-		jmp vhelp
-khelp2:
+		ldx #'H'
+		lda flag_asc_addr
+		and #flag_asc_l_mask
+		beq khelp1
+		ldx #'Y'
+khelp1:
+		stx helpkey
+		ldx #<helptext
+		ldy #>helptext
+		jsr prtext
 		jsr xgetin
 		jmp visual2
+
+// print the text at X (low), Y (high), up to a 0 byte
+prtext:
+		stx vprt+1
+		sty vprt+2
+vprt:
+		lda $ffff	// self-modified
+		beq prtext1
+		jsr xchrout
+		inc vprt+1
+		bne vprt
+		inc vprt+2
+		jmp vprt
+prtext1:
+		rts
+
+// ANSI cursor keys: ESC [ A-D (A-D after tblatc: PETSCII capitals).
+// A key in A: back in A, or the PETSCII cursor key, or 0 (with Z set) if
+// it's part of a sequence. escst: 0 nothing yet, 1 after ESC, 2 after ESC [
+escseq:
+		sta esckey
+		ldx escst
+		bne escseq1
+		cmp #27
+		bne escseq9
+		inc escst
+		lda #0
+		rts
+escseq1:
+		cpx #2
+		beq escseq2
+		cmp #'['
+		bne escseq8
+		inc escst
+		lda #0
+		rts
+escseq2:
+		ldx #3
+escseq3:
+		cmp escabcd,x
+		beq escseq4
+		dex
+		bpl escseq3
+		bmi escseq8	// not A-D: give the key as it is
+escseq4:
+		lda #0
+		sta escst
+		lda esccrsr,x
+		rts
+escseq8:
+		lda #0
+		sta escst
+escseq9:
+		lda esckey
+		rts
+
+escabcd:
+		.text "ABCD"
+esccrsr:
+		.byte $91, $11, $1d, $9d	// up, down, right, left
+
+noansi:
+		.byte 13
+		.text "The visual editor needs ANSI for ASCII."
+		.byte 13
+		.text "Using the line editor instead."
+		.byte 13, 0
 
 helptext:
 		.byte $93, $05	// {clear}{white}
@@ -416,7 +505,9 @@ helptext:
 		.byte 13
 		.text "Ctrl-X       done: save the lines"
 		.byte 13
-		.text "Ctrl-H       this help"
+		.text "Ctrl-"
+helpkey:
+		.text "H       this help"	// H, or Y for ASCII (khelp)
 		.byte 13, 13
 		.text "Press a key to go back."
 		.byte 0
@@ -919,6 +1010,10 @@ rstart:
 		.byte 0		// redraw: the first column to redraw
 oldend:
 		.byte 0		// the line's last visible column before an edit
+escst:
+		.byte 0		// escseq: 0 nothing, 1 after ESC, 2 after ESC [
+esckey:
+		.byte 0		// escseq: the key it was given
 curx:
 		.byte $ff	// where the cursor is (1 = left; $ff: not known)
 cury:
