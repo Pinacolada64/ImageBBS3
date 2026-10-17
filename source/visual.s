@@ -111,12 +111,14 @@ visual3:
 		lda #1
 		jsr pack
 		jsr outbuf
+		ldx numx
+		cpx #23		// no Return after line 23: on the window's last
+		bcs visual3a	// line it would scroll line 1 off
 		lda #13
 		jsr xchrout
 		inc numx
-		ldx numx
-		cpx #24
-		bcc visual3
+		jmp visual3
+visual3a:
 		ldx crsrr	// back to the current reverse and colour
 		lda revers,x
 		jsr xchrout
@@ -529,6 +531,8 @@ track:
 		pha
 		txa
 		pha
+		tsx
+		lda $0102,x	// the character again (txa replaced it)
 		ldx curx
 		cpx #$ff
 		beq track9	// not known: only Home/Clear make it known
