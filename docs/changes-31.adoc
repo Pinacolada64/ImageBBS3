@@ -55,6 +55,20 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 * `IM` C (Payroll Editor): Edit with an entry number out of range no longer stops with `?undef'd statement error`.
 * `i.UU`: the user account editor has a cursor menu.
 
+==== Visual Editor (Alpha Testing)
+
+`++ visual` is a full-screen editor: Image 2.0's unfinished visual editor, converted and taken further.
+It's in alpha testing: it isn't used for messages yet, but can be tried with `i.test visual` (see <<prg-appendix-test-programs.adoc#appendix-test-programs,Test Programs>>).
+
+* Text is typed anywhere on 23 lines of 39 columns, moving around with the cursor keys.
+* Editing keys: kbd:[Del] (delete to the left), kbd:[Shift+Del] or kbd:[Ctrl+I] (insert a space), kbd:[Ctrl+D] (delete at the cursor), kbd:[Ctrl+B] (delete to the start of the line), kbd:[Ctrl+W] (delete the previous word), kbd:[Ctrl+N] (go to the end of the line); kbd:[RVS ON]/kbd:[RVS OFF] and the colour keys.
+* kbd:[Ctrl+V] shows the lines again, kbd:[Ctrl+X] saves them and exits, kbd:[Clear] starts over, and kbd:[Ctrl+H] lists the keys.
+* ASCII callers with ANSI on move with their arrow keys, and get the list of keys with kbd:[Ctrl+Y] (their kbd:[Ctrl+H] is Delete).
+ASCII callers without ANSI are told the editor needs it, and get the line editor.
+* MCI commands (kbd:[&#163;], or kbd:[\] from ASCII) can be typed if the line editor would allow them: the user has MCI Access, and the lightbar's `Mac` right check (MCI disable in editor) is off.
+Then kbd:[Ctrl+V] first shows the lines with their MCI commands acted on, as the line editor's kbd:[.M]CI Read does.
+* A lost carrier or the time running out saves the lines and leaves; the sysop's chat key starts chat, then shows the lines again.
+
 ==== Other Changes
 
 * A user's time-per-day limit can be two digits.
@@ -76,7 +90,9 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 * `&,1` clears its password flags when input ends.
 * `++ copier` has `&,16,3`, which compares two files.
 * `sub.clocks`: reads (and for CMD and DS12C887, writes) every supported clock; `im=0`-`11`.
-* `++ visual`: Image 2.0's unfinished visual editor, converted.
+* `++ visual` (alpha testing): the visual editor.
+Load it as an ML module and start it with `&,16`; it starts with 23 empty lines (in `tt$(1)`-`tt$(23)`, so their text is lost), leaves the text typed in `tt$(1)` on, and puts the number of lines used in `$03fe` (`peek(1022)`), or 255 if it couldn't run (ASCII without ANSI: use the line editor, `gosub 542`).
+Set bit 3 of `$03ff` (`poke 1023,8`) first to allow typing MCI, as `sub.editor` does: `i.test visual` shows how.
 * `im`:
 ** Line 28 copies `a$` into `cm$` (`cm$=a$+""`); modules set `pr$`, `cm$` and `p$` as copies, not pointers into the program.
 ** The boot code sets the clock with `sub.clocks`; its own CMD and Lt. Kernal clock code is gone.
