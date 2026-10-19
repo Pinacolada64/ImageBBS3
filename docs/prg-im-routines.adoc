@@ -508,8 +508,8 @@ _Enter:_
 
 | [[line-74,Load sub.* file]]gosub&#160;74
 | _n/a_
-| Load and execute a `sub.*` module file beginning at line 60000.
-`sub.*` modules are subroutines used to supplement the `im` file.
+| Load and execute a `+sub.*+` module file beginning at line 60000.
+`+sub.*+` modules are subroutines used to supplement the `im` file.
 
 These files replace 2.0`'s `im.*` files.
 
@@ -634,7 +634,7 @@ This routine also stores the filename in `cm$`, and does `gosub 9` <<line-9>>.
 
 The drive number and `sub.` filename prefixes are automatically added by the subroutine.
 
-The subroutine filename is added to a "`module stack`" so that if a ``sub.*`` file loads another ``sub.*`` file, the previous ``sub.*`` file is reloaded on exit.
+The subroutine filename is added to a "`module stack`" so that if a `+sub.*+` file loads another `+sub.*+` file, the previous `+sub.*+` file is reloaded on exit.
 
 `is` is the stack depth, and `im$(is)` is the module name.
 

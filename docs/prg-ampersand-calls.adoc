@@ -746,7 +746,7 @@ _Parameters:_
 `&,6[,_x_]`: _x_ is more password flags, as for `&,1`: `&,6,2` shows nothing at all.
 
 `poke 4850,_mask_`: show _mask_ (a character code) instead of each character typed.
-Image sets it to `X` when it starts; `poke 4850,asc("*")` changes it to `*`.
+Image sets it to `X` when it starts; `+poke 4850,asc("*")+` changes it to `+*+`.
 
 _Exit:_
 
