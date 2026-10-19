@@ -15,6 +15,8 @@
 #   make sysop-pdf  build the Sysop Guide PDF                -> build/master.pdf
 #   make book-pdf   the Sysop Guide as a book (title page, chapters on new
 #                   pages, index)                            -> build/master-book.pdf
+#   make lua-pdf  both guides through pandoc and lualatex instead
+#                 of asciidoctor-pdf     -> build/prg-master-lua.pdf, master-lua.pdf
 #   make clean    remove build/
 #
 # Override any of these on the command line, e.g. make KICKASS=/path/KickAss.jar
@@ -40,7 +42,7 @@ SM_DISK   := $(BUILD)/image30-sm.d81
 RUN_C64LIST = WINEDEBUG=-all $(WINE) $(C64LIST)
 winpath = Z:$(abspath $(1))
 
-.PHONY: all asm basic tests disk test-disk sm-disk pdf sysop-pdf book-pdf clean
+.PHONY: all asm basic tests disk test-disk sm-disk pdf sysop-pdf book-pdf lua-pdf clean
 
 all: asm basic tests
 
@@ -224,6 +226,35 @@ $(BUILD)/master-book.pdf: $(SYSOP_DOCS) $(wildcard docs/includes/*.adoc) \
 		-r ./extensions/table-heading-widths.rb \
 		-r ./extensions/table-keep-together.rb -b pdf \
 		-o $(abspath $@) master-book.adoc
+
+# Both guides typeset with lualatex, as TADA's scripts/md_to_pdf.sh does:
+# asciidoctor writes DocBook, tools/pandoc/fix-docbook.sed puts back what
+# pandoc's DocBook reader would drop, and pandoc makes the PDF with
+# tools/pandoc/docbook-latex.lua (icons, nested tables, column widths for
+# [%autowidth] tables, which autowidth.rb marks) and preamble.tex
+# (fonts, table striping). Needs pandoc, lualatex (TeX Live), the Symbola
+# font and asciidoctor-lists. Listings aren't highlighted: pandoc doesn't
+# know the Image BBS BASIC lexer.
+
+lua-pdf: $(BUILD)/prg-master-lua.pdf $(BUILD)/master-lua.pdf
+
+LUA_PDF_DEPS := $(wildcard docs/includes/*.adoc) $(wildcard tools/pandoc/*)
+
+$(BUILD)/prg-master-lua.pdf: $(wildcard docs/prg-*.adoc) $(LUA_PDF_DEPS)
+$(BUILD)/master-lua.pdf: $(SYSOP_DOCS) $(LUA_PDF_DEPS)
+
+$(BUILD)/%-lua.pdf:
+	@for tool in pandoc lualatex; do command -v $$tool >/dev/null \
+		|| { echo "$$tool isn't installed"; exit 1; }; done
+	@mkdir -p $(BUILD)/lua
+	cd docs && asciidoctor -r asciidoctor-lists -r ../tools/pandoc/autowidth.rb -b docbook5 \
+		-o $(abspath $(BUILD)/lua/$*.xml) $*.adoc
+	sed -E -f tools/pandoc/fix-docbook.sed $(BUILD)/lua/$*.xml > $(BUILD)/lua/$*-fixed.xml
+	cd docs && pandoc $(abspath $(BUILD)/lua/$*-fixed.xml) -f docbook \
+		-t pdf --pdf-engine=lualatex --toc --resource-path=. \
+		-V papersize=a4 -V geometry:margin=1in -V colorlinks=true \
+		-L ../tools/pandoc/docbook-latex.lua -H ../tools/pandoc/preamble.tex \
+		-o $(abspath $@)
 
 clean:
 	rm -rf $(BUILD)

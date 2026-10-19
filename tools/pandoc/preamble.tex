@@ -1,0 +1,12 @@
+% LaTeX preamble for the lualatex PDFs (make lua-pdf): from TADA's
+% md_to_pdf.sh. A Symbola fallback font fills in symbols that Latin Modern
+% lacks; tables get light zebra striping. TADA's main font is Latin Modern
+% Math, which has no bold or italic, so this uses Latin Modern Roman.
+\usepackage{fontspec}
+\directlua{
+  luaotfload.add_fallback("symbolfallback", {"Symbola:mode=harf;"})
+}
+\setmainfont{Latin Modern Roman}[RawFeature={fallback=symbolfallback}]
+\setmonofont{Latin Modern Mono}[RawFeature={fallback=symbolfallback}]
+\usepackage[table]{xcolor}
+\rowcolors{2}{black!5}{white}
