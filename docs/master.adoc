@@ -46,3 +46,6 @@ include::appendix-lightbar-quick-reference.adoc[]
 
 [appendix]
 include::im-configuration.adoc[]
+
+[appendix]
+include::appendix-data-files.adoc[]

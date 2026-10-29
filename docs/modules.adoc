@@ -16,19 +16,18 @@ If Image 1._x_ emulation mode is disabled, you can load Image 3.0 `i` modules. T
 
 === Command Classes
 
-First, you are prompted for the _command class_. A number, 3-5, is required here. The command class specifies which module type will be loaded, and which line number it starts executing at.
+First, you are prompted for the _command class_. A number, 3-6, is required here. The command class specifies which module type will be loaded, and which line number it starts executing at.
 
 .Module Command Classes
 [options="header,autowidth"]
-[cols=">1,2,>3"]
+[cols="^1,>2,^3,>4,^5"]
 |====================
-| Class | Prefix | Starting Line
-| 3     | `i.`   | `3000` 
-| 4     | `i/`   | `4000` 
-| 5     | `sub.` | `60000` 
+| Class | Prefix | Module Type        | Starting Line | Variable
+| 3     | `i.`   | BBS command        | `3000`        | `mm`
+| 4     | `i/`   | Command sub-module | `4000`        | `lm`
+| 5     | `sub.` | Sub-module         | `60000`       | `im`
+| 6     | `i/lo-`| Login module       | `4500`        | `lm`
 |====================
-
-// TODO: Class 6
 
 === Device,Drive Prompt
 

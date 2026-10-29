@@ -4,6 +4,9 @@
 
 === Introduction
 
+This appendix shows how some of Image's data files are laid out inside.
+For every data file, which drive it's on and what reads or writes it, see the _Image BBS 3.0 Sysop Manual_, appendix "Data Files".
+
 ====
 .Option Lists
 To show when options are mutually exclusive (there can be only one option chosen from a group), the following notation is used:
@@ -179,3 +182,31 @@ Bit 15 (`32768`) shows the line in pseudo-local mode (`zz`) too.
 
 // Larry:
 `nm.P.count` stores dates, times and tracking numbers of netsub messages sent out from your board.
+
+==== `today.` _Mon_ [[today-mon]]
+
+`today.Jan` ... `today.Dec`, on the Etcetera drive, are Today in History's facts, a file a month: AutoMaint's `i/lo/today` reads this month's, and writes today's facts to `s.today/hist`, which the login module `i/lo-today` shows.
+
+Each is a sequential file of lines, each ended by a carriage return:
+
+.today. File Format
+[%autowidth]
+[%header]
+|===
+| Columns | Holds
+
+| 1 | `B` born today, `S` happened today, `R` don't forget (a holiday or a reminder)
+| 2-5 | `MMDD`: the date. `i/lo/today` compares only the day (columns 4-5).
+| 6-9 | The year, right-aligned: a space before a three-digit year such as `742`; spaces for `R`
+| 10 | [ space \| `C` \| `1`-`7` ]: a space starts a fact; `C` is more of the fact above; `1` (Sunday) to `7` (Saturday) starts a fact shown only on that weekday, compared with the first character of `d1$`
+| 11- | The text
+|===
+
+* A fact longer than one line goes on in `C` lines, each with its first line's type and date.
+* A holiday on a weekday that moves is a line for each date it can fall on, each with that weekday: Thanksgiving, the fourth Thursday in November, is `R1122` to `R1128`, each with `5`.
+A weekday fact must fit on one line: its `C` lines have no weekday, so on the other weekdays they'd show on their own.
+* A line can be at most 80 characters: `i/lo/today` reads them with <<prg-ampersand-calls.adoc#_2_disk_file_input,`&,2` Disk File Input>>, which reads no more.
+* `i/lo/today` keeps at most 20 lines of one type for a day (`dim zt$(3,20)`), `C` lines included; a 21st stops it with `?bad subscript`.
+* A line starting with `*` is a header (`*MMDDYYYY Birthdays`), and `^` ends the file.
+`i/lo/today` skips a `*` line only because its columns 4-5 never match a day.
+
