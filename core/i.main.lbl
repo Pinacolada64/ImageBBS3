@@ -28,18 +28,31 @@
 	&,52,$30,3:if a%=. then {:3034}
 	poke 53252,14:gosub 304:&"{f6}Run: +.{pound}i0":a$=an$:on -(a$="") goto {:3002}:goto 70
 {:3034}
-	&"[3=i.*, 4=i/*, 5=sub.*]{f6}"
-	&"{lt. blue}Which Class {cyan}(3, 4, 5): {white}{pound}i1":a=val(an$):c=a-2:if a<3 or a>5 then {:3034}
-	&"{lt. blue}Run{cyan}: {white}":a$="i"+mid$("./",c,1):if c=3 then a$="sub."
-	poke 53252,16-len(a$):&:&"{pound}i0":c$=an$:on -(c$="")-2*(c=3) goto {:3002},{:3046}
+	poke 53252,ll%:if em=. then:&"[3=i.  4=i/  5=sub.  6=i/lo-]{f6}"
+	&"{lt. blue}Which Class {cyan}(3-6): {white}{pound}i1":a=val(an$):if a<3 or a>6 then {:3002}
+' string: extract module prefix based on index 'c' into a$:
+    an$=mid$("i.   i/   sub. i/lo-",a*5-4,5):&,15,6,32
+	c=a-2:poke 53252,16-len(a$):&"{lt. blue}Run{cyan}: {white}"+a$+"{pound}i0":poke 53252,ll%:c$=an$:on -(c$="")-2*(c=3) goto {:3002},{:3046}
+' ask for device,drive, a=device not present
 	gosub 349:gosub 350:if a then x=6:gosub 390:goto {:3002}
 {:3046}
-	&"{f6}{lt. blue}Enter Value for {cyan}"+mid$("mmlmim",c*2-1,2)+"{lt. blue}: {white}{pound}i1"
-	a$=c$:on c-1 goto {:3050},{:3052}:mm=val(an$):goto 71
+	&"{f6}{lt. blue}Enter Value for {cyan}"+mid$("mmlmimlm",c*2-1,2)+"{lt. blue}: {white}{pound}i1"
+' a:  variable value to save repeated xx=val(an$)
+' a$: module to load (minus prefix, im's 7x lines add those, with the exception of "i/lo-", there is no line for that)
+	a$=c$:a=val(an$):on c-1 goto {:3050},{:3052},{:3054}:mm=a:goto 71
 {:3050}
-	lm=val(an$):gosub 73:goto {:3002}
+' class 4: i/
+	lm=a:gosub 73:goto {:3002}
 {:3052}
-	im=val(an$):gosub 74:goto {:3002}
+' class 5: sub.
+	im=a:gosub 74:goto {:3002}
+' 10/16/2026: class 6: i/lo- (im line 77 adds "i/" prefix)
+{:3054}
+' 10/29/2026: the name is in a$ (an$ is the value just typed), and 77 only
+' loads the module: run it at 4500, where an i/lo- module starts (i/lo.on
+' runs them there). 77 and 4500 are written {$37}7 and {$34}500: the preface
+' has no 77 (C64List wrote [77]), and 4500 is a line in no file here
+    lm=a:a$="lo-"+a$:dr=5:on -(p1$<>"i/"+a$) gosub {$37}7:gosub {$34}500:goto {:3002}
 {nice:10}
 {:reload_module}
 '	if an$="RL" then a%=-3000*(pr$<>"")-4000*(p1$<>"")-60000*(p2$<>""):&,66,1:goto {:3000}
