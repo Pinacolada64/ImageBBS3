@@ -15,7 +15,9 @@
 3008 &,16,.,34,m%(.,1),"A","","Macros Editor"
 3010 &,16,.,34,m%(.,2),"B","","Command Set"
 3012 &,16,.,34,m%(.,3),"C","","Payroll Editor"
-3014 &,16,.,34,m%(.,4),"D","","Logon Editor"
+' 10/29/2026: "Module Editors" (was "Logon Editor"): its menu edits the
+' Login Mods, AutoMaint Mods, Wall Ads and Quicklist
+3014 &,16,.,34,m%(.,4),"D","","Module Editors"
 3016 &,16,.,34,m%(.,5),"E","","Access Groups"
 3018 &,16,.,34,m%(.,6),"F","","File Lists"
 3020 &,16,.,34,m%(.,7),"G","","Function Keys"
@@ -39,16 +41,20 @@
 3054 &,16,.,34,m%(.,5),"E","","Connections"
 3056 &,16,.,34,m%(.,6),"F","","Fwd. List"
 3058 &,16,.,34,m%(.,7),"G","","Netwall/Grf"
-3060 &,16,.,34,m%(.,8),"H","","Quit"
+' 10/29/2026: a sub-menu's last item is "Main Menu" (was "Quit"), as it
+' goes back to the main menu (3006); the main menu's own Q stays Quit
+3060 &,16,.,34,m%(.,8),"H","","Main Menu"
 3062 n=8:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
 3064 a$="netmail":gosub 3198:fl=1:gosub 3002:fl=.:goto 3062
 3066 a$="netmail":gosub 3198:goto 3062
 3068 &,28,1:n=5:dim m%(16,n),fb%(29,15),a%(60):if tr%<1 then 3006
 3070 &,16,.,34,m%(.,1),"A","","Login Mods"
-3072 &,16,.,34,m%(.,2),"B","","Maint Mods"
+' 10/29/2026: "AutoMaint Mods" (was "Maint Mods"): 14 characters, all
+' this menu's 17-wide columns (3352) leave for an item's text
+3072 &,16,.,34,m%(.,2),"B","","AutoMaint Mods"
 3074 &,16,.,34,m%(.,3),"C","","Wall Ads"
 3076 &,16,.,34,m%(.,4),"D","","Quicklist"
-3078 &,16,.,34,m%(.,5),"E","","Quit"
+3078 &,16,.,34,m%(.,5),"E","","Main Menu"
 3080 n=5:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
 3082 a$="logon":gosub 3198:fl=1:gosub 3002:fl=.:goto 3068
 3084 &,28,1:n=4:zz%=8:dim am%(3,15),m%(16,n),b$(zz%*16-1),c$(60),a%(60)
@@ -58,7 +64,7 @@
 3092 &,16,.,34,m%(.,1),"A","","LightBar Defs"
 3094 &,16,.,34,m%(.,2),"B","","Alarms"
 3096 &,16,.,34,m%(.,3),"C","","NetMail Alarms"
-3098 &,16,.,34,m%(.,4),"D","","Quit"
+3098 &,16,.,34,m%(.,4),"D","","Main Menu"
 3100 n=4:gosub 3348:if tr%<1 or lm=nor lm=.then 3006
 3102 a$="lightbar":gosub 3198:goto 3100
 3104 &,28,1:n=7:zz%=6:dim m%(20,n)
@@ -68,7 +74,7 @@
 3112 a=4:a$="Directory":gosub 3124
 3114 a=5:a$="Program":gosub 3124
 3116 a=6:a$="User":gosub 3124
-3118 &,16,.,42,m%(.,7),"G","","Quit"
+3118 &,16,.,42,m%(.,7),"G","","Main Menu"
 3120 n=7:gosub 3354:if tr%<1 or lm=nor lm=.then 3006
 3122 gosub 3268:goto 3104
 3124 b$=right$("   "+str$(dv%(a)),3)+","+mid$(str$(dr%(a)),2)
@@ -99,7 +105,7 @@
 3172 &,16,.,46,m%(.,11),"K","","New User Credits:  "+str$(nc)
 3173 &,16,.,46,m%(.,12),"L","","Prime Time         "+pt$
 3174 &,16,.,46,m%(.,13),"M","","Chat Messages"
-3176 &,16,.,46,m%(.,14),"N","","Quit"
+3176 &,16,.,46,m%(.,14),"N","","Main Menu"
 3178 n=14:gosub 3360:a=lm:if tr%<1 or lm=nor lm=.then 3006
 3180 a$="misc":gosub 3198:goto 3128
 3182 data "White","Red","Cyan","Purple","Green","Blue","Yellow","Orange","Brown"

@@ -9,6 +9,11 @@ Type kbd:[IM] at the main prompt while in local mode to use it.
 
 Each menu option loads its own module (`i/IM.access`, `i/IM.modem`, and so on), which saves its settings in the files listed in that option's section.
 
+****
+_Changed in 3.1:_ the last item of each of `IM`'s own sub-menus (Module Editors, Lightbar/Alarms, Misc. Features, System Drives, Netmail Config) is called *Main Menu*, not *Quit*, as it goes back to this menu.
+The main menu's kbd:[Q] is still *Quit*.
+****
+
 .IM Main Menu
 [%autowidth]
 [%header]
@@ -124,6 +129,11 @@ NOTE: IDs are kept as 3 digits, so the payroll only works for users 1 to 999.
 
 === Logon Editor [[im-logon]]
 
+****
+_Changed in 3.1:_ this option is called *Module Editors* on the `IM` menu: its menu edits the modules run at login and during AutoMaint, the Wall Ads and the Quicklist, not just logons.
+Its kbd:[B] is called *AutoMaint Mods* (see <<im-maint-mods>>).
+****
+
 Sets what happens when a caller logs on, and during AutoMaint.
 It has its own menu, and loads `i/IM.logon` for each option:
 
@@ -162,6 +172,10 @@ The list shows each one's number, access and description; `>` marks a forced one
 |===
 
 ==== Maint Mods [[im-maint-mods]]
+
+****
+_Changed in 3.1:_ called *AutoMaint Mods* on the menu.
+****
 
 The `i/lo/` modules that AutoMaint runs, in order, each on the days you choose.
 The list shows each one's days (`SMTWTFS`, a `-` for a day it doesn't run), month and date.

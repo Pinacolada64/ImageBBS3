@@ -51,6 +51,8 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 
 ==== `IM` Configuration
 
+* `IM` D is called Module Editors (3.0: Logon Editor): its menu edits Login Mods, AutoMaint Mods (3.0: Maint Mods), Wall Ads and the Quicklist.
+* The last item of `IM`'s sub-menus is called Main Menu (3.0: Quit), as it goes back to `IM`'s main menu; the main menu's Q is still Quit.
 * `IM` J (Modem Config): modem profiles in `nimodem.dat` can be imported, created and edited, with a 19.2k tcpser profile for VICE.
 * `IM` C (Payroll Editor): Edit with an entry number out of range no longer stops with `?undef'd statement error`.
 * `i.UU`: the user account editor has a cursor menu.
