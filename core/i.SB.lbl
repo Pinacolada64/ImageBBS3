@@ -226,7 +226,11 @@
 	if a$=">"ora$="<"ora$="{f4}"ora$=";"then {:3198}
 ' 3248: FIXME: no line 3384. SG already handled by 3242, so remove this duplicate
 '	if z$="SG"then gosub{:3384}:onlm+1goto {:3194},{:3228},{:3270},{:3276}
-	onlm+1goto {:3194},{:3228},{:3270},{:3276}
+' 10/29/2026: its on lm+1 goto went too: left on a line of its own it ran for
+' every command, and with lm 0 went back to the prompt (3194), so P (post),
+' M, Q, RA and SA, on the next line, were never reached. In the release it
+' was part of the if, for SG only
+'	onlm+1goto {:3194},{:3228},{:3270},{:3276}
 	on-(z$="RA"orz$="SA")-(a$="P")*2-(a$="M")*3-(a$="Q")*4goto {:3290},{:3362},{:3370},{:3276}
 	x=2:on-(a$="V")-(a$="Z")*2-(a$="O")*3goto {:3342},3410,564
 {number:3253}
