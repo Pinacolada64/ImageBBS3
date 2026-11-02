@@ -263,6 +263,12 @@ only items not already here are listed from it. Locations are
 - [ ] ML: swap each module in separately (`source/intro.s:24`, also in
   Image-128).
 - [ ] `&,14,2` instead of a `for...next` loop (`core/im.lbl:826`).
+- [ ] Read the lightbar help text (`s.lightdefs` into `b$()`) in
+  `i/IM.lightbar`'s lightbar editor, not in `i.IM` (`core/i.IM.lbl` 3086-3090),
+  which reads all 128 lines for every Lightbar/Alarms (H) choice, Alarms
+  included. Done in Image-128 11/02/2026: `i/IM.lightbar` 4090-4094 ("Reading
+  Lightbar Help Text...", once while `b$()` is empty), called from 4100; 3100
+  already checks `tr%`. A "Changed in 3.1" sidebar for the docs.
 - [ ] Small ML clean-ups: `source/modem.s:124`, `source/irqhn.s:607`,
   `source/struct.s:112`, `source/ecs.s:460`.
 
