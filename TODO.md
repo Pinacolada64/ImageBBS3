@@ -192,6 +192,19 @@ only items not already here are listed from it. Locations are
 
 ### Bugs
 
+- [ ] The release's Disk 2 (`master d2 2023-12-31.d81`, Larry's copy, the
+  one released) marks `s.main 80`'s six blocks (27/20-27/25) free in its BAM,
+  though the file uses them. On a disk copied from it, the next file to grow
+  takes them: here `u.config` took 27/20 and 27/23, so `s.main 80` (the
+  release notes) and the user file shared two blocks, on the run disk
+  (`ImageBBS3-run/data.d81`, repaired 11/02/2026: the entry removed without
+  freeing them, Larry's `s.main 80` written anew; backup
+  `data.d81.before-smain80`) and on `Ryan Sherwood/master d2 2023-12-31.d81`
+  (once used as a live disk: its `s.main 80` holds a `u.config` record,
+  personal details included, so don't pass it on as the release). For 3.1:
+  a Disk 2 with a correct BAM (a validate of a fresh copy, then
+  `diskcheck.py`), and a note for sysops running 3.0 to check theirs with
+  Image-128's `tools/diskcheck.py`.
 - [ ] `i.t`: file transfers broken ("loads screen mask, but does not transmit
   anything"); hanging up doesn't fix it (`core/i_t.lbl:12`, `:519`).
 - [ ] `im`: on an error, a `goto` lands in the middle of a `for...next` loop
