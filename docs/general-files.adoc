@@ -31,14 +31,12 @@ At a library's prompt, kbd:[?] lists the commands:
 | kbd:[Z] | Maintenance Options: add, edit and kill items (see <<gf-maintenance>>)
 |===
 
-The help screen also lists kbd:[A], kbd:[E]__x__ and kbd:[K]__x__ as sysop commands, but typing them at the prompt doesn't work: use kbd:[Z].
-
 === Listing and Scanning a Library [[gf-list-scan]]
 
 kbd:[L] (List Items) lists the library's items, one to a line: the item's number, its type (`Dir`, `Prg`, ... see <<gf-items>>) and its title.
 
 kbd:[S] (Scan Items) lists them with more about each one.
-kbd:[S]__x__ starts at item _x_, _e.g._ kbd:[S5].
+kbd:[S]{empty}__x__ starts at item _x_, _e.g._ kbd:[S5].
 Under each item's line it shows:
 
 [%autowidth]
