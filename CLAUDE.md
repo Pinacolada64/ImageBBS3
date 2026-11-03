@@ -55,6 +55,11 @@ that is only ever printed with `&` (e.g. `a$=a$+"{comma} hidden"`). Leave the
 plain symbol in strings that are compared, used as filenames, sent to the disk,
 or printed some other way, because the bytes differ.
 
+Input is the exception to that: Image's input (`&,1`, MCI `{pound}i`) stores a
+typed `,` `:` `"` `*` `?` `=` `^` as its encoded byte, so compare what was
+typed with the token: `if an$="{question}"`, not `if an$="?"`, which never
+matches.
+
 ### Variables in `&"..."` output strings: use MCI
 
 To print a single-letter variable in an `&` string, use MCI instead of
