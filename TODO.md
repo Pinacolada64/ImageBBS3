@@ -269,6 +269,14 @@ only items not already here are listed from it. Locations are
   included. Done in Image-128 11/02/2026: `i/IM.lightbar` 4090-4094 ("Reading
   Lightbar Help Text...", once while `b$()` is empty), called from 4100; 3100
   already checks `tr%`. A "Changed in 3.1" sidebar for the docs.
+- [ ] Lightbar Labels: an editor for the lightbar's 64 labels (`e.lightbar`,
+  192 screen codes, `&,7,dv%,8` into the label table), as Image-128 has
+  (11/02/2026, ff5b4c9): `i.IM` H gets D Lightbar Labels (Main Menu to E,
+  "LightBar Defs" to "Lightbar Defs"), `i/IM.lightbar` 4400-4458. Then a
+  "New in 3.1" sidebar in `docs/im-configuration.adoc` (Lightbar/Alarms) and
+  `docs/lightbar.adoc`; Image-128's SYSOP_COMMANDS.md has the text. Replaces
+  the `todo-lightbar-labels` branch's item (9c705ca: Trb to Dbg, Dsr to DSR,
+  Scp to MHz, the labels to change first).
 - [ ] Small ML clean-ups: `source/modem.s:124`, `source/irqhn.s:607`,
   `source/struct.s:112`, `source/ecs.s:460`.
 
