@@ -785,7 +785,7 @@ This executes the specified command history`'s entry, by putting it in `an$` and
 | gosub&#160;312
 | _n/a_
 | Split off the first of several stacked commands.
-<<prg-ampersand-calls.adoc#_156_scan_string,`&,15,6,140` Scan String>> splits `an$` at the first `^` (the <<xref:prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
+<<prg-ampersand-calls.adoc#_156_scan_string,`&,15,6,140` Scan String>> splits `an$` at the first `^` (the <<prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
 Line 313 then adds `an$` to the command history, `hs$()`, and ``return``s.
 
 | [[line-314,Echo command]]gosub&#160;314

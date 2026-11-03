@@ -788,8 +788,7 @@ Used to determine whether a message is new or not.
 | User
 | icon:times-circle[role=red]
 | User flags: a string of 20 characters containing 19 separate access flags (flag 18 is two characters).
-
-// TODO: See xref:_im_subroutines#_user_flags
+See <<prg-im-routines.adoc#user-flags,User Flags>>.
 
 | `uu$`
 | BBS
