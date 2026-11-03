@@ -277,6 +277,18 @@ only items not already here are listed from it. Locations are
   `docs/lightbar.adoc`; Image-128's SYSOP_COMMANDS.md has the text. Replaces
   the `todo-lightbar-labels` branch's item (9c705ca: Trb to Dbg, Dsr to DSR,
   Scp to MHz, the labels to change first).
+- [ ] The alarm editor (`i/IM.lightbar`, IM H B), as Image-128 fixed it
+  11/02/2026 (90dbbe7, 8f74146): `-` enters `--:--` (4252); option 2 goes to
+  the Off Time prompt (4244: 4248, not 4250); `--:--` padded to a time's
+  width (4004); checkmarks shown with their lightbar labels, e.g. `At1-R`,
+  read from `bartbl` (4460-4462, ef095df), in the alarm screen and the list.
+  Then drop the NOTE in `docs/lightbar.adoc`'s "Changing an Alarm".
+- [ ] Alarms by weekday: a mask in each alarm's spare byte (the checkmark's
+  high byte, which `source/irqhn.s`'s alarm loop never reads): bit 0 Sunday
+  ... bit 6 Saturday, 0 = every day (as every `e.alarms` has it now); the
+  alarm editor gets option 5, Days. As Image-128 does it (its TODO).
+- [ ] Alarms by date (day of the month, month): the alarm table runs into
+  the date buffer (`$16E0`), so a second table and file; after the weekdays.
 - [ ] Small ML clean-ups: `source/modem.s:124`, `source/irqhn.s:607`,
   `source/struct.s:112`, `source/ecs.s:460`.
 
