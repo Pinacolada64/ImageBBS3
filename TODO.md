@@ -289,6 +289,12 @@ only items not already here are listed from it. Locations are
   alarm editor gets option 5, Days. As Image-128 does it (its TODO).
 - [ ] Alarms by date (day of the month, month): the alarm table runs into
   the date buffer (`$16E0`), so a second table and file; after the weekdays.
+- [ ] Alarm resync: an alarm acts only at its exact minute, so one is missed
+  when the BBS is off then or the clock jumps over it (a hand-set clock, a
+  re-read from a clock chip, DST). After a gap (at boot, and when the clock
+  is set), set each active alarm's checkmark if now is inside its window
+  (on to off, across midnight too) and clear it otherwise; alarms with no
+  off time (`--:--`) keep acting only at their minute. As Image-128's TODO.
 - [ ] Small ML clean-ups: `source/modem.s:124`, `source/irqhn.s:607`,
   `source/struct.s:112`, `source/ecs.s:460`.
 
