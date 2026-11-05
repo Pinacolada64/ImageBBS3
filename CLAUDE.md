@@ -32,6 +32,14 @@ but those bytes no longer match the original, so a converted file is no longer
 
 Use `{pound}`, not `£`, in BASIC code.
 
+### Replacing a file: scratch it first, not `@0:`
+
+Don't write `@0:` ("save with replace") in a filename, in modules, `im`,
+test programs (Image-128's `tests/standin/` too) or the docs. Scratch the
+old file with a command first (`print#15,"s"+dr$+"name"`, or
+`open 15,8,15,"s0:name":close 15` in a test), then open or save it
+without `@`.
+
 ### Symbols in `&"..."` output strings: use the quoter tokens
 
 For readability, write these symbols in strings printed with `&` as the
