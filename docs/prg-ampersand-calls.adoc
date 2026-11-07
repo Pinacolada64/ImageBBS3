@@ -1244,10 +1244,10 @@ You can specify the character to scan for in one of two ways:
 * _x_, the PETSCII value of the character
 * use the `asc("_x_")` function, which returns the ASCII (or PETSCII) value of character _x_
 
-If the specified character is found in `an$`, split it into two strings:
+If the specified character is found in `an$`, split it into two strings (the character itself is dropped):
 
-* `an$` now ends before the specified character was found
-* `a$` begins after the specified character was found to the end of the string
+* `a$` holds the part of `an$` before the character
+* `an$` holds the rest, from after the character to the end of the string
 
 .Details: Split on Space, Two Ways
 ****
@@ -1278,7 +1278,7 @@ This splits `"Hello world"` at the `" "` (space), resulting in `a$="Hello"` and 
 ****
 
 ====
-TIP: If the specified character is not found in `an$`, `a$=""`, a null string.
+TIP: If the specified character is not found in `an$`, `a$` gets all of `an$`, and `an$` becomes `""`, a null string.
 ====
 
 // ====
@@ -1304,9 +1304,9 @@ In our example, it would be `a$="SB4,3"`, and `an$="R1\^>^RN"`.
 [start=2]
 . `uu$=an$`: next, assign `an$` (the remainder of the stacked commands in the sequence) to `uu$` (used for command stacking elsewhere)
 
-. `an$=a$`: lastly, since the remainder of the stacked command string after the `^` is now stored in `a$`, `a$` is assigned back to `an$` in order to continue parsing the stacked commands.
+. `an$=a$`: lastly, the first command, now in `a$`, is assigned back to `an$`, which is the command to run next.
 
-In our example, it would be `an$="R1\^>^RN"`.
+In our example, it would be `an$="SB4,3"`, with `uu$="R1\^>^RN"` kept for the commands after it.
 
 This process repeats until the entire string is parsed.
 
