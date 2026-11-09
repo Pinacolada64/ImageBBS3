@@ -38,7 +38,7 @@ Give your password to each node you'll connect to: they need it to call you.
 +
 TIP: Until both sides are ready to test, set the hours to kbd:[-] and the calls a day to 0, so neither BBS calls the other.
 Once both have each other's passwords, set the hours to kbd:[+] to test, then to what you'd like to keep.
-. Set the times for NetMail to call, in `IM`'s Lightbar/Alarms (see <<netmail-alarms>>), and turn on the lightbar's NetMail Enable checkmark (`Net`, left).
+. Set the times for NetMail to call, in ``IM``'s Lightbar/Alarms (see <<netmail-alarms>>), and turn on the lightbar's NetMail Enable checkmark (`Net`, left).
 
 NetSubs are set up in RELedit (see <<im-reledit>>): each has a name, the nodes that carry it (up to 16), and the sub-boards here that it's posted on.
 
@@ -117,7 +117,7 @@ A file a node sends you must be named `nm.` and a capital letter: anything else 
 | `nm.connlog.` _YYMM_ | Each connection made this month
 | `nm.errors` | Each file that failed to go, and why
 | `nm.sylog` | Changes to the network's settings: who, when, what
-| `nm.P.count` | Each NetSub post sent from here: its date, time and tracking number (see the _Programmer's Reference Guide_, "File Formats")
+| `nm.P.count` | Each NetSub post sent from here: its date, time and tracking number (see the _Programmer's Reference Guide_, "`File Formats`")
 | `nm.reports` | Node 1: the weekly reports
 |===
 
