@@ -41,6 +41,8 @@ include::command-stacking.adoc[]
 
 include::22-text-editor.adoc[]
 
+include::netmail.adoc[]
+
 [appendix]
 include::appendix-lightbar-quick-reference.adoc[]
 

@@ -1,0 +1,186 @@
+// NetMail: the network between Image BBSes (i.NM/auto, i/NM.*, ++ net)
+:experimental:
+:icons: font
+
+== NetMail [[netmail]]
+
+NetMail links Image BBSes into a network.
+Each BBS calls the ones it's connected to, at the times you set, and they pass on:
+
+* e-mail, from a user on one BBS to a user on another;
+* NetSubs: sub-boards shared between BBSes, each post sent to every BBS that carries it;
+* file packages, from one sysop to another;
+* entries on the NetWall and in Net Graffiti, which callers on every BBS see;
+* the network administrator's updates: the list of BBSes, the network map, news and messages for the sysops.
+
+NetMail's files start with `nm.`, and are on the E-Mail drive (Image drive 2), except `nm.times`.
+
+=== Nodes and Connections [[netmail-nodes]]
+
+Each BBS in the network is a _node_, with a number and a three-letter ID (such as `CIB`).
+Node 1 is the network administrator's: it sends the other nodes their updates, and gets a report from each of them every Sunday.
+
+A node calls up to four other nodes, its _standard connections_, and can have more _extra connections_.
+Mail for a node that isn't one of them is passed on from node to node: each BBS knows the whole network's links (`nm.nodes`), and sends the mail one step closer.
+
+=== Setting Up a Node [[netmail-setup]]
+
+. Ask the network administrator for a node number, and for `nm.create`.
+Copy `nm.create` to your E-Mail drive.
+. In `IM`, choose Netmail Config (see <<im-netmail>>).
+The first time, it asks for your node number, and makes `nm.nodes` from `nm.create`.
+. kbd:[A] Local Info: the access groups that may use NetMail, your node's password, and your city and state.
+Give your password to each node you'll connect to: they need it to call you.
+. kbd:[B] Modem Specs: the fastest rate to call at, and the modem's off-hook, on-hook and dial commands.
+. kbd:[C] Calling Hours: up to ten time slots, each from one hour to another.
+. kbd:[D] Make nm.create.
+. kbd:[E] Connections: for each node you connect to, its password, the hours to call it (a time slot from kbd:[C] for each day of the week, kbd:[+] for all day, or kbd:[-] for none), the dial prefix, and the number of calls a day.
++
+TIP: Until both sides are ready to test, set the hours to kbd:[-] and the calls a day to 0, so neither BBS calls the other.
+Once both have each other's passwords, set the hours to kbd:[+] to test, then to what you'd like to keep.
+. Set the times for NetMail to call, in `IM`'s Lightbar/Alarms (see <<netmail-alarms>>), and turn on the lightbar's NetMail Enable checkmark (`Net`, left).
+
+NetSubs are set up in RELedit (see <<im-reledit>>): each has a name, the nodes that carry it (up to 16), and the sub-boards here that it's posted on.
+
+=== A NetMail Call [[netmail-call]]
+
+At a NetMail alarm's time, the lightbar's NetMail Trigger checkmark (`Net`, right) is set, and NetMaint (`i.NM/auto`) runs at the next chance.
+For each connection with files waiting, if the time and the day's count allow a call:
+
+. It dials, and the two BBSes check each other's passwords (the file `nm.password`).
+. It sends the files waiting for that node, then takes the files the other node has for it.
+. It logs the call: the times, and each file sent or received (see <<netmail-logs>>).
+. It processes what came in, in this order: e-mail (`i/NM.mail`), NetSub posts (`i/NM.netsub1` to `4`), the administrator's updates (`i/NM.update`), then the files to pass on to other nodes (`i/NM.sort`).
+
+Files sent are scratched once they're delivered, except those sent to every node, which are scratched after the last connection has had them.
+
+=== The Outgoing List [[netmail-list]]
+
+Each file to send is a line in `nm.list`:
+
+----
+DST/ORG/F/filename
+----
+
+[%autowidth]
+[%header]
+|===
+| Columns | Holds
+
+| 1-3 | The node it's for; `ALL` for every node
+| 5-7 | The node it comes from (on the way, the node that passed it on)
+| 9 | What the node that gets it does if it already has a file by that name: `A` adds to it, `R` replaces it
+| 11 on | The file's name
+|===
+
+For example, `CIB/DEB/A/nm.M.CIB/DEB` is e-mail for `CIB` from `DEB`, added to any `nm.M.CIB/DEB` already there.
+
+After a call, `i/NM.sort` sorts the list into one for each connection (`nm.l.` _ID_), by the node each line is for.
+
+A file a node sends you must be named `nm.` and a capital letter: anything else is renamed `nm.X...` when it arrives, so another node can't replace your other files.
+
+=== For Callers [[netmail-callers]]
+
+[%autowidth]
+[%header]
+|===
+| Command | Does | Module
+
+| kbd:[LN] | The node list and the network map: every node or the active ones, a node's details (its BBS, sysop, phone and connections) | `i.LN`
+| kbd:[NW] | The NetWall: read it, or add to it | `i.NW`
+|===
+
+=== For the Sysop [[netmail-sysop]]
+
+[%autowidth]
+[%header]
+|===
+| Where | Does
+
+| kbd:[LN], options 6-9 (with pseudo-local mode, `zz`) | Read this month's transfer log, the sysop log (`nm.sylog`: changes to the network's settings), the error log (`nm.errors`) and the NetSub tracking numbers (`nm.P.count`)
+| `IM`, Netmail Config | The node's settings (<<netmail-setup>>, <<im-netmail>>)
+| `SM`, kbd:[D] Scan Netlog | A transfer log, `nm.log` _name_
+| `SM`, kbd:[J] Netfiles | Send files to another node, and unpack the file packages (`nm.F.`) sent here
+| `SM`, RELedit | The NetSubs
+| `i.NM/utils` (node 1) | Send the network's updates, and read the weekly reports
+|===
+
+=== Logs [[netmail-logs]]
+
+[%autowidth]
+[%header]
+|===
+| File | Holds
+
+| `nm.log` _YYMM_ | This month's calls: who called whom, when, and the files sent
+| `nm.log` _d_ | The same, for one day of the week (_d_ 1 is Sunday); AutoMaint scratches the day's, so it starts again each week
+| `nm.connlog.` _YYMM_ | Each connection made this month
+| `nm.errors` | Each file that failed to go, and why
+| `nm.sylog` | Changes to the network's settings: who, when, what
+| `nm.P.count` | Each NetSub post sent from here: its date, time and tracking number (see the _Programmer's Reference Guide_, "File Formats")
+| `nm.reports` | Node 1: the weekly reports
+|===
+
+=== NetMail's Files [[netmail-files]]
+
+==== What's Sent
+
+Most are named for the node they're for and the node they come from: `nm.M.CIB/DEB` is e-mail for `CIB` from `DEB`.
+
+[%autowidth]
+[%header]
+|===
+| File | Holds | Made by | Used by
+
+| `nm.M.` _to/from_ | E-mail: each message, with the handle it's for | `i/NM.mail`, `i/MM.sb-mail`, `i/SM.netfile` | `i/NM.mail`: into each user's mail; mail for a handle that isn't here goes back to the sender
+| `nm.P.` _to/from_ | NetSub posts: each with its NetSub's name, the writer, the node, its tracking number and the date sent | `i/NM.netsub4` | `i/NM.netsub2` and `3`: posted on the NetSub's sub-boards here
+| `nm.F.` _to/from_ | A file package | `i/SM.netfile` | `i/SM.netfile`; the sysop is mailed "`Net File Package from ...`"
+| `nm.G.` _to/from_ | NetWall entries | `i/NM.mail` | `i/NM.mail`: onto `nm.wall`, from the nodes set in Netmail Config's kbd:[G]
+| `nm.B.` _to/from_ | Net Graffiti entries | `i/NM.mail` | `i/NM.mail`: into `nm.grf2`
+| `nm.R.` _to/from_ | The weekly report, to node 1: the node, the date, the version, the BBS's name, city and state | `i.NM/auto`, on Sundays | Node 1's `i/NM.sort`: into `nm.reports`
+| `nm.U.nodes`, `nm.U.map`, `nm.U.map 80`, `nm.U.message`, `nm.U.news` | Node 1's updates, to every node | `i.NM/utils` | `i/NM.update`: the node list, the map (the old one kept as `.bak`), the sysop's mail, NetNews
+|===
+
+==== Waiting to Go
+
+[%autowidth]
+[%header]
+|===
+| File | Holds
+
+| `nm.list` | The outgoing list (<<netmail-list>>); after a call, the files that came in
+| `nm.l.` _ID_ | The files waiting for one connection
+| `nm.s.ALL` | The files sent to every node, to scratch once they've all gone
+| `nm.P.sub` _n_ | Posts on sub-board _n_, to send to its NetSub
+| `nm.P.temp` _n_ | Posts received for NetSub _n_, to post here
+| `nm.G.temp`, `nm.B.temp` | NetWall and Net Graffiti entries made here, to send
+| `nm.keep`, `nm.zone` | Node 1: lines for itself; lines for a node there's no way to
+|===
+
+==== Settings
+
+[%autowidth]
+[%header]
+|===
+| File | Type | Holds
+
+| `nm.create` | SEQ | From the network administrator: the network, to start a new node
+| `nm.config` | REL | This node: its number, password and access groups; the modem; the calling hours; city and state; the NetWall and Net Graffiti nodes
+| `nm.nodes` | REL | Every node: its ID, phone, BBS, sysop, whether it's active, and its four connections
+| `nm.nodelist` | PRG | The network's links, from `nm.nodes`, for finding the way to a node
+| `nm.connect` | REL | This node's connections: each one's password, hours, calls a day, and the calls and minutes so far
+| `nm.forward` | REL | E-mail forwarding: a handle here, and the handle and node to send its mail to
+| `nm.netsub1`-`nm.netsub60` | | One NetSub each: its name, its nodes, its sub-boards here
+| `nm.P.track` _n_ ... | | NetSub _n_'s tracking numbers: the highest from each node, so a post that comes twice is dropped
+| `nm.times` | PRG | The NetMail alarms (on the Etcetera drive)
+| `nm.wall`, `nm.grf2` | SEQ, REL | The NetWall and Net Graffiti
+| `nm.map`, `nm.map 80` | SEQ | The network map, 40 and 80 columns
+|===
+
+=== Known Problems [[netmail-problems]]
+
+These are open questions from reading the modules (2026), to settle in a real exchange:
+
+* `i.NM/auto` runs `i/NM.bbs list` after a call if `e.bbs` exists, but the module isn't on the release disks.
+* `sub.local` writes `nm.E.` files, and `i/MM.sb-post` writes `nm.S.temp`, but nothing reads them.
+* `i.NM/utils` reads `nm.dead`, but nothing writes it.
