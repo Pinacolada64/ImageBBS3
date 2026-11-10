@@ -1,0 +1,118 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.sb-post", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps into i.SB's lines (3002-3504), which
+'   3_0-preface.lbl doesn't name, written {$33}nnn so C64List leaves them as
+'   they are (detok.sh would write [3010]). Unchanged, this builds the
+'   release's program byte for byte, except capitals in rem text (1-a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "i/MM.sb-post"
+4002 rt=1:gosub4178:onlmgoto4004,4006,4012,4036,4080,4082
+4004 sh=.:gosub{$33}010:ifa<1ora>rnthena=br:goto4008
+4006 br=a
+4008 &"{f6}":xx=.:gosub4010:a=br-fl:gosub{$33}014:goto{$33}228
+4010 rq=.:sh=.
+4012 a=br:gosub{$33}172:ifrqthenc$=ed$(br):gosub{$33}046:ifb%thenrq=.
+4014 gosub{$33}464:a$=ed$(br):gosub{$33}024:gosub{$33}004:gosub{$33}470:ife%<>.orsh<>.thenreturn
+4016 ifrq=.andxx<>.thengosub{$33}478:goto4024
+4018 gosub4076:on-((xx%=.)or(sh<>.)or(tr%=.))goto4036:ifrq=.thenb%=0:&,16,6:goto4024
+4020 &"{f6}{cyan}New {white}Responses:{f6}{pound}q0":a$=ld$:gosub{$33}032:an$=a$
+4022 &,16:on-(b%>xx%)goto4036:on-(a%<>.)goto4024:b%=b%-1:&,16,6
+4024 x=a%:gosub1:x=x+1:&,2,2:&,2,2:z$=a$:&,2,2:an$=a$
+4025 gosub4173:d$=an$:ifqthen4028
+4026 on-(asc(d$)<>42and(f2and3)<>2)goto4028:ifq=.or(f2and3)=2thend$=l$
+4028 gosub12:a%=xx%:&"{f6:2}{down}{blue}[{yellow}{pound}$k #{white}{pound}#0{pound}%b {yellow}Of {white}{pound}%a{blue}]{f6}{lt. green} By {white}{pound}$d{pound}q0{pound}{back arrow}39":kk=sh
+4030 on-(d$=l$)goto4032:&"{lt. green}  On {white}{$04}"+z$:kk=kk+sh:&"{f6}{blue}{pound}vj"
+4032 gosub4154:&"{f6:2}{pound}q0":on-(kk+sh<>.)goto4036:gosub4078
+4034 on-((b%=xx%)or(sh<>.))goto4036:&,16,6:goto4024
+4036 close2:rq=.:gosub{$33}504:gosub12:ifpm=.thenreturn
+4038 sh=.:fl=.:p$="{f6:2}{pound}q0End Of {pound}$j. Command?":pl=1:&,1:gosub{$33}026:a$=left$(an$,1)
+4040 xx=int(abs(val(left$(an$,3)))):on-(xx=.)goto4042:ifxx>xx%thenxx=.
+4042 on-(a$="F")-(a$="R")*2-(a$="{f2}")*3-(a$="O"orxx<>.)*4goto4126,4052,3268,4010
+4044 ifa$="P"thengosub4122:goto4038
+4046 ifan$="K"andqthenx%=br:y%=br:fl=2:goto{$33}376
+4048 ifa$="N"thensh=.:rq=1:xx=.:&"{f6}":goto4012
+4050 sh=-(a$="Q"ora$="/"):return
+4052 ifasc(ed$(br))=140then:&"{f6}Frozen {pound}$j. No {pound}$k Possible.":goto4038
+4054 ifxx%=512then:&"{f6}Only 512 {pound}$ks Possible Per Post.":goto4038
+4056 &"{f6} - Add A {pound}$k To This {pound}$j:{f6}":gosub{$33}028:ifa=.thenx=4:gosub390:goto4038
+4058 m%=.:gosub{$33}004:gosub61:ifa<35thenx=2:goto390
+4060 a$=k$:onrtgosub4152:rt$=left$("*",-(an$<>""))+an$:goto4098
+4062 a$=k$:gosub{$33}002:a$=ed$(br):gosub{$33}024:gosub{$33}004:e%=.:gosub{$33}470:rp=rp+1:gosub{$33}428:xx=x
+4064 gosub1:a$=d1$:gosub{$33}032:print#2,a$r$d1$r$zz$r$rt$:an$=a$:&,16:b%=b%-(a%>.)
+4066 a%=xx:&,16,4:x=x+1:gosub{$33}446:gosub4142:nr=nr+1
+4068 a=val(mid$(np$,br,1))or1:np$=left$(np$,br-1)+mid$(str$(a),2,1)+mid$(np$,br+1)
+4070 gosub62
+4072 gosub30:i=1:x=5:gosub16:x=16:gosub16:x=27:gosub16:x=34:gosub16:close2
+4074 &,16,10:d%(br)=a%:xx%=a%:a=br:gosub{$33}052:dt$(br)=b$+d1$:s=br:gosub{$33}146:goto4038
+4076 x=zz%:gosub1:gosub5:ife%thenreturn
+4078 rc=.:sh=.:&"{pound}q0":&,57,2:return
+4080 gosub4082:goto{$33}228
+4082 ww%=.:m%=1:gosub4178:&"{f6} - Post To {pound}v8:{f6}":gosub{$33}028:ifa=.thenx=4:goto390
+4084 ifrn>59then:&"{f6}Too Many {pound}$js Already.{f6}":return
+4086 gosub{$33}004:gosub60:ifa<.then4170
+4088 gosub61:ifa<35thenx=2:goto390
+4090 a$=j$:gosub4152:ifan$=""thenreturn
+4092 rt$="*"+an$:a$=j$:b$="P:":f1=.:onrn+1goto4098
+4094 forx=1torn:ifleft$(an$,14)=left$(ed$(x),14)thenx=rn:f1=1
+4096 next:onf1goto4120
+4098 tt$=an$:if(f2and3)=2thena=1:goto4102
+4100 a=.:if(f2and3)<2then:&"{f6}File This {pound}$lly?: ":gosub94:iftr%<1thenreturn
+4102 n$=mid$("*",1-a+1,1)+na$
+4104 gosub{$33}054:zz$=a$:gosub542:on-(kk=.and(m%<>.))goto{$33}008:onkk+1goto4038
+4106 gosub{$33}056:gosub{$33}464:tt$(kk)="{^}":ifm%=.then4062
+4108 a$=j$:gosub{$33}002:ps=ps+1:gosub30
+4110 i=1:x=4:gosub16:x=15:gosub16:x=26:gosub16:x=33:gosub16:close2:gosub{$33}004
+4112 gosub{$33}474
+4114 x=zz%:gosub{$33}446:gosub4142:gosub62:np$=np$+"2":np=np+1:rn=rn+1
+4116 dt$(rn)=d1$+"10001011200"
+4118 ed$(rn)=tt$:nn$(rn)=zz$:c%(rn)=.:d%(rn)=.:s=rn:gosub{$33}146:return
+4120 f1=.:&"{f6}Your Title Must Be Unique{f6}To This {pound}$h.{f6}":goto4090
+4122 lm=1:goto{$33}402
+4124 on-(q=.)goto{$33}228:z$="SM":a$=z$:goto70
+4126 if(na$<>nn$(br)and"*"+na$<>nn$(br)ord%(br))andq=.then4036
+4128 ifasc(ed$(br))=140then4132
+4130 c$="{f8}"+ed$(br):d$="F":goto4134
+4132 c$=mid$(ed$(br),2):d$="Unf"
+4134 a$=ed$(br):gosub{$33}024:b$=a$:a$=c$:gosub{$33}024:gosub{$33}004:gosub3
+4136 print#15,"r"dr$a$"="dr$b$:gosub5
+4138 ife%then:&"{f6}Sorry, {pound}$j Can Not be {pound}$drozen{f6}":close15:goto4036
+4140 ed$(br)=c$:s=br:gosub{$33}146:&"{f6}{pound}$j {pound}$drozen{f6}":goto4036
+4142 on-((f2and16)=16)goto4158:on-((f2and8)=.)goto4179:a$="nm.S.temp,s,a":dr=2:gosub4
+4144 ife%thena$="nm.S.temp,s,w":gosub4:ife%then4179
+4146 gosub{$33}422
+4148 a$=bb$(bn):gosub{$33}006:print#2,e%(bn);r$ed$(br)r$n$r$rt$r$k:gosub4177
+4150 fortt=1tokk:print#2,tt$(tt):next:print#2,z1$:close2:&,11:goto{$33}350
+4152 rt$="":poke53252,20:p$="{f6}Enter The Title Of Your {pound}$a:{f6:2}Title"
+4153 pl=.:poke53249,pl:lp=.:&,1:return
+4154 &,2,2:on-(left$(a$,1)<>"*")goto4156:a$=mid$(a$,2):&"{f6} {lt. green}Subtopic: {white}{pound}$a{pound}q0"
+4156 goto1
+4158 gosub33:x=50:gosub1:&,2,2:k=val(a$):k=k+1:gosub1:print#2,k:close2
+4160 dr=2:a$="nm.P.count,s,a":gosub4:ife%thena$="nm.P.count,s,w":gosub4
+4162 an$=d1$:&,15:an$=an$+"M"+str$(k):print#2,an$:close2
+4164 a$="nm.P.sub"+str$(e%(bn))+",s,a":dr=2:gosub4
+4166 ife%thena$="nm.P.sub"+str$(e%(bn))+",s,w":gosub4:ife%then4179
+4168 goto4148
+4170 b$="Disk Directory"
+4172 &"{f6}Sorry, {pound}$b Limit Exceeded.{f6}":return
+4173 ni=val(an$):n1$=cc$+mid$(str$(ni),2):b$="-"+n1$:n2$=""
+4174 ifleft$(an$,1)="!"thenni=-1:n1$=mid$(an$,2,3):b$=" @ "+n1$
+4175 an$=mid$(an$,5):&,15,6,94:ifan$<>""andni=-1thenn2$=an$:b$=b$+"/"+n2$
+4176 an$=a$:n0$=a$:&,15,1:an$=an$+b$:return
+4177 &,52,28,3:ona%goto4180:return
+4178 &,52,28,3:ona%goto4182:return
+4179 close2:&,11:goto{$33}350
+4180 print#2,"{white}Posted On: {$04}"d1$r$:kk=kk-1:return
+' 11/10/2026: nm.origin's status read (gosub5) as soon as it's opened, and the
+' file used only if it opened: without the file, the drive kept 62 (file not
+' found) on channel 15 (the E-Mail drive), the next gosub5 put it in e%, and
+' i.SB 3470 / 4014 here then returned before printing a post's text (every
+' entry here runs 4178 with NetMail on: reading too); z1$ (the origin line
+' added to NetSub posts) was junk. e% is cleared on the way out. Found on
+' Image BBS 128 (its i/MM.sb-post, the same code)
+4182 dr=2:a$="nm.origin,s,r":gosub4:gosub5:z1$="":ife%=.then:&,2,2:z1$=r$+a$+r$+"{^}"
+4183 close2:e%=.:return
+4198 copr.1990 new image 11/18/90
+4199 rem:"i/MM.sb-post (c)nissa 210715 lh-ad"

@@ -7,6 +7,8 @@
   - [ ] the i.IM/RTC module
 
 - fix directory sorting in i/MM.ud-sort (if the directory uses structs)
+- `tools/detok.sh`: a module that jumps into its loader's lines (an `i/` sub-module into `i.SB`'s 3000s, as `i/MM.sb-post` does) can't be imported: `3_0-preface.lbl` names only `im`'s lines, so C64List writes the others back as `[3010]` and the rebuild check fails. Write those as `{$33}nnn` (the first digit as a raw byte, which C64List leaves alone), as `core/i_MM.sb-post.lbl` was imported by hand (11/10/2026) and as Image-128's modules do
+
 
 - move copies of file reader/directory functions in i.SF, i.CP.v3.1, who knows where else, into `sub.sysdos`
 
