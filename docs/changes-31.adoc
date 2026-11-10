@@ -17,7 +17,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | | Files
 
 | Changed
-| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `++ copier`; the ML (`ml 3.1`)
+| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `++ copier`; the ML (`ml 3.1`)
 
 | New
 | `sub.clocks`, `++ visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
@@ -70,6 +70,7 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 
 * kbd:[Ctrl]/kbd:[C=] with a function key could lock up the BBS; programmable function keys work, up to 75 characters.
 * After a password prompt (`&,1,x,1`), everything printed was masked until the next input.
+* Without `nm.origin` (NetMail's origin line), posts were read without their text while NetMail Enable was on, and NetSub posts got a junk origin line (`i/MM.sb-post`; see <<netmail-problems>>).
 
 === For the Programmer
 

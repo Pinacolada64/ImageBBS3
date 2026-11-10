@@ -38,6 +38,9 @@ Give your password to each node you'll connect to: they need it to call you.
 +
 TIP: Until both sides are ready to test, set the hours to kbd:[-] and the calls a day to 0, so neither BBS calls the other.
 Once both have each other's passwords, set the hours to kbd:[+] to test, then to what you'd like to keep.
+. Make `nm.origin` on the E-Mail drive: one line, your _origin line_, which is added to the end of every NetSub post this BBS sends, so readers on other BBSes see where it came from (for example, `{nbsp}Origin: Wrong Number ][ V1.2b, Node 11`).
+The text editor's kbd:[.P] Put can write it: type the line, then Put it as `nm.origin` on the E-Mail drive.
+It's optional (see <<netmail-problems>>).
 . Set the times for NetMail to call, in ``IM``'s Lightbar/Alarms (see <<netmail-alarms>>), and turn on the lightbar's NetMail Enable checkmark (`Net`, left).
 
 NetSubs are set up in RELedit (see <<im-reledit>>): each has a name, the nodes that carry it (up to 16), and the sub-boards here that it's posted on.
@@ -172,12 +175,19 @@ Most are named for the node they're for and the node they come from: `nm.M.CIB/D
 | `nm.forward` | REL | E-mail forwarding: a handle here, and the handle and node to send its mail to
 | `nm.netsub1`-`nm.netsub60` | | One NetSub each: its name, its nodes, its sub-boards here
 | `nm.P.track` _n_ ... | | NetSub _n_'s tracking numbers: the highest from each node, so a post that comes twice is dropped
+| `nm.origin` | SEQ | One line, the origin line added to each NetSub post sent from here; made by the sysop (<<netmail-setup>>)
 | `nm.times` | PRG | The NetMail alarms (on the Etcetera drive)
 | `nm.wall`, `nm.grf2` | SEQ, REL | The NetWall and Net Graffiti
 | `nm.map`, `nm.map 80` | SEQ | The network map, 40 and 80 columns
 |===
 
 === Known Problems [[netmail-problems]]
+
+* *Without `nm.origin`*, the release's `i/MM.sb-post` shows posts without their text while NetMail Enable is on: each post's title, author and date are listed, but not what it says, until the BBS is restarted.
+It looks for `nm.origin` every time a post is read or written, and the "`file not found`" it gets is taken for an error reading the post.
+NetSub posts also go out with a few junk characters as their origin line.
+Making `nm.origin` avoids both.
+_Fixed in 3.1:_ without `nm.origin`, posts read normally and no origin line is added.
 
 These are open questions from reading the modules (2026), to settle in a real exchange:
 
