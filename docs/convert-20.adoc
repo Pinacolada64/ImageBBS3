@@ -23,6 +23,8 @@ NOTE: If running on a Lt. Kernal and your boot LU is not LU0, change the `0` in 
 You'll want them if you go back to 2.0, and they include any modules you've written or installed.
 . Copy all the files from IMAGE 3.0 D1 to your Program Disk.
 . Copy `bd.data` from the Etcetera Disk to the Program Disk, but rename it to `d.data`.
++
+_Changed in 3.1:_ you can skip this step: when `d.data` isn't on the Program Disk, the conversion asks where your 2.0 `bd.data` is (the Etcetera Disk, from step 2), and makes `d.data` from it (see <<convert-20-run>>).
 . Copy `e.lightdefs`, `e.lightbar` and `e.ecs.main` from IMAGE 3.0 D2 to your Etcetera Disk, replacing the existing files.
 . Copy the Image 2.0 `s.*` files you've customized (your login and welcome screens, board entry screens, and so on) to another disk or partition, to put back afterwards.
 . Copy all the `s.*` files from `IMAGE 3.0 D2` to your System Disk, replacing the 2.0 files of the same name.
@@ -39,11 +41,13 @@ If you want to run the "`Today in History`" login module in 3.0, copy all the `t
 [start=10]
 include::includes/sub_modem-config.adoc[]
 
-=== Run the Conversion
+=== Run the Conversion [[convert-20-run]]
 
 include::includes/boot-command.adoc[]
 
 . When prompted, type kbd:[3] `Convert a 2.0 system`.
++
+_New in 3.1:_ if there's no `d.data` on the Program Disk, it asks for the device and drive where your 2.0 `bd.data` is, copies it to `d.data` on the Program Disk, and carries on.
 
 . Image 3.0 will perform all the necessary tasks of converting your 2.0 to 3.0 and will end up at the idle screen.
 

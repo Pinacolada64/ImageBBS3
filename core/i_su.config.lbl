@@ -232,7 +232,9 @@
 '	fl=.:z3$="Reading 2.0 configuration...":gosub 3404:&"{f6:9}"
 	fl=.:z3$="Reading 2.0 configuration...":gosub 3404:&,70,0,10
 	close 2:open 2,dv%,2,bd$+"d.data,s,r":gosub 5
-	if e% then close 2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key:{pound}g1":return
+' 11/10/2026: no d.data: make it from the 2.0 system's bd.data ({:bd20_find})
+'	if e% then close 2:&"{f6:2}{blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} not found!!{f6:2}Hit Any Key:{pound}g1":return
+	if e% then close 2:goto {:bd20_find}
 	input#2,dv%(3),dr%(3):&,2,2:po$=a$:close2
 	z3$="Writing new 'bd.data' file...":gosub 3404
 	open2,dv%,2,bd$+"bd.data,s,w":gosub 5:if e%then close2:gosub 3200:goto 3080
@@ -262,17 +264,8 @@
 ' this boot drive; the sysop gives the new System disk (drive 1) and checks
 ' the rest. bv: the boot device; n: the lines after the drives, in tt$(41-49)
 {:bd12_find}
-	bv=dv%:&"{f6:2}{lt. blue}No {blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} here{colon} making it from{f6}your 1.2 system's {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}.{f6}"
-	poke 53252,2:pl=1:w$="8":p$="1.2 Boot Device"+"":&,1,32:a=val(an$):if an$="" then a=8
-	if a<8 or a>30 then a=8
-	d1%=a:poke 53252,3:w$="0":p$="1.2 Boot Drive"+"":&,1,32:a=val(an$):if a<. or a>254 then a=.
-	d2%=a:dr=.:gosub 3:close 2:open 2,dv%,2,dr$+"bd.data,s,r":gosub 5:if e%=. then {:bd12_read}
-	close 2:close 15:dv%=bv:open 15,dv%,15:&"{f6}{lt. red}Not found there.{lt. blue} Try again{question} ":gosub 96:if a then {:bd12_find}
-	return
-{:bd12_read}
-	for i=1 to 6:input#2,dv%(i),dr%(i):next:n=.
-{:bd12_rest}
-	n=n+1:&,2,2:tt$(40+n)=a$+"":if st=. and n<9 then {:bd12_rest}
+	v$="1.2":gosub {:bd_find}:if e% then return
+	for i=1 to 6:input#2,dv%(i),dr%(i):next:n=.:gosub {:bd_rest}
 	close 2:close 15:dv%=bv:dv%(5)=bv:dr%(5)=val(bd$):i=1:gosub 3414
 	&"{f6}{lt. blue}Where is your new 3.0 System disk{comma}{f6}with 3.0's s. files{question}{f6}":gosub {:bd12_drive}
 {:bd12_show}
@@ -296,12 +289,40 @@
 {:bd12_trim}
 	if right$(b$,1)=" " then b$=left$(b$,len(b$)-1):goto {:bd12_trim}
 	return
-' write d.data on the boot disk (scratched first: no "@0:"), then read it
-' as if it had been there
+' write d.data on the boot disk, then read it as if it had been there
 {:bd12_write}
+	gosub {:bd_write}:for i=1 to 6:print#2,mid$(str$(dv%(i)),2)r$mid$(str$(dr%(i)),2):next
+	gosub {:bd_lines}:goto {:4200}
+
+' 11/10/2026: no d.data on the boot disk: make it from the 2.0 system's
+' bd.data (the Etcetera drive's device and drive, the main prompt, the
+' version), as it is: 2.0's drives are kept. No copying it by hand
+{:bd20_find}
+	v$="2.0":gosub {:bd_find}:if e% then return
+	n=.:gosub {:bd_rest}:close 2:close 15:dv%=bv:gosub {:bd_write}:gosub {:bd_lines}:goto {:4300}
+
+' ask where the old system's (v$: "1.2" or "2.0") bd.data is, and open it as
+' file 2: e% 0. Not there and not trying again: e% 1, and file 15 is the
+' boot drive's again. bv: the boot device
+{:bd_find}
+	bv=dv%:&"{f6:2}{lt. blue}No {blue}{f5}{cyan}d.data{blue}{f5}{lt. blue} here{colon} making it from{f6}your {pound}$v system's {blue}{f5}{cyan}bd.data{blue}{f5}{lt. blue}.{f6}"
+	poke 53252,2:pl=1:w$="8":p$="bd.data Device"+"":&,1,32:a=val(an$):if an$="" then a=8
+	if a<8 or a>30 then a=8
+	d1%=a:poke 53252,3:w$="0":p$="bd.data Drive"+"":&,1,32:a=val(an$):if a<. or a>254 then a=.
+	d2%=a:dr=.:gosub 3:close 2:open 2,dv%,2,dr$+"bd.data,s,r":gosub 5:if e%=. then return
+	close 2:close 15:dv%=bv:open 15,dv%,15:&"{f6}{lt. red}Not found there.{lt. blue} Try again{question} ":gosub 96:if a then {:bd_find}
+	e%=1:return
+' read the rest of bd.data's lines (up to 9) into tt$(41-49): n of them
+{:bd_rest}
+	n=n+1:&,2,2:tt$(40+n)=a$+"":if st=. and n<9 then {:bd_rest}
+	return
+' open d.data on the boot disk to write (scratched first: no "@0:")
+{:bd_write}
 	z3$="Writing 'd.data' file...":gosub 3404:open 15,bv,15:print#15,"s"+bd$+"d.data"
-	open 2,bv,2,bd$+"d.data,s,w":for i=1 to 6:print#2,mid$(str$(dv%(i)),2)r$mid$(str$(dr%(i)),2):next
-	for i=1 to n:print#2,tt$(40+i):next:close 2:dv%=bv:goto {:4200}
+	open 2,bv,2,bd$+"d.data,s,w":return
+' write tt$(41-40+n) and close it
+{:bd_lines}
+	for i=1 to n:print#2,tt$(40+i):next:close 2:dv%=bv:return
 
 ' 11/10/2026: 1.2 kept its macros in e.macros records 1 to m, and m in the
 ' SEQ file e.i.macro; 3.0 keeps m in record 1 and the macros in records 2 to
