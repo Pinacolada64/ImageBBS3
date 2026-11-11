@@ -26,6 +26,9 @@ include::preface.adoc[]
 include::whats-new.adoc[]
 
 [preface]
+include::changes-31.adoc[]
+
+[preface]
 include::typography.adoc[]
 
 // end of preface: back to arabic page numbers

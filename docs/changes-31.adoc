@@ -1,10 +1,9 @@
-// DRAFT: not included in either guide yet.
 // What Image BBS 3.1 changes from the 3.0 release (2023-12-31): the files on
 // a 3.1 system disk that differ from the release disk, and why.
 // Documentation corrections that apply to 3.0 as well are in the changelog,
-// not here.
+// not here. Included in master.adoc and master-book.adoc after whats-new.adoc.
 
-== Changes in 3.1 [[changes-3-1]]
+== What`'s New in 3.1 [[changes-3-1]]
 
 Image BBS 3.1 is the 3.0 release of 2023-12-31, with the fixes and features below.
 Sections of the guides that describe something new or changed in 3.1 are marked _New in 3.1_ or _Changed in 3.1_.
@@ -20,7 +19,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `sub.local`, `++ copier`; the ML (`ml 3.1`)
 
 | New
-| `sub.clocks`, `++ visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
+| `sub.clocks`, `++ visual`, `i.rename mail`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
 
 | Renamed
 | `boot 3.0`, `image 3.0`, `ml 3.0` are `boot 3.1`, `image 3.1`, `ml 3.1`
@@ -81,15 +80,22 @@ Upgrading from 3.0 needs those users' mail files renamed (see <<changes-3-1-upgr
 
 Mail files are now named with 14 characters of the handle, not 13 (see <<changes-3-1>>, Fixes).
 On a 3.0 system, a user whose handle is 14 characters or longer has mail files named with only 13, which 3.1 won't find.
-For each such user, rename the files on the E-Mail drive (Image drive 2) that are named with 13 characters of the handle, `m.` _handle_ and any `f.` _handle_, to their 14-character names.
-For example, for the handle `THE GREAT GATSBY`, the DOS command
+`i.rename mail` renames them all: run it once, as the sysop, before the BBS takes calls, with kbd:[R] at the main prompt (class 3, the module drive; see <<modules.adoc#_command_classes,Running Modules>>).
+For each handle of 14 characters or more, it renames `m.` and `f.` files on the E-Mail drive (Image drive 2) from 13 characters of the handle to 14, and lists what it did.
+It leaves two kinds alone, and lists them:
+
+* A file named with 13 characters that another handle starts with too: it held both users' mail, so sort it out by hand.
+* A file whose new name is already there.
+
+To rename a file by hand, use a DOS command on the E-Mail drive.
+For example, for the handle `THE GREAT GATSBY`,
 
 ----
 r0:m.THE GREAT GATS=m.THE GREAT GAT
 ----
 
 renames that user's mail file (send it to the E-Mail drive's device; on a CMD device, put the partition number in place of the `0`).
-Do this before the BBS first runs 3.1, so that no mail is saved under the new name while the old file is still there.
+Either way, rename them before the BBS takes calls under 3.1, so that no mail is saved under a new name while the old file is still there.
 Handles of 13 characters or fewer aren't affected.
 
 

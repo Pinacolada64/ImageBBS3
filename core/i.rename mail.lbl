@@ -1,0 +1,43 @@
+' i.rename mail: rename mail files from 13 to 14 characters of the handle
+'
+' 11/10/2026: Image 3.0's release named a user's mail files (m. handle, and
+' f. handle, shown at login) with 13 characters of the handle in most modules;
+' 3.1 uses 14 everywhere (a 16-character file name). A 3.0 system upgraded to
+' 3.1 has to rename the mail files of each user whose handle is 14 characters
+' or longer, or 3.1 won't find them. This does it, once, for every user.
+'
+' Run it as a module (R at the main prompt, class 3, from the module drive),
+' before callers leave mail under the new names. For each handle of 14
+' characters or more it renames, on the E-Mail drive,
+'   m.<13 characters>  to  m.<14 characters>    (and f. the same)
+' It leaves a file alone, and says so, if another handle (of 13 characters or
+' more) starts with the same 13 characters, as the old file then held mail
+' for both, or if a file by the new name is there already.
+'
+' h$(1-n): the handles of 13 characters or more; r: files renamed; s: skipped
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{include:quoters.lbl}
+
+{number:3000}
+{step:2}
+	pr$="i."+"rename mail":rem "i.rename mail" {usedef:__BuildDate} {usedef:__BuildTime}
+	cm$="Rename Mail":gosub 9:if id<>1 then:&"{f6}Sysop only.{f6}":goto 300
+	&"{f6}{white}Rename mail files (m. and f.) from 13{f6}characters of the handle to 14{comma} as{f6}Image 3.1 names them.{f6:2}Go ahead{question} ":gosub 96:if a=. then 300
+' pass 1: the handles of 13 characters or more
+	n=.:dim h$(ur):gosub 35:if e% then close 2:&"{f6}Can't read u.config.{f6}":goto 300
+	a%=ur:&"{f6:2}{lt. blue}Reading {pound}%a users...{f6}"
+	for x=1 to ur:gosub 1:&,2,2:if len(a$)>12 and a$<>"{^}" and a$<>"RES" then n=n+1:h$(n)=a$+""
+	next:close 2
+' pass 2: rename the mail files of each handle of 14 characters or more
+	r=.:s=.:dr=2:gosub 3:for i=1 to n:if len(h$(i))<14 then {:next_handle}
+	b$=left$(h$(i),13):c$=left$(h$(i),14):k=.:for j=1 to n:if j<>i and left$(h$(j),13)=b$ then k=1
+	next:if k then:&"{f6}{yellow}Shared by two handles{comma} left alone{colon}{f6} {pound}$b{f6}":s=s+1:goto {:next_handle}
+	for f=1 to 2:d$=mid$("m.f.",f*2-1,2):print#15,"r"dr$d$c$"="dr$d$b$:gosub 5
+	if e%=. then:&"{f6}{lt. green}Renamed {pound}$d{pound}$b{f6} to {pound}$d{pound}$c{f6}":r=r+1
+	if e%=63 then:&"{f6}{yellow}Both exist{comma} left alone{colon}{f6} {pound}$d{pound}$b{f6} and {pound}$d{pound}$c{f6}":s=s+1
+	if e%<>. and e%<>62 and e%<>63 then:&"{f6}{lt. red}{pound}$d{pound}$c{colon} {pound}%e {pound}$e{f6}":s=s+1
+	next
+{:next_handle}
+	next:close 15
+	a%=r:b%=s:&"{f6:2}{white}Renamed{colon} {pound}%a  Left alone{colon} {pound}%b{f6:2}Hit any key{pound}g1":goto 300
