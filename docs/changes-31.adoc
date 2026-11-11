@@ -16,7 +16,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | | Files
 
 | Changed
-| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `sub.local`, `++ copier`; the ML (`ml 3.1`)
+| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `sub.local`, `sub.param1`, `++ copier`; the ML (`ml 3.1`)
 
 | New
 | `sub.clocks`, `++ visual`, `i.rename mail`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
@@ -73,6 +73,9 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 * The 1.2 conversion converts `e.macros` too: 1.2's macros move down one record, the count from `e.i.macro` goes in record 1, and `e.i.macro` is scratched.
 
 ==== Fixes
+
+* Translation modes (`sub.param1`): kbd:[AT+] and kbd:[AT-] step to the next and previous mode (3.0 always set Commodore C/G or ANSI C/G), kbd:[AT] and a number (kbd:[AT3]) picks that mode (3.0 showed the menu), and kbd:[Return] at the modes menu keeps the current mode (3.0 set Commodore C/G).
+The menu shows the current mode under the list.
 
 * kbd:[Ctrl]/kbd:[C=] with a function key could lock up the BBS; programmable function keys work, up to 75 characters.
 * After a password prompt (`&,1,x,1`), everything printed was masked until the next input.

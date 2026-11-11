@@ -1,0 +1,86 @@
+' imported from the release disk (MASTER D1 231231.d81), "sub.param1", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+{include:quoters.lbl}
+
+60000 onimgoto60004,60056,60114,60094,60096:rem sub.param1
+60002 return
+60004 b$=co$(co%):&,52,17,lf:&,52,20,em:poke951,ll%:poke971,mp%:poke970,.
+60006 gosub60068:&,52,17,3:a=a%:gosub60046:y$=an$:a%=em:gosub60046:x$=an$
+60008 gosub60120:gosub60104:d$=a$
+60012 a%=val(mid$(uf$,3,1)):gosub60046:v$=an$:a%=ll%:b%=mp%:t$=mid$(uf$,6,3)
+60014 a$="s.m.params":dr=1:gosub13:poke53252,2:&"{white}  > {pound}i1":a=val(an$)
+60016 ifathengosub60018:goto60004
+60018 onagoto60028,60060,60034,60042,60024,60026,60082,60114,60027
+60020 c$="{left:4}"
+60022 &,69,31,19,str$(ll%)+"x"+mid$(str$(mp%),2),$8c:return
+60024 &,52,17,2:&,52,17,3:lf=a%:uf$=mid$(str$(a%),2,1)+mid$(uf$,2):return
+60026 &,52,20,2:&,52,20,3:em=a%:return
+60027 &,52,44,2:&,52,44,3:uf$=left$(uf$,2)+mid$(str$(a%),2,1)+mid$(uf$,4):return
+60028 &"{f6:2}":forx=1to9:b$=co$(x):a%=x:&"{pound}%a>-{pound}$b{f6}":next
+60030 &"{f6}Computer Type?: {pound}g1{pound}v7{f6}":iftr%<1thenreturn
+60032 on-(val(an$)<1)goto60028:co%=val(an$):an$=co$(co%):co$=an$:&,9:return
+60034 lp=1:&"{f6}How Many Characters/Line?{f6:2}: {pound}i1"
+60036 x=int(val(an$)):iftr%<1thenreturn
+60038 ifx<22orx>80then:&"{f6}Must Be Between 22 And 80.{f6}":goto60034
+60040 ll%=x:a$="":fora=1toll%-2:a$=a$+"{$c0}":next:ak$=" "+a$+"{f6}":return
+60042 poke53252,3:lp=1:&"{f6}How Many Lines/Screen?{f6:2}: {pound}i1"
+60044 mp%=abs(val(an$)):on-(mp%<1ormp%>255)goto60050:poke971,mp%:return
+60046 an$="Off":ifa%thenan$="On"
+60048 return
+60050 lp=1:&"{f6}Must Be Between 1 and 255":goto60042
+60052 &,52,34,2:&,52,34,3:uf$=left$(uf$,1)+mid$(str$(a%),2,1)+mid$(uf$,3)
+60054 return
+' 11/10/2026: ATn picks mode n (1-5); AT+ and AT- step from the current mode,
+' wrapping. a=abs(val(a$)) read a$, not the command, so AT+ always gave mode 1
+' (Commodore C/G), AT- mode 7's bits (ANSI C/G), and ATn showed the menu
+60056 on-(an$="AT")goto60060:c$=mid$(an$,3,1):a=abs(val(mid$(an$,3))):ifa>.anda<6then60062
+60058 ifc$<>"+"andc$<>"-"then60060
+' the current mode's menu number (1: bits 0-3, 2-5: bits 4-7), then one on or back
+60059 gosub60068:a=-(a<4)-(a>3)*(a-2)-(c$="+")+(c$="-"):a=a+5*(a>5)-5*(a<1):goto60062
+' 11/10/2026: the current mode (z$, 60068) under s.m.modes' list; anything but
+' 1-5 keeps the mode (Return set Commodore C/G)
+60060 a$="s.m.modes":dr=1:gosub13:gosub60068:&"{lt. blue}Current Mode{colon} {white}{pound}$z{f6:2}{white} > {pound}g1":a=val(an$):ifa<1ora>5then60066
+60062 a=(a-2*(a>1))and7
+60064 &,52,16,sgn(aand4):&,52,18,sgn(aand2):&,52,19,aand1:nl=-(a=7ora<4)
+60066 gosub60068:&"{pound}$z{f6}":return:rem was just &
+60068 &,52,16,3:a=a%*4:&,52,18,3:a=a+a%*2:&,52,19,3:a=a+a%
+60070 lp=1:ifa>3thenona-3goto60074,60076,60078,60080
+60072 z$="CBM C/G":return
+60074 z$="ASCII":return
+60076 z$="ASCII & IBM Graphics":return
+60078 z$="ASCII & ANSI Color":return
+60080 z$="ANSI C/G":return
+60082 gosub60106:onx+1goto999:a=val(mid$(an$,3,3)):ifa>.then60088
+60084 &"{f6}Available Protocols:{f6:2}":fori=1tox:a%=i:a$=mid$(tt$(i),10)
+60086 lp=1:&"{pound}%a) {pound}$a{pound}{back arrow}39 ":next:&"{f6:2}--> {pound}g1":a=val(an$)
+60088 ifa>.anda<=xthenlp=1:&mid$(tt$(a),10):ifa<xorb%=.thenul=a-1
+60090 ifan$="{f2}"thena$="s.protos":dr=1:gosub13:goto60084
+60092 a=-a*(a>.):return
+60094 &,52,4,3:ona%goto999:gosub60082:goto60098
+60096 gosub60106:a=ul+1:ifa%thena=x
+60098 ml$="":ona+1goto999:ifb%=1anda=xthena$="copier":goto28
+60100 a$=tt$(a):f=val(mid$(a$,7,1)):nb=val(mid$(a$,8,1)):d4$=mid$(a$,10):pr=-1
+60102 dr=5:gosub3:a$=left$(a$,6):gosub28:&,16,4,f:return
+60104 gosub60106:a$=mid$(tt$(ul+1),10):&,11:return
+60106 &,11:b%=.:dr=1:a$="s.m.protos,s,r":gosub4:x=.:ife%then:&:return
+60108 &,2,2:ifa$<>"{^}"andx<253thenx=x+1:tt$(x)=a$:ifst=.then60108
+60110 &,52,4,3:ifzz=1ora%=1thenx=x+1:tt$(x)="copier00 Copier":b%=1:pr=2
+60111 d4$=right$(tt$(x),6)
+60112 close2:return
+60114 &"{clear}{f6}More Prompt Options:{f6:2}{white} 1 {lt. blue}Off{f6}{white} 2 {lt. blue}On{f6}{white} 3 {lt. blue}Messages Only{f6:2}{white}  > {pound}g1"
+60116 a=val(an$):ifa>.anda<4thenuf$=left$(uf$,1)+chr$(a+47)+mid$(uf$,3)
+60118 gosub60120:&,52,35,3:ifa%=.then:&"{pound}$w{f6}"
+60119 return
+60120 a=val(mid$(uf$,2,1)):w$="Off":ifathenw$="On":ifa>1thenw$="Messages Only"
+60121 &,52,35,3:ifa%=1then:&" Sorry, More Prompt Disabled{f6}":&,52,34,.:goto60123
+60122 ifa<>2then:&,52,34,a
+60123 return
+60124 copr. 1996 new image 5/5/96
+60126 rem:"sub.param1 (c)nissa 210307 lh"

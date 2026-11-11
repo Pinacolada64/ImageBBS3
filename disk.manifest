@@ -30,6 +30,7 @@ basic/i.SB.prg	i.SB
 basic/i_su.config.prg	i/su.config
 basic/sub.display.prg	sub.display
 basic/sub.local.prg	sub.local
+basic/sub.param1.prg	sub.param1
 basic/i.rename mail.prg	i.rename mail
 basic/i_MM.load.prg	i/MM.load
 basic/i_MM.sb-post.prg	i/MM.sb-post
