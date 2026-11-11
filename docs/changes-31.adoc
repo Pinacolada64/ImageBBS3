@@ -65,6 +65,12 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 * A system error only turns the border red if the lightbar's `Trb` right check is set.
 * At boot, `im` shows the date it was last changed ("`im Revision: Oct 14, 2026 12:08 PM`"), from its own date string; the release always showed "`Apr. 17, 2023 6:55 AM`".
 
+==== Converting From 1.2
+
+* Without `d.data` on the Program Disk, "`Convert from Image 1.2`" makes it from the 1.2 system's `bd.data`: it asks where that is and where the new System Disk is, sets the Program Disk to the boot disk, and lists the six drives to check (`i/su.config`; see <<convert-12-run>>).
+1.2's WF editor isn't needed.
+* It converts `e.macros` too: 1.2's macros move down one record, the count from `e.i.macro` goes in record 1, and `e.i.macro` is scratched.
+
 ==== Fixes
 
 * kbd:[Ctrl]/kbd:[C=] with a function key could lock up the BBS; programmable function keys work, up to 75 characters.

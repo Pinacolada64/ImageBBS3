@@ -40,6 +40,8 @@ If you want to keep your existing news files and canned message files, copy the 
 
 Here you`'ll change your device/drive assignments.
 
+_Changed in 3.1:_ skip steps 1-8 (but still scratch `e.last`, below): when `d.data` isn't on the Program Disk, the conversion makes it from your 1.2 `bd.data` itself (see <<convert-12-run>>).
+
 [start=1]
 . Log on to your 1.2 system.
 
@@ -64,11 +66,16 @@ include::includes/sub_modem-config.adoc[]
 . Shut down your computer and reboot the BBS.
 
 
-=== Run the Conversion
+=== Run the Conversion [[convert-12-run]]
 
 include::includes/boot-command.adoc[]
 
 . When prompted, select kbd:[2] `Convert from Image 1.2`.
++
+_New in 3.1:_ if there's no `d.data` on the Program Disk, it asks for the device and drive of your 1.2 boot disk, and reads `bd.data` there.
+Then it asks where your new System Disk is, and lists the six Image drives, with the Program Disk set to the disk you booted from.
+Answer kbd:[Y] if they're right, or kbd:[N] and the number of a drive to change.
+It writes them to `d.data` on the Program Disk, and carries on.
 . Clock setting
 
 You are asked to select a method of setting the system clock automatically during boot up.
@@ -145,20 +152,21 @@ TIP: If a CMD device's real-time clock will set the BBS clock at boot, now is a 
 
 If you had macros in your 1.2 system and don't want to keep them, scratch the file `e.macros` (kbd:[DC]).
 
-To keep them, change the first record of `e.macros` to 3.0's macro count:
+1.2 keeps its macros in records 1 to _n_ of `e.macros`, and the number of them, _n_, in the SEQ file `e.i.macro`.
+3.0 keeps _n_ in record 1, and the macros in records 2 to _n_+1.
 
-// FIXME: more exact steps.
+_Changed in 3.1:_ the conversion does this for you: it moves each macro down one record, puts _n_ in record 1, and scratches `e.i.macro`.
+Skip the steps below.
 
-. Type kbd:[RD] at the Main Prompt, and read the SEQ file `e.i.macros`.
-It holds the number of macros you have.
+To keep them in 3.0:
+
+. Type kbd:[RD] at the Main Prompt, and read the SEQ file `e.i.macro`.
+It holds _n_, the number of macros you have.
 . Type kbd:[RF] at the Main Prompt (the REL file editor), and read `e.macros`.
-. kbd:[V]iew record 1.
-
-TIP: You might want to copy this record to the end of the file first, since record 1 is going to be replaced by the macro count.
-
-[start=4]
-. Edit record 1, replacing it with a number 1 less than the number in `e.i.macros`.
-. Scratch `e.i.macros` with kbd:[DC]: it isn't needed any more.
+. kbd:[V]iew record 1, then edit record _n_+1 (one past the end of the file) and type the same macro in again.
+(The order of the macros doesn't matter: one is picked at random.)
+. Edit record 1, replacing it with _n_.
+. Scratch `e.i.macro` with kbd:[DC]: it isn't needed any more.
 
 See <<im-macros>> for editing the macros afterwards.
 
