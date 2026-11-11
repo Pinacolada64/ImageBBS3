@@ -1,0 +1,335 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.EM", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 gosub304:ms=1:&,52,28,3:nf=a%:lg=1:bh=.:ad=.:al=.:gosub3374:goto3062
+3002 &"{f6}":return
+3004 gosub2:goto61
+3006 a$="r":goto32
+3008 a=abs(int(val(mid$(an$,2)))):return
+3010 a=abs(int(val(an$))):return
+3012 p$="{cyan}E-Mail":return
+3014 &"{f6}Deleting...{pound}w1{f6}":return
+3016 poke2038,.:poke2024,255:&,3,2:fl=st:poke2024,.:return
+3018 &"{f6}Enter The HANDLE Or ID# Of The Person{f6}{pound}$b:{f6:2}"
+3020 nn$="":poke53252,20:gosub6:gosub3010:ifan$=""thenreturn
+3022 on-(a=.)goto3030:on-(a>ur)goto3002:i=a:h=a:gosub35:x=a
+3024 gosub1:&,2,2:close2:on-(a$="{^}")goto3332:b$=a$
+3026 &"{f6}Is {f5}{pound}$b{f5} Correct?: ":gosub94:ifa=.thenreturn
+3028 nn$=b$:return
+3030 im=10:gosub445:ifi=.then:&"{f6}{f5}{pound}v7{f5} Not Found{f6}In User File.{f6}":return
+3032 nn$=an$:kk=i:h=i:return
+3034 gosub3535:a=-(z%<300):return
+3036 &"{f6}Not Enough Memory!{f6}"
+3038 &"Aborted.{f6}":close2:close3:print#15,"s"dr$"temp":goto3088
+3040 &"{f6}Disk{shft space}Error!{f6}":&:goto3038
+3042 rn=f%(.):fori=1tof%(.):f%(i)=a%(i):next:on-(z%<300)goto3036:goto3038
+3044 a=.:a%=br:b%=d%(a%):fr$=nn$(a%):j$=left$(dt$(a%),11):tt$(.)=ed$(a%)
+3046 ifleft$(tt$(.),1)="!"then3380
+3048 an$=fr$:&"{f6}{blue}{pound}vj {rvrs on}{yellow}Numb:{rvrs off} {white}{pound}%a{pound}{back arrow}39  {rvrs on}{yellow}From:{rvrs off} {white}{pound}v7 {pound}{back arrow}20{cyan}(UID#{white}{pound}%b{cyan}){f6}{right}{rvrs on}{yellow}Sent:{rvrs off} {white}{$04}"+j$:a=rc
+3050 a=a+rc:b$=tt$(.):ifleft$(b$,1)="*"thenb$=mid$(b$,2)
+3052 &"{pound}{back arrow}39  {rvrs on}{yellow}Subj:{rvrs off} {white}{pound}$b{f6}{blue}{pound}vj{pound}q0":a=a+rc:return
+3054 gosub3046:&"{f6}":forj=1tokk-1:lp=1:&,39,j:next:&"{f6}":return
+3056 &"Save{f6}"
+3058 rs=1:print#3,fr$r$b%r$j$:forj=.tokk:print#3,tt$(j)
+3060 &".":next:goto3002
+3062 r%=.:rn=.:gosub3012:gosub9:dr=2:gosub61:tz=a:tt$=na$:g$="Mail"
+3064 dr=1:a$="s.EM"+str$(nl):ifll%=80thena$=a$+" 80"
+3066 gosub13:gosub3006:ife%then3074
+3068 &"{f6} {lt. blue}Counting Your {cyan}{pound}$p:  {white}"
+3070 rn=rn+1:a%=rn:&"{white}{pound}h2{pound}#2{pound}# {pound}%a":&,2,2:nn$(rn)=a$:&,2,2:d%(rn)=val(a$)
+3072 &,2,2:dt$(rn)=a$:&,2,2:ed$(rn)=a$:f%(rn)=.:gosub3016:iffl=.then3070
+3074 close2:dr=2:a$="nm.forward":gosub4:ife%then3084
+3076 &,2,2:n=val(a$):x=2
+3078 gosub1:&,2,2:ifa$<>na$thenx=x+1:n=n-1:on-(n>0)goto3078:goto3084
+3080 &,2,2:an$=a$:&,15,1:&,2,2
+3082 lp=1:&"{f6} {cyan}Your E-Mail Here Is Forwarded To{f6} {gray3}{pound}v7 @ {pound}$a{f6}{cyan}"
+3084 close2
+3086 close2:br=.:ifrn=.then:&"{f6}{cyan}You Have No {pound}$g.{f6}"
+3088 on(r%*g%)goto3110:r%=.:dr=2:close2:lc=6:gosub3012:im=6:gosub429:ontr%+1goto300
+3090 gosub220:g%=1:on(f4or-(an$="Q"))goto3270:ifrsthen3088
+3092 gosub3370:ifrsthen3088
+3093 ifz$="SM"andmid$(fl$,8,1)<>"0"andzz=1then3562
+3094 g%=.:gosub3010:ifa>.anda<=rnthenbr=a-1:goto3110
+3095 on-(zz=.)goto3096:on-(z$="VT")-(z$="SL")*2goto3500,3512
+3096 x=3:g%=1:on-(a$="S")-(a$="V")*2-(a$="O")*3goto3126,3210,3270
+3098 on-(a$="{f2}")-(z$="FR")*2goto3104,3186:ifrn=.then3086
+3100 ifa$="A"thenbr=.:al=1:goto3110
+3101 g%=.:on-(a$="")goto3110
+3102 g%=.:on-(a$="R")-(a$="L")*2-(a$="D")*3goto3126,3106,3270:goto3088
+3104 im=1:gosub436:goto3088
+3106 gosub3008:a=a-(a=.):&"{f6:2}":ifa>rnthena=1
+3108 forbr=atorn:gosub3044:br=br+rn*a:next:br=.:goto3088
+3110 br=br+1:on-(br<=rn)goto3112:br=rn:al=.
+3111 &"{f6:2}No More Mail.":br=0:r%=0:g%=0:goto3088
+3112 tt$=na$:gosub3006:gosub3044
+3114 sh=.:ifbr<>1thenforx=1tobr-1:gosub3016:next
+3116 forj=1to4:&,2,2:next:gosub3002:gosub3528:onrcgosub3016:ifd%(br)=.thengosub3382:goto3122
+3117 ifal=1then:&"{f6}Next: {pound}g1{f6}":goto3120
+3118 &"{f6:2}{lt. blue}[A]gain, [F]oward, [R]eply{pound}q0?: {pound}g1":ifan$="R"thena=1:&"Reply{f6}":goto3120
+3119 on-(an$="A")-(an$="F")*2goto3496,3495:r%=.:a=.
+3120 ifa=1thenr%=1:goto3126
+3122 r%=.:on-(sh=47org%=.)goto3088:br=br+1:on-(br>rn)goto3110:gosub3044:goto3116
+3124 x=2:gosub390:goto3088
+3126 p$="Send":on(g%*(1-r%))goto3138:g$="Reply":gosub3008:ifa>.anda<=rnthenbr=a
+3128 on-(br=.)goto3088:ifd%(br)=.thengosub3382:goto3088
+3130 gosub35:x=d%(br):gosub1:&,2,2:close2
+3132 i=d%(br):ifa$<>nn$(br)then3332
+3134 nn$=a$:f%(br)=-1:onr%goto3140:&"{f6:2}Reply To {white}{f5}{pound}$a{f5}{pound}q0?: {pound}g1"
+3136 a=-(an$="Y"oran$="R"):gosub97:f%(br)=-a:ona+1goto3088,3140
+3138 c$="Mail":gosub3002:p$="Send Mail To":gosub3020:bh$=nn$:ifnn$=""then3088
+3140 dr=2:gosub61:on-(a<20)goto3124:gosub60:ifathengosub390:goto3088
+3142 poke53252,30:&"{f6}":p$="Subject":gosub3524:ifan$<>""org%ored$(br)=""then3148
+3144 a$=ed$(br):an$=mid$(a$,2):ifleft$(a$,1)="*"thenan$=mid$(an$,2)
+3145 ifleft$(an$,3)="RE:"thenan$=mid$(an$,5)
+3146 an$="RE: "+left$(an$,len(an$)-1):&"Subject: {pound}v7{f6}"
+3148 lg$=an$:&"{f6}Carbon Copy? :":gosub94:ifa=.then3164
+3150 p$="{f6}Send Carbon Copy To":bh=1
+3152 da$="":poke53252,20:gosub6:gosub3010:ifan$=""thenbh=.:goto3164
+3154 on-(a=.)goto3162:on-(a>ur)goto3088:i=a:gosub35:x=a
+3156 gosub1:&,2,2:close2:on-(a$="{^}")goto3332:b$=a$
+3158 &"{f6}Is {f5}{pound}$b{f5} Correct?: ":gosub94:ifa=.then3150
+3160 da$=b$:goto3164
+3162 im=10:gosub445:ifi=.then:&"{f6}{f5}{pound}v7{f5} Not Found{f6}In User File.{f6}":goto3150
+3163 da$=an$:kk=i
+3164 an$=lg$:tt$(.)="["+an$+"]":y=i:p2$="":im=1:gosub440:a=1:ifkk=.then3088
+3166 ifmsthen:&"{f6}{yellow}Return{shft space}Receipt?: {cyan}":gosub94:a=1-a
+3168 tt$(.)=mid$("*",a+1,1)+tt$(.):&"{f6}Filing {pound}$g For ":&nn$:&"...{f6}"
+3170 iflgthenfd$="Local E-Mail":gosub3478
+3172 z=1:a$="w":tt$=nn$:gosub32:ife%thena$="a":z=.:gosub32
+3174 print#2,na$r$id;r$d1$:forx=.tokk-1:print#2,tt$(x):next:ifbhthenprint#2,"{f6}{white}CC: {yellow}"da$
+3176 ifadthenprint#2,"{f6:2}This Message Was Carbon Copied From "na$" To "bh$" ...":ad=.
+3178 print#2,"{^}":close2
+3180 ify=1thengosub30:x=2:i=1:gosub16:x=13:gosub16:x=24:gosub16:x=31:gosub16:close2
+3182 gosub30:x=3:i=1:gosub16:x=14:gosub16:x=25:gosub16:x=32:gosub16
+3183 ifbhthennn$=da$:bh=.:ad=1:y=h:goto3168
+3184 close2:gosub62:goto3088
+3186 &"{clear}{f6:2}Personal File Storage.{f6:2}Enter Filename To Read Or{f6}$ For{shft space}Directory:"
+3188 &"{f6:2}":p$="Filename":d$=mid$(str$(id),2)
+3190 poke53252,10:gosub3524:on-(an$="")goto3088:fr$="m."+d$+"."+an$
+3192 ifan$="$"then3200
+3194 a$=fr$:dr=2:gosub4:one%+1goto3196:&"{f6}File Not Found.{f6}":goto3088
+3196 gosub3002:gosub3528:close2:&"{f6}Delete?: ":gosub94:ifa=.then3088
+3198 print#15,"s"dr$fr$:goto3088
+3200 dr=2:gosub3:close2:open2,dv%,0,"$"+dr$+"m."+d$+".*"
+3202 get#2,a$,a$:&,8,2,1:&,8,2,1:if mid$(a$,7,5)="block"then3208
+3204 b$=a$:&,8,2,1:ifst=.then:&"{f5}":lp=1:&mid$(b$,11+len(d$),11):goto3204
+3206 close2:&"{f6:2}Hit A Key: {pound}g1":goto3186
+3208 &"{f6}No Files.":goto3206
+3210 f2=-(z$="VE"):a=abs(int(val(mid$(an$,3)))):ifathengosub3022:goto3214
+3212 p$="Verify Mail Of":&"{f6}":gosub3020
+3214 d%=i:ifnn$=""then3088
+3216 a%=.:b=.:tt$=nn$:b$=nn$:gosub3006:ife%then3220
+3218 a%=a%+1:&,2,2:b=b-(a$=na$):gosub3016:iffl=.then3218
+3220 close2:ifa%=.thenb$=tt$:&"{f6}{pound}$b Has No Mail.{f6}":goto3088
+3222 g$="None":ifbtheng$=mid$(str$(b),2)
+3224 &"{f6}{pound}$b Has {pound}%a Messages,{f6}{pound}$g Of Them From You.{f6}":onf2*b+1goto3088
+3226 s=.:a%=.:gosub61:ifa<50thengosub3124:goto3088
+3228 gosub3006:close3:open3,dv%,3,dr$+"temp,s,w":gosub5:ife%then3038
+3230 on-(s<>.)goto3260:a%=a%+1:input#2,fr$,b%,j$:&,2,2:tt$(.)=a$:kk=1
+3232 on-(fr$=na$)gosub3046:ad%=b%:a$=tt$(.):&,11:gosub3534:tt$(.)=a$
+3234 &,2,2:tt$(kk)=a$:gosub3034:onaor-(kk>le)goto3036:ifa$<>"{^}"thenkk=kk+1:goto3234
+3236 s=st:iffr$<>na$thengosub3058:goto3230
+3238 &"{f6}(A,D,E,R,S,? For Help) "
+3240 gosub7:on-(a$="R")goto3246:ifa$="A"ortr%=.then3038
+3242 on-(a$="D")-(a$="E")*2-(a$="{f2}")*3-(a$="S")*4goto3250,3254,3244,3248:goto3240
+3244 gosub3334:goto3238
+3246 &"Read{f6}":gosub3054:goto3238
+3248 &"Save{f6}":gosub3058:goto3230
+3250 &"Delete{f6}":gosub93
+3252 ona+1goto3238:a%=a%-1:goto3230
+3254 &"Edit{f6}":&"{f6:2}Editor:"+str$(kk-1)+" Lines.{f6:2}"
+3256 im=2:gosub440:ifkk=.then3038
+3258 &"{f6:2}Filing Edited Mail...{f6}":b%=ad%:tt$(kk)="{^}":gosub3058:goto3230
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+3260 &"{f6}Updating..":close2:close3:dr=2:gosub3:print#15,"s"dr$"m."left$(tt$,14)
+3262 ifa%thenprint#15,"r"dr$"m."left$(tt$,14)"="dr$"temp":goto3266
+3264 print#15,"s"dr$"temp":gosub30:i=-1:x=25:gosub16:close2
+3266 gosub3002:ifd%=1thengosub30:x=24:st(x)=a%:gosub17:close2
+3268 goto3088
+3270 rem:pu$=an$
+3272 on-((left$(an$,1)="O")and(right$(an$,1)="!"))goto234:f%(.)=rn:ifrn=.then3366
+3274 p$="MD":&"{f6}{lt. blue}Delete:{f6}{cyan}[A]ll, [S]ome, [N]one Of Your Mail?{f6:2}{lt. blue}MD: {white}{pound}g1"
+3276 on-(an$="A")-(an$="S")*2goto3278,3288:goto3286
+3278 &"All{f6:2}{pound}q0":gosub93:ifa=.then3274
+3280 dr=2:gosub3:print#15,"s"dr$+left$("m."+na$,16):gosub30:i=-rn:x=25
+3282 gosub16:ifid=1thenx=24:st(x)=.:gosub17
+3284 close2:fori=1torn:f%(i)=f%(i)+1:next:&"{f6}Mail Deleted.{f6}":rn=.:goto3344
+3286 &"None{f6:2}":goto3366
+3288 &"Some{f6:2}Selective Mail Delete:{f6:2}Creating Files...{f6}":tt$=na$:dr=2:gosub3
+3290 gosub61:ifa<50thengosub3124:goto3088
+3291 lh=.
+3292 tt$=na$:gosub3006:close3:open3,dv%,3,dr$+"temp,s,w":gosub5:ife%then3040
+3294 fori=1to60:a%(i)=f%(i):next:fori=1torn:br=i:gosub3044:kk=.:&,11:gosub3534
+3296 gosub3002:forj=1to4:&,2,2:next:tt$(.)=ed$(i):gosub3002
+3298 kk=kk+1:&,2,2:tt$(kk)=a$:gosub3034:onagoto3036:ifa$<>"{^}"then3298
+3300 &"{pound}q0{f6}(A,D,F,R,S,? For Help): ":gosub7
+3302 ontr%+1goto3042:on-(a$="A")-(a$="D")*2-(a$="F")*3goto3042,3306,3308
+3304 rs=.:on-(a$="S")-(a$="{f2}")*2-(a$="R")*3gosub3056,3338,3342:onrsgoto3320:goto3300
+3306 &"Delete{f6}":gosub93:ona+1goto3300:gosub3014:rn=rn-1:f%(i)=f%(i)+1
+3307 lh=lh+1:goto3320
+3308 onms+1goto3300:&"File Away{f6:2}"
+3310 p$="Enter Filename":poke53252,8:gosub3524:ontr%+1goto3042:ifan$=""then3300
+3312 close5:open5,dv%,5,dr$+"m."+mid$(str$(id),2)+"."+an$+",s,w"
+3314 gosub5:ife%then:&:close5:goto3300
+3316 an$=j$:&,15:print#5,"From: "fr$"{shft space}(UID#"mid$(str$(b%),2)")"r$"Date: "an$"M"
+3318 print#5,"Subj: "b$r$:forj=1tokk-1:print#5,tt$(j):&".":next:close5:goto3300
+3320 next:close2:close3:a$="{f6}Updating..{f6}":a$=left$(na$,14):print#15,"s"dr$"m."a$
+3322 ifrnthenprint#15,"r"dr$"m."a$"="dr$"temp":goto3326
+3324 print#15,"s"dr$"temp"
+3326 gosub30:i=-lh:x=25:gosub16:ifid=1thengosub30:x=24:st(x)=rn:gosub17
+3328 close2:goto3344
+3330 &:goto3088
+3332 &"{f6}":&nn$(br):&" Has Been Deleted.{f6}":goto3088
+3334 &"Help{f6:2} A - Abort{f6} D - Delete{f6} E - Edit{f6} R - Read{f6} S - Save{f6}"
+3336 &" ? - This Menu{f6}":return
+3338 &"Help{f6:2} A - Abort{f6} D - Delete{f6} F - File Away{f6} R - Read{f6} S - Save"
+3340 &"{f6} ? - This Menu{f6}":return
+3342 &"Read{f6}":goto3054
+3344 &"{f6:2}Filing Receipts...":gosub61:on-(a<20)goto3088:fori=1tof%(.):a$="w"
+3346 iff%(i)<>1orleft$(ed$(i),1)<>"*"then3364
+3348 gosub35:x=d%(i):gosub1:&,2,2:ifa$<>nn$(i)then3364
+3350 tt$=nn$(i):a$="w":gosub32:b=e%:ife%>0ande%<>63thenclose2:&:goto3088
+3352 ife%=63thenclose2:a$="a":gosub32
+3354 print#2,"IMAGE"r$0r$d1$r$mid$(ed$(i),2)
+3356 print#2,na$"{shft space}(User #"str$(id)") Has"r$"Received Your E-Mail Sent On"
+3358 an$=dt$(i):&,15:print#2,an$"M.  No Reply Sent."r$"{^}":close2
+3360 gosub30:x=25:st(x)=st(x)+1:gosub17:close2
+3362 ifd%(i)=1thengosub30:x=24:st(x)=st(x)+1:gosub17
+3364 close2:next
+3366 ong%+1goto3062:r%=.:an$=pu$:a$=left$(an$,1):z$=left$(an$,2)
+3368 on-(a$="Q")-(z$="O"orz$="O%")*2goto300,234:goto3088
+3370 ifnf=.or(af%and2^ac%)=.thenrs=.:return
+3372 goto3384
+3374 ifnf=.thenreturn
+3376 goto3386
+3380 onnfgoto3388:return
+3382 on-(nf=.or((af%and2^ac%)=.)orleft$(ed$(br),1)<>"!")goto999:goto3390
+3384 rs=1:on-(z$="NS")-2*(z$="NM")-3*(z$="NL")goto3448,3392,3538
+3385 on-(z$="NA")-2*(z$="NI")goto3540,3546:rs=.:return
+3386 goto3406
+3388 goto3396
+3390 ifal=1then:&"{f6}Next: {pound}g1{f6}":return
+3391 goto3465
+3392 ifll%>40thena$="nm.map 80":dr=2:goto13
+3394 dr=2:a$="nm.map":goto13
+3396 z%=val(mid$(tt$(.),2,4)):k$=mid$(dt$(a%),12,11)
+3398 b$=fr$:&"{f6}{lt. blue}Numb: {white}{pound}%a {pound}{back arrow}20{cyan}(NetMail){pound}{back arrow}39 {lt. blue}From: {white}{pound}$b":a=rc
+3400 b$=mid$(tt$(.),6,20):&"{f6}{lt. blue}Node: {white}#{pound}%z, {cyan}{pound}$b{pound}{back arrow}39 {lt. blue}Sent: {white}{$04}"+j$:a=aorrc
+3402 ifk$<>""then:&"{f6}{lt. blue}Recv: {white}{$04}"+k$:a=aorrc
+3404 b$=mid$(tt$(.),26):&"{pound}{back arrow}39 {lt. blue}Subj: {white}{pound}$b{f6}{pound}q0":a=aorrc:return
+3406 dr=2:a$="nm.config":gosub4:nn=.:ife%then3414
+3408 input#2,nn,af%,pn$,v$:close2:ifv$<"900610"then3414
+3410 ml$="":a$="path":gosub28:gosub5:ife%then3414
+3412 dr=2:gosub3:a$=dr$+"nm.nodelist":&,16:gosub5:ife%=0thenreturn
+3414 &:close2:&,52,28,0:nf=.:&"{f6}No Network Configured...{f6:2}{pound}w2":return
+3416 &"{f6}":gosub3426:p$="{f6}Destination Node":gosub6
+3418 a%=val(an$):a$=an$:ifa%<1then:&,16,2
+3420 ifa%<1then:&"{f6}No Node Found.{f6}":tt$="":return
+3422 x=a%:gosub3438:tt$=a$+"/":x=nn:gosub3438:tt$=tt$+a$
+3424 return
+3426 dr=2:a$="nm.nodes":gosub4:input#2,n
+3428 fori=1ton:a%=i:x=i+1:gosub1:input#2,a$,b$,b$,c$,b
+3430 if(band1)=0then:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+3432 i=i+rc*n:next:close2:return
+3434 &"{f6}Aborted.{f6}":return
+3436 x=nn
+3438 dr=2:a$="nm.nodes":gosub4:x=x+1:gosub1:&,2,2:close2:return
+3440 f$="nm.list":gosub3444:print#2,tt$:close2
+3442 f$="nm.sylog":gosub3444:print#2,na$r$d1$r$tt$:close2:return
+3444 dr=2:a$=f$+",s,w":gosub4:ife%thena$=f$+",s,a":gosub4:return
+3446 return
+3448 p$="{f6}Send NetMail To":gosub6:nn$=an$:ifan$=""then3434
+3450 p$="{f6}Subject":q=20:gosub3476:gosub3524:l$=an$:gosub3416:iftt$=""then3434
+3452 tt$(.)="!"+left$(str$(nn)+"    ",4):j$="                    "
+3454 tt$(.)=tt$(.)+left$(bn$+j$,20)+"["+l$+"]":im=1:gosub440:ifkk=.then3434
+3456 gosub3436:iflgthenfd$="NetMail":gosub3478
+3458 &"{f6}Filing NetMail...":f$="nm.M."+tt$:tt$=tt$+"/A/"+f$
+3460 gosub3444:print#2,nn$r$na$r$0;r$d1$
+3462 fori=0tokk-1:print#2,tt$(i):next:print#2,"{^}":close2
+3464 gosub3440:&"{pound}h9{pound}h5ed!! Done!{f6}":return
+3465 &"{f6:2}{lt. blue}[{yellow}R{lt. blue}]{cyan}eply, {lt. blue}[{yellow}F{lt. blue}]{cyan}orward, Or {lt. blue}[{yellow}N{lt. blue}]{cyan}ext? {white}{pound}g1":on-(an$="F")gosub3640
+3466 on-(an$="N")gosub3657:ifan$="E"then3572
+3467 a=-(an$="Y"oran$="R"):ifan$="R"thengosub3655
+3468 ona+1goto3648:p$="Subject":q=20:gosub3476:gosub3524:kk=val(mid$(ed$(br),2,4))
+3469 ifmid$(ed$(br),27,3)="RE:"thened$(br)=left$(ed$(br),26)+mid$(ed$(br),31)
+3470 ifan$=""thenan$="RE: "+mid$(ed$(br),27,len(ed$(br))-27):&"Subject: {pound}v7{f6}"
+3472 l$=an$:an$=str$(kk):gosub3418:on-(tt$="")goto3434:nn$=nn$(br):goto3452
+3474 close2:&"Unknown Node #!{f6}":return
+3476 poke53252,q:return
+3478 a$="a":b$="em log":gosub36:ife%thena$="w":gosub36
+3479 print#2,"{blue}{pound}vj {cyan}{pound}$q       E-Mail Log"
+3480 print#2,"{blue}{pound}vj"
+3481 ad$=nn$:hr$=d1$:&,15
+3482 print#2,"{cyan}Type:{white} "+fd$+"{pound}{back arrow}39  {cyan}On  : {white}{$04}"+hr$
+3486 iffd$="NetMail"thenad$=ad$+" @ "+left$(tt$,3)
+3488 print#2,"{cyan}From: {white}"+na$+"{pound}{back arrow}39  {cyan}To  :{white} "+ad$
+3494 close2:return
+3495 &"Forward{pound}q0{f6}":goto3570
+3496 &"Again{f6}":goto3112
+3497 &"{f6}Feature not fully Implemented":goto3118
+3500 &"{f6} Read This Month's NetLog{f6}":dr=2:l$="nm.log "+mid$(d1$,2,4):a$=l$+",s,r"
+3502 gosub4:a%=.:sh=.:ife%then3522
+3504 a%=a%+1:input#2,a$,b$:&"{f6}#{pound}%a: {pound}$a{f6}    {$04}"+right$(b$,11)
+3506 iflen(b$)>11then:&"{f6} To {$04}"+left$(b$,11)
+3508 &"{f6}Files Transferred:":&,3,2:ifst=.andsh=.then3504
+3510 goto3520
+3512 &"{f6}Read Net Sysop Log{f6}":dr=2:l$="nm.sylog":a$=l$+",s,r":gosub4:a%=.:sh=.
+3514 ife%then3522
+3516 a%=a%+1:&,2,2:f$=a$:&,2,2:b$=a$:&,2,2:c$=a$:a$=f$:s=st
+3518 &"{f6}#{pound}%a: Sent By {f5}{pound}$a{f5}{f6} On {$04}"+b$:&"{f6} File:{pound}$c{f6}":ifs+sh=.then3516
+3520 close2:&"{f6}Delete?":gosub94:ona+1goto3088:a$=l$:gosub19
+3522 close2:goto3088
+3524 pl=.:poke53249,pl:lp=.:&,1:return
+3528 sh=.:rc=.:poke2038,.:poke2024,-(qe=.andrq=1)*255
+3530 &,3,2:s=st
+3532 poke144,sand255:a=rc:gosub12:rc=a:return
+3534 &,40
+3535 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+3538 mm=2:goto3564
+3540 mm=3:goto3564
+3546 mm=4:goto3564
+3562 mm=1:goto3564
+3564 a$="EM.extra":goto72
+3570 gosub3600:f1=f1-(f1=.):fb=l:&"{f6:2}{lt. blue}Forward As [{yellow}E{lt. blue}]-Mail Or [{yellow}N{lt. blue}]et-Mail? {pound}g1{f6}"
+3571 on-(an$<>"E"andan$<>"N")goto3118:ifan$="N"thengosub3620:goto3118
+3572 &"{f6:2}Forward As E-Mail...{f6}"
+3573 an$="":&"{f6}Enter HANDLE Or ID# Of The Person To{f6}Send This Message To.{f6}: {pound}i1"
+3574 ifan$=""thengosub3434:goto3118
+3576 b$=an$:gosub3010:gg=a:ongg+1goto3581:ifgg>urtheni=.:goto3583
+3578 gosub35:x=gg:gosub1:&,2,2:close2:ifa$="{^}"ora$="RES"then3592
+3580 b$=a$:&"{f6}Is {f5}{pound}$b{f5} Correct?: ":gosub96:ifa=.then3572
+3581 an$=b$:im=1:gosub441:y=i
+3582 ifi=.then:&"{f6}{f5}{pound}$b{f5} Not Found{f6}In Current User Files.{f6}":goto3572
+3583 ifi=.then:&"{f6}{f5}{pound}$b{f5} Not Found. ID# Too High.{f6}":goto3572
+3584 tt$=b$:kk=k:rem:tt$(.)="[Forwarded From "+na$+"]":kk=k:tt$=b$
+3586 z=.:a$="w":gosub32:ife%thena$="a":gosub32:z=1
+3587 rem:h$=nn$(br):f$=str$(d%(br))
+3588 rem:print#2,h$r$f$r$d1$r$tt$(.)r$"Sent By: "h$"‹On "j$r$
+3589 fork=1tokk-1:print#2,tt$(k):next:print#2,"{f6}[Forwarded From "+na$+"] On"
+3590 print#2,"{$04}"d1$:print#2,"{^}":close2:gosub3594:&"":l=fb:iffd=1thenfd=.:return
+3591 goto3118
+3592 &"{f6} {pound}$b Has Been Deleted.":goto3118
+3594 gosub62:gosub30:i=1:forx=3to25step11:gosub16:next:x=32:gosub16
+3596 ify=1then:forx=2to24step11:gosub16:next:x=31:gosub16:close2:return
+3598 close2:return
+3600 mm=1:goto3650
+3620 mm=2:goto3650
+3640 &"Forward{pound}q0{f6:2}{lt. blue}Forward As [{yellow}E{lt. blue}]-Mail Or [{yellow}N{lt. blue}]et-Mail ? {pound}g1"
+3642 on-(an$="E")-(an$="N")*2goto3644,3646
+3644 gosub3600:f1=f1-(f1=.):fb=1:fd=1:return
+3646 mm=3:goto3650
+3648 mm=4
+3650 a$="EM.fwd":gosub72:return
+3655 &"Reply{pound}q0{f6:2}":return
+3657 &"Next{pound}q0{f6:2}":return
+3700 copr.1995 new image 04/22/95 04:38p
+3702 rem:"i.EM (c)nissa 230325 lh ad"

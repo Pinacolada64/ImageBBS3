@@ -17,7 +17,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | | Files
 
 | Changed
-| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `++ copier`; the ML (`ml 3.1`)
+| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `++ copier`; the ML (`ml 3.1`)
 
 | New
 | `sub.clocks`, `++ visual`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
@@ -71,8 +71,25 @@ Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the ne
 * kbd:[Ctrl]/kbd:[C=] with a function key could lock up the BBS; programmable function keys work, up to 75 characters.
 * After a password prompt (`&,1,x,1`), everything printed was masked until the next input.
 * Without `nm.origin` (NetMail's origin line), posts were read without their text while NetMail Enable was on, and NetSub posts got a junk origin line (`i/MM.sb-post`; see <<netmail-problems>>).
+* Mail for a user whose handle is 14 characters or longer could go astray: the mail files (`m.` _handle_, and `f.` _handle_, shown at login) are named with only the start of the handle, and some modules kept 13 characters of it while `i/lo.on` looked for 14.
+Every module now keeps 14 (`im`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.VF`, `i.UU`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`).
+Upgrading from 3.0 needs those users' mail files renamed (see <<changes-3-1-upgrading>>).
 
-=== For the Programmer
+==== Upgrading From 3.0 [[changes-3-1-upgrading]]
+
+Mail files are now named with 14 characters of the handle, not 13 (see <<changes-3-1>>, Fixes).
+On a 3.0 system, a user whose handle is 14 characters or longer has mail files named with only 13, which 3.1 won't find.
+For each such user, rename the files on the E-Mail drive (Image drive 2) that are named with 13 characters of the handle, `m.` _handle_ and any `f.` _handle_, to their 14-character names.
+For example, for the handle `THE GREAT GATSBY`, the DOS command
+
+----
+r0:m.THE GREAT GATS=m.THE GREAT GAT
+----
+
+renames that user's mail file (send it to the E-Mail drive's device; on a CMD device, put the partition number in place of the `0`).
+Do this before the BBS first runs 3.1, so that no mail is saved under the new name while the old file is still there.
+Handles of 13 characters or fewer aren't affected.
+
 
 * `&,5` returns the version (3.1) in `lp` and the revision in `a%` (3.0: 2.0, and `a%` not set).
 * `&,9` shows number variables as digits (3.0 showed garbage).

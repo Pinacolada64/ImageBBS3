@@ -422,7 +422,10 @@
 ' if user email exists, decrease current total # of emails in BAR stats:
 	a$="r":gosub 32:close 2:if e%=. then gosub 30:i=-1:x=25:gosub 16:close 2
 ' scratch forced mail, regular mail:
-	dr=2:b$=left$(tt$,13):a$="f."+b$:gosub 19:a$="m."+b$:gosub 19:goto {:_102}
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+	dr=2:b$=left$(tt$,14):a$="f."+b$:gosub 19:a$="m."+b$:gosub 19:goto {:_102}
 {:res_pw}
 ' this is for creating a REServed user's pw:
 ' inform of default password:
@@ -515,7 +518,7 @@
 {:_206}
 ' handle change: rename forced mail and regular mail files:
 	dr=2:gosub 3:a$="f.":for i=1 to 2
-	print# 15,"r"dr$a$left$(tt$(1),13)"="a$left$(tt$,13):a$="m.":next
+	print# 15,"r"dr$a$left$(tt$(1),14)"="a$left$(tt$,14):a$="m.":next
 ' check error channel, TODO: delete old handle an$ from alphabetical user index:
 	gosub 5:an$=tt$:kk=id:id=x:im=7:gosub 445:an$=tt$(1)
 ' TODO: insert new handle into alphabetical user index:

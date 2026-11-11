@@ -1,0 +1,89 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/NM.update", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "+.NM.update" 06-29-90
+4002 g$="nm.U.":&"{f6}Scanning For Updates..."
+4004 dr=2:a$="nm.list,s,r":gosub4:kk=0:ife%thenclose2:goto4010
+4006 &,2,2:kk=kk+1:ed$(kk)=a$:on-(st=0andkk<61)goto4006:close2
+4008 foru=1tokk:o$=mid$(ed$(u),11):on-(left$(o$,5)=g$)gosub4012:next
+4010 &"{f6}Done{f6}":return
+4012 b$=mid$(o$,6)
+4014 ifb$="nodes"then4050
+4016 ifb$="map"then4040
+4017 ifb$="map 80"then4045
+4018 ifb$="message"then4024
+4020 ifb$="news"then4100
+4022 return
+4024 n=0:dr=2:a$=o$+",s,r":gosub4:ife%then4034
+4026 &"{f6} Delivering Sysop Message..."
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4028 f$="m."+left$(sy$,14):close3:open3,dv%,3,dr$+f$+",s,w":gosub5
+4030 ife%thenclose3:open3,dv%,3,dr$+f$+",s,a"
+4032 &,2,2:s=st:print#3,a$:on-(a$<>"{^}"ands=0)goto4032:n=n+1:on-(s=0)goto4032
+4034 close2:close3:ifn=0thenreturn
+4036 gosub30:i=n:x=2:gosub16:x=13:gosub16:x=24:gosub16:x=31:gosub16
+4038 close2:return
+4040 &"{f6} Updating {f5}nm.map{f5}...":dr=2:gosub3
+4041 print#15,"s"dr$"nm.map.bak"
+4042 print#15,"r"dr$"nm.map.bak="dr$"nm.map"
+4043 print#15,"c"dr$"nm.map="dr$o$
+4044 return
+4045 &"{f6} Updating {f5}nm.map 80{f5}...":dr=2:gosub3
+4046 print#15,"s"dr$"nm.map 80.bak"
+4047 print#15,"r"dr$"nm.map 80.bak="dr$"nm.map 80"
+4048 print#15,"c"dr$"nm.map 80="dr$o$
+4049 return
+4050 onnngoto4064:&"{f6} Updating {f5}nm.nodes{f5}..."
+4052 dr=2:gosub3:close3:open3,dv%,3,dr$+o$+",s,r"
+4054 close2:open2,dv%,2,dr$+"nm.nodes":input#2,z
+4056 input#3,a,a$,b$,c$,d$,o%,a%,b%,c%,d%:s=st
+4058 x=a+1:gosub1:print#2,a$r$b$r$c$r$d$r$o%r$a%r$b%r$c%r$d%
+4060 ifa>zthenz=a:x=1:gosub1:print#2,z
+4062 on-(s=0)goto4056:x=1:gosub1:close2:close3
+4064 &"{f6} Updating {f5}nm.nodelist{f5}...":dr=2:gosub3:print#15,"s"dr$"nm.nodelist"
+4066 dr=2:a$="nm.nodes":gosub4
+4068 close3:open3,dv%,3,dr$+"nm.nodelist,p,w":print#3,chr$(0)chr$(194);
+4070 input#2,n:print#3,chr$(n);:ifn=0then4076
+4072 fori=1ton:x=i+1:gosub1:input#2,a$,b$,b$,b$,b$,a,b,c,d
+4074 print#3,left$(a$+"---",3)chr$(0)chr$(a)chr$(b)chr$(c)chr$(d);:next
+4076 close3:x=nn+1:gosub1:&,2,2:nn$=a$:dt$(0)=a$
+4078 &,2,2:&,2,2:&,2,2:&,2,2:fori=1to4:&,2,2:a%(i)=val(a$):next
+4080 fori=1to4:x=a%(i)+1:dt$(i)="":ifx>1thengosub1:&,2,2:dt$(i)=a$
+4082 next:close2:dr=2:a$="nm.connect":gosub4:ife%thenclose2:return
+4084 forx=1to4:gosub1:b$=""
+4086 &,2,2:b$=b$+a$+r$:on-(st=0)goto4086:nn$(x)=b$:next
+4088 b$="{^}"+r$+"{f2}"+r$+"-------"+r$+r$+"-------"+r$+"0"+r$+"0"+r$+d1$+r$+d1$+r$
+4090 fori=1to4:forj=1to4
+4092 ifleft$(nn$(j),3)=dt$(i)andi<>jthena$=nn$(i):nn$(i)=nn$(j):nn$(j)=a$
+4094 next:next:forx=1to4:ifdt$(x)=""thennn$(x)="{^}"+b$
+4096 ifdt$(x)<>left$(nn$(x),3)thennn$(x)=dt$(x)+b$
+4098 gosub1:print#2,nn$(x);:next:gosub1:close2:return
+4100 &"{f6} Adding NetNews..."
+4102 dr=4:a$="d.n.Main,s,r":gosub4:n=0:on-(e%<>0)goto4106:&,2,2:n=val(a$)
+4104 ifnthenfori=1ton:b$="":forj=1to3:&,2,2:b$=b$+a$+r$:next:tt$(i)=b$:next
+4106 close2
+4108 dr=2:a$=o$+",s,r":gosub4:ife%thenclose2:goto4134
+4110 f=1:&,2,2:a$=a$+r$:on-(n=0)goto4116:a=len(a$)
+4112 fori=1ton:ifleft$(tt$(i),a)=a$thentt$(i)=a$+d1$+str$(af%)+r$:f=0:i=n
+4114 next
+4116 iffthenn=n+1:tt$(n)=a$+d1$+r$+str$(af%)+r$
+4118 &,2,2:s=st:on-(a$<>"{^}"ands=0)goto4118:on-(s=0)goto4110:close2
+4120 dr=1:gosub3:dr=2:gosub2:close3:open3,dv%,3,dr$+o$+",s,r":dr=1
+4122 gosub2:&,2,3:f$=left$("n."+a$,16)+",s,w":close2:open2,dv%,2,dr$+f$+",s,w
+4124 gosub5:on-(e%=0)goto4128:close2:print#15,"s"dr$f$
+4126 open2,dv%,2,dr$+f$+",s,w":gosub5
+4128 &,2,3:s=st:print#2,a$:on-(a$<>"{^}"ands=0)goto4128:close2:on-(s=0)goto4096
+4130 close3:dr=4:gosub3:print#15,"s"dr$"d.n.Main"
+4132 a$="d.n.Main,s,w":gosub4:print#2,n:fori=1ton:print#2,tt$(i);:next:close2
+4134 return
+4136 rem:"i/NM.update (c)nissa 190107 lh"
+4138 rem check 4128 was 048 at end of line

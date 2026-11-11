@@ -1,0 +1,116 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.ED", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 r=int(val(mid$(an$,3,3)))
+3102 restore:fori=1to23:readed$(i):next:fori=1to20:readdt$(i):next
+3104 gosub31:fori=0to9:x=i+1:gosub1:&,2,2:&,2,2:bb$(i)=a$:next:close2
+3106 ifrthenan$="":x=r:goto3114
+3108 &"{clear}{f6}{blue}{pound}vj {white}{rvrs on}{pound}{back arrow}07 IMAGE User Account Editor {pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6}{cyan}":p$="User Edit"
+3110 a%=ur:&"{f6} Users: {pound}%a{f6:2}Enter Handle Or ID# Of User To Edit.{f6:2}":gosub6
+3112 on-(an$="")goto300:x=abs(int(val(left$(an$,4))))
+3114 tz=1:p=0:if(x<=ur)andx>.then3118
+3116 i=0:ifan$<>""thenim=10:gosub445
+3117 x=i:ifi=0then:&"{f6}{f5}{pound}v7{f5} Not Found.{f6}{pound}w2":goto3108
+3118 gosub35:gosub1:fori=1to23:&,2,2:ifasc(a$+nl$)=32thena$=mid$(a$,2)
+3120 tt$(i)=a$:next:tt$=tt$(1)
+3122 a=val(left$(tt$(7),1)):a$=tt$(23)
+3124 iflen(a$)<len(bb$(a))thentt$(23)=a$+mid$(bb$(a),len(a$)):tz=0
+3126 close2:a%=x:&"{clear}{f6} {pound}vn#{pound}%a    (Type {f5}N{f5} For Next Page) {cyan}{f6:2}"
+3128 ifl1=xthen:&" (This is the lowest deleted account.){f6:2}"
+3130 fori=1to23:a%=i:b$=ed$(i):c$=tt$(i):a$="{pound}#2{pound}# {pound}%a>-{pound}$b{pound}{back arrow}16: {pound}$c{f6}"
+3132 ifi=2andid<>1thenc$="Not Available"
+3134 ifi=10thenc$=co$(val(tt$(i)))
+3136 if(p=1and(i>9andi<22))or(p=.and(i<10ori>21))then:&
+3138 next:&"{f6} # To Change?: {pound}i1{f6}":ontr%+1goto300:a=abs(int(val(an$)))
+3139 ifa=5thenpl=.
+3140 ifan$="N"thenp=1-p:goto3126
+3142 ifa=2andid<>1thenx=3:gosub390:&"{f6}{pound}w2":goto3126
+3144 ifa=10thengosub3162:goto3126
+3146 on-(a<1ora>23)goto3152:ifa=23thenq$=tt$(23):gosub3196:tt$(23)=q$:tz=0:goto3126
+3148 p$=ed$(a):w$=tt$(a):&,1,32:pl=1:ifan$=""oran$=tt$(a)then3126
+3150 tt$(a)=an$:tz=.:on-(a=1)-(a=7)*2goto3168,3172:goto3126
+3152 ontzgoto3108:&"{f6}Save Changes?: ":gosub94:on-(a=.)goto3108
+3154 &"{clear}{f6}Writing To User Data Files..."
+3156 iftt$(1)<>"{^}"andtt$(1)<>"RES"andtt$(1)<>tt$thengosub3242:gosub3174:goto3108
+3158 gosub3174:iftt$(1)="RES"andtt$<>"{^}"andtt$<>"RES"then3186
+3160 goto3108
+3162 &"{f6:2}":fort=1to9:b$=co$(t):a%=t:&"{pound}%a>-{pound}$b{f6}":next
+3164 &"{f6}Computer Type?: {pound}g1{pound}v7{f6}":a=val(an$):iftr%<1thenreturn
+3166 ona+1goto3162:tt$(10)=str$(a):tz=.:return
+3168 on-(an$="{f8}")-(an$="RES")*2goto3178,3192:g=x:im=10:gosub445:x=g
+3170 oni+1goto3126:a%=i:&"{f6:2}Handle Already Used By {pound}vn{pound}%a{f6}{pound}w2":tt$(1)=tt$:goto3126
+3172 tt$(23)=bb$(val(tt$(7))):goto3126
+3174 gosub35:a$="":fori=1to23:a$=a$+tt$(i)+r$:next:gosub1
+3176 print#2,a$;:close2:ifx=idthenim=2:gosub445
+3177 return
+3178 b$=tt$:&"{f6:2}Delete {f5}{pound}$b{f5}{f6}Are You Sure?: ":gosub94:ifa=.then3108
+3180 an$=tt$:im=7:gosub445
+3182 tt$(1)="{^}":tt$(2)="d":fori=3to23:tt$(i)="0":next:gosub3174
+3184 ifx<l1thenl1=x:x=31:gosub33:gosub1:print#2,l1:close2
+3186 rem
+3188 a$="r":gosub32:close2:ife%=.thengosub30:i=-1:x=25:gosub16:close2
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+3190 dr=2:b$=left$(tt$,14):a$="f."+b$:gosub19:a$="m."+b$:gosub19:goto3108
+3192 &"{f6}Password?: {pound}i1":ifan$=""thenan$="PASS"
+3194 fori=3to23:tt$(i)="0":next:tt$(2)=an$:goto3126
+3196 &"{clear}":poke53252,38:fori=1to20:b$=mid$(q$,i,1)
+3198 ifi=2thenb$=b$+" to 1":goto3212
+3200 ifi=16ori=17ori=20then3212
+3202 ifi=6thenb$=mid$(str$((val(b$)+1)*10),2):goto3212
+3204 ifi=18thenb$=mid$(q$,i,2):goto3212
+3206 ifi=19then3214
+3208 ifb$="1"thenb$="Yes"
+3210 ifb$="0"thenb$="No"
+3212 a%=i:c$=dt$(i):&"{pound}#2{pound}# {pound}%a--{pound}$c{pound}{back arrow}20: {pound}$b{f6}"
+3214 next:&"Change?: {pound}i1"
+3216 a=val(an$):iftr%<1ora<1ora>20thenreturn
+3218 on-(a=16ora=17ora=20)-2*(a=18)-3*(a=19)goto3232,3236,3196
+3220 on-(a=2ora=6)goto3222:b$=mid$(str$(1-val(mid$(q$,a,1))),2):goto3230
+3222 ifa=2thenb$=mid$(q$,2,1)+"/1"
+3224 ifa=6thenb$=mid$(str$((val(mid$(q$,6,1))+1)*10),2)
+3226 p$=dt$(a):w$=b$:&,1,32:ifan$=""then3196
+3228 b$=left$(an$,1):ifa=6thenb$=mid$(str$(int(val(an$)/10)-1),2,1)
+3230 q$=left$(q$,a-1)+b$+mid$(q$,a+1):&"{f6}":goto3196
+3232 p$=dt$(a):b$=mid$(q$,a,1):w$=b$:poke53252,1:pl=1:&,1,32:ifan$<>""thenb$=an$
+3234 goto3230
+3236 p$=dt$(a):b$=mid$(q$,a,2):w$=b$:poke53252,2:pl=1:&,1,32:ifan$<>""thenb$=an$
+3238 iflen(b$)=1thenb$="0"+b$
+3240 q$=left$(q$,a-1)+b$+mid$(q$,a+2):&"{f6}":goto3196
+3242 dr=2:gosub3:a$="f.":fori=1to2
+3244 print#15,"r"dr$a$left$(tt$(1),14)"="dr$a$left$(tt$,14):a$="m.":next
+3246 gosub5:an$=tt$:kk=id:id=x:im=7:gosub445:an$=tt$(1):gosub3250
+3248 an$=tt$(1):ifan$<>"{f8}"andan$<>"RES"thenim=8:gosub445
+3249 id=kk:return
+3250 a$="4":gosub28:dr=6:gosub3:a$=dr$+"u.weedinfo":&,16,1
+3252 gosub5:ife%thenreturn
+3254 a%=id:&,16,8:ifa%then:&,16,5:goto3254
+3256 a$=dr$+"u.weedinfo":print#15,"s"a$:&,16,2:return
+3258 data"Handle","Password"
+3260 data"First Name","Last Name"
+3262 data"Email","Last Date"
+3264 data"Access Group","Calls Today"
+3266 data"Total Calls","Computer"
+3268 data"Line Length","Upper/Lower"
+3270 data"Linefeeds","Expert Mode"
+3272 data"Downloads","Uploads"
+3274 data"Blks Dnld","Blks Upld"
+3276 data"Credit Pts","Posts"
+3278 data"Responses","Last Call"
+3280 data"Flags"
+3282 data"Non-Weed Status","Credit Ratio","Local Maint"
+3284 data"Post/Respond","U/D Access","Max.Editor Lines"
+3286 data"Unlimited D/Ls","Remote Maint","EMail"
+3288 data"User List","B.A.R./Log View","Submaint"
+3290 data"Files Maint","MCI Access","UDs At Primetime"
+3292 data"Max Idle Time","Calls/Day","Time/Call"
+3294 data"Time/Call","Download/Call*10"
+3300 rem:"i.ED (c)nissa 230628 lh"

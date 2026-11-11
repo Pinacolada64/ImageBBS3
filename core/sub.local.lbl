@@ -41,7 +41,10 @@
 60046 an$=mid$(tt$,5):&,15,6,94:b$=an$:an$=a$
 60048 if left$(tt$,1)="!" then b$=mid$(tt$,2,3)+b$
 60050 if b$<>"" then 60058
-60052 c$=left$("m."+an$,15):gosub 60076:if e%then close 2:&:return
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+60052 c$=left$("m."+an$,16):gosub 60076:if e%then close 2:&:return
 60054 an$=right$(str$(id+10000),4)+na$
 60056 print# 2,an$r$id:goto 60074
 60058 dr=2:a$="nm.config":gosub 4

@@ -1,0 +1,58 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/lo-fmail", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4500 rem "+.on.fm"  08-03-90  4:45pm
+4502 cm$="Force Mail":gosub9
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4504 a$="f."+left$(na$,14)+",s,r":dr=2:gosub4:one%goto4560
+4506 f4=.:&"{f6}":&,2,2:c$=b$:b$=a$:ifa$="{^}"orst<>.then4514
+4508 fl=-(a$="ERASE"ora$="KILL"ora$="OFF"):onflgoto4506
+4510 fl=-(left$(a$,1)="!"orleft$(a$,1)="{back arrow}"orleft$(a$,1)="@"):onflgoto4506
+4512 &:goto4506
+4514 a$="KILL":ifb$=a$orc$=a$then:&"{f6:2}Terminating {pound}v2...{f6}":gosub4542
+4516 a$="!":ifleft$(b$,1)=a$thenb$=mid$(b$,2):gosub4534
+4518 a$="!":ifleft$(c$,1)=a$thenb$=mid$(c$,2):gosub4534
+4520 a$="OFF":ifb$=a$orc$=a$thenf4=1
+4522 a$="{back arrow}":ifleft$(b$,1)=a$thenac%=val(mid$(b$,2)):fl$=fl$(ac%)
+4524 a$="{back arrow}":ifleft$(c$,1)=a$thenac%=val(mid$(c$,2)):fl$=fl$(ac%)
+4526 a$="ERASE":ifb$=a$orc$=a$thengosub4536
+4528 a$="@":ifleft$(b$,1)=a$thennn$=mid$(b$,2):gosub4562
+4530 a$="@":ifleft$(c$,1)=a$thennn$=mid$(c$,2):gosub4562
+4532 goto4560
+4534 ifmid$(d1$,2,6)<mid$(b$,2,6)then4538
+4536 dr=2:gosub3:print#15,"s"dr$"f."left$(na$,14):gosub62:goto4560
+4538 an$=b$:&,15:b$=mid$(an$,1,12):&"{f6:2}{lt. blue}Sorry, Your Account Is Suspended"
+4540 &" Until{f6}{pound}$b...{f6}":a$=" Account Suspended!":gosub50:goto4554
+4542 &,52,4,3:on-(a%=1orid=1)goto4560:an$=na$:tt$=an$
+4543 gosub4580:tt$(1)="{^}":tt$(2)="d":fori=3to23:tt$(i)="0":next
+4544 gosub35:a$="":fori=1to23:a$=a$+tt$(i)+r$:next:x=id:gosub1:print#2,a$:close2
+4546 ifx<l1thenl1=x:x=31:gosub33:gosub1:print#2,l1:close2
+4548 a$="r":gosub32:close2:ife%=.thengosub4560:close2:i=-1:x=25:gosub16:close2
+4550 dr=2:d$=left$(tt$,14):a$="f."+d$:gosub19:a$="m."+d$:gosub19:gosub62
+4552 a$=" User Terminated!":gosub50
+4554 c$=right$(d1$,4):a=val(c$):ifa>8e3thena=a-8e3
+4556 c$=str$(a):c$=left$(c$,len(c$)-2)+":"+right$(c$,2)+r$
+4558 a$=" {yellow}Off------------:"+c$+left$(ak$,25):gosub50:ac%=16:f4=1:tr%=.
+4560 close2:return
+4562 an$=na$:gosub4580:dr=2:gosub3:print#15,"r"dr$"f."left$(nn$,14)"="dr$"f."left$(na$,14)
+4564 print#15,"r"dr$"m."left$(nn$,14)"="dr$"m."left$(na$,14):an$=nn$
+4565 im=8:gosub445:na$=nn$
+4566 dr=5:a=1:gosub375:gosub4576:print"{white}{home}{down}"spc(6)" "na$" "
+4568 b$="{left:4}":ch$=co$:an$=d5$:&,15:printspc(6)an$:printspc(6)rn$
+4570 print"{home}{down}"spc(32)cc$mid$(str$(id),2):printspc(31)ct%"{left}"tc%:printspc(35)ac%
+4572 printspc(35)ll%"{left}"b$ul;b$lf;b$nl;b$em:print"{home}{down:4}"spc(6)ph$:printspc(31)ur
+4574 im=1:gosub445:goto62
+4576 a$=co$(co%):co$=a$
+4578 an$=a$=&,9:return
+4580 im=7:goto445
+4590 dr.bob 1990!
+4600 rem:"i/lo-fmail (c)nissa 211218 lh"

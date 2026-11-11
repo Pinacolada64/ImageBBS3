@@ -31,6 +31,15 @@ basic/i_su.config.prg	i/su.config
 basic/sub.display.prg	sub.display
 basic/i_MM.load.prg	i/MM.load
 basic/i_MM.sb-post.prg	i/MM.sb-post
+basic/i.EM.prg	i.EM
+basic/i_EM.extra.prg	i/EM.extra
+basic/i.FM.prg	i.FM
+basic/i_lo-fmail.prg	i/lo-fmail
+basic/i.ED.prg	i.ED
+basic/i.VF.prg	i.VF
+basic/i_NM.mail.prg	i/NM.mail
+basic/i_NM.update.prg	i/NM.update
+basic/i_NM.sort.prg	i/NM.sort
 basic/sub.clocks.prg	sub.clocks
 basic/sub.turbo.prg	sub.turbo
 basic/im.emul13.prg	im.emul13

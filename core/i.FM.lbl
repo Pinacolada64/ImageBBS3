@@ -1,0 +1,47 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.FM", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 p$="":pr$="":cm$="FORCE Mail":gosub9:a=8:gosub11:ifa=.then3064
+3002 &"{f6} (E)rase Or, (S)end Force Mail?: {pound}i1":ontr%+1goto3064
+3004 fl=-(an$="E"):iffl=.andan$<>"S"then3064
+3006 poke53252,20:b$="Send":ifflthenb$="Erase"
+3008 &"{f6}Enter Handle Or ID# Of User.{f6:2}":gosub6:x=abs(val(an$)):ifxthen3014
+3010 im=10:gosub445:x=i:ifxthennn$=an$:goto3022
+3012 &"{f6:2}{f5}{pound}v7{f5} Not Found.{f6}":goto3064
+3014 ifx<1orx>urthen3018
+3016 gosub35:gosub1:input#2,nn$:ifnn$<>"{^}"andnn$<>"RES"then3020
+3018 &"{f6}Invalid Account Number.{f6}":x=.:goto3064
+3020 &"{f6}Handle: ":&nn$:&"{f6}Is That Correct?: ":gosub94:ona+1goto3008:close2
+3022 onflgoto3062:gosub542
+3024 bl=.:&"{f6}Auto-Delete Message after Read?: ":gosub94:ona+1goto3028
+3026 kk=kk+1:tt$(kk)="ERASE":bl=bl+1
+3028 &"{f6}Auto Logoff After Read?: ":gosub94:ona+1goto3032:kk=kk+1:tt$(kk)="OFF":bl=bl+1
+3030 ifbl=2then3054
+3032 &"{f6}Delete User After Read?:{right}":gosub94:ona+1goto3036:kk=kk+1:tt$(kk)="KILL":bl=bl+1
+3034 ifbl=2then3054
+3036 &"{f6}Suspend User's Account?: ":gosub94:ona+1goto3042
+3038 &"{f6}Enter Date Suspension Ends (YYMMDD){f6}: {pound}i1":ontr%+1goto3064:iflen(an$)<>6then3038
+3040 kk=kk+1:tt$(kk)="!1"+an$+"0000":bl=bl+1:ifbl=2then3054
+3042 &"{f6}Change User's Handle After Read?: ":gosub94:ona+1goto3048
+3044 &"{f6}Enter New Handle: {pound}i1":ontr%+1goto3064
+3046 kk=kk+1:tt$(kk)="@"+an$:bl=bl+1:ifbl=2then3054
+3048 &"{f6}Change Access Group After Read?: ":gosub94:ona+1goto3054
+3050 &"{f6}Enter New Access: {pound}i1":ontr%+1goto3064:a=val(an$):ifa<.ora>9then3050
+3052 kk=kk+1:tt$(kk)="{back arrow}"+mid$(str$(a),2)
+3054 if kk=.then3002
+3056 &"{f6}Filing Mail For ":&nn$:&"...{f6}"
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+3058 a$="f."+left$(nn$,14):dr=2:gosub18
+3060 forx=1tokk:print#2,tt$(x):next:close2:goto3002
+3062 a$="f."+left$(nn$,14):dr=2:gosub19:&"{f6}Mail Erased!{f6}":goto3002
+3064 goto300
+3066 rem:"i.FM (c)nissa 210307 lh"

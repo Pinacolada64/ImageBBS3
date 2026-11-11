@@ -1,0 +1,138 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/NM.mail", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "+/NM.mail" 05-19-91
+4002 r$=chr$(13):gosub4500:gosub4600:gosub4900
+4004 return
+4500 rem process mail
+4501 gosub35:x=1:gosub1:&,2,2:lh$=a$:close2
+4502 dr=2:a$="nm.forward":gosub4:ife%then4520
+4504 &"Checking Forward List...":x=1:gosub1:&,2,2:n=val(a$):&,2,2
+4506 ifn=0then:&"Empty!":goto4520
+4508 ifa$=mid$(d1$,2,6)then:&"Already Done!":goto4520
+4510 x=1:gosub1:print#2,n;r$mid$(d1$,2,6):close2
+4512 forxx=1ton:dr=2:a$="nm.forward":gosub4:ife%then4520
+4514 x=xx+1:gosub1:input#2,a1$,a2$,a3$:close2
+4516 lp=.:ifa3$<>""thenlp=1:&"{f6}From:"+a1$+"{f6}To:"+a2$+"{f6}Node:"+a3$:gosub4522
+4518 next
+4520 close2:&"{f6}":return
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4522 dr=2:a$="m."+left$(a1$,14)+",s,r":gosub4:close2:ife%thenreturn
+4524 f$="nm.M."+a3$+"/"+nn$:dr=2
+4526 a$=f$+",s,w":gosub4:ife%thena$=f$+",s,a":gosub4:ife%thenclose2:return
+4528 close3:open3,dv%,3,dr$+"m."+left$(a1$,14):lh=1
+4530 &".":print#2,a2$:&,2,3:print#2,a$:&,2,3:print#2,0:&,2,3:print#2,a$:&,2,3
+4532 ifleft$(a$,1)="!"then4536
+4534 a$="!"+left$(str$(nn)+"    ",4)+left$(bn$+"                    ",20)+a$
+4536 print#2,a$:print#2,">This Message Was Forwarded From "r$bn$
+4538 &,2,3:s=st:print#2,a$:ifa$<>"{^}"then4538
+4540 ifs=.thenlh=lh+1:goto4530
+4542 close2:close3:b$=a3$+"/"+nn$+"/A/"+f$:gosub{$33}030
+4544 print#15,"s"dr$"m."left$(a1$,14)
+4546 gosub30:i=-lh:x=25:gosub16:close2
+4548 ifa1$=lh$thengosub30:i=-lh:x=24:gosub16:close2
+4550 return
+4600 a$="path":gosub28:ife%then:&:return
+4602 dr=2:gosub3:a$=dr$+"nm.nodelist":&,16:gosub5:ife%then:&:return
+4604 g$="nm.M.":dr=2:a$="nm.list,s,r":gosub4:kk=0:ife%thenclose2:goto4618
+4606 &,2,2:kk=kk+1:ed$(kk)=a$:on-(st=0andkk<61)goto4606:close2:u=1
+4608 o$=mid$(ed$(u),11):ifleft$(o$,8)=g$+nn$thengosub4620:ed$(u)=""
+4610 u=u+1:on-(u<=kk)goto4608:x=0:fori=1tokk:ifed$(i)<>""thenx=x+1:ed$(x)=ed$(i)
+4612 next:kk=x
+4614 dr=2:gosub3:print#15,"s"dr$"nm.list"
+4616 ifkkthena$="nm.list,s,w":gosub4:fori=1tokk:print#2,ed$(i):next:close2
+4618 return
+4620 &"Delivering NetMail{f6}":n=0:a%=0
+4622 dr=2:a$=o$+",s,r":gosub4:ife%thenclose2:return
+4624 &,2,2:&:b$=a$:n=n+1:nn$(n)=a$:e%(n)=1
+4626 close3:open3,dv%,3,dr$+"m."+left$(b$,14)+",s,w":gosub5
+4628 ife%thene%(n)=.:close3:open3,dv%,3,dr$+"m."+left$(b$,14)+",s,a"
+4630 &,2,2:print#3,a$:&,2,2:print#3,a$:&,2,2:print#3,a$d1$
+4632 &,2,2:s=st:print#3,a$:ifa$<>"{^}"ands=.then4632
+4634 &"{f6}":on-(s=0)goto4624:close2:close3:print#15,"s"dr$o$:&"Updating Stats{f6}"
+4636 forz=1ton:an$=nn$(z):gosub505:ifi=0thengosub4650:goto4644
+4638 st(3)=st(3)+1:st(14)=st(14)+1:st(25)=st(25)+1:st(32)=st(32)+1
+4640 ifi=1thenst(2)=st(2)+1:st(13)=st(13)+1:st(24)=st(24)+1:st(31)=st(31)+1
+4642 rem:st(25)=st(25)+e%(z)
+4644 gosub30
+4646 x=13:gosub17:x=14:gosub17:x=24:gosub17:x=25:gosub17:x=31:gosub17:x=32:gosub17
+4648 next:close2:return
+4650 dr=2:a$="nm.nodes":gosub4:ife%thenclose2:return
+4652 &,2,2:n=val(a$):a$=nn$(z):&"No User:{pound}$a - Returning{f6}"
+4654 close3:open3,dv%,3,dr$+"m."+left$(nn$(z),14)+",s,r"
+4656 gosub5:ife%then4680
+4658 &,2,3:tt$(1)=a$:&,2,3:&,2,3:tt$(2)=a$:&,2,3:a=val(mid$(a$,2,4))
+4660 on-(a<1ora>n)goto4682:x=a+1:gosub1:&,2,2
+4662 b$=a$+"/"+nn$:f$="nm.M."+b$:tt$=b$+"/A/"+f$
+4664 lp=1:&tt$:f=1:on-(kk=0)goto4668:fori=1tokk:ifed$(i)=tt$thenf=0
+4666 next
+4668 iffthenkk=kk+1:ed$(kk)=tt$
+4670 close2:open2,dv%,2,dr$+f$+",s,w":gosub5
+4672 ife%thenclose2:open2,dv%,2,dr$+f$+",s,a":gosub5:ife%thenclose2:goto4682
+4674 print#2,tt$(1)r$"NetMail"r$;0;r$d1$r$"[Handle Not Found:"+nn$(z)+"]"
+4676 print#2,">This message was returned from "r$bn$r$">On {$04}"d1$
+4678 &,2,3:s=st:print#2,a$:on-(a$<>"{^}"ands=0)goto4678:close2:on-(s=0)goto4684
+4680 close3:print#15,"s"dr$"m."left$(nn$(z),14):return
+4682 &,2,3:s=st:on-(a$<>"{^}"ands=0)goto4682:on-(s<>0)goto4680
+4684 close2:open2,dv%,2,dr$+"nm.nodes":goto4658
+4686 rem
+4900 rem process netwall
+4902 g1=1:g2=1:&"{f6}Processing NetWall/NetGrf..."
+4904 dr=2:a$="nm.list,s,r":gosub4:kk=0:ife%thenclose2:goto4918
+4906 &,2,2:kk=kk+1:tt$(kk)=a$:on-(st=0andkk<61)goto4906:close2
+4908 fori=1tokk:o$=mid$(tt$(i),11):b$=left$(o$,8):c$=right$(o$,3)
+4910 ifb$="nm.G."+nn$thengosub4962
+4912 ifb$="nm.B."+nn$thengosub4944
+4914 next:x=0:fori=1tokk:iftt$(i)<>""thenx=x+1:tt$(x)=tt$(i)
+4916 next:kk=x
+4918 &"{f6}Checking local grf":o$="nm.B.temp":k=8:gosub4928
+4920 &"{f6}Checking local netwall":o$="nm.G.temp":k=7:gosub4928
+4922 print#15,"s"dr$"nm.list"
+4924 ifkkthena$="nm.list,s,w":gosub4:fori=1tokk:print#2,tt$(i):next:close2
+4926 &"{f6}Done{f6}":return
+4928 gosub4982
+4930 forj=1to8:ifmid$(o$,10,3)=ed$(j)ornn$=ed$(j)ored$(j)="{^}"then4942
+4932 a$=o$+",s,r":dr=2:gosub4:ife%thenclose2:return
+4934 a$=ed$(j):&"{f6} Distributing to {pound}$a..."
+4936 f$=left$(o$,5)+a$+"/"+nn$:gosub4988:ife%then4942
+4938 tt$=ed$(j)+"/"+nn$+"/A/"+f$:gosub4994
+4940 &,2,2:s=st:print#3,a$:on-(s=.)goto4940
+4942 close3:close2:next:dr=2:gosub3:print#15,"s"dr$o$:return
+4944 k=8:gosub4972:ifa=0thenreturn
+4946 tt$(i)="":dr=2:a$="nm.grf2":gosub4:&,2,2:a1=val(a$):&,2,2:a2=val(a$)
+4948 &,2,2:a3=val(a$):ifa3=0thenclose2:goto4928
+4950 close3:open3,dv%,3,dr$+o$+",s,r":gosub5:ife%thenclose3:close2:return
+4952 a$=c$:&"{f6}Net Graffiti from {pound}$a"
+4954 &,2,3:b$=a$:&,2,3:c$=a$:&,2,3:d$=a$:a$=d1$:s=st:ifa1=0thena1=2:a2=2
+4956 x=a2:gosub1:print#2,a$r$b$r$c$r$d$:a2=a2+1:ifa2=>a3thena2=2
+4958 ifa2=a1thena1=a1+1:ifa1=>a3thena1=2
+4960 on-(s=0)goto4954:x=1:gosub1:print#2,a1;r$a2;r$a3:gosub1:close2:goto4928
+4962 k=7:gosub4972:ifa=0thenreturn
+4964 tt$(i)="":dr=2:a$=o$+",s,r":gosub4:ife%then4970
+4966 a$=mid$(o$,10,3):&"{f6}NetWall from {pound}$a":f$="nm.wall":gosub4988:ife%then4970
+4968 fors=0to1:print#3,d1$:forj=0to1:&,2,2:s=st:print#3,a$:j=s-(a$="{^}"):nextj,s
+4970 close2:close3:goto4928
+4972 dr=2:a$="nm.config":gosub4:ife%then4978
+4974 x=k:gosub1:forj=1to8:&,2,2:ifa$=c$anda$<>"{^}"thena=1:goto4980
+4976 ifst=0thennext
+4978 a=0
+4980 close2:return
+4982 forj=1to8:ed$(j)="{^}":next:dr=2:a$="nm.config":gosub4:ife%thenreturn
+4984 x=k:gosub1:forj=1to8:&,2,2:ed$(j)=a$:ifst=0thennext
+4986 return
+4988 close3:open3,dv%,3,dr$+f$+",s,w":gosub5
+4990 ife%thenclose3:open3,dv%,3,dr$+f$+",s,a":gosub5
+4992 return
+4994 f=0:ifkkthenfork=1tokk:f=(tt$=tt$(k))orf:next
+4996 iff=0thenkk=kk+1:tt$(kk)=tt$
+4997 return
+4999 rem:"i/NM.mail (c)nissa 211221 lh"

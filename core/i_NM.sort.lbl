@@ -1,0 +1,86 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/NM.sort", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "+/NM.sort" 05-19-91
+4002 onnngosub4400:gosub4800
+4004 return
+4400 rem process reports
+4402 g$="nm.R.":&"{f6}Checking for Reports..."
+4404 dr=2:a$="nm.list,s,r":gosub4:kk=0:ife%thenclose2:goto4414
+4406 &,2,2:kk=kk+1:ed$(kk)=a$:on-(st=0andkk<61)goto4406:close2
+4408 fori=1tokk:o$=mid$(ed$(i),11):ifleft$(o$,8)=g$+nn$thengosub4420:ed$(i)=""
+4410 next:x=0:fori=1tokk:ifed$(i)<>""thenx=x+1:ed$(x)=ed$(i)
+4412 next:kk=x
+4414 print#15,"s"dr$"nm.list"
+4416 ifkkthena$="nm.list,s,w":gosub4:fori=1tokk:print#2,ed$(i):next:close2
+4418 &"{f6}Done{f6}":return
+4420 dr=2:a$=o$+",s,r":gosub4:ife%thenclose2:return
+4422 close3:open3,dv%,3,dr$+"nm.reports,s,a":gosub5
+4424 ife%thenclose3:open3,dv%,3,dr$+"nm.reports,s,w":gosub5
+4426 &,2,2:s=st:print#3,a$:on-(s=0)goto4426:print#3,"{^}":close3:close2
+4428 print#15,"s"dr$o$:return
+4430 rem
+4600 &"{f6} Adding NetNews..."
+4602 dr=4:a$="d.n.Main,s,r":gosub4:n=0:on-(e%<>0)goto4606:&,2,2:n=val(a$)
+4604 ifnthenfori=1ton:b$="":forj=1to3:&,2,2:b$=b$+a$+r$:next:tt$(i)=b$:next
+4606 close2
+4608 dr=2:a$=o$+",s,r":gosub4:ife%thenclose2:goto4634
+4610 f=1:&,2,2:a$=a$+r$:on-(n=0)goto4616:a=len(a$)
+4612 fori=1ton:ifleft$(tt$(i),a)=a$thentt$(i)=a$+d1$+str$(af%)+r$:f=0:i=n
+4614 next
+4616 iffthenn=n+1:tt$(n)=a$+d1$+r$+str$(af%)+r$
+4618 &,2,2:s=st:on-(a$<>"{^}"ands=0)goto4618:on-(s=0)goto4610:close2
+4620 dr=1:gosub3:dr=2:gosub2:close3:open3,dv%,3,dr$+o$+",s,r":dr=1
+4622 gosub2:&,2,3:f$=left$("n."+a$,16)+",s,w":close2:open2,dv%,2,dr$+f$+",s,w"
+4624 gosub5:on-(e%=0)goto4628:close2:print#15,"s"dr$f$
+4626 open2,dv%,2,dr$+f$+",s,w":gosub5
+4628 &,2,3:s=st:print#2,a$:on-(a$<>"{^}"ands=0)goto4628:close2:on-(s=0)goto4622
+4630 close3:dr=4:gosub3:print#15,"s"dr$"d.n.Main"
+4632 a$="d.n.Main,s,w":gosub4:print#2,n:fori=1ton:print#2,tt$(i);:next:close2
+4634 return
+4636 rem
+4800 rem sort files
+4802 x=1:gosub{$33}002:ife%thenreturn
+4804 a$="path":gosub28:ife%then4808
+4806 dr=2:gosub3:a$=dr$+"nm.nodelist":&,16:gosub5:ife%=.then:goto4810
+4808 &"{f6}ERROR! #{pound}%e {pound}$e{f6}":return
+4810 &"Reading File List...{f6}"
+4812 kk=.:dr=2:a$="nm.list,s,r":gosub4:ife%thenclose2:&"No Files!{f6}":return
+4814 &,2,2:kk=kk+1:tt$(kk)=a$:on-(st=0andkk<254)goto4814:close2:&"{f6}"
+4818 &"Sorting Files...{f6}":foru=1tokk:c$=tt$(u):gosub4824:next
+4820 foru=1tokk:o$=mid$(tt$(u),11):on-(left$(o$,8)="nm.F."+nn$)gosub4854:next
+4822 dr=2:gosub3:print#15,"s"dr$"nm.list":&"Done{f6}":return
+4824 n$=mid$(c$,5,3):b$=left$(c$,3):&"{pound}$c{pound}{back arrow}32":b%=0:on-(b$="ALL")goto4836
+4826 ifb$=nn$then:&"Keep{f6}":o$="nm.keep":onnngoto4850:return
+4828 a%=nn:&,16,1:ifan$=""andnn<>1thenb%=1:goto4828
+4830 ifan$=""then4840
+4832 an$=mid$(an$,6):ifbb>4thenforx=5tobb:a$=dt$(x):&,16,3:next
+4834 a$=left$(an$,3):&"{pound}$a{f6}":goto4842
+4836 &"ALL{f6}":fori=1to4:a$=dt$(i):ifa$<>""anda$<>n$anda$<>"{^}"thengosub4842
+4838 next:b$=mid$(c$,11):x=4:goto{$33}002
+4840 o$="nm.zone":&"Zone{f6}":goto4850
+4842 o$="nm.l."+a$:c$=left$(c$,4)+nn$+mid$(c$,8)
+4844 dr=2:a$=o$+",s,r":gosub4:ife%then4850
+4846 &,2,2:ifa$=c$thenclose2:return
+4848 on-(st=0)goto4846:close2
+4850 a$=o$+",s,w":gosub4:ife%thena$=o$+",s,a":gosub4:ife%thenclose2:return
+4852 print#2,c$:close2:return
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4854 f$="m."+left$(sy$,14):m$="Net File Package from "+right$(o$,3)
+4856 dr=2:a$=f$+",s,w":gosub4:f%=e%:ife%thena$=f$+",s,a":gosub4
+4858 print#2,"NetMail"r$" 0"r$d1$r$"["m$"]"r$"{^}":close2
+4860 gosub30:i=1
+4862 x=13:gosub17:x=24:gosub17:x=31:gosub17:x=14:gosub17:x=32:gosub17
+4864 iff%=.thenx=25:gosub17
+4866 close2:return
+4868 rem removed updates and zones 180205 x-tec
+4870 rem:"i/NM.sort (c)nissa 200625 lh"

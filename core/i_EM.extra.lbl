@@ -1,0 +1,65 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/EM.extra", with:
+'   C64List4_04.exe -txt -keycase -varcase -alpha:alt (as tools/detok.sh
+'   --keep-spaces), then jumps to lines 3_0-preface.lbl doesn't name written
+'   {$3x}nnn so C64List leaves them as they are (detok.sh would write [nnnn]).
+'   Unchanged, this builds the release's program byte for byte, except
+'   capitals in rem text ($61-$7a).
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem:em.extra
+4002 onmmgoto4004,4072,4076,4084
+4004 rem:forced mail
+4006 p$="":pr$="":cm$="FORCE Mail":gosub9:a=8:gosub11:ifa=.then4070
+4008 &"{f6} (E)rase Or, (S)end Force Mail?: {pound}i1":ontr%+1goto4070
+4010 fl=-(an$="E"):iffl=.andan$<>"S"then4070
+4012 poke53252,20:b$="Send":ifflthenb$="Erase"
+4014 &"{f6}Enter Handle Or ID# Of User.{f6:2}":gosub6:x=abs(val(an$)):ifxthen4020
+4016 im=10:gosub445:x=i:ifxthennn$=an$:goto4028
+4018 &"{f6:2}{f5}{pound}v7{f5} Not Found.{f6}":goto4070
+4020 ifx<1orx>urthen4024
+4022 gosub35:gosub1:input#2,nn$:ifnn$<>"{^}"andnn$<>"RES"then4026
+4024 &"{f6}Invalid Account Number.{f6}":x=.:goto4070
+4026 &"{f6}Handle: ":&nn$:&"{f6}Is That Correct?: ":gosub94:ona+1goto4014:close2
+4028 onflgoto4068:gosub542
+4030 bl=.:&"{f6}Auto-Delete Message after Read?: ":gosub94:ona+1goto4034
+4032 kk=kk+1:tt$(kk)="ERASE":bl=bl+1
+4034 &"{f6}Auto Logoff After Read?: ":gosub94:ona+1goto4038:kk=kk+1:tt$(kk)="OFF":bl=bl+1
+4036 ifbl=2then4060
+4038 &"{f6}Delete User After Read?:{right}":gosub94:ona+1goto4042:kk=kk+1:tt$(kk)="KILL":bl=bl+1
+4040 ifbl=2then4060
+4042 &"{f6}Suspend User's Account?: ":gosub94:ona+1goto4048
+4044 &"{f6}Enter Date Suspension Ends (YYMMDD){f6}: {pound}i1":ontr%+1goto4070:iflen(an$)<>6then4044
+4046 kk=kk+1:tt$(kk)="!1"+an$+"0000":bl=bl+1:ifbl=2then4060
+4048 &"{f6}Change User's Handle After Read?: ":gosub94:ona+1goto4054
+4050 &"{f6}Enter New Handle: {pound}i1":ontr%+1goto4070
+4052 kk=kk+1:tt$(kk)="@"+an$:bl=bl+1:ifbl=2then4060
+4054 &"{f6}Change Access Group After Read?: ":gosub94:ona+1goto4060
+4056 &"{f6}Enter New Access: {pound}i1":ontr%+1goto4070:a=val(an$):ifa<.ora>9then4056
+4058 kk=kk+1:tt$(kk)="{back arrow}"+mid$(str$(a),2)
+4060 if kk=.then4008
+4062 &"{f6}Filing Mail For ":&nn$:&"...{f6}"
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4064 a$="f."+left$(nn$,14):dr=2:gosub18
+4066 forx=1tokk:print#2,tt$(x):next:close2:goto4008
+4068 a$="f."+left$(nn$,14):dr=2:gosub19:&"{f6}Mail Erased!{f6}":goto4008
+4070 goto{$33}088
+4072 rem:list active
+4074 &"{f6} Active Network Nodes:{f6:2}":gosub{$33}426:return
+4076 rem:list all
+4078 &"{f6} All NetWork Nodes:{f6:2}":dr=2:a$="nm.nodes":gosub4:input#2,n
+4080 fori=1ton:a%=i:x=i+1:gosub1:input#2,a$,b$,b$:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+4082 i=i+rc*n:next:close2:return
+4084 rem:node info
+4086 a=abs(val(mid$(an$,3,3)))
+4088 dr=2:a$="nm.nodes":gosub4:input#2,n:ifa<1ora>nthen4100
+4090 x=a+1:gosub1:input#2,a$,b$,c$,d$,o%,a%,b%,c%,d%:close2:n%=a
+4092 f$="Active":if(o%and1)thenf$="Inactive"
+4094 &"{f6}#{pound}#2{pound}%n ({pound}$a) {f5}{pound}$c{f5}{pound}{back arrow}25<{pound}$f>{f6} Sysop:{pound}$d{f6} Phone:{pound}$b{f6}"
+4096 &" Connected To #{pound}%a":ifb%then:&",#{pound}%b":ifc%then:&",#{pound}%c":ifd%then:&",#{pound}%d"
+4098 &"{f6}":close2:return
+4100 close2:&"{f6}Unkown Node #!{f6}":return
+4102 rem:"i/EM.extra (c)nissa 210307 lh"

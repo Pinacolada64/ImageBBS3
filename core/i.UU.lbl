@@ -242,7 +242,10 @@
 ' (from i.ED)
 {:rename}
 	h=x:tt$=u$(1,1):dr=2:gosub 3:a$="f.":for i=1 to 2
-	print#15,"r"dr$a$left$(u$(1,0),13)"="dr$a$left$(tt$,13):a$="m.":next
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+	print#15,"r"dr$a$left$(u$(1,0),14)"="dr$a$left$(tt$,14):a$="m.":next
 	gosub 5:an$=tt$:kk=id:id=x:im=7:gosub 445:an$=u$(1,0):gosub {:weedinfo}
 	an$=u$(1,0):im=8:gosub 445
 	id=kk:x=h:return

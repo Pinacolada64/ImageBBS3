@@ -38,10 +38,13 @@
 4054 a%=u:&"{f6}Total:{pound}%a Files{f6}"
 4056 gosub 30:x=28:st(x)=u:gosub 17:close 2:return
 4058 nt=.:for i=1 to ur:gosub 35:x=i:gosub 1:&,2,2:tt$=a$:an$=a$:&,15,1:&an$"'s Mail:"
-4060 dr=2:a$=left$("m."+tt$,15)+",s,r":gosub 4078:nt=nt+n:next
+' 11/10/2026: mail (m.) and waiting-mail (f.) file names keep 14 characters of the
+' handle (a 16-character file name), as im line 32 and i/lo.on 4178 do; some
+' modules kept 13, so a 14+ character handle's mail went to another file
+4060 dr=2:a$=left$("m."+tt$,16)+",s,r":gosub 4078:nt=nt+n:next
 4066 close 2:st(25)=nt:gosub 30:x=25:gosub 17:close 2:return
 4068 gosub 35:&,2,2:close 2:tt$=a$:an$=a$:&,15,1:&an$"'s Mail: "
-4070 dr=2:a$=left$("m."+tt$,15)+",s,r":gosub 4078:st(24)=n
+4070 dr=2:a$=left$("m."+tt$,16)+",s,r":gosub 4078:st(24)=n
 4072 &"{f6}Feedback: ":dr=3:a$="e.fback,s,r":gosub 4078:st(23)=n
 4074 &"{f6}New Users: ":dr=3:a$="e.new,s,r":gosub 4078:st(29)=n
 4076 gosub 30:x=23:gosub 17:x=24:gosub 17:x=29:gosub 17:close 2:return
