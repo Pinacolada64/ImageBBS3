@@ -210,3 +210,33 @@ A weekday fact must fit on one line: its `C` lines have no weekday, so on the ot
 * A line starting with `*` is a header (`*MMDDYYYY Birthdays`), and `^` ends the file.
 `i/lo/today` skips a `*` line only because its columns 4-5 never match a day.
 
+==== `e.sysop` [[e-sysop]]
+
+`e.sysop`, on the Etcetera drive, holds what callers who run an Image BBS of their own say about it (see the _Sysop Manual_, "Sysop Information").
+`SF` (`i.SF`) creates and edits it, the new user application (`i/lo.new`) writes a new caller's record, and the login module `i/lo-question` has callers fill theirs in and check it.
+
+It's a relative file of 250-byte records; record _n_ is user ID _n_'s.
+`SF`'s Create (or `i/lo.new`, when there's no file) writes `^` to a record for each user.
+A record is one of:
+
+* `^`: nothing yet; `i/lo-question` asks the caller to fill it in.
+* `n`: the caller doesn't run an Image BBS, and is never asked. `SF`'s Delete and "Change File to n" write this.
+* 14 fields, each ended by a carriage return:
+
+.e.sysop Record Format
+[%autowidth]
+[%header]
+|===
+| Field | Holds
+
+| 0 | When it was last written or checked: an 11-digit date (`d1$`). `i/lo-question` compares its month (characters 4-5) with today's, to ask once a month.
+| 1-3 | Handle, first name, last name
+| 4-7 | Address, city, state, zip code
+| 8 | The BBS's Image serial number ("IMAGES#")
+| 9 | The board's name
+| 10 | Voice phone number
+| 11 | The board's telnet address; its phone number in older records (`i/lo.new` still writes that here, and `i/lo-sysop.quest` calls it "Board No.")
+| 12 | Its network (`SF` writes `None` when it's blank)
+| 13 | Its node ID (`SF`: `N/A` when blank)
+|===
+

@@ -24,7 +24,7 @@ A file's prefix says which of Image's drives it's on (see <<im-system-drives>> i
 The release's `MASTER D2` disk has the screens and tables Image comes with; Image creates the rest as it runs (marked _created_ below).
 
 This appendix says what each file is for.
-How some of them are laid out inside (`e.data`, `e.menu` _n_, `s.m.protos`, `nm.P.count` and the `today.` files) is in the _Image BBS 3.0 Programmer's Reference Guide_, appendix "File Formats".
+How some of them are laid out inside (`e.data`, `e.menu` _n_, `e.sysop`, `s.m.protos`, `nm.P.count` and the `today.` files) is in the _Image BBS 3.0 Programmer's Reference Guide_, appendix "File Formats".
 
 === Screens: `s.` files [[data-files-screens]]
 
@@ -161,6 +161,7 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `e.i.modem` | REL | the modem's settings | <<im-modem>> (`i/IM.modem`)
 | `e.menu` _n_ | PRG | graphic menus | `i.menuedit`
 | `e.anagram` | REL | the anagram game's words | `i/SM.make anagra`
+| `e.sysop` | REL | what callers who run an Image BBS of their own say about it, a record each (see <<sysop-info>>) | `SF` (`i.SF`), `i/lo.new`, `i/lo-question`
 | `e.errlog` | SEQ | the errors the BBS has trapped | `im`
 | `e.zz log` | SEQ | who turned local maintenance on, and when | `sub.local`
 |===

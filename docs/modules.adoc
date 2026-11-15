@@ -133,3 +133,49 @@ You can find a more complete breakdown of what most individual modules do in the
 === From General Files
 
 A General Files library can list modules too, so callers can run them from its menu; see <<gf-modules>>.
+
+=== Sysop Information: `i/lo-question` and `SF` [[sysop-info]]
+
+Image keeps a file of what callers who run an Image BBS of their own say about it: their name and address, the board's name, its Image serial number, telnet address, network and node ID.
+It's `e.sysop` on the Etcetera drive, a record for each user (its layout is in the _Programmer's Reference Guide_, appendix "File Formats").
+
+==== The Login Module `i/lo-question`
+
+Add it to the login modules (see <<im-login-mods>>) as `question`.
+As a caller logs in, it looks at their record:
+
+[%autowidth]
+[%header]
+|===
+| Record | What happens
+
+| empty (`^`) | Asks them to fill it in: their handle and name come from their user record, then the address to the node ID; they check it and say whether it's correct.
+| `n` | Nothing: they don't run an Image BBS.
+| filled in | Once a month, for callers above access group 3: shows it, asks "`Is This Correct?`", and lets them change any field.
+|===
+
+Each time, it writes the record back with today's date.
+When the caller has changed something, it also sends "`Changed Sysop Data`", with the new information, to Feedback.
+
+NOTE: The release also has `i/lo-sysop.quest`, an older copy with 12 fields: a "`Board No.`" where the telnet address is, and no network.
+Use `i/lo-question`, which matches `SF`.
+
+==== `SF`: Sysop File Maintenance
+
+`SF` at the main prompt (an Extended Command Set command) runs `i.SF`:
+
+[%autowidth]
+[%header]
+|===
+| Option | Does
+
+| 1. Create Sysop File | Makes a new `e.sysop`, every record empty (`^`). It erases what's there.
+| 2. Edit Sysop Record | By handle or ID: shows the fields, and changes one at a time.
+| 3. Delete Sysop | By ID: the record becomes `n`.
+| 4. Change File to `n` | The same, without asking.
+| 5. Add Sysop | By handle or ID: asks for every field.
+| 6. Quit |
+|===
+
+The new user application (`i/lo.new`) asks "`Are You An IMAGE BBS Owner?`", and writes the new caller's record (or `n`); it creates `e.sysop` if it isn't there.
+
