@@ -364,10 +364,12 @@ _Enter:_
 | [[line-40,Display s.new user]]gosub&#160;40
 | _n/a_
 | Displays the file `s.new user` (`a$="new user"`, then line 42 <<line-42>>).
+The `NU` command runs it: its ECS entry in `e.ecs.main` goes to line 40.
 
 | [[line-41,Display s.config]]gosub&#160;41
 | _n/a_
 | Displays the file `s.config` (`a$="config"`, then line 42 <<line-42>>).
+The `CF` command runs it: its ECS entry in `e.ecs.main` goes to line 41.
 
 // FIXME: this was here for lines 40 and 41, but the 3.0 im doesn't load
 // sub.editor or sub.handles at these lines (see above). It may belong with

@@ -45,7 +45,7 @@ A screen that isn't on the disk is skipped.
 | `s.welcome` _n_ `[80]` | after logging in, before the login modules | `i/lo.on` (4184)
 | `s.start 0`, `1`, `2` | never: `i/lo.on` (4183) asks C/G callers for `s.start` and the weekday's digit (`s.start4`), not these names |
 | `s.mail` | at login, when mail is waiting | `i/lo.mail`
-| `s.new user` | a new user's application, first | `i/lo.new` (4014)
+| `s.new user` | a new user's application, first; and the `NU` command | `i/lo.new` (4014); `im` (40), from the ECS
 | `s.nu welcome` | the welcome letter `i.VF` sends a user it validates | `i.VF` (3154)
 | `s.end` _n_ `[80]` | at logoff, after "Bye" | `i.lo` (3202)
 | `s.logon help` | Help at the Login Options menu | `i/lo!help`
@@ -76,6 +76,7 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `s.ps` | about personal signatures | `sub.misc2`
 | `s.nubbslist` | the BBS list | `i.BB`
 | `s.netmenu`, `s.netmenuzz` | the network menu, and its sysop options | `i.LN`
+| `s.config` | the `CF` command (System Configuration) | `im` (41), from the ECS
 | `s.today/hist` | Today in History (_created_ by `i/lo/today`, see <<data-files-today>>) | `i/lo-today`
 |===
 
@@ -114,7 +115,7 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `s.lightdefs` | the lightbar checks' names, for the Lightbar editor | `i.IM`
 |===
 
-`s.config` (a "System Configuration" screen), `s.idle` (Image 2.0's idle screen commands: `i/lo.idle` draws its own) and `s.netapp` (a network application form) aren't opened by name by any module.
+`s.netapp` (a network application form) isn't opened by name by any module.
 
 === Tables and Settings: `e.` files [[data-files-etcetera]]
 
