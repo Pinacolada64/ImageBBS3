@@ -207,7 +207,7 @@ Each is a sequential file of lines, each ended by a carriage return:
 A weekday fact must fit on one line: its `C` lines have no weekday, so on the other weekdays they'd show on their own.
 * A line can be at most 80 characters: `i/lo/today` reads them with <<prg-ampersand-calls.adoc#_2_disk_file_input,`&,2` Disk File Input>>, which reads no more.
 * `i/lo/today` keeps at most 20 lines of one type for a day (`dim zt$(3,20)`), `C` lines included; a 21st stops it with `?bad subscript`.
-* A line starting with `*` is a header (`*MMDDYYYY Birthdays`), and `^` ends the file.
+* A line starting with `+*+` is a header (`+*MMDDYYYY Birthdays+`), and `^` ends the file.
 `i/lo/today` skips a `*` line only because its columns 4-5 never match a day.
 
 ==== `e.sysop` [[e-sysop]]
