@@ -12,10 +12,10 @@ A file's prefix says which of Image's drives it's on (see <<im-system-drives>> i
 |===
 | Prefix | Drive | Holds
 
-| `s.` | 1, System | screens, help menus
-| `f.`, `nm.log` | 2, E-Mail | mail waiting at login, the network log
-| `e.`, `today.`, `nm.times` | 3, Etcetera | tables, settings, logs
-| `d.` | 4, Directory | General Files libraries
+| `s.`, `n.` | 1, System | screens, help menus, news items
+| `f.`, `m.`, `nm.` | 2, E-Mail | mail, personal files, NetMail's files and logs
+| `e.`, `today.`, `v.`, `nm.times`, `nimodem.dat` | 3, Etcetera | tables, settings, logs
+| `d.` | 4, Directory | General Files libraries, the message and U/D bases, the news list
 | `u.` | 6, User | the user records
 |===
 
@@ -65,6 +65,8 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `s.EM` _n_ `[80]` | on entering E-Mail | `i.EM`
 | `s.SB` _n_ `[80]` | on entering the sub-boards | `i.SB`
 | `s.Sig` _s_ _n_ `[80]` | on entering SIG _s_ | `i/MM.load`
+| `s.Sub` _b_ _n_ | on entering sub-board _b_ | `i.SB`
+| `s.U/D` _b_ _n_, `s.U/X` _b_ | on entering U/D area _b_, U/X area _b_ | `i.UD`, `i.UX`
 | `s.UD` _n_ `[80]`, `s.UX` _n_ `[80]` | on entering U/D, U/X | `i.UD`, `i.UX`
 | `s.VF` _n_ `[80]` | on entering VF | `i.VF`
 | `s.FF`, `s.GF`, `s.UD`, `s.UX`, `s.VF` | title banners ("Image 3.0 File System"...): `s.` and the section's name | `im`, `i.GF`
@@ -77,6 +79,8 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `s.nubbslist` | the BBS list | `i.BB`
 | `s.netmenu`, `s.netmenuzz` | the network menu, and its sysop options | `i.LN`
 | `s.config` | the `CF` command (System Configuration) | `im` (41), from the ECS
+| `s.logo 1` ... `s.logo 13` | a logo picked at random: `1`-`7` most of the year, `8`-`13` in December | `i.lo` (3600)
+| `s.can msg`, `s.can msg` _n_ | VF's canned messages: the count and titles, and message _n_ | `i.VF`
 | `s.today/hist` | Today in History (_created_ by `i/lo/today`, see <<data-files-today>>) | `i/lo-today`
 |===
 
@@ -162,6 +166,20 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `e.i.modem` | REL | the modem's settings | <<im-modem>> (`i/IM.modem`)
 | `e.menu` _n_ | PRG | graphic menus | `i.menuedit`
 | `e.anagram` | REL | the anagram game's words | `i/SM.make anagra`
+| `e.Sub`, `e.U/D`, `e.U/X`, `e.Sig` | REL | the sub-boards, U/D areas, U/X areas and SIGs, a record each | <<im-reledit>> (`i/SM.reledit`); read by `i/MM.load`, `i.SB`, `i/SM.fixer`
+| `e.Siglist`, `e.Siglist` _n_ | PRG | the SIG list, and SIG _n_'s bases: structs made from `e.Sig` | `i/SM.consig1`, `i/SM.consig2`; read by `i/MM.load`
+| `e.macs` | REL | each user's four macros (record _id_ × 4 - 4 + _n_) | `sub.param2`; read by `i.main` (3020)
+| `e.walladds` | REL | the BBS ads on the wall | <<im-wall-ads>> (`i/IM.logon`); read by `i/lo-wall`
+| `e.filelists` | SEQ | the U/D file lists | <<im-file-lists>> (`i/IM.filelist`)
+| `e.fback` | SEQ | feedback to the sysop | `sub.feedback`, `i/lo-question`, `i/lo-sysop.quest`, `i/MM.subop`; read by `i.VF`
+| `e.new` | SEQ | new users' applications | `i/lo.new`; read by `i.VF`
+| `e.nark` | SEQ | applications `i.VF` has archived from `e.new` | `i.VF`
+| `e.telecheck` | SEQ | failed logins | `i/lo!telecheck`; read by `i.VF`
+| `e.em log` | SEQ | the E-Mail sent | `sub.misc2`; read by `i.VF`
+| `e.temp` | SEQ | `i.VF`'s working copy while it edits a log | `i.VF`
+| `e.cr.pool 1` | SEQ | the Credit Pool's two totals | `i.GF`, `i/lo-cr pool`
+| `e.phone` | PRG | Image Term's phone book (a struct) | `i/t`
+| `nimodem.dat` | SEQ | the modem profiles (see <<im-modem-nimodem>>) | `i/IM.modem`
 | `e.errlog` | SEQ | the errors the BBS has trapped | `im`
 | `e.zz log` | SEQ | who turned local maintenance on, and when | `sub.local`
 |===
@@ -178,9 +196,54 @@ Keep the `s.welcome` screens on the System disk, or add `gosub 5` to the end of 
 | `u.weedinfo` | User | Autoweed's information
 | `u.payroll` | User | the credits paid out (<<im-payroll>>)
 | `d.` _library_ | Directory | a General Files library (`d.GF` ...)
+| `m.` _handle_ | E-Mail | a user's mailbox (`i.EM`, `i/lo.login`'s Mail-Check, `i/NM.mail`)
+| `m.` _id_ `.` _name_ | E-Mail | a file in user _id_'s Personal File Storage (`i.EM`)
 | `f.` _handle_ | E-Mail | mail for a user, shown at login (`i/lo-fmail`)
+| `d.sub` _n_ | Directory | sub-board _n_'s messages (REL; `i.SB`, `i/SM.fixer`)
+| `d.u/d` _n_ | Directory | U/D area _n_'s files (`i.UD`, `i/SM.fixer`)
+| `d.n.Main` | Directory | the news list: a count, then the items' names (`i/lo-news`, `i/NM.sort`, `i/NM.update`)
+| `n.` _item_ | System | a news item (`i/lo-news`)
+| `u.biographies` | User | the users' biographies, a REL record each (`i.UB`, `i/lo-UB.update`)
 | `nm.log` _n_ | E-Mail | the network log, one for each day of the week
 | `nm.P.count` | E-Mail | the dates, times and tracking numbers of network sub-board messages sent from this BBS
+|===
+
+NetMail's other `nm.` files (the node list, the outgoing list, packets, maps and the NetSub tables) are in <<netmail-files>>, and its logs in <<netmail-logs>>.
+
+=== Optional Modules [[data-files-optional]]
+
+These come with modules that aren't part of every BBS. Each is _created_ by its module.
+
+[%autowidth]
+[%header]
+|===
+| File | Drive | Holds | Module
+
+| `e.direct` | Etcetera | the directory (REL) | `i.DE`, `i.DX`
+| `e.nubbslist`, `e.nubbspt` | Etcetera | the BBS list, and a counter for it (REL, one record) | `i.BB`
+| `e.top ten` | Etcetera | a top ten list, shown | `sub.misc2`
+| `e.ss.` _file_ | Etcetera | the comments on an uploaded file; scratched with the file | `i.UD`, `i/MM.u_d_c`
+| `e.jerks`, `e.jvoters`, `n.$Jerk Award` | Etcetera, Etcetera, System | the Jerk Award: the nominees, who has voted, and the winner's news item | `i.JA`, `i/lo-jerk`
+| `e.grf` | Etcetera | what callers have written on the wall (WallWriter) | `i/lo-wall`
+| `e.g.five`, `e.g.five-sh`, `s.g.five`, `s.g.five-sh` | Etcetera, System | Greed's games this week: full game and single hand | `i/lo_gd`, `i/lo_gd.seq`
+| `s.greed winner`, `s.grd.bak`, `n.$Greed Winner` | System | the week's Greed winners, a backup, and their news item | `i/lo_gd`
+| `e.new temp` | Etcetera | the new users for the `n.$Welcome!` news item, which it writes | `i/lo_an`
+| `d.votes`, `v.t.` _topic_, `v.r.` _topic_ | Directory, Etcetera | the voting booth's topics (name, date, access), and each topic's text and the reasons voters give | `i.VB`, `i/lo-vote`
+| `e.bbs` | Etcetera | (only checked for: opened and closed) | `i.NM_auto`
+|===
+
+=== Read When Converting [[data-files-converting]]
+
+`i/su.config` and `i/IM.modem` read these files from an older Image BBS when you convert it (see <<convert-12>> and <<convert-20>>):
+
+[%autowidth]
+[%header]
+|===
+| File | From | Read by
+
+| `d.data` | the boot disk: the drive setup, made from the old system's `bd.data` if it isn't there | `i/su.config`
+| `e.i.macro` | 1.2's macros, moved into `e.macros` and then scratched | `i/su.config`
+| `e.modrc` | 1.2's modem setup | `i/IM.modem` (<<im-modem-setup>>, option kbd:[3])
 |===
 
 === Today in History: `today.` _Mon_ and `s.today/hist` [[data-files-today]]
