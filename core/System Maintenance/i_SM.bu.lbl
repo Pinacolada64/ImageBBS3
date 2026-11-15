@@ -24,7 +24,7 @@
 4026 data "1:u.config"
 4028 data "1:e.data"
 4030 data "1:e.stats"
-4032 data "1:e.cr.pool1"
+4032 data "1:e.cr.pool 1"
 4034 data "1:e.daily stats"
 4036 data "1:u.index"
 4038 data "1:u.weedinfo"
