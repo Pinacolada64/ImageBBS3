@@ -458,7 +458,8 @@ Set it, then call <<prg-im-routines.adoc#line-2,`gosub 2`>> (or `3` or `4`).
 | `f1`
 | BBS
 | icon:times-circle[role=red]
-| What `i.lo` does next (its line 3004, `on f1 goto`): `0` wait for a call, `1` log off with the logoff screen (`O`, or the time limit ran out), `2` log off without it (`O!`, or after an error), `3` after boot, a reload or AutoMaint, `4` log on, `5` go to the main prompt.
+| What `i.lo` does next (its line 3004, `on f1 goto`): `0` a call has come in, so log the caller on, `1` log off with the logoff screen (`O`, or the time limit ran out), `2` log off without it (`O!`, or after an error), `3` show the "`Wait For Call`" screen (after boot, a reload or AutoMaint), `4` log on (`i/lo.on`), `5` go to the main prompt.
+See <<prg-im-routines.adoc#line-302,line 302>>.
 
 | `f2`
 | Work
@@ -913,6 +914,7 @@ ML variables 40-47.
 | User
 | icon:times-circle[role=red]
 | 20-character string which determines the user`'s status flags.
+See <<prg-im-routines.adoc#user-flags,User Flags>>, and <<prg-im-routines.adoc#line-11,`gosub 11`>> to read one.
 
 | `hx$`
 | BBS
@@ -1132,8 +1134,9 @@ ML variable 10.
 | `uf$`
 | User
 | icon:times-circle[role=red]
-| User flags: a string of 20 characters containing 19 separate access flags (flag 18 is two characters).
-See <<prg-im-routines.adoc#user-flags,User Flags>>.
+| The caller`'s settings, one digit each: `1` line feeds (`lf`), `2` the More prompt (`0` off, `1` on, `2` messages only), `3` graphic menus; characters 6-8 are the time zone.
+`sub.param1` sets most of them.
+(The access flags are in `fl$`.)
 
 | `uu$`
 | BBS
