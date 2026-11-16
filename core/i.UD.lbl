@@ -55,9 +55,10 @@
 3080 gosub62:gosub30:i=1:x=3:gosub16:x=14:gosub16:x=32:gosub16
 3082 ify=1thenforx=2to24step11:gosub16:next:x=31:gosub16
 3084 x=25:gosub16:close2:return
-3086 rn=rn-1:onrn+1goto3008:forx=kktorn:u%=x:v%=x+1:gosub3088:next:return
+3086 rn=rn-1:onrn+1goto3087:forx=kktorn:u%=x:v%=x+1:gosub3088:next
+3087 cj=rn+1:cs$="?":goto3115
 3088 c%(u%)=c%(v%):d%(u%)=d%(v%):f%(u%)=f%(v%):dt$(u%)=dt$(v%)
-3090 nn$(u%)=nn$(v%):ed$(u%)=ed$(v%):return
+3090 nn$(u%)=nn$(v%):ed$(u%)=ed$(v%):cj=u%:cs$=mid$(cf$,v%,1):goto3115
 3092 a$="a":goto34
 3094 dt$(kk)=left$(dt$(kk),11)+d1$+mid$(dt$(kk),23):return
 3096 a%=bn:&"{f6}{green}U/D {pound}$h #{pound}%a: {lt. red}":a$=bb$(bn):gosub3006:lp=1:&:d2$=a$
@@ -69,7 +70,14 @@
 3108 input#2,a$:rn=val(a$):ifrn=.then3114
 3110 forx=1torn:input#2,c%(x),nn$(x):&,2,2
 3112 dt$(x)=a$:&,2,2:ed$(x)=a$:input#2,d%(x),f%(x):next
-3114 close2:goto3004
+3114 close2:gosub3375:goto3004
+' 11/15/2026: comment flags, so the About screen (3488) needn't look for a
+' comment file on every move: cf$ has a character for each entry (61): "0" no
+' comments, "1" has some, "?" don't know (look on the disk, as before).
+' 3375 makes them once, when a library is loaded, from the Etcetera disk's
+' directory of e.ss.* files; entries copied (3088) take theirs along, and
+' slots freed by deleting go back to "?". 3115 sets slot cj to cs$
+3115 cf$=left$(cf$,cj-1)+cs$+mid$(cf$,cj+1):return
 3116 a%=.:ifrn=.then3122
 3118 forx=1torn:ifmid$(dt$(x),2,10)>mid$(ld$,2)thena%=a%+1
 3120 next:ifa%then:&"{f6}{blue} -{lt. blue} New {pound}$js  {blue}:{white} {pound}%a"
@@ -202,6 +210,15 @@
 3370 lm=1:goto3392
 3372 lm=2:goto3392
 3374 lm=7:goto3390
+' 11/15/2026: the comment flag scan (3114 calls it; see 3115)
+3375 cf$="":forcj=1to61:cf$=cf$+mid$("0?",1-(cj>rn),1):next:ifrn=.thenreturn
+3376 dr=3:gosub2:open2,dv%,0,"$"+dr$+"e.ss.*":get#2,a$,a$:&,8,2,1
+3377 &,8,2,1:if64andstthenclose2:return
+' &,8,2,1 puts the block count in characters 1-5 and a space at 6, so the
+' name's quote is character 7: "e.ss.", then (from 13) the first 11 characters of
+' the entry's filename (as 3488 builds it), then the closing quote
+3379 forcj=1torn:cs$=mid$(dt$(cj),23):cs$=left$(left$(cs$,len(cs$)-2),11):ifmid$(a$,13,len(cs$)+1)=cs$+qt$thencs$="1":gosub3115:cj=rn
+3380 next:goto3377
 3384 b$="u/d/c":goto3402
 3386 b$="ud-trans":goto3402
 3388 b$="ud-local":goto3402
@@ -233,8 +250,8 @@
 3446 a%=jm:&"{f6}{lt. blue}Auto-Logoff when Completed?: ":gosub94:jm=a:return
 3448 ld$=lt$:f1=2:goto302
 3450 dt$(kk)=d1$+d1$+b$
-3452 c%(rn+1)=c%(kk):nn$(rn+1)=nn$(kk):dt$(rn+1)=dt$(kk):ed$(rn+1)=ed$(kk)
-3454 d%(rn+1)=d%(kk):f%(rn+1)=f%(kk):forx=kktorn:u%=x:v%=x+1:gosub3088:next:return
+3452 c%(rn+1)=c%(kk):nn$(rn+1)=nn$(kk):dt$(rn+1)=dt$(kk):ed$(rn+1)=ed$(kk):cj=rn+1:cs$=mid$(cf$,kk,1):gosub3115
+3454 d%(rn+1)=d%(kk):f%(rn+1)=f%(kk):forx=kktorn:u%=x:v%=x+1:gosub3088:next:cj=rn+1:cs$="?":goto3115
 3456 gosub3010:on-(a>rn)goto3016:a=a-(a=.):x%=a:gosub3072:gosub3014:&,11,5:tz=.
 3458 fori=x%torn:gosub3058:ifq=.anda$<>nn$(i)then3468
 3460 kk=i:gosub3060:gosub3062:tt$(i)=b$:a=i:gosub3174:&"{orange}Kill?: ":gosub7
@@ -247,18 +264,27 @@
 3473 z$="e.ss."+left$(tt$(i),13):lx=dr:dr=3:a$=z$:gosub19:dr=lx:lx=.
 3474 ona%(i)goto3478:a$=tt$(i):gosub3004:gosub19
 3476 gosub3058:ifa$=nn$(i)andq=.thena=2:gosub11:cr=cr-c%(i)*a:ifcr<1thencr=.
-3478 next:gosub62:rn=rn-tz:goto3150
+3478 next:gosub62:rn=rn-tz:forcj=rn+1torn+tz:cs$="?":gosub3115:next:goto3150
 3480 on-(tr%<1)goto3264:bl=-(an$="E"oran$="M"oran$="U"oran$="V"oran$="R"oran$="D")
 3482 ifkkandq=1andan$="V"thenkk=a:gosub3356:a=kk:jm=.:goto3296
+' 11/15/2026: print comment lines from LFN 2 until "^" (&,2 also gives "^" at the
+' end of the file) or an abort. &,2,2, not input#, so commas and colons are read
+3483 &,2,2:on-(a$="{^}"orrc<>.)goto999:&"    "+a$+"{f6}":goto3483
 3484 goto3306
 3485 &,40
 3486 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
 3487 &"{f6}Sorry {pound}$b Limit Exceeded {f6}":return
 3488 lx$=mid$(dt$(a),23):lx$=left$(lx$,len(lx$)-2):f2%=a:f1%=.
-3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:get#2,a$:ifa$="!"then3492
-3490 ife%then:&"{up}    {yellow}Comment Status: {lt. red}{rvrs on} No Comments {rvrs off}{f6:2}{pound}q0"
-3491 close2:close1:return
-3492 close2:close1:&"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6:2}{pound}q0":return
+' 11/15/2026: as Pinacolada's rewrite of 2.0's +.MM.ud-about did, print the
+' status's start once, then just the word; one exit (3491). A file without
+' "!" first now shows "No Comments" (it showed no status at all)
+3489 &"{up}    {yellow}Comment Status: {rvrs on}":on-(mid$(cf$,a,1)="0")goto3490:dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:&,2,2:ifa$="!"then3492
+3490 &"{lt. red} No Comments {rvrs off}{f6}"
+3491 close2:close1:&"{f6}{pound}q0":return
+' 11/15/2026: show the first comment, under the status: after the "!" line, the
+' handle, account number and date, then lines until "^" (each read with &,2,2,
+' as 3489 now reads the "!" line: get#2 left its carriage return to be read)
+3492 &"{lt. green} Commented {rvrs off}{f6}":&,2,2:z$=a$:&,2,2:&,2,2:&"{lt. blue}    First comment from {white}{pound}$z{f6}{cyan}":gosub3483:goto3491
 3493 x=1:gosub390:pf=.:f1=.:goto300
 3494 f1=2:goto302
 3495 &,52,$34,3:on-(a%=.)goto3496:poke53370,0:&,52,$35,0

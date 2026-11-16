@@ -11,17 +11,23 @@
 {assign:3291	=3291	}
 {assign:3296	=3296	}
 {assign:3297	=3297	}
+{assign:3115	=3115	}
 
 4000 rem:"i/MM.u/d/c"
 4002 pr$=d4$:&,27:on-(e%>0)goto4048
 4004 dr=3:z$="e.ss."+left$(lx$,11)
-4006 a$=z$+",s,r":gosub4:get#2,a$
-4008 input#2,nn$:input#2,nx$:input#2,da$
-4010 an$=nn$:&"{clear}{pound}cm{pound}vz {pound}co{pound}r1 From: {pound}r0  {pound}cn{pound}v7"
+' 11/15/2026: the comment file is read with &,2,2, a line at a time: get#2 read
+' just the "!" (leaving its carriage return), and input# stops at a comma or
+' colon. At the end of the file, &,2,2 gives "^" and sets st to 64
+4006 a$=z$+",s,r":gosub4:&,2,2
+4008 &,2,2:nn$=a$:&,2,2:nx$=a$:&,2,2:da$=a$
+' 11/15/2026: reset the More? line count (usrlin, 970) before each comment's
+' first separator line, so a comment starts counting from the top
+4010 poke970,.:an$=nn$:&"{clear}{pound}cm{pound}vj {pound}co{pound}r1 From: {pound}r0  {pound}cn{pound}v7"
 4012 an$=nx$:&"  {pound}co[ {pound}c1#{pound}v7{pound}co]":an$=da$:&"{f6} {pound}r1 Date: {pound}r0  {pound}co{$04}"+an$
-4014 &"{f6}{pound}cm{pound}vz{pound}n1{pound}c7":an$=""
-4016 input#2,a$:ifa$<>"{^}"andrc=0then:&a$:&"{f6}":goto4016
-4018 ifrctheninput#2,a$:on-(a$<>"{^}")goto4018
+4014 &"{f6}{pound}cm{pound}vj{pound}n1{pound}c7":an$=""
+4016 &,2,2:ifa$<>"{^}"andrc=0then:&a$:&"{f6}":goto4016
+4018 ifrcthen:&,2,2:on-(a$<>"{^}")goto4018
 4020 &"{f6:2}"
 4022 &"{pound}c7{pound}r1 (N)-Next (Q)-Quit :{pound}r0{pound}g1":ifan$>=" "then:&an$
 4024 &"{f6}":iftr%<1then4088
@@ -30,7 +36,7 @@
 4030 &"  {pound}c3[Q]{pound}co-{pound}r1 Quit        {pound}r0{f6:2}  {pound}c2>>{pound}cn{pound}r1 Command {pound}r0{pound}c2>> {pound}g1"
 4032 &an$:iftr%<1then4088
 4034 on-(an$="A")-(an$="Q")*2goto4060,3297:goto4028
-4036 lr=0:get#2,a$:lr=((st)and66):onsgn(lr)+1goto4008,4028
+4036 lr=0:&,2,2:lr=((st)and66):onsgn(lr)+1goto4008,4028
 4038 goto4004
 4040 on-((an$="N")or(an$=r$))goto4036:goto4020
 4042 an$=lx$:&"{f6:2}{pound}c7{pound}c1{pound}r1 Creating A File For {pound}r0{pound}c3 {pound}r1 {f5}{pound}v7{f5} {f6}"
@@ -51,7 +57,8 @@
 4070 a$="a":b$="ss."+left$(lx$,11):gosub4078
 4072 ife%thena$="w":b$="ss."+left$(lx$,11):close2:gosub4078
 4074 print#2,"!"r$;na$r$id;r$d1$
-4076 forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2:gosub4094:a=f2%:goto3297
+' 11/15/2026: the file now has comments: set its flag in i.UD's cf$ (3115)
+4076 &,14,2,kk-1:print#2,"{^}":close2:gosub4094:a=f2%:cj=a:cs$="1":gosub3115:goto3297
 4078 goto36
 4080 dr=3:gosub61:ifa<50then:close5:f1%=1:goto4084
 4082 f1%=.:&,28:d4$=pr$:return
