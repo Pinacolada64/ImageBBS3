@@ -3,6 +3,7 @@
 ' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
 ' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
 ' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+' Its strings' $61-$7a capitals (51) build as $c1-$da, the usual capitals: both show as capitals.
 
 {uses:3_0-preface.lbl}
 {alpha:alt}
@@ -10,31 +11,11 @@
 3000 rem image file readers - 12/18/2015
 3002 rem original by der deutscher - 03/01/1995
 3006 &"{pound}f1{blue}{pound}vj{rvrs off} {rvrs on}{lt. blue} File Reader Utilities{pound}{back arrow}39{rvrs off}{f6}{blue}{pound}vj{f6:2}{green}"
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3008 &"[d]IRECTORY rEADER{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3010 &"[p]ROGRAM rEADER{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3012 &"[r]ELATIVE rEADER{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3014 &"[s]EQUENTIAL rEADER{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3016 &"[q]UIT{f6:2}"
-{alpha:alt}
+3008 &"[D]irectory Reader{f6}"
+3010 &"[P]rogram Reader{f6}"
+3012 &"[R]elative Reader{f6}"
+3014 &"[S]equential Reader{f6}"
+3016 &"[Q]uit{f6:2}"
 3018 &"Read: {pound}g1"
 3020 on-(an$="D")-2*(an$="P")-3*(an$="R")-4*(an$="S")gosub3118,3028,3060,3132
 3022 ifan$<>"Q"andtr%>1then3006
@@ -46,113 +27,53 @@
 3034 &"{f6}{gray2}Enter Filename:{lt. blue} ":gosub289:ifan$=""thenreturn
 3036 a$=an$+",p,r"
 3038 gosub4:ife%then:&:goto3032
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3040 gosub3046:gosub3054:&,16,x,y:&"{f6:2}{pound}#0{pound}%A bLOCKS rEAD{f6:2}"
-{alpha:alt}
+3040 gosub3046:gosub3054:&,16,x,y:&"{f6:2}{pound}#0{pound}%a Blocks Read{f6:2}"
 3042 close2:close15:goto3032
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3044 &"{f6}dEVICE nOT pRESENT{f6}":goto3036
-{alpha:alt}
+3044 &"{f6}Device Not Present{f6}":goto3036
 3046 &,52,16,3:ifa%=.then3052
 3048 &,52,18,3:ifa%=.thenx=.:return
 3050 &,52,19,3:ifa%=.thenx=.:return
 3052 &"{f6}Display control codes in expanded form{f6}(BASIC only)?: ":gosub94:x=a:return
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3054 a%=ll%:&"{f6}sCREEN WIDTH (return={pound}#0{pound}%A): {pound}I1":y=val(an$):ify<22ory>80theny=ll%
-{alpha:alt}
+3054 a%=ll%:&"{f6}Screen width (RETURN={pound}#0{pound}%a): {pound}i1":y=val(an$):ify<22ory>80theny=ll%
 3056 return
 3058 rem relative file reader
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3060 &"{clear}{f6:2}{pound}{back arrow}09{green}-<>{rvrs on}{blue}  rELATIVE fILE  {rvrs off}{green}<>-{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3062 &"{pound}{back arrow}09{green}-<>{rvrs on}{blue} rEADER & eDITOR {rvrs off}{green}<>-{f6}"
-{alpha:alt}
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3064 &"{pound}{back arrow}09{yellow}wRITTEN bY: tHE pHANTOM{f6}"
-{alpha:alt}
+3060 &"{clear}{f6:2}{pound}{back arrow}09{green}-<>{rvrs on}{blue}  Relative File  {rvrs off}{green}<>-{f6}"
+3062 &"{pound}{back arrow}09{green}-<>{rvrs on}{blue} Reader & Editor {rvrs off}{green}<>-{f6}"
+3064 &"{pound}{back arrow}09{yellow}Written By: The Phantom{f6}"
 3066 &"{f6}{f5}${f5} gets a directory."
 3068 poke53252,16:&"{f6:2}Filename: ":gosub289:f$=an$:iff$=""thenreturn
 3070 gosub349:gosub350
 3072 gosub353:ifathen:&"Device Not Present":goto3066
 3074 iff$="$"thengosub3118:goto3060
 3076 a$=f$:gosub4:ife%then:&:goto3066
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3078 rc=.:&"{f6}rECORD (a=aLL): {pound}I1{f6}":x=val(an$):on-(an$="")-2*(an$="{$c1}")goto3066,3104
-{alpha:alt}
+3078 rc=.:&"{f6}Record (A=All): {pound}i1{f6}":x=val(an$):on-(an$="")-2*(an$="A")goto3066,3104
 3080 ifx<1thenclose2:&"{f6}":goto3066
 3082 r%=x:gosub1:gosub5:ife%=50then:&"{f6}{pound}$e{f6}":goto3078
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3084 f%=0:&"{clear}{f6}{rvrs on}{lt. blue}    rECORD #{pound}%R{rvrs on}    {rvrs off}{f6}"
-{alpha:alt}
+3084 f%=0:&"{clear}{f6}{rvrs on}{lt. blue}    Record #{pound}%r{rvrs on}    {rvrs off}{f6}"
 3086 f%=f%+1:&,2,2:tt$(f%)=a$
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3088 &"{lt. red}fIELD #{white}{pound}%F{cyan}{f6}"+tt$(f%)+"{f6}":ifst=.then3086
-{alpha:alt}
+3088 &"{lt. red}Field #{white}{pound}%f{cyan}{f6}"+tt$(f%)+"{f6}":ifst=.then3086
 3090 &"{f6} Edit (Y/N)? ":gosub94:ifa=.then3078
 3092 e=f%:iff%>1then:&"{f6} Which Field? {pound}i1":e=val(an$):ife<1ore>f%then3078
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3094 &"{f6}sTANDARD EDITING KEYS ARE AVAILABLE.{f6}return BY ITSELF ABORTS.{f6}"
-{alpha:alt}
+3094 &"{f6}Standard editing keys are available.{f6}RETURN by itself aborts.{f6}"
 3096 poke53252,254:pl=.:w$=tt$(e):p$="Field"+str$(e):&,1,32:ifan$<>""thentt$(e)=an$
 3098 gosub1:w$=tt$(1):iff%>1thenfora=2tof%:w$=w$+r$+tt$(a):next
 3100 print#2,w$:gosub5:ife%then:&
 3102 goto3078
 3104 r%=0:f%=0:x=1:gosub1:gosub5:ife%then:&:goto3066
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3106 r%=r%+1:&"{f6}{rvrs on}{lt. blue}    rECORD #{pound}%R{rvrs on}    {rvrs off}{f6:2}"
-{alpha:alt}
+3106 r%=r%+1:&"{f6}{rvrs on}{lt. blue}    Record #{pound}%r{rvrs on}    {rvrs off}{f6:2}"
 3108 f%=f%+1:&,2,2:tt$(f%)=a$
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3110 &"{lt. red}fIELD #{white}{pound}%F{cyan}{f6}"+tt$(f%)+"{f6}":ifrcthen3066
-{alpha:alt}
+3110 &"{lt. red}Field #{white}{pound}%f{cyan}{f6}"+tt$(f%)+"{f6}":ifrcthen3066
 3112 on-(st=.)goto3108:x=x+1:gosub1:gosub5:ife%=50thenclose2:goto3066
 3114 f%=0:goto3106
 3116 rem directory reader
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3118 &"{clear}{f6:2}{pound}{back arrow}11{rvrs on}{lt. red}qUIK dIRECTORY{rvrs off}{f6:3}{yellow}"
-{alpha:alt}
+3118 &"{clear}{f6:2}{pound}{back arrow}11{rvrs on}{lt. red}Quik Directory{rvrs off}{f6:3}{yellow}"
 3120 gosub349:gosub350:onagoto3128
 3122 an$="":&"{f6}{rvrs on}{lt. green}Pattern ({f7}):{rvrs off}{white} ":gosub289:ifan$=""thenan$="*"
 3124 close1:&"{f6}":open1,dv%,0,"$"+dr$+an$:&,8,1:close1
 3126 &"{f6:2}{rvrs on}{lt. green}Another?{rvrs off}{white} ":gosub94:onagoto3118:return
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3128 &"{white}dEVICE nOT pRESENT{pound}W2":goto3126
-{alpha:alt}
+3128 &"{white}Device Not Present{pound}w2":goto3126
 3130 rem seq file reader
-' (next line, {alpha:ascii}: its strings use $61-$7a capitals; here they're in
-' lower case, and the strings' lower case letters are capitals)
-{alpha:ascii}
-3132 &"{clear}{f6:2}{pound}{back arrow}11{rvrs on}{lt. green}sEQ fILE rEADER{rvrs off}{f6:3}{yellow}":a=2
-{alpha:alt}
+3132 &"{clear}{f6:2}{pound}{back arrow}11{rvrs on}{lt. green}Seq File Reader{rvrs off}{f6:3}{yellow}":a=2
 3134 gosub349:onagoto3144:gosub350:gosub353
 3136 &"{f6:2}{lt. blue}{rvrs on}Filename?:{rvrs off}{white} ":gosub289:ifan$=""thenclose2:return
 3138 a$=an$+",s,r":gosub4:ife%then:&:goto3142

@@ -33,8 +33,10 @@
 # mode, so the rebuilt rems differ from the original in those bytes only.
 #
 # In "strings", C64List writes both $c1-$da and $61-$7a capitals as ASCII
-# A-Z, which build as $c1-$da; tools/keepcase.py writes the $61-$7a ones as
-# {$xx}, so they build as they were.
+# A-Z, which build as $c1-$da, the usual capitals. Both show as capitals in
+# lower/upper case mode, so a program whose strings have $61-$7a capitals
+# rebuilds with them changed to $c1-$da, and the script says how many. (A
+# test such as an$="D" needs $c1-$da anyway, as typed input has.)
 #
 # Afterwards, the listing is built again and compared with the original (with
 # the same rem capitals changed to $61-$7a): the script fails unless the two
@@ -141,17 +143,16 @@ c64list orig.prg -txt:orig.txt "${detok_opts[@]}" > "$tmp/detok.log" 2>&1 \
 		for n in ${assigns//,/ }; do printf '{assign:%s\t=%s\t}\r\n' "$n" "$n"; done
 	fi
 	printf '\r\n'
-	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing \
-		| python3 -I "$repo/tools/keepcase.py" "$tmp/orig.prg"
+	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
 } > "$tmp/new.lbl"
 
-# the original, with capitals in rem text changed the way C64List builds them
-# ($c1-$da -> $61-$7a); prints how many were changed
+# the original, with capitals changed the way C64List builds them: in rem text
+# $c1-$da -> $61-$7a, in strings $61-$7a -> $c1-$da; prints how many of each
 remcaps() {
 	python3 -I -c '
 import sys
 src, dst = sys.argv[1], sys.argv[2]
-p = bytearray(open(src, "rb").read()); i = 2; n = 0
+p = bytearray(open(src, "rb").read()); i = 2; n = s = 0
 while i + 4 <= len(p) and (p[i] or p[i+1]):
     i += 4; quoted = rem = False
     while p[i]:
@@ -161,11 +162,14 @@ while i + 4 <= len(p) and (p[i] or p[i+1]):
                 p[i] = c - 0x60; n += 1
         elif c == 0x22:
             quoted = not quoted
-        elif c == 0x8f and not quoted:
+        elif quoted:
+            if 0x61 <= c <= 0x7a:
+                p[i] = c + 0x60; s += 1
+        elif c == 0x8f:
             rem = True
         i += 1
     i += 1
-open(dst, "wb").write(p); print(n)
+open(dst, "wb").write(p); print(n, s)
 ' "$1" "$2"
 }
 
@@ -178,7 +182,7 @@ c64list new.lbl -prg:new.prg $crunch_opt > "$tmp/build.log" 2>&1 \
 # byte. If that is the only difference (compared as listings, with trailing
 # colons and spaces ignored), the program still behaves the same. A line that
 # ends inside an open quote keeps them: there they are part of the string.
-caps=$(remcaps "$tmp/orig.prg" "$tmp/want.prg")
+read -r caps scaps < <(remcaps "$tmp/orig.prg" "$tmp/want.prg")
 same="rebuilds byte-for-byte identical"
 if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
@@ -203,6 +207,10 @@ for line in sys.stdin:
 	same="rebuilds identically except for $n lines' trailing \":\" or spaces, which C64List removes"
 fi
 [ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
+[ "$scaps" -gt 0 ] && same="$scaps \$61-\$7a capitals in strings now \$c1-\$da; $same"
 
-sed "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" "$tmp/new.lbl" > "$out"
+strnote=
+[ "$scaps" -gt 0 ] && strnote="' Its strings' \$61-\$7a capitals ($scaps) build as \$c1-\$da, the usual capitals: both show as capitals.\r\n"
+sed -e "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" \
+	-e "0,/^\r\?$/s||$strnote&|" "$tmp/new.lbl" > "$out"
 echo "$out: $(grep -c '' "$out") lines; $same"
