@@ -58,7 +58,7 @@
 4072 ife%thena$="w":b$="ss."+left$(lx$,11):close2:gosub4078
 4074 print#2,"!"r$;na$r$id;r$d1$
 ' 11/15/2026: the file now has comments: set its flag in i.UD's cf$ (3115)
-4076 forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2:gosub4094:a=f2%:cj=a:cs$="1":gosub3115:goto3297
+4076 &,14,2,kk-1:print#2,"{^}":close2:gosub4094:a=f2%:cj=a:cs$="1":gosub3115:goto3297
 4078 goto36
 4080 dr=3:gosub61:ifa<50then:close5:f1%=1:goto4084
 4082 f1%=.:&,28:d4$=pr$:return
