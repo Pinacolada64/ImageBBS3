@@ -1,0 +1,29 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ud-sort" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 &"{f6}{pound}q0 (N) Filename{f6} (S) Filesize{f6} (D) Times {pound}$ked{f6:2} Sort By?: {pound}g1"
+4002 x=-(an$="N")-2*(an$="S")-3*(an$="D"):ifx=0then4032
+4004 a%=rn:&"{f6}Sorting {pound}%a Files..."
+4006 fori=1torn:&".":a%(i)=0:forj=1toi:ifa%(j)=0then4010
+4008 onxgosub4100,4102,4104:ifathennext
+4010 b%=a%(j):a%(j)=i:forj=jtoi:c%=a%(j+1):a%(j+1)=b%:b%=c%:next:next
+4012 &"{f6}":b$="Bk":ifco%>2thenb$="Kb"
+4014 poke970,0:&"{f6}{white} ## {lt. red}{pound}$b's   {green}Dl'd  {lt. blue}Name{f6}{orange}{pound}vj"
+4016 fori=1torn:a=a%(i)
+4018 b$=mid$(dt$(a),23):iff%(a)>.thenc$="{lt. blue}{f5}{pound}$b{f5}":goto4024
+4020 c$="{yellow}(Unvalidated)":a$=right$("0000"+mid$(str$(id),2),4)+na$
+4022 if(qora$=nn$(a))thenc$="{white}*{lt. blue}{f5}{pound}$b{f5}"
+4024 a%=a:b%=c%(a):c%=f%(a)-1:ifc%<0thenc%=0
+4026 ifco%>2thenb%=(b%*254)/1024:ifb%<1thenb%=1
+4028 &" {white}{pound}#2{pound}# {pound}%a {lt. red}[{white}{pound}#4{pound}%b{lt. red}] {green}{pound}#3[{white}{pound}%c{green}] {lt. blue}"+c$+"{f6}":ifrctheni=rn
+4030 next:&"{orange}{pound}vj"
+4032 return
+4100 a=mid$(dt$(i),12)>mid$(dt$(a%(j)),12):return
+4102 a=c%(i)<c%(a%(j)):return
+4104 a=f%(i)<f%(a%(j)):return

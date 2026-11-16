@@ -1,0 +1,69 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.u/d/c" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.UD's lines: i.UD is in memory when this module runs)
+{assign:3291	=3291	}
+{assign:3296	=3296	}
+{assign:3297	=3297	}
+
+4000 rem:"i/MM.u/d/c"
+4002 pr$=d4$:&,27:on-(e%>0)goto4048
+4004 dr=3:z$="e.ss."+left$(lx$,11)
+4006 a$=z$+",s,r":gosub4:get#2,a$
+4008 input#2,nn$:input#2,nx$:input#2,da$
+4010 an$=nn$:&"{clear}{pound}cm{pound}vz {pound}co{pound}r1 From: {pound}r0  {pound}cn{pound}v7"
+4012 an$=nx$:&"  {pound}co[ {pound}c1#{pound}v7{pound}co]":an$=da$:&"{f6} {pound}r1 Date: {pound}r0  {pound}co{$04}"+an$
+4014 &"{f6}{pound}cm{pound}vz{pound}n1{pound}c7":an$=""
+4016 input#2,a$:ifa$<>"{^}"andrc=0then:&a$:&"{f6}":goto4016
+4018 ifrctheninput#2,a$:on-(a$<>"{^}")goto4018
+4020 &"{f6:2}"
+4022 &"{pound}c7{pound}r1 (N)-Next (Q)-Quit :{pound}r0{pound}g1":ifan$>=" "then:&an$
+4024 &"{f6}":iftr%<1then4088
+4026 on-(an$="Q")-(an$="N"oran$="")*2goto3297,4040:goto4040
+4028 close2:close1:&"{f6:2}{cyan}{pound}r1 End Of Comments... {f6}":&"{f6:2}  {cyan}[A]{gray3}-{pound}r1 Add Comment {f6}"
+4030 &"  {pound}c3[Q]{pound}co-{pound}r1 Quit        {pound}r0{f6:2}  {pound}c2>>{pound}cn{pound}r1 Command {pound}r0{pound}c2>> {pound}g1"
+4032 &an$:iftr%<1then4088
+4034 on-(an$="A")-(an$="Q")*2goto4060,3297:goto4028
+4036 lr=0:get#2,a$:lr=((st)and66):onsgn(lr)+1goto4008,4028
+4038 goto4004
+4040 on-((an$="N")or(an$=r$))goto4036:goto4020
+4042 an$=lx$:&"{f6:2}{pound}c7{pound}c1{pound}r1 Creating A File For {pound}r0{pound}c3 {pound}r1 {f5}{pound}v7{f5} {f6}"
+4044 a$="{white} Created Comment file: {lt. red}"+lx$:gosub50
+4046 goto4064
+4048 gosub4080
+4050 an$=lx$
+4052 &"{f6:2}{pound}c3Would You Like To Start A{f6}Comment File For {pound}c7{pound}r1 {pound}v7 {pound}r0{pound}c3 ?{f6:2}"
+4054 &"{pound}c2 >>{pound}c1[{pound}cn{pound}r1 Y/N {pound}r0{pound}c1]{pound}c2> {pound}g1":iftr%<1then4088
+4056 ifan$="N"then3291
+4058 goto4042
+4060 dr=3:gosub61:ifa<50then:close5:gosub4084:goto3296
+4062 an$=lx$
+4064 &"{pound}f1{pound}c1{pound}vj {pound}cn{pound}r1{pound}{back arrow}11*{pound}c2 COMMENT{shft space}EDITOR {pound}cn*{pound}{back arrow}39{pound}r0{f6}{pound}c1{pound}vj"
+4066 &"{f6} {pound}co{pound}r1 Loading Editor.... {f6:2}":im=1:gosub440:ifkk=.thenz=.:a=f2%:goto3297
+4068 &"{f6:2} {pound}co{pound}r1 Filing Comment....{f6}":a$="{purple} Posted Comment on: {lt. green}"+lx$+r$
+4069 a$=a$+" {cyan}"+sg$+" SIG "+"{green}U/D#"+mid$(str$(bn),2)+":{lt. blue}"+mid$(bb$(bn),4):gosub50
+4070 a$="a":b$="ss."+left$(lx$,11):gosub4078
+4072 ife%thena$="w":b$="ss."+left$(lx$,11):close2:gosub4078
+4074 print#2,"!"r$;na$r$id;r$d1$
+4076 forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2:gosub4094:a=f2%:goto3297
+4078 goto36
+4080 dr=3:gosub61:ifa<50then:close5:f1%=1:goto4084
+4082 f1%=.:&,28:d4$=pr$:return
+4084 &"{f6:2}{pound}c1Please Notify Sysops That{f6}The Directory Was Too Full To"
+4086 &"{f6}{pound}c7Leave A Comment On Disk!{f6:2}{pound}w4":&,28:d4$=pr$:return
+4088 rm=k8:f1%=.:lr=.:zz=.:d4$=pr$:z$="":lx$="":nn$="":nx$="":da$="":forx=1to9
+4090 tt$(x)=l$(x):ed$(x)=m$(x):m$(x)="":l$(x)=""
+4092 next:x=k9:kk=k7:a=kk:c$="":gosub4094:goto3297
+4094 g$="Comment":c%=0:fori=1tokk-1:c%=c%+len(tt$(i)):next:ifc%<40thenreturn
+4096 a=2:gosub11:c%=(int(c%/10))*(a+m%):ifc%>50thenc%=50
+4098 cr=cr+c%:b$=str$(cr)
+4100 &"{f6:2}{yellow}Your {white}{pound}$g{yellow} Earned {white}{pound}%c{yellow} Credits,{f6}You Now Have{white}{pound}$b{yellow} Total!{f6}{pound}w4":return
+4102 rem modded by darkstar april 2018           atlantis    atl.ddns.net 6401
+4104 rem "+.MM.u/d/c":version 3 combining    by: iron axe of future systems '93
+4106 rem:"i/MM.u/d/c (c)nissa 190201 lh"

@@ -1,0 +1,94 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ud-trans" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.UD's lines: i.UD is in memory when this module runs)
+{assign:3002	=3002	}
+{assign:3004	=3004	}
+{assign:3008	=3008	}
+{assign:3012	=3012	}
+{assign:3022	=3022	}
+{assign:3030	=3030	}
+{assign:3032	=3032	}
+{assign:3040	=3040	}
+{assign:3048	=3048	}
+{assign:3058	=3058	}
+{assign:3062	=3062	}
+{assign:3066	=3066	}
+{assign:3068	=3068	}
+{assign:3074	=3074	}
+{assign:3124	=3124	}
+{assign:3150	=3150	}
+{assign:3214	=3214	}
+{assign:3264	=3264	}
+{assign:3444	=3444	}
+{assign:3448	=3448	}
+{assign:3487	=3487	}
+{assign:3495	=3495	}
+
+4000 rem "i/MM.ud-trans (upload)"
+4002 on-(((f2and1)=1)and(q=.))goto3048:&"{f6} - {pound}$l To {pound}v8:{f6}"
+4004 fl=-(z$="UM"):gosub3002:onl%goto4012:gosub3004:gosub61:ifa<250then:x=2:gosub390:goto3214
+4006 on-(co%>2)goto4008:ifa<664thenb$=str$(a):&"{f6}{lt. blue}{pound}$b Blocks Free: Room Enough? ":gosub94:ona+1goto3214:goto4010
+4008 ifa<664thena=int((a*254)/1024):b$=str$(a):&"{f6}{lt. blue}{pound}$b Kbytes Free: Room Enough? ":gosub94:ona+1goto3214
+4010 gosub60:ifa<.then:b$="Time":gosub3487:goto3214
+4012 ifrn>59thengosub3032:goto3214
+4014 gosub3002:ifl%then:&"{f6}{yellow}LOCAL MODE UPLOAD{f6}"
+4016 rs=tr%:onflgoto4052:poke53252,16:&"{f6}{white}({f7} = Batch) {green}{pound}$l ":gosub3022:tt$=an$:ifan$="{f7}"then4052
+4018 on-(tt$=""ortt$="$"orleft$(tt$,1)="@"ormid$(tt$,2,1)=":")goto3214:gosub3004
+4020 &"{f6}{lt. green}[P]RG (Binary) Or{f6}[S]EQ (Text) {pound}$j?{f6:2}U: {lt. blue}{pound}g1"
+4022 t$=chr$(asc(an$)and127):a$="SEQ{f6}":ift$<>"s"thent$="p":a$="PRG{f6}"
+4024 &:gosub3002:onl%goto4026:gosub3004:a$=tt$+","+t$+",r":gosub4:close2:ife%=.then4050
+4026 b$=co$(co%):&"{f6}{lt. red}{pound}$b Only {pound}$j?: ":gosub94:ifathenz%=co%*a:goto4032
+4028 &"{f6}{lt. green}Which Computer?:{f6}":forx=1to9:b%=x:b$=co$(x):&"{f6} {pound}%b. {pound}$b":next
+4030 &"{f6:2}{lt. blue}({white}RETURN{lt. blue} = Any Computer): {pound}g1{pound}v7{f6}":gosub3012:z%=-a*(a>.anda<10)
+4032 &"{f6}{lt. green}Please Enter A {pound}$j Description{f6}({white}RETURN{lt. green} to abort upload):"
+4034 poke53252,78:&"{f6}{lt. blue}-{pound}i0":g$="-"+an$:ifan$=""then3214
+4036 gosub3002:ifl%then:&"{f6}# Blocks?: {pound}i1":gosub3012:ontr%+1goto3264:f=a:goto4042
+4038 gosub3444:an$="Send":gosub3030:a$=tt$+","+t$+",w":gosub4
+4040 an$=tt$+","+t$:x=2:im=4:gosub443:gosub3495:&,16,1:gosub3124
+4041 gosub4078:f=a%:&,52,22,3:cu=a%:a%=f:ife%orb=.then4048
+4042 gosub4112:f$=d1$+d1$+tt$+"{f1}"+t$:gosub4075:gosub3150:gosub3002:ifl%then4046
+4044 gosub3040:c$=l$:a%=1:tt$(1)=tt$:gosub3068
+4046 a%=1:d=c%(rn):gosub3002:onl%+1goto4066,4068
+4048 gosub92:jm=.:gosub3004:a$=tt$:gosub19:goto4072
+4050 &"{f6:2}{$0f}{orange}{pound}$j Exists.{f6}":goto3214
+4052 onnbgoto4104:gosub3444:an$=m$+"Send":gosub3030:gosub4092:rk=x:gosub3124:ifb=.thengosub92:jm=.:b%=.
+4054 gosub4078:&,52,22,3:cu=a%:a%=f:d=.:gosub4078:lp=1
+4056 ifa%=.thengosub92:jm=.:goto4072
+4058 g$=m$+l$:y%=a%:fori=1toa%:b=asc(tt$(i)+nl$)+asc(mid$(tt$(i),2)+nl$)*256
+4060 b$=mid$(tt$(i),3):a$=right$(b$,1):gosub3062:tt$(i)=b$+"{f1}"+a$
+4062 d=d+b:z%=co%:f$=d1$+d1$+tt$(i):g$="-"+m$+l$:gosub4074:gosub4080:next:y%=a%:gosub3150
+4064 g$=m$+l$:gosub3040:a$="  "+g$:gosub51:c$=l$:a%=y%:gosub3068
+4066 x=3:&,25,.,x:gosub3004:gosub62:tr%=rs:on-(cu=1)goto4068:a=2:gosub11:cr=cr+(a*d)
+4068 uc=uc+a%:bu=bu+d:gosub30
+4070 i=a%:x=6:gosub16:x=17:gosub16:x=28:gosub16:x=35:gosub16:close2
+4072 &"{f6}":gosub3066:onxgoto3264:onjmgoto3448:goto3214
+4074 rn=rn+1:gosub3058:c%(rn)=b:nn$(rn)=a$:dt$(rn)=f$:goto4076
+4075 rn=rn+1:gosub3058:c%(rn)=f:nn$(rn)=a$:dt$(rn)=f$
+4076 ed$(rn)=g$:d%(rn)=z%:gosub3002:f%(rn)=1:onl%goto3008:f%(rn)=-cu:return
+4078 gosub3074:gosub5:close2:return
+4080 &"{f6}{lt. green}Please Enter A Description For"
+4082 an$="":poke53252,78:&"{f6}{white}{pound}$b{lt. green} (No Desc. Will KILL Upload!){f6}:{lt. blue}-{pound}i0"
+4084 on-(an$=""oran$=r$)goto4086:ed$(rn)="-"+an$:return
+4086 gosub3066:on-(tr%<1andx=1)goto3008:ifx=.andrk=1thenreturn
+4088 d=d-c%(rn):rn=rn-1:tt$(i)=tt$(i)+" (Deleted!)":y=i:i=-1:gosub30:x=28:gosub16:i=y
+4090 a$=b$:gosub3004:goto19
+4092 f=.
+4094 on-(rn+f>=60)goto4102:an$="":gosub3495:&,16,3
+4095 on-(an$="")goto4102:f=f+1:tt$(f)=an$:x=2:im=4:gosub443
+4096 a$=an$+",w":gosub3004:gosub4:ife%thenclose2:f=f-1:goto4102
+4098 &,16,1:gosub3124:gosub3066:onxgoto4102
+4099 ifb=.thena$=left$(tt$(f),len(tt$(f))-2):jm=0:f=f-1:gosub3004:goto19
+4100 tt$(f)=chr$(band255)+chr$(b/256)+tt$(f):gosub3066:onxgoto4102:goto4094
+4102 print#131,"{$18:3}";:goto3066
+4104 lp=1:&"{f6}Sorry, Batch {pound}$ls{shft space}Using {pound}vl Are Not Currently Supported.":goto3214
+4112 ifleft$(d4$,1)="X"thenf=f/2
+4114 return
+4116 copr.1990 new image 10/28/90
+4118 rem "i/MM.ud-trans (c)nissa 210307 lh"

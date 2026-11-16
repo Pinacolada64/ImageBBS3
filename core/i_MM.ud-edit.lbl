@@ -1,0 +1,62 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ud-edit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.UD's lines: i.UD is in memory when this module runs)
+{assign:3150	=3150	}
+{assign:3214	=3214	}
+
+4000 rem "i/MM.ud-edit"
+4002 onlmgoto4004,4006,4036
+4004 bl=.:gosub4900:ifa<1ora>rnthen3214
+4006 tz=.:kk=a:gosub4916:ifa$<>nn$(a)andq=.thenonbl+1goto3214:a=kk:return
+4008 poke53252,38:b$=str$(d%(kk)):a$="{f6}{white}1) Comp:{pound}$b":&
+4010 gosub4918:gosub4920:z$=b$:&"{f6}2) Name: {pound}$b"
+4012 an$=ed$(kk):&"{f6}3) Desc:{f6}{pound}v7{f6:2}{lt. green}Edit?{lt. blue}: {pound}i1"
+4014 gosub4902:ifa=.thenontzgosub3150:a=kk:onbl+1goto3214:return
+4016 gosub4910:onagosub4018,4022,4032:gosub4912:goto4008
+4018 p$="{lt. green}Computer Type{lt. blue}":w$=mid$(str$(d%(kk)),2):&,1,32
+4020 gosub4902:on-(an$=""ora>9ora=d%(kk))goto4904:d%(kk)=a:tz=1:return
+4022 poke53252,16:pl=.:p$="{pound}$jname":w$=z$:&,1,32
+4024 tt$=an$:on-(tt$=""ortt$="$"ortt$=z$)goto4904
+4026 dr=bn+6:gosub3:print#15,"r"+dr$+tt$+"="+dr$+z$
+4028 gosub5:ife%=.thendt$(kk)=left$(dt$(kk),22)+tt$+right$(dt$(kk),2):tz=1:return
+4030 lp=1:&:gosub92:return
+4032 poke53252,76:pl=.:p$="{lt. green}Description{lt. blue}:{f6}":w$=ed$(kk):&,1,32
+4034 on-(an$=""oran$=ed$(kk))goto4904:ed$(kk)=an$:tz=1:return
+4036 &"{f6}{pound}q0 1-> {pound}$jname{f6} 2-> {pound}$jsize{f6} 3-> Times {pound}$ked{f6:2} Sort By?: {pound}i1"
+4038 gosub4902:on-(a<1ora>3)goto3214:a%=rn:x=a:&"{f6}Sorting {pound}%a Files..."
+4040 fori=1torn:&".":a%(i)=.:forj=1toi:ifa%(j)=.then4048
+4042 ifx=1andmid$(dt$(i),12)>mid$(dt$(a%(j)),12)thennext
+4044 ifx=2andc%(i)<c%(a%(j))thennext
+4046 ifx=3andf%(i)<f%(a%(j))thennext
+4048 b%=a%(j):a%(j)=i:forj=jtoi:c%=a%(j+1):a%(j+1)=b%:b%=c%:next:next
+4050 &"{f6}":gosub4922:fori=1torn:a=a%(i):gosub4928:&"{f6}":ifs+rctheni=rn
+4052 next:gosub4926:goto3214
+4900 a=abs(int(val(left$(mid$(an$,2),4)))):return
+4902 a=abs(int(val(an$))):return
+4904 return
+4906 ifval(a$)thenifval(a$)<1thena$=mid$(a$,4)
+4908 return
+4910 &"{f6}{lt. green} (RETURN To Keep Same){f6:2}":return
+4912 a$=bb$(bn):gosub4906:p$="{green}U/D#"+mid$(str$(bn),2)+": {lt. red}"+a$:cm$=p$
+4914 on-(sg=0)goto4908:p$=sg$+" SIG{f6:2}"+p$:return
+4916 a$=right$("0000"+mid$(str$(id),2),4)+na$:return
+4918 b$=mid$(dt$(kk),23):return
+4920 b$=left$(b$,len(b$)-2):return
+4922 b$="Bk's":ifco%>2thenb$="Kb's"
+4924 poke970,0:&"{f6}{white} ## {lt. red}{pound}$b   {green}Dl'd  {lt. blue}Name{f6}{orange}{pound}vj":return
+4926 &"{orange}{pound}vj":return
+4928 kk=a:gosub4918:iff%(a)>.thenc$="{lt. blue}{f5}{pound}$b{f5}":goto4932
+4930 c$="{yellow}(Unvalidated)":gosub4916:if(qora$=nn$(a))thenc$="{white}*{lt. blue}{f5}{pound}$b{f5}"
+4932 a%=a:b%=c%(a):c%=f%(a)-1:ifc%<.thenc%=.
+4934 ifco%>2thenb%=(b%*254)/1024:ifb%<1thenb%=1
+4936 &" {white}{pound}#2{pound}# {pound}%a {lt. red}[{white}{pound}#4{pound}%b{lt. red}] {green}{pound}#3[{white}{pound}%c{green}] {lt. blue}"+c$+"{pound}{back arrow}39"
+4938 s=rc:s=s+rc:&"{pound}q0":return
+4940 copr.1989 new image 10/28/90
+4942 rem:"i/MM.ud-edit (c)nissa 190201 lh"
