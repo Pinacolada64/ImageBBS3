@@ -684,7 +684,7 @@
 	df%=3:x=40:gosub {:1}:&,2,2:a=val(a$):if a>. and a<16 then df%=a
 ' printer secondary address:
 	x=41:gosub {:1}:&,2,2:a=val(a$):if a$<>"" then close 4:open 4,4,a
-' password mask characters:
+' printer line feeds (0 or 10; the password mask is record 43):
 	x=42:gosub {:1}:&,2,2:a=val(a$):if a then poke 17136,a
 	x=35:gosub {:1}:&,2,2:an$=a$:&,15:d6$=an$+"M":x=45:gosub {:1}:&,2,2:tz$=a$
 	x=47:gosub {:1}:&,2,2:bn$=a$

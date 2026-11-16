@@ -2000,28 +2000,78 @@ _Example:_
 
 _Enter:_
 
-`an$`: command the user typed
+`an$`: command the user typed (`""` always returns `a%=0`)
 
-`a%`: Local Mode flag (`zz`)
+`a%`: Local Mode flag (`zz`): a command marked "`ZZ Locked`" is only found when this is nonzero
 
-`b%`: access level
+The ML works out the access level mask (`2^ac%`) from `ac%` itself.
+`im` also passes it in `b%`, but `&,42` doesn't read `b%`.
 
 _Exit:_
 
-`a%`: [`0`: not found in ECS table | `_n_`: ECS command #`n`]
+`a%`: `0` if the command isn`'t in the ECS table, or the caller`'s access level can`'t use it.
+Otherwise, the command`'s type: bits 4 and 5 of its flags byte (see <<ecs-entry-format>>), plus 1:
 
-`a$`: password
+[%autowidth]
+[%header]
+|===
+| `a%` | Type in `i/IM.ecs` | What `im` does (line 264)
+| `1` | File, GOTO | load the `i.` module named in `b$` (line 265; line 216 then calls `gosub 304` and goes to line 270)
+| `2` | Line, GOTO | `goto` the line in `b$` (line 266; line 216 then calls `gosub 304` and goes to line 268)
+| `3` | File, GOSUB | run the `i/` module named in `b$` as a subroutine (line 267, which goes to line 80)
+| `4` | Line, GOSUB | `goto` the line in `b$` while still inside line 216`'s `gosub 220`, so a `return` there comes back to `im` (line 268)
+| `5` | -- | the command`'s "`active`" bit (7) is clear (`i/IM.ecs` shows a `*` by it); `im` does nothing with it
+|===
 
-`b$`: ECS flags
+`b$`: the module name, or the line number as two bytes, low byte first (`im` keeps it in `ef$`)
 
-// not sure on this
-`b%`: credits to use command
+`a$`: password (`""` for none; `im` keeps it in `ep$`)
+
+`b%`: credits the command costs (`im` keeps it in `ec%`)
+
+`im`'s ECS variables are described in <<prg-variables.adoc#variables-dim,Variables>>.
+
+[[ecs-entry-format]]
+_ECS table entry:_
+
+Each command in the table (`e.ecs.main`, edited with `i/IM.ecs`) starts with a flags byte.
+A long command takes 32 bytes, a short one (flags bit 3) 8 bytes.
+
+.ECS Entry Flags
+[%autowidth]
+[%header]
+|===
+| Bit | Meaning
+| 7 | Active (`&,42` returns `5` if clear)
+| 6 | Entry in use (`&,42` skips the entry if clear)
+| 5 | `0`: GOTO, `1`: GOSUB
+| 4 | `0`: File (module name), `1`: Line number
+| 3 | Short entry
+| 2 | "`Ignore Extra`": a short command also matches when more is typed after its two letters
+| 0 | "`ZZ Locked`": only found in pseudo-local (ZZ) mode
+|===
+
+.ECS Entry Layout
+[%autowidth]
+[%header]
+|===
+| Field | Long entry (bytes) | Short entry (bytes)
+| flags | 0 | 0
+| access groups allowed (bit _n_ for group _n_, low byte first) | 1-2 | 1-2
+| command | 3-9 (up to 7 characters) | 3-4 (2 characters)
+| module name, or line number (low byte first) | 10-23 (up to 14) | 5-6 (2)
+| password | 24-30 (up to 7 characters) | --
+| credits | 31 | 7
+|===
+
+`i/IM.ecs` makes a short entry only for a File command whose command and module name are both 2 characters or less.
 
 '''
 
 ==== `&,42,1` Goto Line in ECS Command
 
-This will `goto` a particular line in `im` contained in the ECS command, if its `goto/gosub` flag is set to `goto`.
+This will `goto` the line in `a%`, as BASIC`'s `goto` does.
+`im` uses it for both kinds of Line command (types `2` and `4` from <<_42_check_for_ecs_command,`&,42` Check for ECS Command>>): for a GOSUB command it calls `&,42,1` from inside a subroutine, so a `return` at the end of the command`'s code goes back to `im`.
 In this respect, it is similar to <<calcgoto>>.
 
 _Parameter:_

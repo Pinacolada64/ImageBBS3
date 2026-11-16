@@ -442,7 +442,7 @@ Set it, then call <<prg-im-routines.adoc#line-2,`gosub 2`>> (or `3` or `4`).
 | `ec`
 | BBS
 | icon:times-circle[role=red]
-| Type of the ECS command just typed (`a%` from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>): `1` load an `i.` module, `2` and `4` `goto` a line, `3` load an `i/` module; `5` for a short command.
+| Type of the ECS command just typed (`a%` from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>): `1` load an `i.` module, `2` `goto` a line, `3` run an `i/` module as a subroutine, `4` `goto` a line as a subroutine; `5` an inactive command, which `im` ignores.
 `im` line 264 branches on it.
 
 | `el`

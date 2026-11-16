@@ -56,14 +56,14 @@ The record size is 31 bytes.
 // record #36 in e.data has been moved to record #1 in e.macros
 // i/IM.macros uses mc, could remove 
 
-| 36 | -- | _unused_ |
+| 36 | `mc` | _unused_: `im` reads it into `mc` at boot, but nothing uses `mc`; `i/su.config` writes `0` | It was the number of macros, which is in `e.macros` record 1 now
 | 37 | `y%` | Clock set device | [`1`=Manual \| `3`=Lt.Kernal Port 1 \| `4`=Lt.Kernal Port 2 \| `8-29`=CMD Device #]
 | 38 | `lk%` | Lt.Kernal device number | 
 | 39 | -- | Autoweed cutoff, in months | 
 | 40 | `df%` | Default text color | 
 | 41 | `a` | Printer secondary address | 
-| 42 | `a` | Printer line feeds | [`0`=no \| `10`=yes]
-| 43 | -- | Password mask character(s) |
+| 42 | `a` | Printer line feeds; `im` (at boot) and `i/IM.misc` poke it into `17136` | [`0`=no \| `10`=yes]
+| 43 | `mm$` | Password mask character(s): `i.IM` shows them, and `i/IM.misc` edits them |
 | 44 | -- | Log start date | 
 | 45 | `tz$` | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
 | 46 | -- | _unused_ | 
