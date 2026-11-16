@@ -93,6 +93,7 @@
 {assign:310	=310	} ' im: command stack/history
 {assign:349	=349	} ' im.prompt_device_drive
 {assign:350	=350	} ' im.set_drive
+{assign:353	=353	} ' im: open the command channel, a=1 if the device isn't there
 {assign:330	=330	} ' im: open e.macros
 {assign:304	=304	}
 {assign:370	=370	}

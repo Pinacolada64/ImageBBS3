@@ -1,0 +1,55 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.sb-mail" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.SB's lines: i.SB is in memory when this module runs)
+{assign:3002	=3002	}
+{assign:3004	=3004	}
+{assign:3006	=3006	}
+{assign:3024	=3024	}
+{assign:3072	=3072	}
+{assign:3464	=3464	}
+{assign:3470	=3470	}
+{assign:3478	=3478	}
+
+4000 rem "i/MM.sb-mail
+4002 on-(lm=2)goto4008:a=val(mid$(an$,2,4)):ifa<1ora>xx%thens$=nn$(br):goto4008
+4004 xx=a:a$=ed$(br):gosub3024:gosub3004:gosub3464:gosub3470:gosub3478:x=a%:gosub1
+4006 &,2,2:&,2,2:&,2,2:s$=a$
+4008 pr=-6:gosub4028:a$=mid$(s$,5)
+4010 b$=mid$(a$,1-(asc(a$)=42)):onqgoto4012:ifasc(a$)=42thentt$="":goto4018
+4012 an$=b$:&,15,1:&"{f6}Reply Privately To {pound}v7:{f6}":dr=2:gosub61
+4013 ifa<35thenx=2:gosub390:goto3464
+4014 ifmid$(s$,2,3)=ni$orleft$(s$,1)<>"!"then4040
+4016 on-(ni$="")goto4062:tt$="nm.M."+mid$(s$,2,3)+"/"+ni$:gosub4058
+4018 iftt$=""then:&"{f6}User Unknown.{f6}":goto3464
+4020 gosub542:on-(kk=.)goto3464:a$="Private Reply":gosub3002
+4022 a$=bb$(bn):gosub3006:c$="[Private Reply]":d$="Sub : {f5}"+a$+"{f5}{f6}Post: {f5}"+ed$(br)+"{f5} {f6:2}"
+4024 ifleft$(tt$,5)="nm.M."then4044
+4026 c$=c$+r$+d$:gosub3072:goto3464
+4028 on-(ni$<>"")goto4034:nn=.:a$="nm.config":dr=2:gosub4
+4029 ife%=.thenx=1:gosub1:&,2,2:nn=val(a$)
+4030 ifnn=.then4038
+4032 a$="nm.nodes":dr=2:gosub4:on-(e%>.)goto4038:x=nn+1:gosub1:&,2,2:ni$=a$
+4034 a$="path":gosub28:ife%thenni$="":goto4038
+4036 dr=2:gosub3:a$=dr$+"nm.nodelist":&,16:gosub5:ife%thenni$=""
+4038 close2:return
+4040 an$=b$:im=10:gosub445:ifi=.thentt$="":goto4018
+4042 tt$=b$:goto4018
+4044 a$=tt$+",s,w":dr=2:gosub4:ife%thenclose2:a$=tt$+",s,a":dr=2:gosub4
+4046 ife%thenclose2:goto3464
+4048 b$=mid$(s$,5):b$=mid$(b$,1-(asc(b$)=42)):print#2,b$r$na$r$0r$d1$:a$=left$(bn$+"                    ",20)
+4050 print#2,"!"left$(str$(nn)+"    ",4)a$c$:print#2,d$:forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2
+4052 a$="nm.list,s,a":dr=2:gosub4:ife%thena$="nm.list,s,w":dr=2:gosub4
+4054 ife%thenclose2:goto3464
+4056 print#2,mid$(tt$,6)+"/A/"+tt$:close2:goto3464
+4058 b$=mid$(s$,2,3):b%=.:a%=nn:&,16,1:ifmid$(an$,5)=""thentt$=""
+4060 return
+4062 &"{f6}Network Not Configured{f6:2}Private NetSub Response Impossible{f6}":goto3464
+4064 rem copr.1990 image 06/14/90  9:41pm
+4066 rem:"i/MM.sb-mail (c)nissa 210429 lh"

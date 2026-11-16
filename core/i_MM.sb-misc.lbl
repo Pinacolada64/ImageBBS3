@@ -1,0 +1,72 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.sb-misc" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.SB's lines: i.SB is in memory when this module runs)
+{assign:3002	=3002	}
+{assign:3004	=3004	}
+{assign:3006	=3006	}
+{assign:3010	=3010	}
+{assign:3014	=3014	}
+{assign:3016	=3016	}
+{assign:3024	=3024	}
+{assign:3040	=3040	}
+{assign:3042	=3042	}
+{assign:3066	=3066	}
+{assign:3072	=3072	}
+{assign:3084	=3084	}
+{assign:3114	=3114	}
+{assign:3152	=3152	}
+{assign:3172	=3172	}
+{assign:3228	=3228	}
+{assign:3342	=3342	}
+
+4000 rem "i/MM.sb-misc
+4002 onlmgoto4004,4046,4058,4072,4008
+4004 ifz$="KA"then:&"{f6:2}Kill Auto{f6:2}Are You Sure? ":gosub94:ifa=.thentz=.:return
+4006 y%=rn:gosub3010:on-(a>rn)goto3016:a=a-(a=.):x%=a:on-(z$<>"KA")gosub3066:gosub3014
+4008 &,11,5:c=.:tz=.:fori=x%toy%:onqgoto4012
+4010 ifna$<>mid$(nn$(i),4)and"*"+na$<>mid$(nn$(i),4)ord%(i)then4028
+4012 on-(z$<>"KO"andz$<>"KA")goto4014:ifmid$(np$,i,1)<>"0"then4028
+4014 kk=i:tt$(i)=ed$(i):a=i:gosub3172
+4016 ifz$="KA"thena%(i)=1:tz=tz+1:c=c+d%(i):goto4028
+4018 &"Kill?: ":gosub7
+4020 on-(a$="S"ora$="A")goto4024
+4021 a=-(a$="Y"):gosub97:a%(i)=a:tz=tz+a:ifathenc=c+d%(i)
+4022 goto4028
+4024 a=.:i=rn:a$="Start":ifan$="A"thena$="Abort":tz=.
+4026 &:&"{f6}"
+4028 next:on-(tz=.)goto3016:ifx%=y%then4034
+4030 u%=.:&"{f6}":fori=1torn:ifa%(i)=1thenu%=u%+1:b$=tt$(i):&"{pound}#2{pound}# {pound}%u - {pound}$b{f6}"
+4032 next:&"{f6}Kill These Messages? ":gosub94:ifa=.thentz=.:goto3016
+4034 gosub30:i=-tz:x=26:gosub16:x=27:i=-c:gosub16:close2
+4036 &"{f6}":u%=1:fori=1torn:ifa%(i)=.thenv%=i:gosub3084:u%=u%+1:goto4042
+4038 br=br-1:a=a-1:b$=tt$(i):&"Killing: {f5}{pound}$b{f5}{f6}":kk=i
+4040 a$=b$:gosub3024:gosub3004:gosub19
+4042 next:rn=rn-tz:gosub3042:ifrn=.thengosub19:a=a-1:goto3114
+4044 gosub4:x=1:gosub1:print#2,rn:fors=1torn:gosub3152:next:close2:a=a-1:goto3114
+4046 x=so%(bn):y=x:on-(x<1)goto3342:gosub35:gosub1:&,2,2:b$=a$:tt$=b$:close2
+4048 on-(b$="{^}"orb$="RES")goto3342:an$=b$:&,15,1
+4049 &"{f6}Send To {pound}v7?: ":gosub94:ifa=.then3228
+4050 dr=2:gosub61:ifa<35thenx=2:gosub390:goto3228
+4052 gosub542:on-(kk=.)goto3228
+4054 a$=mid$(i$,2)+"Feedback ":gosub3002:c$="[SubOp Feedback]{f6}Sub : "
+4056 a$=bb$(bn):gosub3006:c$=c$+a$:gosub3072:goto3228
+4058 a$=bb$(a%):gosub3006:b$=a$:c$="PASS":ifval(mid$(ba$,a%,1))thenan$=c$:return
+4060 a$="e.Sub":dr=3:gosub4:x=e%(a%)+1:gosub1:&,2,2:c$=a$
+4062 &"{f6}{white}Sub {pound}$h #{pound}#0{pound}%a: {yellow}{pound}$b{f6:2}  Password?{f6:2}  PW: ":pl=1:&,6
+4064 on-(an$<>c$)goto4068:&"{f6}  YOU{shft space}GOT{shft space}IT!{pound}b5{f6}"
+4066 ba$=left$(ba$,a%-1)+"1"+mid$(ba$,a%+1):a=.:return
+4068 &"{f6:2}{shft space} Not This Time...Sorry!!!{f6:2}  Try Again?: "
+4070 gosub94:onagoto4062:r=bn:return
+4072 a=val(mid$(an$,2,2)):ifa<1ora>bzthena=bn
+4074 a$=bb$(a):a=e%(a):gosub3006:b$=a$:b=a:a$=jn$:gosub3040:a=1-a
+4076 jn$=left$(jn$,b-1)+mid$(str$(a),2)+mid$(jn$,b+1)
+4078 a$=mid$("Un-Joined",a*3+1):gosub3006:&"{f6}{pound}$b:{f6}Now {pound}$a":goto3228
+4080 copr.1990 new image 07/15/90
+4082 rem:"i/MM.sb-misc (c)nissa 190125 lh"

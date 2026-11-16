@@ -21,7 +21,8 @@
 # identically.
 #
 # --assign N,N,... is for a program that jumps to lines that are neither in it
-# nor in im (dead code left from an older version, for example): C64List
+# nor in im (lines of the module it's loaded with, as i/MM.sb-* jump into
+# i.SB, or dead code left from an older version): C64List
 # can't find them, and writes "goto [68]" as text. The listing gets an
 # {assign:N=N} for each, with a comment, so they build as the original's
 # numbers. (A line of im belongs in 3_0-preface.lbl instead.)
@@ -30,6 +31,10 @@
 # bytes, which editors can't show; they're converted to ASCII A-Z. C64List
 # builds those as $61-$7a, which also look like capitals in lower/upper case
 # mode, so the rebuilt rems differ from the original in those bytes only.
+#
+# In "strings", C64List writes both $c1-$da and $61-$7a capitals as ASCII
+# A-Z, which build as $c1-$da; tools/keepcase.py writes the $61-$7a ones as
+# {$xx}, so they build as they were.
 #
 # Afterwards, the listing is built again and compared with the original (with
 # the same rem capitals changed to $61-$7a): the script fails unless the two
@@ -132,11 +137,12 @@ c64list orig.prg -txt:orig.txt "${detok_opts[@]}" > "$tmp/detok.log" 2>&1 \
 		"{alpha:alt}"
 	[ -n "$crunch_line" ] && printf '%s\r\n' "$crunch_line"
 	if [ -n "$assigns" ]; then
-		printf '%s\r\n' "' jumps to lines that are neither here nor in im; kept as the original's numbers:"
+		printf '%s\r\n' "' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:"
 		for n in ${assigns//,/ }; do printf '{assign:%s\t=%s\t}\r\n' "$n" "$n"; done
 	fi
 	printf '\r\n'
-	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
+	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing \
+		| python3 -I "$repo/tools/keepcase.py" "$tmp/orig.prg"
 } > "$tmp/new.lbl"
 
 # the original, with capitals in rem text changed the way C64List builds them
