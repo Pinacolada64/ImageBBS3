@@ -95,6 +95,28 @@ The record size is 31 bytes.
 | 58 | `nc` | Credits for new user | 
 |====================
 
+==== `d.sub` _n_ [[d-sub]]
+
+`d.sub` _n_ is the list of posts on sub-board _n_ (`e%(bn)`, the board`'s record in the sub-board file): a RELative file on the Directory drive, with 80-byte records.
+`i.SB` reads it into the Image 1.2 arrays (<<prg-variables.adoc#image-12-arrays,Image 1.2 Arrays>>), and writes the post count and a post`'s record back with its line 3148.
+
+Record 1 holds the number of posts.
+Records 2 on hold one post each, as five lines (each ended with a carriage return):
+
+.d.sub _n_ post record
+[%autowidth]
+[%header]
+|===
+| Line | Array | Contents | Example
+| 1 | `ed$()` | the post`'s title; if its first character is `chr$(140)` (the encoded `+^+`), the post is frozen, and `i.SB` lists it as `+*FZN*+` | `First post!`
+| 2 | `nn$()` | who wrote it: a 4-digit account number and the handle; a network post has `!` and the 3-character system ID in place of the account number | `0001PINACOLADA`
+| 3 | `dt$()` | the date it was posted, then the date of its last response (11 digits each) | `4261014844210001011200`
+| 4 | `c%()` | a number nothing in 3.0 or 2.0 reads; a new post gets `0` | `0`
+| 5 | `d%()` | the number of responses | `0`
+|===
+
+The examples are from a test post (which is frozen); like the release`'s test post, it has no responses, and its second date is `10001011200`.
+
 ==== s.m.protos
 
 This is a file which describes the file transfer protocols available to a user.

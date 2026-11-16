@@ -1279,14 +1279,17 @@ The sub-board, e-mail, General Files and network modules call it, and use the ar
 `i.EM` also keeps a field of each letter in it.
 
 | nn$(61)
-| `i.SB`: who wrote each post: an account number, or `!` and a system ID for a network post.
+| `i.SB`: who wrote each post: a 4-digit account number and the handle (_e.g._ `0001PINACOLADA`), or, for a network post, `!` and the 3-character system ID in place of the account number.
 `i.EM` also keeps a field of each letter in it.
 
 | a%(61)
 | Work array; `i/SM.reledit` and the `IM` editors use it.
 
 | c%(61)
-| `i.SB`: a number kept for each post, saved with it; `i/SM.reledit` uses it as a work array.
+| `i.SB`: the fourth field of each post`'s record in <<prg-file-formats.adoc#d-sub,`d.sub` _n_>>.
+`i.SB` reads it, keeps it with its post when posts are removed, and writes it back; `i/MM.sb-post` writes `0` for a new post.
+Nothing reads its value, in 3.0 or in 2.0, so what it was for isn`'t known.
+`i/SM.reledit` uses `c%()` as a work array.
 
 | d%(61)
 | `i.SB`: number of responses to each post.
