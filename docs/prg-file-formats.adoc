@@ -18,7 +18,7 @@ means that of the three options presented, option 1 _or_ option 2 _or_ option 3 
 
 // NOTE: argh icon:exclamation[] icon:download[]
 
-==== `e.data`
+==== `e.data` [[e-data]]
 
 `e.data` is a RELative file containing BBS configuration information, as well as BBS statistics.
 
@@ -56,14 +56,14 @@ The record size is 31 bytes.
 // record #36 in e.data has been moved to record #1 in e.macros
 // i/IM.macros uses mc, could remove 
 
-| 36 | -- | _unused_ |
+| 36 | `mc` | _unused_: `im` reads it into `mc` at boot, but nothing uses `mc`; `i/su.config` writes `0` | It was the number of macros, which is in `e.macros` record 1 now
 | 37 | `y%` | Clock set device | [`1`=Manual \| `3`=Lt.Kernal Port 1 \| `4`=Lt.Kernal Port 2 \| `8-29`=CMD Device #]
 | 38 | `lk%` | Lt.Kernal device number | 
 | 39 | -- | Autoweed cutoff, in months | 
 | 40 | `df%` | Default text color | 
 | 41 | `a` | Printer secondary address | 
-| 42 | `a` | Printer line feeds | [`0`=no \| `10`=yes]
-| 43 | -- | Password mask character(s) |
+| 42 | `a` | Printer line feeds; `im` (at boot) and `i/IM.misc` poke it into `17136` | [`0`=no \| `10`=yes]
+| 43 | `mm$` | Password mask character(s): `i.IM` shows them, and `i/IM.misc` edits them |
 | 44 | -- | Log start date | 
 | 45 | `tz$` | BBS time zone abbreviation/hour offset | _e.g._, `EST0700`
 | 46 | -- | _unused_ | 
@@ -95,7 +95,29 @@ The record size is 31 bytes.
 | 58 | `nc` | Credits for new user | 
 |====================
 
-==== s.m.protos
+==== `d.sub` _n_ [[d-sub]]
+
+`d.sub` _n_ is the list of posts on sub-board _n_ (`e%(bn)`, the board`'s record in the sub-board file): a RELative file on the Directory drive, with 80-byte records.
+`i.SB` reads it into the Image 1.2 arrays (<<prg-variables.adoc#image-12-arrays,Image 1.2 Arrays>>), and writes the post count and a post`'s record back with its line 3148.
+
+Record 1 holds the number of posts.
+Records 2 on hold one post each, as five lines (each ended with a carriage return):
+
+.d.sub _n_ post record
+[%autowidth]
+[%header]
+|===
+| Line | Array | Contents | Example
+| 1 | `ed$()` | the post`'s title; if its first character is `chr$(140)` (the encoded `+^+`), the post is frozen, and `i.SB` lists it as `+*FZN*+` | `First post!`
+| 2 | `nn$()` | who wrote it: a 4-digit account number and the handle; a network post has `!` and the 3-character system ID in place of the account number | `0001PINACOLADA`
+| 3 | `dt$()` | the date it was posted, then the date of its last response (11 digits each) | `4261014844210001011200`
+| 4 | `c%()` | a number nothing in 3.0 or 2.0 reads; a new post gets `0` | `0`
+| 5 | `d%()` | the number of responses | `0`
+|===
+
+The examples are from a test post (which is frozen); like the release`'s test post, it has no responses, and its second date is `10001011200`.
+
+==== `s.m.protos` [[s-m-protos]]
 
 This is a file which describes the file transfer protocols available to a user.
 
@@ -118,16 +140,16 @@ This is a file which describes the file transfer protocols available to a user.
 | Offset | Purpose | Variable name
 
 | 1-6
-| `++ filename`
-| `pm$`: protocol module?
+| the protocol module`'s name: `{plus}{plus} __name__` is loaded (<<prg-im-routines.adoc#line-28,`gosub 28`>>)
+| `pm$` (in `sub.protos`)
 
 | 7
-| x
-| `f`: default function?
+| the protocol`'s options, a digit: `sub.protos` and `sub.param1` give it to the protocol with `&,16,4,f` (see <<prg-ampersand-calls.adoc#defflag,`defflag`>>)
+| `f`
 
 | 8
-| x
-| `nb`: ?
+| a digit, `1` for XMODEM in the sample; read, but nothing in 3.0 uses it
+| `nb`
 
 | 9
 | x

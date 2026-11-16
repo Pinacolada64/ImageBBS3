@@ -35,9 +35,14 @@ Layout :
 
 // &#160; = non-breaking space
 
-| goto&#160;0
+| [[line-0,Start]]goto&#160;0
 | goto&#160;1812
-| Jump to `300` <<line-300>>.
+| The first line of `im`: `on peek(829) goto 3000,4000:goto 300`.
+Location 829 (`loadflag` in the ML) says why BASIC is starting from the top:
+
+* `1`: the ML has just started the BBS, so boot (line 3000 <<line-3000>>).
+* `2`: line 2006 has reloaded `im` after an error (a `load` from a program sets 829 to its secondary address, and line 2006 uses `2`), so go to the error handler (line 4000 <<line-4000>>).
+* anything else: the main prompt (line 300 <<line-300>>).
 
 | [[line-1,Position REL pointer]]gosub&#160;1
 | gosub&#160;1001
@@ -70,7 +75,7 @@ _Enter:_
 ! 2 ! E-mail/NetMail ! ``m.``, ``nm.``
 ! 3 ! Etcetera Files ! ``e.``
 ! 4 ! Directory Files ! ``d.``
-! 5 ! Plus Files ! ``i.``, ``i/``, ``sub.``, ``++``
+! 5 ! Plus Files ! ``i.``, ``i/``, ``sub.``, ``{plus}{plus}``
 ! 6 ! User Files ! ``u.``
 !===
 
@@ -93,7 +98,7 @@ include::includes/prg-im-return.adoc[]
 
 include::includes/prg-im-return.adoc[]
 
-| gosub&#160;4
+| [[line-4,Open file]]gosub&#160;4
 | gosub&#160;1011
 | Opens filename stored in `a$` on device/drive `dr` requested by setting the variable as explained in <<line-2>>.
 `gosub` lines 2 and 3.
@@ -130,15 +135,17 @@ include::includes/prg-im-return.adoc[]
 
 | gosub&#160;6
 | gosub&#160;1006
-| Uppercase input routine.
+| Uppercase input routine, used for every prompt (line 210 <<line-200>>).
 
-1. `gosub 310`: Stacked commands (`uu$`, _e.g._ `SB4\^R3^Q`) are checked for.
+If commands are stacked (`uu$` isn't empty, _e.g._ after typing `+SB4^R3^Q+`), the next one is used instead of asking: it goes into `an$`, line 310 <<line-310>> splits it off, and line 314 <<line-314>> shows it after the prompt, as if it had been typed.
 
-If any stacked commands are pending, `gosub 310` checks whether to:
+Otherwise it sets `pl=1` (uppercase), gets a line with <<prg-ampersand-calls.adoc#amp-1-input-line,`&,1` Input Line>>, and goes to line 310, which checks for:
 
-* display the command history (`^?`), or
+* the command history (`+^?+`), or
+* a command from the history (`+^+` and a digit), or
+* several commands typed at once, separated by `+^+`.
 
-* display and execute a command in the history (`^` and a digit).
+_Enter:_
 
 `p$`: Text of prompt.
 
@@ -236,7 +243,7 @@ h! 19 ! Time Per Day Allowed (second digit)
 
 &#13;
 
-| gosub&#160;12
+| [[line-12,Reset output defaults]]gosub&#160;12
 | gosub&#160;1914
 | Reset output routine.
 Resets all system output to default parameters.
@@ -249,7 +256,13 @@ This routine continues to line 14.
 
 | [[line-14,Display a SEQ file]]gosub&#160;14
 | gosub&#160;1076
-| Outputs the SEQ file in `a$` on device, drive `dr` to the console and to the modem.
+| Outputs the SEQ file in `a$` on device, drive `dr` to the console and to the modem (<<prg-ampersand-calls.adoc#_3_read_file_from_disk,`&,3` Read File from Disk>>), if it opened without an error (`e%=0`).
+
+This routine continues to line 15.
+
+| [[line-15,Close file and reset output]]gosub&#160;15
+|
+| Closes LFN 2, then resets output defaults (`goto 12` <<line-12>>).
 
 | gosub&#160;16
 | gosub&#160;1025
@@ -301,13 +314,21 @@ This routine continues to line 17.
 
 Note that `e.stats` should be opened first (`gosub 30`), prior to calling this routine, on LFN 2.
 
-| gosub&#160;28
+| [[line-18,Create SEQ file]]gosub&#160;18
+|
+| Creates a SEQ file named `a$` on drive `dr`, open for writing on LFN 2: scratches any old file of that name (line 19 <<line-19>>), then opens `a$+",s,w"` (line 4 <<line-4>>, so `e%` has the DOS status).
+
+| [[line-19,Scratch file]]gosub&#160;19
+|
+| Scratches (deletes) the file named `a$` on drive `dr`: opens the command channel (line 3 <<line-3>>), then `print#15,"s"dr$a$`.
+
+| [[line-28,Load protocol]]gosub&#160;28
 | gosub&#160;1750
 | Loads a `++` (protocol) file from Plus File drive--if it isn`'t already loaded--and checks the DOS error status.
 
 _Enter:_
 
-`a$`: ML or protocol file (minus the `++&#160;` prefix)
+`a$`: ML or protocol file (minus the `{plus}{plus}` prefix and the space after it)
 
 This routine then:
 
@@ -325,7 +346,13 @@ standard im does not do this:
 
 _Exit:_
 
-#FIXME#
+`e%`, `e$`, `t%`, `s%`: the DOS status (line 5 <<line-5>>), or `e%=0` if the module was already in memory.
+
+`ml$`: `{plus}{plus}` and a space, then the module name.
+
+| [[line-29,Load ML module]]gosub&#160;29
+|
+| Loads the `{plus}{plus}` ML module in `a$` (minus the prefix) from the current device and drive (`dv%`, `dr$`), without checking whether it is already loaded: sets `ml$`, loads it with <<prg-ampersand-calls.adoc#load-file,`&,7` Load File>>, and reads the DOS status (line 5 <<line-5>>).
 
 | [[line-30,Open e.stats]]gosub&#160;30
 | gosub&#160;1060
@@ -351,7 +378,8 @@ _Enter:_
 
 | [[line-34,Open e.log <day>]]gosub&#160;34
 | gosub&#160;1064
-| Opens SEQ file `e.log \#` (where `#` is the weekday number in `am$`) on the Etcetera drive.
+| Opens the SEQ file `e.log` on the Etcetera drive, on LFN 2.
+If lightbar checkmark 46 is set (`am=1`), the first character of `lt$` (the weekday, `1`-`7`) goes on the end of the name, so each day has its own log (`+e.log1+`-`+e.log7+`).
 
 _Enter:_
 
@@ -360,6 +388,29 @@ _Enter:_
 | [[line-35,Open u.config]]gosub&#160;35
 | gosub&#160;1065
 | Opens REL file `u.config` on user files drive.
+
+| [[line-36,Open e.* SEQ file]]gosub&#160;36
+|
+| Opens the SEQ file `e.` + `b$` on the Etcetera drive on LFN 2.
+
+_Enter:_
+
+`b$`: the filename, minus the `e.` prefix
+
+`a$`: `r` to read, `w` to write (create), or `a` to append
+
+| [[line-37,Append to e.* SEQ file]]gosub&#160;37
+|
+| Opens `e.` + `b$` for appending (line 36 <<line-36>>), or creates it if that fails.
+
+| [[line-38,Write caller information]]gosub&#160;38
+|
+| Writes seven lines about the caller to the file open on LFN 2: handle (`na$`), account number (`id`), the time and date (`d1$`), access level (`ac%`), e-mail address (`ph$`), real name (`rn$`) and computer type (`co$`).
+
+| [[line-39,Write tt$() to file]]gosub&#160;39
+|
+| Writes lines `1` to `kk-1` of `tt$()` to the file open on LFN 2 (<<prg-ampersand-calls.adoc#_14_dump_array,`&,14` Dump Array>>), then a line with `+^+` to end it.
+Closes the file, then reads the drive`'s blocks free again (line 62 <<line-62>>).
 
 | [[line-40,Display s.new user]]gosub&#160;40
 | _n/a_
@@ -443,11 +494,17 @@ _Exit:_
 
 | [[line-43,Display record from e.say]]gosub&#160;43
 | gosub&#160;1910
-| Display a random saying from the RELative file `e.say`.
+| Display a random saying from the RELative file `e.say`, whose record 1 holds the number of sayings.
+ECS command `SY` runs it.
+
+Line 44 picks a record at random (record 2 on), and line 45 shows its four lines in white, cyan, yellow and orange, centered on a wider screen (line 90 <<line-90>>).
+Line 46 closes the file.
 
 _Exit:_
 
 `x`: record number chosen
+
+`b$`, `c$`, `d$`, `f$`: the saying`'s four lines
 
 | [[line-50,Check for instant mode]]gosub&#160;50
 | gosub&#160;1490
@@ -458,7 +515,11 @@ This routine continues to line 51.
 
 | [[line-51,Print a$ to daily log]]gosub&#160;51
 | gosub&#160;1096
-| Writes `a$` to the daily log regardless of instant mode (`i%=1`).
+| Writes `a$` to the daily log (`e.log`, line 34 <<line-34>>) regardless of instant mode (`i%=1`).
+
+Then, if lightbar checkmark 13 is set and a printer answers on device 4, lines 52-54 print it too (`print#4`).
+
+NOTE: It changes `c$` and `an$` (both are set to the text).
 
 | [[line-60,Check for free directory entry]]gosub&#160;60
 | gosub&#160;1085
@@ -475,12 +536,18 @@ It should be called before the creation of any new file.
 | [[line-61,Check blocks free]]gosub&#160;61
 | gosub&#160;1079
 | Reads blocks free on device/drive `dr`.
+If the count for drive `dr` is already known (`bf(dr)` isn't `-1`), it uses that; otherwise it continues to line 62.
 
 This routine should be called and the variable `bf` checked before creating any file on a device/drive to ensure there is enough space available.
 
 _Exit:_
 
-`bf`: Blocks free on the device/drive.
+`bf`, `a`: Blocks free on the device/drive.
+
+| [[line-62,Read blocks free from drive]]gosub&#160;62
+|
+| Reads the blocks free of the device/drive `dr` from the drive: from a Lt. Kernal (`dv%=lk%`) with its `LG` command, otherwise from the directory header.
+The count goes in `bf` and `a`, and in `bf()` for every system drive on the same device and drive.
 
 | [[line-70,Load i.* file]]gosub&#160;70
 |
@@ -497,7 +564,7 @@ _Enter:_
 | [[line-72,Load i/* file]]gosub&#160;72
 |
 | Load and execute an `i/` "`mini-module`" file beginning at line `4000`.
-These are the equivalent of `+.MM.*` files from v1.2.
+These are the equivalent of `{plus}.MM.*` files from v1.2.
 
 Sets `dr=5`, the Plus File drive.
 The module isn't loaded again if it's already the one in memory (`p1$`); otherwise line 77 <<line-77>> loads it.
@@ -573,6 +640,29 @@ This routine falls through to line 83.
 | gosub&#160;1094
 | Clear array `0` [`tt$()`] in the xref:prg-ampersand-calls.adoc#table-array-numbers[array table].
 
+| [[line-84,Check prime time]]gosub&#160;84
+|
+| Sets `pt%` (prime time active) to `1` if the hour is from `p2%` up to (not including) `p3%`, and prime time is on (`p1%` isn't `0`); otherwise `0`.
+
+| [[line-85,Ask to leave feedback]]gosub&#160;85
+|
+| Asks "`Would You Like To Leave Feedback?`" (line 96 <<line-96>>, default Yes).
+If the answer is Yes, it continues to line 86.
+ECS command `F` runs it.
+
+| [[line-86,Leave feedback]]gosub&#160;86
+|
+| If the Etcetera drive has fewer than 35 blocks free, shows `e.text` record 2 (line 390 <<line-390>>) instead; otherwise runs `sub.feedback` with `im=1`.
+
+| [[line-90,Center text]]gosub&#160;90
+|
+| Sets `q$` to the spaces that center 40-column text on the caller`'s screen: `(ll%-42)/2` spaces, or `""` on a screen 42 columns wide or less.
+Print it before each line (MCI `&#163;$q`).
+
+| [[line-92,Display Canceled!]]gosub&#160;92
+|
+| Displays `>>Canceled!` on a new line.
+
 | [[line-93,Display "Are You Sure? "]]gosub&#160;93
 | gosub&#160;1901
 | Display ``Are You Sure?: ``, and fall through to line 94.
@@ -627,6 +717,16 @@ _Exit:_
 ! the key typed.
 !===
 
+| [[line-97,Display Yes or No]]gosub&#160;97
+|
+| Displays `Yes` (`a=1`) or `No` (`a=0`) in the default color (`df%`), then a new line.
+Lines 94 and 96 end here.
+
+| [[line-98,Display Are You Sure]]gosub&#160;98
+|
+| Displays ``Are You Sure?: ``.
+Lines 93 and 95 call it.
+
 | [[line-100]]gosub&#160;100
 | gosub&#160;1013
 | Load `sub.*` module in `a$` (minus the `sub.` prefix) from the plus file drive (`dr`=5), then ``return``s from routine.
@@ -642,7 +742,9 @@ Like line 79 <<line-79>>, it doesn't read the DOS error status afterwards.
 
 | gosub&#160;110
 | _n/a_
-| load `+sub.*+` module in `a$` (minus the `+sub.*+` prefix) from the Plus File drive (``dr=5``), but don`'t reload the previous module when ``return`` is executed.
+| Loads the `+sub.*+` module in `a$` (minus the `sub.` prefix) from the Plus File drive (``dr=5``), and ``return``s without running it or putting it on the module stack.
+Sets `p2$`, `im$` and `cm$` (which it shows with line 9 <<line-9>>).
+Lines 100 and 102 use it.
 ////
 21: Loads i. module in `a$` (minus the i.).  Same as 20, except device, drive is determined by current value of `dr`. (none)
 
@@ -657,48 +759,52 @@ Like line 79 <<line-79>>, it doesn't read the DOS error status afterwards.
 27: Loads i. "mini-module" in `a$` from plus file drive (dr=5), then continues to line 4000.  Note that if the file is already loaded `lm$`, then this routine exits without actually re-loading the file.  (none)
 ////
 
-| [[line-200,Prompt routine]]200
+| [[line-200,Prompt routine]]goto&#160;200
 | _n/a_
-| Prompt routine.
+| Prompt routine, used for all system prompts.
 Not to be confused with line 1812 of 1.2's `im` file (that is line 300 <<line-300>>).
-This routine is used for all system prompts.
-It prints the time, the minutes left (if fewer than 100) and, in local mode, the stack free, then the prompt in `p$` (`gosub 6`).
-It then checks what was typed (line 220 on).
 
-The routine checks the command stack `uu$`, #FIXME#
+. Line 200: if the caller`'s time has run out (`tr%<1`), goes to line 240 <<line-240>>.
+Gives the ML the line feed (`lf`) and expert mode (`em`) flags, the line length (`poke 951,ll%`) and the screen height (`poke 971,mp%`).
+. Line 202: if lightbar checkmark 30 (macros) is set, shows a random macro (line 330).
+. Lines 204-208: resets output (line 12 <<line-12>>), then calls the module at line 3000 with `mm=2`, so it can set up `p$` and print anything it wants before the prompt.
+Shows `cm$` (line 9 <<line-9>>), and prints the time and, if it is under 100, the minutes left.
+. Line 209: in pseudo-local mode (`zz`), prints the free BASIC stack.
+. Line 210: gets the command (line 6, up to 38 characters).
+. Line 212: shows the prompt and the command in the `Area` window.
+. Line 214: if carrier was lost (`tr%<1`), goes to line 240; if nothing was typed, shows the menu (line 250) and starts again.
+. Line 216: checks the command (line 220 <<line-220>>).
+For an ECS command or a logoff (`f4` is set), it sets up the Image 1.2 arrays (line 304) and goes to line 270, 268 or 234.
+. Line 218: if `im` has dealt with the command (`rs=1`), it starts again; otherwise it calls the module at line 3000 with `mm=1`, to deal with the command in `an$`.
 
-| 228
-| _n/a_
-| Check for logoff (kbd:[O], or kbd:[Q] if at main prompt [`lc=1`]), or menu (kbd:[?]) commands.
-
-_Exit:_
-On exit, this routine does `goto 3000` when `mm` is set as follows:
+`im` calls a module`'s line 3000 with `mm` set as follows:
 
 [%header]
 [%autowidth]
 !====
 ! mm ! Action
-!  0 ! "`Init.`"  Use this as an entry point.
-!  1 ! Not a Global (ECS) Command.
-!  2 ! Preparation for a prompt display.  (Set up `p$` and
-  any pre-prompt text, then `return`.)  This action
-  is called before actually displaying the time/prompt in `p$`.
-!  3 ! Global (ECS) Command issued.  Clean up and exit.
-  (This could be a `gosub` or `goto` ECS command.
-  The purpose is to quickly perform a clean-up
-  [close files, etc.] before proceeding.  In most
-  cases, nothing is done.  Exit should be handled
-  by issuing a `return`.
-
-NOTE: This is also the setting for `mm` that is used if the time limit is exceeded.
-
-!  4-? ! *Internal usage by modules.*  Not related to
-  prompt routine.
+!  0 ! "`Init.`"  The module has just been loaded (lines 270 and 300-302).
+!  1 ! A command `im` doesn`'t know: the module deals with `an$` (line 218).
+!  2 ! Preparation for a prompt display.  (Set up `p$` and any pre-prompt text, then `return`.)  This is called before the time and the prompt in `p$` are displayed (line 208).
+!  3 ! The time limit was exceeded (line 240).  Close files and clean up, then `return`.
+!  4-? ! *Internal usage by modules.*  Not related to the prompt routine.
 !====
 
 &#13;
 
-NOTE: If an ECS command is detected, the routine at line 304 is called.  If nothing is entered (kbd:[Return]), the local `lc` menu is shown to the user.
+| [[line-220,Check command]]gosub&#160;220
+|
+| Checks the command in `an$` (line 216 calls it):
+
+. If the caller`'s access level has changed (`ac%<>ao%`), updates `ag$` and `fl$` (line 320).
+. Puts the first character of `an$` in `a$` and the first two in `z$`, reads the expert mode (`em`) and pseudo-local (`zz`) flags from the lightbar (line 222), and sets `rs=1`.
+. Line 226: if it is an ECS command (<<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42` Check for ECS Command>>), keeps its details (`ef$`, `ep$`, `ec`, `ec%`) and goes to line 261 <<line-261>>.
+. Line 228: kbd:[O], or kbd:[Q] at the main prompt (`lc=1`), logs off (line 230 <<line-230>>); kbd:[?] shows the menu (line 250).
+Anything else sets `rs=0`: not an `im` command.
+
+| [[line-230,Logoff?]]goto&#160;230
+|
+| Unless the command ends in `!`, asks "`Logoff?`" (line 96 <<line-96>>); if the answer is Yes, line 232 sets `f4=1.3` (log off, line 234).
 
 | goto&#160;234
 |
@@ -708,32 +814,82 @@ NOTE: If an ECS command is detected, the routine at line 304 is called.  If noth
 . If the 2^nd^ character is a `%` (__i.e.__, kbd:[O%] or kbd:[O%!]), `goto 302` (load `i.lo`, the logoff module).
 . Otherwise, ask "`Update Message/File Scan Date?`" (line 235), then `goto 302`.
 
-| goto 250
+| [[line-240,Time limit exceeded]]goto&#160;240
 |
-| Displays local/level `lc` menu.
+| Displays "`Sorry, Time Limit Exceeded.`", calls the module at line 3000 with `mm=3` so it can clean up, then logs off (`f1=1`, line 302).
 
-.Menu numbers
+| [[line-242,Aborted]]goto&#160;242
+|
+| Displays "`Aborted!`", sets `f1=0`, and goes back to the prompt (line 200 <<line-200>>).
+
+| [[line-250,Show the menu]]goto&#160;250
+|
+| Shows the menu for the current level, `lc` (`sub.menus` with `im=1`), when kbd:[?] or kbd:[Return] alone is typed at a prompt.
+
+`sub.menus` shows menu number `lc`: the access-aware menu `e.menu` _n_ on the Etcetera drive if there is one, which lists only what the caller can use, or else the screen `s.menu` _n_ on the System drive.
+Then, unless the caller is at the main prompt (`lc=1`) or stopped the output, it shows the main menu (menu 1) as well.
+(`im=2` shows only menu `lc`; `im=3` shows the `e.menu` file named in `b$`.)
+
+The modules set `lc` as follows (`i.NF`, `i.UD`, `i.UX` and `i.VB` are on the release disk, but not in this repository):
+
+.Menu levels
+[%autowidth]
+[%header]
+!===
+! `lc` ! Menu ! Set by
+! `0` ! none ! `i/lo.idle` (waiting for a call); `i.VB`, which shows its own menu
+! `1` ! Image BBS Sub-Systems (the main menu) ! `i.main`
+! `2` ! Message Commands ! `i.SB`
+! `5` ! Upload/Download Commands ! `i.UD`
+! `6` ! Electronic Mail Commands ! `i.EM`
+! `7` ! Directory System Commands ! `i.GF`, `i.NF`
+! `9` ! Exchange Up/Download Commands ! `i.UX`
+!===
+
+Other `s.menu` files are shown by the modules that use them, not through `lc`:
 
 [%autowidth]
 [%header]
 !===
-! `lc` ! Menu ! Accessed Via
-!  `1` ! Main menu ! kbd:[?]
-!  `2` ! Message Base Menu ! kbd:[SB]
-!  `3` ! Editor Menu/Help ! kbd:[.?] or kbd:[.H]
-!  `4` ! Local Mode Menu ! kbd:[??]
-!  `5` ! File Transfer Menu ! kbd:[UD]
-!  `6` ! E-mail Menu ! kbd:[EM]
-!  `7` ! General Files Menu ! kbd:[GF]
-!  `8` ! End of Bulletin Menu ! kbd:[SB]
-!  `9` ! Disk Transfer Menu ! kbd:[UX]
+! Menu ! Title ! Shown by
+! `s.menu 3` ! Image Text Editor Commands ! `sub.editor` (kbd:[.?]), `i.NW`
+! `s.menu 4` ! Main-Level Local Commands ! `sub.local` (kbd:[??], line 550)
+! `s.menu 8` ! End-of-message Commands ! `i.SB`
+! `s.menu 10` ! Which day ! `i/lo.misc`
+! `s.menu 12` ! Log-In Commands ! nothing in 3.0 (`i/lo.login` draws its own "`Login Options Menu`")
+! `s.menu t1`-`t3` ! Image Term ! `i.t`
 !===
 
 &#13;
 
-| gosub&#160;280
+| [[line-261,Run ECS command]]goto&#160;261
 |
-| This routine is called by the prompt routine at line 200 to check for ECS commands.
+| Runs the ECS command found by line 226 (see <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42` Check for ECS Command>> for the types):
+
+. Line 261: if the command costs credits (`ec%`) and the caller has fewer (`cr`), displays "`Not Enough Credits!`".
+. Line 262: takes the credits off.
+If the command has a password (`ep$`) and the caller isn`'t the sysop (`id=1`), line 263 asks for it.
+. Line 264: goes by the command`'s type (`ec`):
+`1` (line 265) sets `z$` to the module name and `f4=1.1`; `2` (line 266) sets `f4=1.2`; `3` (line 267) runs the `i/` module through line 80 <<line-80>>; `4` goes to line 268 at once.
+Line 216 then sets up the Image 1.2 arrays and goes to line 270 (`f4=1.1`) or 268 (`f4=1.2`).
+. Line 268: takes the line number from `ef$`, and goes to it (<<prg-ampersand-calls.adoc#_421_goto_line_in_ecs_command,`&,42,1` Goto Line in ECS Command>>).
+For type `4`, this happens inside line 216`'s `gosub 220`, so a `return` at the end of the command goes back to line 216.
+. Line 270: loads the `i.` module in `z$` (line 70 <<line-70>>), with `mm=0`.
+
+| [[line-280,Check for ECS command]]gosub&#160;280
+|
+| Checks `an$` for an ECS command, as line 226 does, but goes straight to line 264 to run it, without the credit and password checks.
+Nothing in 3.0 calls it.
+
+| [[line-289,Input a line]]gosub&#160;289
+|
+| Gets a line of input (MCI `&#163;i0`) into `an$`, and ``return``s if nothing was typed.
+Otherwise it continues to line 290.
+Modules call it often; don`'t change these two lines.
+
+| [[line-290,Decode function keys]]gosub&#160;290
+|
+| Turns the encoded characters in `an$` back into the symbols typed (<<prg-ampersand-calls.adoc#_15_2,`&,15,2` Decode Function Keys>>).
 
 | [[line-300,Main prompt]] goto&#160;300
 | goto&#160;1812
@@ -743,20 +899,24 @@ NOTE: If an ECS command is detected, the routine at line 304 is called.  If noth
 If `pf` isn't `0`, `i.GF` is loaded instead (line 300), and the user is back in the General Files library they ran a module from: `pf` is the library's depth (1 for `GF.Main`), and `pf$(pf)` its name.
 Otherwise line 301 loads `i.main`.
 
-| 302
+Lines 300 and 302 first restore the variable pointers (<<prg-ampersand-calls.adoc#restore-variable-pointers,`&,28,1` Restore Variable Pointers>>) and, if lightbar checkmark 48 (`$30`) is set, load the Image 1.3 emulation lines (line 309 <<line-309>>).
+
+| [[line-302,Load i.lo]]goto&#160;302
 | goto&#160;1700
 | Loads `i.lo` file and executes with `mm` set to `0` (init).
-Action is dependent on the value of `f1`:
+Action is dependent on the value of `f1` (`i.lo` line 3004):
 
 [%autowidth]
 [%header]
 [cols="^1,<2"]
 !====================
 ! `f1` ! Action
-!  `0` ! connection established
-!  `1` ! normal logoff
-!  `2` ! fast logoff (kbd:[O\!], or out of time)
-!  `3` ! normal entry (when loading `i.lo` for "`Wait For Call`" screen)
+!  `0` ! connection established: set up the call and log the caller on
+!  `1` ! normal logoff (kbd:[O], or the time limit was exceeded): the logoff screen, then hang up
+!  `2` ! fast logoff (kbd:[O\!], or after an error): hang up without the logoff screen
+!  `3` ! normal entry (when loading `i.lo` for "`Wait For Call`" screen, after boot, a reload or AutoMaint)
+!  `4` ! log on (`i/lo.on`)
+!  `5` ! go to the main prompt (line 300)
 !====================
 
 &#13;
@@ -765,27 +925,32 @@ Action is dependent on the value of `f1`:
 |
 | Reverts memory marker back to 1 (<<prg-ampersand-calls.adoc#restore-variable-pointers,`&,28,1` Restore Variable Pointers>>), calls line 306 which then issues an <<prg-ampersand-calls.adoc#save-variable-pointers,`&,27` Save Variable Pointers>> (save) and exits.
 
-| gosub&#160;306
+| [[line-306,Image 1.2 arrays]]gosub&#160;306
 |
 | Image 1.2 Emulation Mode.
 ``dim``ensions variables used by Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn$(61)`, `a%(61)`, `c%(61)`, `d%(61)`, `e%(31)`, `f%(61)`, `ac%(31)`, `so%(31)`].
 
 "`Emulating`" 1.2 is not the only use--this routine is helpful to save space and quickly ``dim``ension common variables to be used in a program.
 
+| [[line-309,Load Image 1.3 emulation]]gosub&#160;309
+|
+| Loads `im.emul13`, the Image 1.3 emulation lines, from the Plus File drive, then sets up the Image 1.2 arrays (line 304).
+Lines 300 and 302 call it when lightbar checkmark 48 is set.
+
 | [[line-310,Check for command history]]gosub&#160;310
 | gosub&#160;1260
-| Check for `^?`, the command history.
+| Saves the command in `pu$`, then checks for `+^?+`, the command history.
 If so, `goto 315` <<line-315>>.
 
 | [[line-311,Execute command in command history]]gosub&#160;311
 | _n/a_
-| Check for `^` and a digit `0-9`.
+| Check for `+^+` and a digit `0-9`.
 This executes the specified command history`'s entry, by putting it in `an$` and going to line 314 <<line-314>>.
 
 | gosub&#160;312
 | _n/a_
 | Split off the first of several stacked commands.
-<<prg-ampersand-calls.adoc#_156_scan_string,`&,15,6,140` Scan String>> splits `an$` at the first `^` (the <<prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
+<<prg-ampersand-calls.adoc#_156_scan_string,`&,15,6,140` Scan String>> splits `an$` at the first `+^+` (the <<prg-ampersand-calls.adoc#encoded-function-keys,encoded>> kbd:[f8], `chr$(140)`): the rest goes into `uu$`, the command stack, and the first command into `an$`.
 Line 313 then adds `an$` to the command history, `hs$()`, and ``return``s.
 
 | [[line-314,Echo command]]gosub&#160;314
@@ -811,6 +976,81 @@ This is done when a user previously on Image 1._x_ is upgraded to Image 2.0 or 3
 | gosub&#160;330
 | gosub&#160;1930
 | Outputs a random macro from file `e.macros`.
+
+| [[line-349,Ask for device and drive]]gosub&#160;349
+|
+| Asks "`Device, Drive:`", and puts two spaces before the answer in `an$`, ready for line 350.
+
+| [[line-350,Set device and drive]]gosub&#160;350
+|
+| Sets the drive from `an$` (characters 3 on: a device number, a comma, and a drive number, as line 349 leaves it):
+
+* A device of `1`-`6` is one of the system drives: `dr` is set to it.
+* Otherwise the device (`8` if it was under `7` or over `29`) and the drive go in `d1%` and `d2%`, and `dr=0` (line 352).
+
+Line 353 opens the command channel (line 3 <<line-3>>) to check that the device is there: `a=1` if it isn`'t, `0` if it is.
+
+| [[line-370,Toggle a mode]]gosub&#160;370
+|
+| Toggles `a` (`0` or `1`), and displays "`__b$__ Mode: On`" or "`Off`".
+
+| [[line-371,Toggle a uf$ flag]]gosub&#160;371
+|
+| Toggles digit `b` of `uf$` (and displays it with line 370, named `b$`).
+
+| [[line-372,Toggle expert mode]]gosub&#160;372
+|
+| Toggles expert mode (`em`), and tells the ML.
+ECS command `XP` runs it.
+
+| [[line-373,Set More prompt]]gosub&#160;373
+|
+| Asks for the More prompt setting (`sub.param1` with `im=3`): Off, On, or Messages Only, kept in digit 2 of `uf$`.
+ECS command `MP` runs it.
+
+| [[line-374,Toggle graphic menus]]gosub&#160;374
+|
+| Toggles graphic menus (digit 3 of `uf$`), and tells the ML.
+ECS command `MN` runs it.
+
+| [[line-375,Logoff screen]]gosub&#160;375
+|
+| Resets the console`'s indicators (<<prg-ampersand-calls.adoc#logoff,`&,53` Logoff>> with `a`), then runs `sub.display` with `im=2+a`: the "`waiting for call`" screen (`a=0`) or the empty "`user online`" screen (`a=1`).
+
+| [[line-376,Toggle prompt mode]]gosub&#160;376
+|
+| Toggles prompt mode (`pm`).
+ECS command `PM` runs it.
+
+| [[line-390,Display e.text record]]gosub&#160;390
+|
+| Displays record `x` of the REL file `e.text` on the Etcetera drive, between blank lines.
+Line 86 shows record 2 when the disk is nearly full.
+
+| [[line-427,Load sub.* modules]]gosub&#160;427-450
+|
+a| Each of these lines loads and runs one `+sub.*+` module (`a$` is set to its name, then line 74 <<line-74>>).
+Set `im` first, to choose what the module does.
+
+.`sub.*` module loaders: lines 427-450
+[%autowidth]
+[%header]
+!===
+! Line ! Module ! Line ! Module
+! 427 ! `sub.turbo` ! 441 ! `sub.handles`
+! 428 ! `sub.comm1` ! 442 ! `sub.protos`
+! 429 ! `sub.comm2` ! 443 ! `sub.display`
+! 430 ! `sub.param1` ! 444 ! `sub.feedback`
+! 431 ! `sub.param2` ! 445 ! `sub.misc`
+! 436 ! `sub.menus` ! 446 ! `sub.modem`
+! 437 ! `sub.sysdos` ! 447 ! `sub.info`
+! 438 ! `sub.stats` ! 448 ! `sub.local`
+! 439 ! `sub.bar` ! 449 ! `sub.misc2`
+! 440 ! `sub.editor` ! 450 ! `sub.stack`
+!===
+
+Line 446 (`sub.modem`) runs `sub.modem` at once if it is already in memory and no one is online (`lc=0`).
+Lines 442 and 443 are described below.
 
 | gosub&#160;442
 |
@@ -863,7 +1103,7 @@ Set `im` according to reason for calling:
 ! Displays file transfer screen mask, where device=`d1%`, drive=`d2%`. ^*^
 !===
 
-^*^: for `im=4` or `im-5`, `an$`=filename, and set `x` to one of the following values:
+^*^: for `im=4` or `im=5`, `an$`=filename, and set `x` to one of the following values:
 
 [%autowidth]
 [%header]
@@ -905,5 +1145,115 @@ Since line 10 is used for positioning the RELative file pointer, you can`'t in t
 10 return
 ****
 
-This code `returns` from a subroutine if `a<>0`,
+In the same way, `on -(a<>0) goto 999` ``return``s from a subroutine if `a<>0`.
+
+| [[line-501,Jump table]]gosub&#160;501-567
+|
+| A jump table: each line sets `im` and runs a `+sub.*+` module (lines 427-450 <<line-427>>).
+Most are the targets of ECS commands of type Line, GOSUB, in the release `e.ecs.main` (last column); modules call some of them directly too.
+
+The lines, and the commands that run them, are in <<im-jump-table>>.
+
+| [[line-2000,BASIC error trap]]goto&#160;2000
+|
+| The ML goes here when BASIC stops with an error (`trapline` in `source/wedge.s`).
+It closes all files, and displays "`[Error#_x_, Line#_y_]`" (the error number from `peek(780)`, the line from `peek(781)+256*peek(782)`), keeping the line number in `el`.
+Line 2006 then reloads `im` with secondary address `2`, so line 0 <<line-0>> goes on to the error handler (line 4000 <<line-4000>>).
+
+| [[line-3000,Boot]]goto&#160;3000
+|
+| Boot: line 0 comes here when the ML has started the BBS.
+It ``dim``s the variables (<<prg-variables.adoc#variables-dim,Where the Variables Come From>>), reads `bd.data` and `e.data`, loads the ECS, print mode, lightbar, alarm and function key definitions, sets the clock (`sub.clocks`), reads the BAR statistics and blocks free, and goes to the "`Wait For Call`" screen (`f1=3`, line 302 <<line-302>>).
+
+`i/su.config` (the configuration editor) also uses lines 3080, 3300, 3404 and 3414.
+
+| [[line-3300,Start a new log]]gosub&#160;3300
+|
+| If today`'s log file (`e.log` and the weekday) doesn`'t exist yet, creates it with a "`LOG START`" line (line 51), saves the date in `e.data` record 44 (`d6$`), and zeroes the BAR`'s log statistics (`st(12)`-`st(22)`).
+
+| [[line-3400,Boot screen]]gosub&#160;3400
+|
+| The boot screen`'s frame and message lines:
+
+* Line 3400 draws the frame.
+* Line 3404 scrolls `z3$` into the two message lines (`z1$`, `z2$`); line 3405 redraws them.
+* Line 3408 flashes the message lines until a key is pressed, and returns the key in `an$`.
+* Line 3414 clears the screen below the frame.
+
+| [[line-4000,Error handler]]goto&#160;4000
+|
+| The error handler, reached from line 0 after line 2006 has reloaded `im`.
+A fatal error (number `128` or more) is logged, and the computer is reset.
+Otherwise it:
+
+. displays "`SYSTEM ERROR #__x__ (__name__ ERROR)`", and the line and the module it was in (`im`, `pr$`, `p1$` or `p2$`, by the line number in `el`);
+. adds a report to `e.errlog` (Etcetera drive): who was online (as line 38), the error, line, `cm$`, `p$`, the modules, ML file and protocol in memory, and the command history;
+. clears the module names (`pr$`, `p1$`, `p2$`, `ml$`) and the General Files stack (`pf`);
+. if someone is online (`ac%<>16`), either logs them off (`f1=2`, line 302) or carries on, depending on local mode (lightbar checkmark 4) and bit 0 of location 2033;
+. unless the caller is the sysop, or in local or instant mode, mails them `s.errmail` from the sysop (`i1$`, line 4092), and offers to read it;
+. goes to the main prompt (line 300 <<line-300>>).
 |===
+
+=== Jump Table: Lines 501-567 [[im-jump-table]]
+
+Each of these `im` lines sets `im` and runs a `+sub.*+` module (<<line-427>>).
+The last column is the ECS command (type Line, GOSUB) that runs the line in the release `e.ecs.main`.
+
+.Jump table: lines 501-567
+[%autowidth]
+[%header]
+|===
+| Line | `im` | Module | ECS command
+| 501 | -- | asks "`Edit (I)nfo or (P)arameters?`", then line 502 | `EP`
+| 502 | `1` | `sub.info` or `sub.param1`, by the answer | --
+| 503 | `2` | `sub.info` | `PW`
+| 504 | `1` | `sub.display` | --
+| 505 | `1` | `sub.handles` | --
+| 506 | `1` | `sub.param1` | --
+| 507 | `1` | `sub.misc` | --
+| 508 | `2` | `sub.misc` | --
+| 509 | `1` | `sub.turbo` | `TM`
+| 510 | `1` | `sub.comm1` | --
+| 511 | `2` | `sub.comm1` | `LG`
+| 512 | `2` | `sub.param1` | `AT`
+| 513 | `4` | `sub.display` | --
+| 514 | `4` | `sub.param1` | `PR`
+| 515 | `5` | `sub.param1` | --
+| 516 | `4` | `sub.info` | `TZ`
+| 520 | `1` | `sub.param2` | `LD`
+| 521 | `2` | `sub.param2` | `MX`
+| 525 | `1` | `sub.bar` | --
+| 528 | `1` | `sub.stats` | `ST`
+| 529 | `3` | `sub.bar` | --
+| 533 | `13` | `sub.misc` | `SH`, `ME`
+| 534 | `4` | `sub.misc` | `C`
+| 535 | `5` | `sub.misc` | `T`
+| 540 | `1` | `sub.sysdos` | `DC`
+| 541 | `2` | `sub.sysdos` | --
+| 544 | `1` | `sub.comm2` | `MT`
+| 545 | `8` | `sub.misc` | --
+| 546 | `10` | `sub.misc` | --
+| 547 | `14` | `sub.misc` | --
+| 548 | `15` | `sub.misc` | --
+| 549 | `1` | `sub.local` | `CA`
+| 550 | `2` | `sub.local` | `??`
+| 551 | `3` | `sub.local` | `FG`
+| 552 | `4` | `sub.local` | `RD`
+| 553 | `5` | `sub.local` | `BF`
+| 554 | `6` | `sub.local` | `RP`
+| 555 | `7` | `sub.local` | `ZZ`
+| 556 | `8` | `sub.local` | --
+| 557 | `9` | `sub.local` | `DR`
+| 558 | `1` | `sub.menus` | --
+| 559 | `2` | `sub.comm2` | --
+| 560 | `3` | `sub.comm2` | --
+| 561 | `4` | `sub.comm2` | --
+| 562 | `5` | `sub.comm2` | --
+| 563 | `6` | `sub.comm2` | --
+| 564 | `7` | `sub.comm2` | --
+| 565 | `2` | `sub.misc2` | `PS`
+| 566 | `3` | `sub.misc2` | `TT`
+| 567 | `1` | `sub.misc2` | `QM`
+|===
+
+Other ECS Line commands in the release `e.ecs.main` run lines `40` (`NU`), `41` (`CF`), `43` (`SY`), `85` (`F`), `372` (`XP`), `373` (`MP`), `374` (`MN`), `376` (`PM`) and `450` (`STK`).
