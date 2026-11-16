@@ -48,6 +48,47 @@ Examples are `a$` and `an$`:
 
 These variables have a set purpose, but are intended to change.
 
+=== Where the Variables Come From [[variables-dim]]
+
+When the BBS boots, `im` line 3000 ``dim``s about 200 simple (non-array) variables in a fixed order, one line per letter (`dim a$,a%,ac%,am,ag$,...`, through `dim z$,z%,zz`).
+Line 3070 then ``dim``s the arrays the BBS always keeps: `tt$(254)`, `dv%(36)`, `dr%(36)`, `co$(9)`, `hs$(10)`, `bf(6)`, `st(38)`, `im$(5)` and `pf$(10)`.
+
+``dim``ming a simple variable just creates it, set to `0` or `""`.
+Doing it at boot puts every reserved variable at the start of BASIC`'s variable table, in an order that never changes:
+
+* BASIC finds a variable by searching the table from the start, so variables near the start are found sooner.
+
+* The ML keeps the offsets of 50 variables (see <<ml-variables>>), worked out once by its start-up code, so those variables must exist before the ML first uses them and must never move.
+Every variable a module creates later goes after them.
+
+A few more arrays are only ``dim``med when a module needs them:
+`im` line 306 (<<prg-im-routines.adoc#line-306,`gosub 304`>>, or `gosub 306` directly) ``dim``s the arrays Image 1.2 used (<<image-12-arrays>>).
+
+The tables below list every variable `im` ``dim``s, plus a few others (marked ^†^) that `im` or the modules create when they first assign them.
+
+[[ml-variables]]
+==== Variables the ML Uses
+
+The ML finds 50 BASIC variables by number, through the `vars` table in `source/varbl.s`.
+These are the variables that <<prg-ampersand-calls.adoc#amp-9-bottom-variable,`&,9` Bottom Variable>> shows; its table lists all 50 numbers.
+In the tables below, the Purpose column notes "`ML variable _n_`" for each of them.
+
+Two entries in the table, `tr$` (3) and `ef` (25), are not ``dim``med by `im`, and no BASIC code in 3.0 uses them.
+
+The ML also reads 16 of these through the MCI command ``&#163;v__x__``, where _x_ is a digit or a letter (only the low 4 bits of the character count, so `j`-`o` are 10-15):
+
+[%autowidth]
+[%header]
+|===
+| `&#163;v0` | `&#163;v1` | `&#163;v2` | `&#163;v3` | `&#163;v4` | `&#163;v5` | `&#163;v6` | `&#163;v7`
+| `d1$` | `ld$` | `na$` | `rn$` | `ph$` | `bn$` | `b$` | `an$`
+| `&#163;v8` | `&#163;v9` | `&#163;vj` | `&#163;vk` | `&#163;vl` | `&#163;vm` | `&#163;vn` | `&#163;vo`
+| `d2$` | `d3$` | `ak$` | `lt$` | `d4$` | `ag$` | `cc$` | `dd$`
+|===
+
+NOTE: The Image 1.2 guide gave `&#163;vk` as `d5$`.
+In 3.0 (`mcivars`, `source/mcicm.s`) it is `lt$`.
+
 === Variable
 
 This is the variable`'s name.
@@ -57,6 +98,10 @@ This is the variable`'s name.
 `BBS`: this is a BBS statistic or BBS-maintained variable, it could be saved to `e.data`.
 
 `User`: this is a user statistic, saved to `u.config`.
+
+`Work`: a scratch variable; modules use it for whatever they need at the moment.
+
+`--`: nothing in 3.0 uses it (see <<unused-variables>>).
 
 === Use?
 
@@ -70,6 +115,27 @@ icon:question[role=blue] means the variable may be used in some circumstances, b
 === Purpose
 
 An explanation of what the variable does.
+
+Records of `e.data` are listed in <<prg-file-formats.adoc#e-data,`e.data`>>.
+
+=== Work Variables
+
+The single-letter variables, `a$`-`z$` and `a%`-`z%`, are work variables used throughout the BBS by different subsections.
+Most are free to use, but a few have a job:
+
+* `a$`, `an$`, `b$`, `p$` and `w$` pass text to and from the ML (see <<strings>>).
+* `a%` and `b%` pass numbers to and from the ML: most `&` calls that return a value put it in `a%`, and some take a second value in `b%`.
+* `e%`, `e$`, `t%` and `s%` get the disk status (error number, message, track and sector) from <<prg-im-routines.adoc#line-5,`gosub 5`>> (`im` line 5, `input#15,e%,e$,t%,s%`).
+Many routines test `e%` after opening a file.
+* `r$` is a carriage return [`chr$(13)`]; never change it.
+* `u$` was the command stack in Image 1.2; 3.0 uses `uu$` for that, and `u$` is a work variable.
+* `x$` held the drive designators in Image 1.2; in 3.0 it is a work variable.
+* `y%` and `z%` are used during boot: `y%` is the clock set method (`e.data` record 37), and `z%` holds the boot device number.
+After boot they are work variables.
+* `q$` is set by `im` line 90 to spaces, to center 40-column text on a wider screen.
+
+The single-letter floating point variables (`a`, `b`, `x` and so on) are not ``dim``med; `im` and the modules use them as work variables too.
+`x` is the record number for <<prg-im-routines.adoc#line-1,`gosub 1`>>, and `a` is the flag number and result for <<prg-im-routines.adoc#line-11,`gosub 11`>>.
 
 === Integer
 
@@ -88,20 +154,22 @@ template:
 | Variable | Type | Use? | Purpose
 
 | `a%`
-|
-|
-|
+| Work
+| icon:question[role=blue]
+| Return value of most `&` calls that return a number, and a parameter to several.
+ML variable 30.
 
 | `ac%`
-| BBS
+| User
 | icon:check[role=green]
 | User access level, `0-9`.
 
 *Read:* Get user`'s access level.
 
 *Write:* Set user`'s access level.
+ML variable 24 (ECS and the MCI use it to check access).
 
-| `af%`
+| `af%`^†^
 |
 |
 | Access flag?
@@ -110,12 +178,19 @@ template:
 | BBS
 | icon:check[role=green]
 | Old access level ("`Access Old`").
-If `ac%<>ao%`, the user`'s access level has changed during the call.
+If `ac%<>ao%`, the user`'s access level has changed during the call: `im` line 220 then reads the new level`'s group (`ag$`) and flags (`fl$`) from `e.access` (line 320), and sets `ao%=ac%`.
+
+| `b%`
+| Work
+| icon:question[role=blue]
+| Second number passed to or returned by some `&` calls (for example <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42` Check for ECS Command>>).
+ML variable 31.
 
 | `cd%`
 | User
 | icon:check[role=green]
 | Last call carrier drop flag.
+`im` line 234 clears it on a normal logoff; `i/lo.on` sets it to `1` at logon, so it is still `1` at the next logon if the caller dropped carrier.
 
 | `co%`
 | User
@@ -131,75 +206,166 @@ If `ac%<>ao%`, the user`'s access level has changed during the call.
 | `d1%`
 | BBS
 | icon:check[role=green]
-| Currently active device number.
+| Device number for drive designator `0` (a drive that isn't one of the six system drives).
+<<prg-im-routines.adoc#line-2,`gosub 2`>> copies it to `dv%(0)`, so `dr=0:gosub 3` uses it.
+`im` line 352 sets it from a "`Device, Drive`" prompt.
 
 | `d2%`
 | BBS
-| icon:times-circle[role=red]
-| Currently active drive/LU number. #FIXME: duplicate?#
+| icon:check[role=green]
+| Drive/LU number for drive designator `0`, as `d1%` is its device.
+<<prg-im-routines.adoc#line-2,`gosub 2`>> copies it to `dr%(0)`.
 
 | `d3%`
 | BBS
 | icon:times-circle[role=red]
-| Currently active drive/LU number. #FIXME: duplicate?#
+| Drive/LU number of the drive just selected: <<prg-im-routines.adoc#line-2,`gosub 2`>> sets it to `dr%(dr)`, the number in `dr$`.
+Image 1.2 passed it to the ML; nothing in 3.0 reads it.
 
 | `da%`
 | User
 | icon:check[role=green]
-| Downloads allowed per day.
+| Downloads allowed per day, from user flag 20 (`im` line 324).
 
 | `db%`
+| --
+| --
+| Unused (<<unused-variables>>).
+
+| `dc%`
 | User
 | icon:check[role=green]
-| Downloaded blocks.
+| Downloads this call.
+`i/lo.idle` clears it at logon.
 
 | `df%`
 | BBS
 | icon:check[role=green]
-| Default color for text.
+| Default color for text (`e.data` record 40; `3`, cyan, if not set).
+<<prg-im-routines.adoc#line-12,`gosub 12`>> sets it with `&#163;q`.
+
+| `dv%`
+| BBS
+| icon:times-circle[role=red]
+| Device number of the active drive.
+<<prg-im-routines.adoc#line-2,`gosub 2`>> sets it to `dv%(dr)`.
+ML variable 32.
+
+| `e%`
+| Work
+| icon:check[role=green]
+| Disk error number from <<prg-im-routines.adoc#line-5,`gosub 5`>>: `0` if there was no error.
+
+| `ec%`
+| BBS
+| icon:times-circle[role=red]
+| Credits the ECS command just typed costs (`b%` from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>).
+`im` line 261 refuses the command if the caller has fewer credits (`cr`), and line 262 takes them off.
+
+| `i%`
+| BBS
+| icon:times-circle[role=red]
+| Instant (local) logon flag: nonzero when the sysop logged on at the console.
+Some routines skip writing the user`'s record or mail when it is set.
 
 | `kp%`
 | BBS
 | icon:times-circle[role=red]
-| ASCII value of keypress?
+| After `&` output, the key the caller pressed during it (`0` if none).
+ML variable 38; no BASIC code in 3.0 reads it.
 // not after {pound}Gx
+
+| `lk%`
+| BBS
+| icon:times-circle[role=red]
+| Lt. Kernal hard drive device number (`e.data` record 38); `0` if there isn't one.
 
 | `ll%`
 | User
 | icon:check[role=green]
 | Line length (width of the user`'s screen in columns).
 
+| `lt%`
+| User
+| icon:times-circle[role=red]
+| Minute of the day (`mn%`) when the user logged on; `i/lo.on` saves it in the user log.
+
 | `mn%`
 | BBS
 | icon:times-circle[role=red]
 | Minute of the day: `1-1440`, updated by BBS ML.
+ML variable 49.
+
+| `mp%`
+| User
+| icon:check[role=green]
+| Screen height in lines (`poke 971,mp%`): how many lines are shown before the "`More?`" prompt (`mp$`).
+`0` means no pause.
+
+| `o%`
+| Work
+| icon:check[role=green]
+| `sub.info` uses it for the minutes used this call.
 
 | `p1%`
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Minutes allowed during prime time.
+| Prime Time: Minutes allowed during prime time (`e.data` record 20).
 
 | `p2%`
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Starting hour.
+| Prime Time: Starting hour (`e.data` record 20).
 
 | `p3%`
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Ending hour.
+| Prime Time: Ending hour (`e.data` record 20).
 
-| `pt%`
+| `pt%`^†^
 | BBS
 | icon:times-circle[role=red]
-| Prime Time: Active flag
+| Prime Time: Active flag, set by `im` line 84.
+
+| `s%`
+| Work
+| icon:check[role=green]
+| Sector number from <<prg-im-routines.adoc#line-5,`gosub 5`>>.
+
+| `sa%`
+| --
+| --
+| Unused (<<unused-variables>>).
+
+| `t%`
+| Work
+| icon:check[role=green]
+| Track number from <<prg-im-routines.adoc#line-5,`gosub 5`>>.
 
 | `tc%`
 | User
 | icon:times-circle[role=red]
-| Total calls to the system by the user online
+| Total calls to the system by the user online.
 
+| `tr%`
+| User
+| icon:times-circle[role=red]
+| Time remaining this call, in minutes.
+The ML counts it down, and sets it to `0` when carrier is lost, so check `if tr%<1` after any input.
+ML variable 29.
+
+| `y%`
+| Work
+| icon:check[role=green]
+| During boot, the clock set method (`e.data` record 37).
+
+| `z%`
+| Work
+| icon:check[role=green]
+| During boot, the boot device number.
 |====================
+
+`c%`, `d%`, `f%`, `g%`, `h%`, `j%`, `k%`, `l%`, `m%`, `n%`, `p%`, `q%`, `r%`, `u%`, `v%`, `w%` and `x%` are work variables (`j%` and `l%` aren`'t used in 3.0).
 
 === Floating Point
 
@@ -218,42 +384,66 @@ template:
 | Variable | Type | Use? | Purpose
 
 | `am`
-| BBS
-| icon:times-circle[role=red]
-| AutoMaint flag.
+| Work
+| icon:check[role=green]
+| `im` line 34 (open `e.log`) uses it for lightbar checkmark 46 (<<prg-ampersand-calls.adoc#_52_lightbar_interface,`&,52` Lightbar Interface>>): it decides whether the log name gets a day digit (`e.log` + `left$(lt$,am)`).
 
 | `bd`
-| BBS
-| icon:check[role=green]
-| BBS boot drive device number, used only during initialization.
+| --
+| --
+| Unused (<<unused-variables>>).
 
-| `bf`
+| `bf`^†^
 | BBS
 |
-| Temporary blocks free count.
+| Temporary blocks free count, from <<prg-im-routines.adoc#line-61,`gosub 61`>>.
 
 | `bu`
-|
-|
-|
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `ca`
 | BBS
-|
-| Total calls to the BBS.
+| icon:times-circle[role=red]
+| Total calls to the BBS (`e.data` record 1).
 
-// cc
-// cn
+| `cc`
+| Work
+| icon:check[role=green]
+| `i/C` (chat) uses it to number chat logs.
+
+| `cn`
+| BBS
+| icon:times-circle[role=red]
+| Calls since the BBS was booted.
 
 | `cr`
 | User
 | icon:check[role=green]
 | Amount of credits the user has.
 
-// ct
-// dc
-// dr
-// ec
+| `ct`
+| Work
+| icon:check[role=green]
+| Loop counter for the command history (`im` lines 313 and 315).
+
+| `dc`
+| --
+| --
+| Unused (<<unused-variables>>).
+
+| `dr`
+| BBS
+| icon:check[role=green]
+| Drive designator for the next disk access, `0-6`: `1` System, `2` E-Mail, `3` Etcetera, `4` Directory, `5` Plus-File, `6` User, `0` the drive in `d1%`/`d2%`.
+Set it, then call <<prg-im-routines.adoc#line-2,`gosub 2`>> (or `3` or `4`).
+
+| `ec`
+| BBS
+| icon:times-circle[role=red]
+| Type of the ECS command just typed (`a%` from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>): `1` load an `i.` module, `2` and `4` `goto` a line, `3` load an `i/` module; `5` for a short command.
+`im` line 264 branches on it.
 
 | `el`
 | BBS
@@ -265,52 +455,82 @@ template:
 | icon:check[role=green]
 | Expert mode flag: `0`=disabled, `1`=enabled
 
-// f1
-// f2
-// f3
-// f4
-// fl
-// id
-// im
+| `f1`
+| BBS
+| icon:times-circle[role=red]
+| What `i.lo` does next (its line 3004, `on f1 goto`): `0` wait for a call, `1` log off with the logoff screen (`O`, or the time limit ran out), `2` log off without it (`O!`, or after an error), `3` after boot, a reload or AutoMaint, `4` log on, `5` go to the main prompt.
+
+| `f2`
+| Work
+| icon:check[role=green]
+| `i.SB` and the sub-board modules: flags of the current sub-board.
+
+| `f3`
+| BBS
+| icon:times-circle[role=red]
+| `i/lo.idle`: which wait-for-call screen is showing.
+
+| `f4`
+| BBS
+| icon:times-circle[role=red]
+| What to do after a command (`im` line 216): `1.1` load an `i.` module (ECS), `1.2` `goto` a line (ECS), `1.3` log off.
+Modules also use it as a "`done`" flag.
+
+| `fl`
+| Work
+| icon:check[role=green]
+| General flag; the editor (`sub.editor`) and several modules use it.
+
+| `id`
+| User
+| icon:times-circle[role=red]
+| ID (account) number of the user online.
+`id=1` is the sysop.
+
+| `im`
+| BBS
+| icon:check[role=green]
+| Function number for a `sub.*` module: set it before calling the module (for example `im=2:goto 447`), and the module goes to that function.
 
 | `is`
 | BBS
 | icon:times-circle[role=red]
-| Image `sub.*` module stack depth counter.
+| Image `sub.*` module stack depth counter (see `im$()`).
 
-// kk
+| `kk`
+| Work
+| icon:question[role=blue]
+| Number of lines in `tt$()`: the editor sets it, and the mail and message modules use it as the line count.
 
 | `l1`
 | BBS
-| icon:times-circle[role=red]
-| BBS reservation: `0`=none, `1`=one, `2`=all calls
+| icon:check[role=green]
+| Lowest deleted (free) user account number; the user editor and `i/lo` modules save it.
 
 | `l2`
 | BBS
 | icon:times-circle[role=red]
-| BBS reservation:
+| BBS reservation: `0`=none, `1`=one call, `2`=all calls (`e.data` record 21).
 
 | `l3`
-| BBS
-| icon:times-circle[role=red]
-| BBS reservation:
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `lc`
-|
-|
-|
+| BBS
+| icon:times-circle[role=red]
+| Current menu level, for `sub.menus`: `1` main, `2` sub-boards, `6` e-mail, `7` General Files, `0` waiting for a call.
 
 | `le`
-|
-|
-| Lines in text editor x10
+| User
+| icon:times-circle[role=red]
+| Lines the user may enter in the text editor: 10 times (user flag 6 plus 1).
 
 | `lf`
 | User
 | icon:times-circle[role=red]
-| Linefeed flag.
-
-// lm
+| Linefeed flag: lightbar checkmark 17, line feed after carriage return (<<prg-ampersand-calls.adoc#_52_lightbar_interface,`&,52` Lightbar Interface>>).
 
 | `lp`
 | BBS
@@ -319,81 +539,152 @@ template:
 `lp` returns the ML major/minor version number, _e.g._, `1.3`.
 
 Use: Disable or enable word-wrap for `&` text output.
-`lp=0`: disable word-wrap, `lp=1`: enable word-wrap
+`lp=0`: disable word-wrap, `lp=1`: enable word-wrap.
+The ML sets `lp` back to `0` after a word-wrapped output.
+ML variable 15.
 
-// mc
-// mf
-// mm
-// mw
+| `mc`
+| BBS
+| icon:times-circle[role=red]
+| Read from `e.data` record 36 at boot; nothing in 3.0 uses it.
+(It was the number of macros; `e.macros` record 1 holds that now.)
 
-| nc
+| `mf`
+| BBS
+| icon:times-circle[role=red]
+| Modem speaker setting: `sub.modem` puts it in the modem init string (`ATM__n__`).
+
+| `mw`
+| --
+| --
+| ML variable 19; nothing in 3.0 uses it (<<unused-variables>>).
+
+| `nc`
 | BBS
 | Edit with kbd:[IM]
-| Credits given to new user.
+| Credits given to new user (`e.data` record 58).
 
-// nf
+| `nf`
+| BBS
+| icon:times-circle[role=red]
+| `i.EM`: NetMail enabled, lightbar checkmark 28 (<<prg-ampersand-calls.adoc#_52_lightbar_interface,`&,52` Lightbar Interface>>).
 
 | `nl`
 | User
-|
-| Graphics mode.
+| icon:times-circle[role=red]
+| Graphics mode: `0` ASCII, `1` Commodore graphics, `2` ANSI.
+ML variable 20.
 
-// nm
+| `nm`
+| --
+| --
+| Unused (<<unused-variables>>).
 
-| `nt`
+| `nt`^†^
 | BBS
 | icon:times-circle[role=red]
 | Network transfer flag: `0`=no transfer occurring, `1`=in NetMaint (NMauto) mode.
 
 | `pf`
 | BBS
-|
-| General Files directory stack depth counter.
+| icon:times-circle[role=red]
+| General Files directory stack depth counter (see `pf$()`).
+If it is not `0` when a module ends, `im` line 300 goes back to General Files.
 
-// pl
+| `pl`
+| BBS
+| icon:check[role=green]
+| Input control flag: `pl=0` accepts upper- and lowercase input; `pl=1` makes it uppercase only.
+ML variable 16.
 
 | `pm`
 | User
 | icon:times-circle[role=red]
 | Prompt Mode flag: `0`=disabled, `1`=enabled
 
-// pr - protocol?
-// ps - posts?
-// qb - baud rate
-// qe
-// rc - abort char typed
-// rp - responses?
-// rq
-// rs
-// sg
-// sh - ascii value of last key hit: 47 = "/"
-// sr - copy of st?
-// st - Commodore DOS status
-// t1
-// tf
-// ti - jiffy clock
-// tt 3044
+| `pr`
+| BBS
+| icon:times-circle[role=red]
+| Number of the ML transfer protocol in memory (`-1` for none).
+
+| `ps`
+| Work
+| icon:check[role=green]
+| `i/MM.sb-post`: posts made this call.
+
+| `qb`
+| User
+| icon:times-circle[role=red]
+| Caller`'s connection speed in BPS (`300`-`38400`).
+
+| `qe`
+| BBS
+| icon:times-circle[role=red]
+| ML variable 22; `i.EM` tests it, but nothing in 3.0 sets it.
+
+| `rc`
+| BBS
+| icon:check[role=green]
+| Abort flag: after `&` output, `-1` if the caller pressed a key to stop it, `0` if not.
+ML variable 17.
+
+| `rp`
+| Work
+| icon:check[role=green]
+| `i/MM.sb-post`: responses made this call.
+
+| `rq`
+| BBS
+| icon:times-circle[role=red]
+| Sub-board reading: set while reading a post and its responses.
+ML variable 23.
+
+| `sg`
+| BBS
+| icon:times-circle[role=red]
+| Current SIG number, `0` for none.
+
+| `sh`
+| BBS
+| icon:check[role=green]
+| After `&` output that was stopped with a key: `47` if the key was kbd:[/] (or carrier was lost), meaning quit to the prompt; otherwise `0`.
+ML variable 18.
+
+| `t1`
+| BBS
+| icon:times-circle[role=red]
+| Minute of the day (`mn%`) when timing started; `i.lo` works out the minutes since.
+
+| `tf`
+| Work
+| icon:check[role=green]
+| `i.IM`: a drive setting was changed, so save it.
+
+| `tt`
+| Work
+| icon:check[role=green]
+| Loop counter for `tt$()` lines (`i.SB`, `i/MM.sb-post`).
 
 | `uc`
-|
-|
-|
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `uh`
 | BBS
-|
-|
+| icon:times-circle[role=red]
+| Number of active user accounts (from `sub.handles` at boot).
 
 | `ul`
-| BBS
-|
-|
+| User
+| icon:times-circle[role=red]
+| Caller`'s default transfer protocol: `ul+1` is its number in `s.m.protos`.
+ML variable 21.
 
 | `ur`
 | BBS
-|
-|
-
+| icon:times-circle[role=red]
+| Highest user account number (`e.data` record 12, minus 1).
 
 | `zz`
 | BBS
@@ -401,10 +692,10 @@ Use: Disable or enable word-wrap for `&` text output.
 | Pseudo-local mode flag: `0`=disabled, `1`=enabled
 |====================
 
-=== Strings
+=== Strings [[strings]]
 
 `b$`-`z$` are work variables used throughout the BBS by different subsections.
-They are available for use and may be read and written freely.
+They are available for use and may be read and written freely, except for `p$`, `r$` and `w$`.
 
 Some specific information about certain variables is outlined below.
 
@@ -428,6 +719,7 @@ template:
 | Output text using `a$="text":&`.
 
 General-purpose work variable.
+ML variable 1.
 
 | `ag$`
 | BBS
@@ -441,6 +733,7 @@ General-purpose work variable.
 | icon:check[role=green]
 | A horizontal line 2 characters less than the user`'s screen width.
 
+ML variable 14.
 (Also MCI variable `&#163;vj`.)
 
 | `am$`
@@ -456,7 +749,16 @@ At boot, `im` also uses it as the date the daily log (`e.log`) last started (`lt
 
 `&,15,_x_` (convert `an$`): perform various conversions on `an$`.
 
+ML variable 0.
 (Also MCI variable `&#163;v7`.)
+
+| `b$`
+| Work
+| icon:check[role=green]
+| Work variable; some `&` calls return text in it (for example, the ECS flags from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>).
+
+ML variable 2.
+(Also MCI variable `&#163;v6`.)
 
 | `bd$`
 | BBS
@@ -467,11 +769,11 @@ Used once in `im` during boot-up, and in `i.su/config`.
 | `bn$`
 | BBS
 | icon:times-circle[role=red]
-| BBS name.
+| BBS name (`e.data` record 47).
 
 (Also MCI variable `&#163;v5`.)
 
-| `bs$`
+| `bs$`^†^
 |
 | icon:check[role=green]
 | used once in `im`, line 3100
@@ -479,22 +781,25 @@ Used once in `im` during boot-up, and in `i.su/config`.
 | `c1$`
 | BBS
 | icon:check[role=green]
-| Chat mode entry message.
+| Chat mode entry message (`e.data` record 48).
+ML variable 34.
 
 | `c2$`
 | BBS
 | icon:check[role=green]
-| Chat mode exit message.
+| Chat mode exit message (`e.data` record 49).
+ML variable 35.
 
 | `c3$`
 | BBS
 | icon:times-circle[role=red]
-| `Returning To The Editor` message (hard-coded, `im` line `3060`).
+| `Returning To The Editor` message (hard-coded, `im` line `3060`), shown when chat ends in the editor.
+ML variable 39.
 
 | `cc$`
 | BBS
 | icon:times-circle[role=red]
-| 2-character system identifier, sometimes shown with user ID.
+| 2-character system identifier, sometimes shown with user ID (`e.data` record 51).
 
 (Also MCI variable `&#163;vn`.)
 
@@ -502,11 +807,12 @@ Used once in `im` during boot-up, and in `i.su/config`.
 | BBS
 |
 | Copy of `co$` (computer name).
+ML variable 37.
 
 | `cm$`
 | BBS
 | icon:check[role=green]
-| Current Message, displayed in the `Area` sysop console screen mask.
+| Current Message, displayed in the `Area` sysop console screen mask by <<prg-im-routines.adoc#line-9,`gosub 9`>>.
 
 (Sometimes used for debugging information in `e.errlog`.)
 
@@ -515,12 +821,14 @@ Used once in `im` during boot-up, and in `i.su/config`.
 | icon:check[role=green]
 | User`'s computer type, displayed in 16-character programmable window using `&,9,36`.
 Equivalent to `co$(co%)`.
+ML variable 36 (shown on the screen after chat).
 
 | `d1$`
 | BBS
 | icon:times-circle[role=red]
 | Current time and date information in 11-digit format, updated by BBS ML.
 
+ML variable 4.
 (Also MCI variable `&#163;v0`.)
 
 | `d2$`
@@ -528,13 +836,15 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | Time and date of last logoff, or Library name at entry.
 
+ML variable 5.
 (Also MCI variable `&#163;v8`.)
 
 | `d3$`
 | BBS
 | icon:times-circle[role=red]
-| Handle of last user on the system.
+| Handle of last user on the system (`e.data` record 17).
 
+ML variable 6.
 (Also MCI variable `&#163;v9`.)
 
 | `d4$`
@@ -542,6 +852,7 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | Name of current ML protocol in memory.
 
+ML variable 7.
 (Also MCI variable `&#163;vl`.)
 
 | `d5$`
@@ -549,32 +860,41 @@ Equivalent to `co$(co%)`.
 | icon:times-circle[role=red]
 | True last call date of user online in 11 digit format.
 
-(Also MCI variable `&#163;vk`.)
+ML variable 8.
 
 | `d6$`
 | BBS
 | icon:times-circle[role=red]
 | Logoff time of last user.
+At boot, and when the log is reset, the date the log (`e.log`) started.
 
 | `dd$`
 | BBS
 | icon:times-circle[role=red]
 | System identifier + user ID number
 
+(Also MCI variable `&#163;vo`.)
+
 | `dr$`
 | BBS
 | icon:times-circle[role=red]
-| Currently active drive/LU number + `:`
+| Currently active drive/LU number + `:`, set by <<prg-im-routines.adoc#line-2,`gosub 2`>>.
+ML variable 33.
+
+| `e$`
+| Work
+| icon:check[role=green]
+| Disk error message from <<prg-im-routines.adoc#line-5,`gosub 5`>>.
 
 | `ef$`
 | BBS
 | icon:times-circle[role=red]
-| ECS command flags.
+| ECS command flags (`b$` from <<prg-ampersand-calls.adoc#_42_check_for_ecs_command,`&,42`>>): the name of the module to load, or the line number to `goto` (two bytes, low byte first).
 
 | `ep$`
 | BBS
 | icon:times-circle[role=red]
-| ECS command password.
+| ECS command password (`a$` from `&,42`); `""` for none.
 
 | `f1$`--`f8$`
 | BBS
@@ -582,6 +902,7 @@ Equivalent to `co$(co%)`.
 | Programmable function key definitions: the text kbd:[Ctrl+f1] (`f1$`), kbd:[C=+f1] (`f2$`), kbd:[Ctrl+f3] (`f3$`) and so on type at the console, up to 75 characters (longer is cut).
 `im` reads them from `e.fkeys` at boot, and ``IM``'s Function Key Editor (`i/IM.macros`) sets them; both turn a `←` (the back-arrow key, `_` in ASCII) at the end into a carriage return.
 The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and keyboard input takes it from there.
+ML variables 40-47.
 
 | `ff$`
 | User
@@ -598,17 +919,22 @@ The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and ke
 | icon:times-circle[role=red]
 | 16 hexadecimal digits: `"0123456789abcdef"`.
 
+| `i$`
+| Work
+| icon:check[role=green]
+| `i.SB` and General Files: the "`SubOp`" title.
+
 | `im$`
 | BBS
-|
-| Current `sub.*` module.
+| icon:times-circle[role=red]
+| Name of the `sub.*` module just loaded, without `sub.` (set by `im` line 110).
 
 | `in$`
 | BBS
 |
 | Modem initialization string.
 
-| `i1$`
+| `i1$`^†^
 | BBS
 | icon:times-circle[role=red]
 | Access level + handle of the sysop.
@@ -617,20 +943,22 @@ The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and ke
 | User
 | icon:check[role=green]
 | ``dim``__ensioned but unused?__ Sub-board "`joined read`" string from pre-TurboREL 1.2 SB subsystem.
+`i.SB` still reads it, but nothing in 3.0 sets it.
 
-// i/lo.misc:
 | `l1$`
-|
-|
-|
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `l2$`
 | BBS
 |
-| System reservation: password.
+| System reservation: password (`e.data` record 21).
 
-// `l3$`
-// dimensioned but unused
+| `l3$`
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `ld$`
 | User
@@ -638,20 +966,25 @@ The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and ke
 | Last call date of user online in 11-digit format.
 Used to determine whether a message is new or not.
 
+ML variable 9.
+(Also MCI variable `&#163;v1`.)
+
 | `ll$`
 | User
 | icon:times-circle[role=red]
 | Real last name of user online.
 
 | `lm$`
-|
-|
-|
+| BBS
+| icon:times-circle[role=red]
+| Name of the last `i/` module `i.GF`, `i.IM` or `i.SB` loaded (for example `GF-x`), so it isn`'t loaded again.
 
 | `lt$`
 | BBS
 | icon:times-circle[role=red]
 | Logon time of user online in 11-digit format.
+
+(Also MCI variable `&#163;vk`.)
 
 | `ml$`
 | BBS
@@ -662,17 +995,19 @@ Used to determine whether a message is new or not.
 | BBS
 | icon:times-circle[role=red]
 | More prompt text: ``...More? (Y/n)`` (hard-coded in `im`, line `3158`)
+ML variable 48.
 
 | `mt$`
 | BBS
 | icon:times-circle[role=red]
-| modem setup?
+| Modem settings from `e.i.modem` (`i/IM.modem` edits them); `sub.modem` builds the modem init string from some of its characters.
 
 | `na$`
 | BBS
 | icon:times-circle[role=red]
 | Handle of current caller.
 
+ML variable 11.
 (Also MCI variable ``&#163;v2``)
 
 | `nl$`
@@ -681,14 +1016,15 @@ Used to determine whether a message is new or not.
 | Null character [`chr$(0)`]
 
 | `nm$`
-| BBS
-| icon:times-circle[role=red]
-| Last network sort time/date in 11-digit format.
+| --
+| --
+| Unused (<<unused-variables>>).
 
 | `p$`
 | BBS
 | icon:check[role=green]
 | Current prompt text.
+ML variable 28.
 
 | `p1$`
 | BBS
@@ -705,17 +1041,19 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | E-mail address of current user online.
 
+ML variable 13.
 (Also MCI variable `&#163;v4`.)
 
 | `po$`
 | BBS
-| 
-| Text for system main level prompt.
+|
+| Text for system main level prompt (from `bd.data`).
 
 | `pp$`
 | BBS
 | icon:times-circle[role=red]
-| System password (change with `PC` command) #FIXME: still used?#
+| `e.data` record 18, read at boot.
+It was the system password (changed with the `PC` command); nothing in 3.0 uses it.
 
 | `pr$`
 | BBS
@@ -723,16 +1061,21 @@ Used to determine whether a message is new or not.
 | Name of current ``pr``ogram (``i.*`` module) in memory.
 
 | `pu$`
-|
-|
-|
+| BBS
+| icon:times-circle[role=red]
+| The last command typed at a prompt (`im` line 310); the editor also keeps the prompt to restore in it.
 
 | `pw$`
 | User
 | icon:times-circle[role=red]
 | Password of current online user
 
-| `qt$` 
+| `q$`
+| Work
+| icon:check[role=green]
+| Spaces to center 40-column text on a wider screen, set by `im` line 90.
+
+| `qt$`
 | BBS
 | icon:times-circle[role=red]
 | Quotation mark [`chr$(34)`].
@@ -747,42 +1090,44 @@ Used to determine whether a message is new or not.
 | icon:times-circle[role=red]
 | Real name of user online (``ff$+" "+ll$``)
 
+ML variable 12.
 (Also MCI variable `&#163;v3`.)
 
-| `sb$`
+| `sb$`^†^
 |
 |
 |
 
-| `sy$`
+| `sy$`^†^
 | BBS
 | icon:times-circle[role=red]
 | Current subsystem active.
 
-| `ti$`
+| `ti$`^†^
 | BBS
 | icon:check[role=green]
 | Commodore 64 Time-of-day clock
 
 | `tk$`
-|
-|
-|
+| BBS
+| icon:times-circle[role=red]
+| First character (weekday digit) of `am$`, set at boot; nothing in 3.0 reads it.
 
 | `tt$`
-|
-|
-|
+| Work
+| icon:check[role=green]
+| Name of the e-mail file for <<prg-im-routines.adoc#line-32,`gosub 32`>> (`m.` + `tt$`, usually a handle).
+ML variable 10.
 
 | `tz$`
 | User
 |
-| Time zone string, _e.g._ `PST`.
+| Time zone string, _e.g._ `PST` (`e.data` record 45).
 
 | `u$`
-| BBS
-| icon:times-circle[role=red]
-| Reserved for command stacking.
+| Work
+| icon:check[role=green]
+| Was the command stack in Image 1.2; a work variable in 3.0 (see `uu$`).
 
 | `uf$`
 | User
@@ -800,13 +1145,14 @@ See <<prg-im-routines.adoc#user-flags,User Flags>>.
 | icon:check[role=green]
 | During <<prg-ampersand-calls.adoc#amp-1-input-line,`&,1,32` Input Line>> (input string in edit mode), it displays `p$: w$`, a new line, ``p$: ``, then waits for input.
 If kbd:[Return] is hit without typing a response, you can assign `w$` to `an$` (the standard "`answer string`") via `an$=w$`.
+ML variable 27.
 
 | `x$`
-| BBS
-| icon:times-circle[role=red]
-| System drive/LU designators #FIXME#?
- 
-| `z1$`, `z2$`, `z3$`
+| Work
+| icon:check[role=green]
+| Held the system drive/LU designators in Image 1.2; a work variable in 3.0.
+
+| `z1$`^†^, `z2$`^†^, `z3$`^†^
 | BBS
 | icon:check[role=green]
 | Only used during boot-up or BBS configuration to display information in the scrolling message area.
@@ -826,20 +1172,21 @@ template:
 |====================
 | Variable | Type | Use? | Purpose
 
-| `co$(1-9)`
+| `co$(9)`
 | BBS
 | icon:check[role=green]
-| Text of computer types.
+| Text of computer types, `1-9`, from the `data` at `im` line 3500.
 
 | `hs$(10)`
 | BBS
 | icon:times-circle[role=red]
-| User command history stack.
+| User command history stack (`im` lines 310-315).
+`hs$(10)` is the newest command.
 
-| `is$(10)`
+| `im$(5)`
 | BBS
 | icon:times-circle[role=red]
-| `sub.*` module call stack.
+| `sub.*` module call stack, `is` deep: when a `sub.*` module calls another, `im` returns to the one in `im$(is)` afterwards.
 
 | `pf$(10)`
 | BBS
@@ -858,6 +1205,26 @@ GF section remembers which menu level you were at after quitting a module.
 
 This array can be used in modules not using the text editor.
 |====================
+
+=== Integer Arrays
+
+[%autowidth]
+[%header]
+[cols=">,^,^,<"]
+|===
+| Variable | Type | Use? | Purpose
+
+| `dv%(36)`
+| BBS
+| icon:times-circle[role=red]
+| Device number of each drive designator: `dv%(1)`-`dv%(6)` are the system drives (`e.data` records 52-57), and `dv%(0)` is the drive in `d1%`.
+`dv%(7)` up hold the devices of the current SIG`'s boards (`i/MM.load`).
+
+| `dr%(36)`
+| BBS
+| icon:times-circle[role=red]
+| Drive/LU number of each drive designator, as `dv%()` is its device.
+|===
 
 === Floating Point Arrays
 
@@ -878,50 +1245,18 @@ template:
 | `bf(6)`
 | BBS
 | icon:times-circle[role=red]
-| Blocks free on system disks.
+| Blocks free on system disks, `1-6` (`-1` until counted).
 
+| `st(38)`
+| BBS
+| icon:times-circle[role=red]
+| Board Activity Register (BAR) stats, from `e.stats`.
 |===
 
-////
-	dima$,a%,ac%,am,ag$,ak$,am$,an$,ao%
-	dimb$,b%,bd,bd$,bn$,bu
-	dimc$,c%,c1$,c2$,c3$,ca,cc,cc$,cd%,ch$,cm$,cn,co$,co%,cr,ct,ct%
-	dimd$,d%,d1$,d1%,d2$,d2%,d3%,d3$,d4$,d5$,d6$,da%,db%,dc,dc%,dd$,dr,dr$,dv%
-	dimdf%
-	dime$,e%,el,em,ef$,ep$,ec,ec%
-	dimf$,f%,f1,f2,f3,f4,ff$,fl,fl$,f1$,f2$,f3$,f4$,f5$,f6$,f7$,f8$
-	dimg$,g%
-	dimh$,h%,hx$
-	dimi$,i%,id,im$,im,in$,is
-	dimj$,j%,jn$
-	dimk$,k%,kk,kp%
-	diml$,l%,l1,l1$,l2,l2$,l3,l3$,lc,ld$,le,lf,lk%,ll$,ll%,lm$,lp,lt$,lt%
-	dimm$,m%,mc,mf,ml$,mp$,mt$,mw,mp%,mn%
-	dimn$,n%,na$,nc,nf,nl,nl$,nm,nm$
-	dimo$,o%
-	dimp$,p%,p1%,p2%,p3%,pf,ph$,pl,pm,po$,pp$,pr,pr$,ps,pu$,pw$,p1$,p2$
-	dimq$,q%,qb,qe,qt$
-	dimr$,r%,rc,rn$,rp,rq
-	dims$,s%,sa%,sh,sg
-	dimt$,t%,t1,tc%,tf,tk$,tr%,tt,tt$,tz$
-	dimu$,u%,uc,uh,ul,ur,uf$,uu$
-	dimv$,v%
-	dimw$,w%
-	dimx$,x%
-	dimy$,y%
-	dimz$,z%,zz
-////
+=== Image 1.2 Arrays [[image-12-arrays]]
 
-=== Image 1.2 Arrays
-
-Image 1.2 Arrays
-
-////
-set up Image 1.2 arrays:
-	dim bb$(31),dt$(61),ed$(61),nn$(61)
-{:308}
-return
-////
+`im` line 306 ``dim``s these.
+The sub-board, e-mail, General Files and network modules call it, and use the arrays as below; other modules may use them for anything (<<prg-ampersand-calls.adoc#table-array-numbers,array numbers>> for `&` calls that take an array).
 
 [cols="1m,2"]
 [%header]
@@ -929,35 +1264,102 @@ return
 | Variable | Purpose
 
 | bb$(31)
-|
+| Sub-board names of the current SIG (`i/MM.load`).
 
-| dt$(31)
-|
+| dt$(61)
+| `i.SB`: each post`'s date, then the date of its last response (11 digits each).
+`i.EM` keeps the date of each letter in it; `i/NM.update` and `i/SM.reledit` keep network sub IDs in it.
 
 | ed$(61)
-|
+| `i.SB`: each post`'s title.
+`i.EM` also keeps a field of each letter in it.
 
 | nn$(61)
-|
+| `i.SB`: who wrote each post: an account number, or `!` and a system ID for a network post.
+`i.EM` also keeps a field of each letter in it.
 
 | a%(61)
-|
+| Work array; `i/SM.reledit` and the `IM` editors use it.
 
 | c%(61)
-|
+| `i.SB`: a number kept for each post, saved with it; `i/SM.reledit` uses it as a work array.
 
 | d%(61)
-|
+| `i.SB`: number of responses to each post.
+`i.EM` also keeps a number for each letter in it.
 
 | e%(31)
-|
+| Record numbers in the sub-board file of the current SIG`'s boards (`i/MM.load`).
 
 | f%(61)
-|
+| `i.EM`: a flag or count kept for each letter (`f%(0)` is the number of letters).
 
 | ac%(31)
-| Access group information
+| Access group information: access mask of each board of the current SIG (`i/MM.load`).
 
 | so%(31)
-| Subop information
+| Subop information: account number of each board`'s subop (`i/MM.load`).
 |===
+
+[[unused-variables]]
+=== Variables Nothing in 3.0 Uses
+
+`im` ``dim``s these, but no `im` line or module in 3.0 uses them.
+Some still hold what Image 1.2 used them for, which is shown below.
+They are free to use as work variables.
+
+Image 1.2 saved a user`'s statistics in these, in its user record (`na$`, `pw$`, `ff$`, `ll$`, `ph$`, `ld$`, `ac%`, `ct%`, `tc%`, `co%`, `ll%`, `ul`, `lf`, `em`, `dc`, `uc`, `bd`, `bu`, `cr`, `ps`, `rp`, `lt$`, `fl$`, `jn$`).
+
+[%autowidth]
+[%header]
+|===
+| Variable | Image 1.2 use
+
+| `bd` | Blocks downloaded by the user online.
+| `bu` | Blocks uploaded by the user online.
+| `db%` | --
+| `dc` | Files downloaded by the user online.
+| `j%` | --
+| `l%` | --
+| `l1$` | --
+| `l3`, `l3$` | --
+| `mw` | ML variable 19; reserved for the ML in Image 1.2.
+| `nm` | Network flag.
+| `nm$` | Last network sort, in 11-digit format.
+| `sa%` | --
+| `uc` | Files uploaded by the user online.
+|===
+
+Of the ML variables, `tr$` (3) and `ef` (25) are not ``dim``med, and `kp%` (38) is set by the ML but read by nothing.
+
+////
+These are the dim statements of im line 3000, for reference:
+	dim a$,a%,ac%,am,ag$,ak$,am$,an$,ao%
+	dim b$,b%,bd,bd$,bn$,bu
+	dim c$,c%,c1$,c2$,c3$,ca,cc,cc$,cd%,ch$,cm$,cn,co$,co%,cr,ct,ct%
+	dim d$,d%,d1$,d1%,d2$,d2%,d3%,d3$,d4$,d5$,d6$,da%,db%,dc,dc%,dd$,dr,dr$,dv%
+	dim df%
+	dim e$,e%,el,em,ef$,ep$,ec,ec%
+	dim f$,f%,f1,f2,f3,f4,ff$,fl,fl$,f1$,f2$,f3$,f4$,f5$,f6$,f7$,f8$
+	dim g$,g%
+	dim h$,h%,hx$
+	dim i$,i%,id,im$,im,in$,is
+	dim j$,j%,jn$
+	dim k$,k%,kk,kp%
+	dim l$,l%,l1,l1$,l2,l2$,l3,l3$,lc,ld$,le,lf,lk%,ll$,ll%,lm$,lp,lt$,lt%
+	dim m$,m%,mc,mf,ml$,mp$,mt$,mw,mp%,mn%
+	dim n$,n%,na$,nc,nf,nl,nl$,nm,nm$
+	dim o$,o%
+	dim p$,p%,p1%,p2%,p3%,pf,ph$,pl,pm,po$,pp$,pr,pr$,ps,pu$,pw$,p1$,p2$
+	dim q$,q%,qb,qe,qt$
+	dim r$,r%,rc,rn$,rp,rq
+	dim s$,s%,sa%,sh,sg
+	dim t$,t%,t1,tc%,tf,tk$,tr%,tt,tt$,tz$
+	dim u$,u%,uc,uh,ul,ur,uf$,uu$
+	dim v$,v%
+	dim w$,w%
+	dim x$,x%
+	dim y$,y%
+	dim z$,z%,zz
+	dim tt$(254),dv%(36),dr%(36),co$(9),hs$(10),bf(6),st(38),im$(5),pf$(10)
+////

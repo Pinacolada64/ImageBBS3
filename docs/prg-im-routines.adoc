@@ -236,7 +236,7 @@ h! 19 ! Time Per Day Allowed (second digit)
 
 &#13;
 
-| gosub&#160;12
+| [[line-12,Reset output defaults]]gosub&#160;12
 | gosub&#160;1914
 | Reset output routine.
 Resets all system output to default parameters.
@@ -765,7 +765,7 @@ Action is dependent on the value of `f1`:
 |
 | Reverts memory marker back to 1 (<<prg-ampersand-calls.adoc#restore-variable-pointers,`&,28,1` Restore Variable Pointers>>), calls line 306 which then issues an <<prg-ampersand-calls.adoc#save-variable-pointers,`&,27` Save Variable Pointers>> (save) and exits.
 
-| gosub&#160;306
+| [[line-306,Image 1.2 arrays]]gosub&#160;306
 |
 | Image 1.2 Emulation Mode.
 ``dim``ensions variables used by Image v1.2 [`bb$(31)`, `dt$(61)`, `ed$(61)`, `nn$(61)`, `a%(61)`, `c%(61)`, `d%(61)`, `e%(31)`, `f%(61)`, `ac%(31)`, `so%(31)`].
