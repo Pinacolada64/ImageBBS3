@@ -2287,17 +2287,36 @@ TIP: `&,52,$_hexadecimal_,_option_` is allowed.
 _Example_: Turn off `Trc` left: `&,52,$18,0` (`&,52,24,0` decimal).
 ====
 
-`option=0`: clear checkmark at _position_
+[%autowidth]
+[%header]
+|===
+| _option_ | Action
+| `0` | clear the checkmark at _position_
+| `1` | set the checkmark at _position_
+| `2` | toggle the checkmark at _position_
+| `3` | read the checkmark at _position_ into `a%`: `0` off, `1` on
+| `4` | move the lightbar to _position_
+| `5` | read the checkmark at _position_ for ML: the accumulator holds the checkmark`'s bit (_e.g._ `$10`) if it is on, `0` (with the Z flag set) if it is off
+|===
 
-`option=1`: set checkmark at _position_
+Options `0`, `1`, `2` and `4` make the lightbar redraw.
+An _option_ above `5` isn`'t defined: it replaces the checkmark`'s whole byte with just its bit.
 
-`option=2`: toggle checkmark at _position_
+Option `5` is option `3` for ML, which can`'t use `a%`.
+The ML itself calls it as `ldx #__position__:jsr chkflag` (`source/irqhn.s`); an ML module (a protocol, for example) can call it through the `&` dispatcher:
 
-`option=3`: read status of _position_, return in `a%` (`0`=off, `1`=on)
+[source]
+----
+lda #52      // &,52
+ldx #$34     // position (checkmark 52, SuperCPU present)
+ldy #5       // option 5
+jsr usetbl1
+beq off      // 0: the checkmark is off
+----
 
-`option=4`: move lightbar to _position_
+From BASIC, the result can be read with `peek(780)`, where the `&` dispatcher leaves the accumulator: `&,52,$34,5:a=peek(780)`.
 
-Option 5 does the same thing in ML as option 4 does in BASIC.
+Each checkmark is a bit in the checkmark table (`chktbl`, `$1300`): _position_ / 8 is the byte, and _position_ AND 7 the bit (`1` for bit 0, `$80` for bit 7).
 
 '''
 
