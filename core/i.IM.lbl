@@ -80,7 +80,6 @@
 3124 b$=right$("   "+str$(dv%(a)),3)+","+mid$(str$(dr%(a)),2)
 3126 &,16,.,42,m%(.,a),chr$(192+a),"",left$(a$+" Disk:     ",15)+b$:return
 3128 &,28,1:n=14:dim m%(22,n):gosub 33
-3129 x=20:gosub 1:&,2,2:pt$=a$
 3130 x=38:gosub 1:&,2,2:lk%=val(a$)
 3132 x=39:gosub 1:&,2,2:a%(2)=val(a$)
 3134 x=40:gosub 1:&,2,2:a%(3)=val(a$)
@@ -103,7 +102,9 @@
 3168 &,16,.,46,m%(.,9),"I","","BBS Name:           "+left$(bn$,15)
 3170 &,16,.,46,m%(.,10),"J","","System ID           "+cc$
 3172 &,16,.,46,m%(.,11),"K","","New User Credits:  "+str$(nc)
-3173 &,16,.,46,m%(.,12),"L","","Prime Time         "+pt$
+' 11/15/2026: Prime Time from p1%-p3% (3365), as Pinacolada's i.IM-2021 did,
+' instead of e.data record 20 as it was when the module loaded (3129, gone)
+3173 gosub 3365:&,16,.,46,m%(.,12),"L","","Prime Time:        "+b$
 3174 &,16,.,46,m%(.,13),"M","","Chat Messages"
 3176 &,16,.,46,m%(.,14),"N","","Main Menu"
 3178 n=14:gosub 3360:a=lm:if tr%<1 or lm=nor lm=.then 3006
@@ -244,6 +245,10 @@
 3360 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
 3362 &"{rvrs on} {cyan}        Configuration Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
 3364 &,16,2,46,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}":return
+' Prime Time in b$, e.g. "Not Set", " 60, 1A-9A", "240, 12A-11P": p1% minutes a
+' call, p2% to p3% the hours (0-23), shown 12-hour: (h+11) mod 12+1, A before noon
+' (i.IM-2021 showed 12 noon as 12A, and midnight as 0A)
+3365 b$="Not Set":on -(p1%<1) goto 999:b$=right$(str$(p1%),3)+", ":pa=p2%:for pb=1 to 2:b$=b$+mid$(str$(pa+11-12*int((pa+11)/12)+1),2)+mid$("AP",1-(pa>11),1)+mid$("-",pb,1):pa=p3%:next:return
 ' copyright line: plain text, not a rem; -crunch would take out its spaces, so
 ' they're written as {$20}
 3366 copr.{$20}1994{$20}new{$20}image{$20}9/18/94
