@@ -214,9 +214,10 @@
 3375 cf$="":forcj=1to61:cf$=cf$+mid$("0?",1-(cj>rn),1):next:ifrn=.thenreturn
 3376 dr=3:gosub2:open2,dv%,0,"$"+dr$+"e.ss.*":get#2,a$,a$:&,8,2,1
 3377 &,8,2,1:if64andstthenclose2:return
-3378 forci=1tolen(a$):ifmid$(a$,ci,1)<>qt$thennext
-' the name is "e.ss." and the first 11 characters of the entry's (3488)
-3379 forcj=1torn:cs$=mid$(dt$(cj),23):cs$=left$(left$(cs$,len(cs$)-2),11):ifmid$(a$,ci+6,len(cs$)+1)=cs$+qt$thencs$="1":gosub3115:cj=rn
+' &,8,2,1 puts the block count in characters 1-5 and a space at 6, so the
+' name's quote is character 7: "e.ss.", then (from 13) the first 11 characters of
+' the entry's filename (as 3488 builds it), then the closing quote
+3379 forcj=1torn:cs$=mid$(dt$(cj),23):cs$=left$(left$(cs$,len(cs$)-2),11):ifmid$(a$,13,len(cs$)+1)=cs$+qt$thencs$="1":gosub3115:cj=rn
 3380 next:goto3377
 3384 b$="u/d/c":goto3402
 3386 b$="ud-trans":goto3402
