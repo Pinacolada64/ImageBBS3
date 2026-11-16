@@ -250,19 +250,21 @@
 3478 next:gosub62:rn=rn-tz:goto3150
 3480 on-(tr%<1)goto3264:bl=-(an$="E"oran$="M"oran$="U"oran$="V"oran$="R"oran$="D")
 3482 ifkkandq=1andan$="V"thenkk=a:gosub3356:a=kk:jm=.:goto3296
-' 11/15/2026: print comment lines from LFN 2 until "^", the end of the file, or an abort
-3483 input#2,a$:on-(a$="{^}"orrc<>.)goto999:&"    "+a$+"{f6}":on-(st<>.)goto999:goto3483
+' 11/15/2026: print comment lines from LFN 2 until "^" (&,2 also gives "^" at the
+' end of the file) or an abort. &,2,2, not input#, so commas and colons are read
+3483 &,2,2:on-(a$="{^}"orrc<>.)goto999:&"    "+a$+"{f6}":goto3483
 3484 goto3306
 3485 &,40
 3486 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
 3487 &"{f6}Sorry {pound}$b Limit Exceeded {f6}":return
 3488 lx$=mid$(dt$(a),23):lx$=left$(lx$,len(lx$)-2):f2%=a:f1%=.
-3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:get#2,a$:ifa$="!"then3492
+3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:&,2,2:ifa$="!"then3492
 3490 ife%then:&"{up}    {yellow}Comment Status: {lt. red}{rvrs on} No Comments {rvrs off}{f6:2}{pound}q0"
 3491 close2:close1:return
-' 11/15/2026: show the first comment, under the status, as i/MM.u/d/c reads it:
-' after the "!", the handle, account number and date, then lines until "^"
-3492 &"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6}":input#2,a$:z$=a$:input#2,a$,a$:&"{lt. blue}    First comment from {white}{pound}$z{f6}{cyan}":gosub3483:close2:close1:&"{f6}{pound}q0":return
+' 11/15/2026: show the first comment, under the status: after the "!" line, the
+' handle, account number and date, then lines until "^" (each read with &,2,2,
+' as 3489 now reads the "!" line: get#2 left its carriage return to be read)
+3492 &"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6}":&,2,2:z$=a$:&,2,2:&,2,2:&"{lt. blue}    First comment from {white}{pound}$z{f6}{cyan}":gosub3483:close2:close1:&"{f6}{pound}q0":return
 3493 x=1:gosub390:pf=.:f1=.:goto300
 3494 f1=2:goto302
 3495 &,52,$34,3:on-(a%=.)goto3496:poke53370,0:&,52,$35,0
