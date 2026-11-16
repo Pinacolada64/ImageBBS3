@@ -4,6 +4,7 @@
 #   tools/detok.sh "<C64 filename>" <out.lbl>   take the file from the release disk
 #   tools/detok.sh <file.prg> <out.lbl>          or from a .prg file
 #   tools/detok.sh --keep-spaces ...             keep the original's spacing
+#   tools/detok.sh --assign 68,814 ...           jumps to lines that exist nowhere
 #
 #   e.g. tools/detok.sh "i/MM.load" core/i_MM.load.lbl
 #
@@ -19,15 +20,28 @@
 # spaced as the original is, without -autospace or {crunch:on}, so it rebuilds
 # identically.
 #
+# --assign N,N,... is for a program that jumps to lines that are neither in it
+# nor in im (lines of the module it's loaded with, as i/MM.sb-* jump into
+# i.SB, or dead code left from an older version): C64List
+# can't find them, and writes "goto [68]" as text. The listing gets an
+# {assign:N=N} for each, with a comment, so they build as the original's
+# numbers. (A line of im belongs in 3_0-preface.lbl instead.)
+#
 # Shifted PETSCII capitals ($c1-$da) in rem text are copied by C64List as raw
 # bytes, which editors can't show; they're converted to ASCII A-Z. C64List
 # builds those as $61-$7a, which also look like capitals in lower/upper case
 # mode, so the rebuilt rems differ from the original in those bytes only.
 #
+# In "strings", C64List writes both $c1-$da and $61-$7a capitals as ASCII
+# A-Z, which build as $c1-$da, the usual capitals. Both show as capitals in
+# lower/upper case mode, so a program whose strings have $61-$7a capitals
+# rebuilds with them changed to $c1-$da, and the script says how many. (A
+# test such as an$="D" needs $c1-$da anyway, as typed input has.)
+#
 # Afterwards, the listing is built again and compared with the original (with
 # the same rem capitals changed to $61-$7a): the script fails unless the two
 # are byte-for-byte identical, or differ only by trailing ":"s, which C64List's
-# -crunch removes.
+# -crunch removes, or trailing spaces, which C64List drops from every line.
 #
 # Environment (defaults as in the Makefile): C64LIST, WINE, C1541, RELEASE_ZIP,
 # RELEASE_D81
@@ -41,9 +55,16 @@ RELEASE_ZIP=${RELEASE_ZIP:-$HOME/Documents/c64/image30-231231.zip}
 RELEASE_D81=${RELEASE_D81:-MASTER D1 231231.d81}
 
 keep_spaces=0
-[ "${1:-}" = --keep-spaces ] && { keep_spaces=1; shift; }
-if [ $# -ne 2 ]; then
-	echo "usage: $0 [--keep-spaces] \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
+assigns=
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--keep-spaces) keep_spaces=1; shift;;
+	--assign) assigns=${2:-}; shift 2 || true;;
+	*) break;;
+	esac
+done
+if [ $# -ne 2 ] || ! [[ "$assigns" =~ ^([0-9]+(,[0-9]+)*)?$ ]]; then
+	echo "usage: $0 [--keep-spaces] [--assign N,N,...] \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
 	exit 2
 fi
 src=$1
@@ -117,17 +138,21 @@ c64list orig.prg -txt:orig.txt "${detok_opts[@]}" > "$tmp/detok.log" 2>&1 \
 		"{uses:3_0-preface.lbl}" \
 		"{alpha:alt}"
 	[ -n "$crunch_line" ] && printf '%s\r\n' "$crunch_line"
+	if [ -n "$assigns" ]; then
+		printf '%s\r\n' "' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:"
+		for n in ${assigns//,/ }; do printf '{assign:%s\t=%s\t}\r\n' "$n" "$n"; done
+	fi
 	printf '\r\n'
 	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
 } > "$tmp/new.lbl"
 
-# the original, with capitals in rem text changed the way C64List builds them
-# ($c1-$da -> $61-$7a); prints how many were changed
+# the original, with capitals changed the way C64List builds them: in rem text
+# $c1-$da -> $61-$7a, in strings $61-$7a -> $c1-$da; prints how many of each
 remcaps() {
 	python3 -I -c '
 import sys
 src, dst = sys.argv[1], sys.argv[2]
-p = bytearray(open(src, "rb").read()); i = 2; n = 0
+p = bytearray(open(src, "rb").read()); i = 2; n = s = 0
 while i + 4 <= len(p) and (p[i] or p[i+1]):
     i += 4; quoted = rem = False
     while p[i]:
@@ -137,11 +162,14 @@ while i + 4 <= len(p) and (p[i] or p[i+1]):
                 p[i] = c - 0x60; n += 1
         elif c == 0x22:
             quoted = not quoted
-        elif c == 0x8f and not quoted:
+        elif quoted:
+            if 0x61 <= c <= 0x7a:
+                p[i] = c + 0x60; s += 1
+        elif c == 0x8f:
             rem = True
         i += 1
     i += 1
-open(dst, "wb").write(p); print(n)
+open(dst, "wb").write(p); print(n, s)
 ' "$1" "$2"
 }
 
@@ -149,23 +177,40 @@ open(dst, "wb").write(p); print(n)
 cp "$repo/core/3_0-preface.lbl" "$tmp/"
 c64list new.lbl -prg:new.prg $crunch_opt > "$tmp/build.log" 2>&1 \
 	|| { cat "$tmp/build.log" >&2; exit 1; }
-# C64List's -crunch drops a line's trailing ":" (an empty statement), which
-# shifts every later byte. If that is the only difference (compared as
-# listings, with trailing colons ignored), the program still behaves the same.
-caps=$(remcaps "$tmp/orig.prg" "$tmp/want.prg")
+# C64List's -crunch drops a line's trailing ":" (an empty statement), and
+# C64List drops trailing spaces from every line; either shifts every later
+# byte. If that is the only difference (compared as listings, with trailing
+# colons and spaces ignored), the program still behaves the same. A line that
+# ends inside an open quote keeps them: there they are part of the string.
+read -r caps scaps < <(remcaps "$tmp/orig.prg" "$tmp/want.prg")
 same="rebuilds byte-for-byte identical"
 if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
+	# a line's trailing ":"s and spaces, unless it ends inside a quote
+	untrail() {
+		python3 -I -c '
+import sys, re
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if line.count("\"") % 2 == 0:
+        line = re.sub(r"[: ]+$", "", line)
+    print(line)
+'
+	}
 	if ! command -v petcat > /dev/null \
-		|| ! diff -q <(listing "$tmp/want.prg" | sed 's/:*$//') \
-			<(listing "$tmp/new.prg" | sed 's/:*$//') > /dev/null; then
+		|| ! diff -q <(listing "$tmp/want.prg" | untrail) \
+			<(listing "$tmp/new.prg" | untrail) > /dev/null; then
 		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/want.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
 		exit 1
 	fi
 	n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
-	same="rebuilds identically except for $n trailing \":\" removed by -crunch"
+	same="rebuilds identically except for $n lines' trailing \":\" or spaces, which C64List removes"
 fi
 [ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
+[ "$scaps" -gt 0 ] && same="$scaps \$61-\$7a capitals in strings now \$c1-\$da; $same"
 
-sed "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" "$tmp/new.lbl" > "$out"
+strnote=
+[ "$scaps" -gt 0 ] && strnote="' Its strings' \$61-\$7a capitals ($scaps) build as \$c1-\$da, the usual capitals: both show as capitals.\r\n"
+sed -e "s|^{uses:3_0-preface.lbl}|{uses:$preface}|" \
+	-e "0,/^\r\?$/s||$strnote&|" "$tmp/new.lbl" > "$out"
 echo "$out: $(grep -c '' "$out") lines; $same"

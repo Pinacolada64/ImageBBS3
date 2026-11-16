@@ -1,0 +1,269 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.UD" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 &,52,$0e,3:ona%goto3493
+3001 tm=1:pr$="":lc=5:gosub3050:on-(f1=3)goto3214:it=0:yy%=.:goto3184
+3002 l%=-(pr=2):return
+3004 dr=bn+6:return
+3006 ifval(a$)thenifval(a$)<1thena$=mid$(a$,4)
+3008 return
+3010 a=abs(int(val(left$(mid$(an$,2),4)))):return
+3012 a=abs(int(val(an$))):return
+3014 br=a+1:ifbr<1orbr>rnthenbr=1
+3016 return
+3018 &"{f6}{white}No {pound}$js In This {pound}$h.{f6}":return
+3020 &"{f6}{lt. green} (RETURN To Keep Same){f6:2}":return
+3022 &"{green}{pound}$jname?{lt. blue}: {pound}i0":return
+3024 &"{clear}{f6}{pound}q0End Of Transfer.{f6}":gosub3497:im=1:goto443
+3026 a$=bb$(bn):gosub3006:p$="{green}U/D#"+mid$(str$(bn),2)+": {lt. blue}"+a$+"{white}":cm$=p$
+3027 on-(sg=0)goto3008:p$=sg$+" SIG{f6:2}"+p$:return
+3028 a$=mid$(a$,23):return
+3030 &"{f6}{lt. red}Go To {pound}v7 {pound}$js Mode!{f6}":return
+3032 &"{f6}{$0f}{orange}Sorry, {pound}$h Full.{f6}":return
+3034 b=.:on-(left$(a$,1)<>"."ormid$(a$,3,1)<>".")goto3008:b=val(mid$(a$,2,1)):return
+3036 on-(a$="N")-(a$="L")*2goto3288,3324:ifa$="{f2}"thenim=1goto436
+3037 fl=.:return
+3038 close2:close3:close14:close15:return
+3040 on-(s$=d2$)goto3092:a$=" "+d2$:gosub50:s$=d2$:goto3092
+3042 dr=4:a$="d.u/d"+str$(e%(bn)):return
+3044 close15:open15,a,15:close15:a=st:return
+3046 on-(a%=1)goto3016:&"s":return
+3048 &"{f6}Sorry, {pound}$ks Only{f6}":goto3214
+3050 dr=1:a$="s.UD"+str$(nl):ifll%=80thena$=a$+" 80"
+3051 gosub13:h$="Library":j$="File":k$="Download":l$="Upload":m$="Multi-"
+3052 i$=" SubOp ":return
+3054 an$=mid$(a$,5):&,15,1:ifleft$(a$,1)="!"thenan$=an$+"{cyan} @ "+mid$(a$,2,3):return
+3056 an$=an$+"{cyan}-"+cc$+mid$(str$(val(left$(a$,4))),2):return
+3058 a$=right$("0000"+mid$(str$(id),2),4)+na$:return
+3060 b$=mid$(dt$(kk),23):return
+3062 b$=left$(b$,len(b$)-2):return
+3064 b$=left$(b$,len(b$)-2)+","+right$(b$,1):return
+3066 x=-(((peek(2033)and127)=1)and(zz=.)):return
+3068 y%=a%:fori=1toa%:d$=" {yellow}"+c$+": {white}{f5}"+tt$(i)+"{f5}"
+3069 a$="a":gosub34:print#2,d$:a%=y%:next:close2:return
+3070 &"{f6:2}{lt. green}Correct?: ":goto94
+3072 &"{f6}{yellow} [Y]es [N]o [S]tart [A]bort{pound}q0{f6}{pound}vj":return
+3074 poke668,peek(667):return
+3076 z=1:a$="w":gosub32:ife%thenz=.:a$="a":gosub32
+3078 print#2,na$r$id;r$d1$r$c$:forx=1tokk-1:print#2,tt$(x):next:print#2,"{^}":close2
+3080 gosub62:gosub30:i=1:x=3:gosub16:x=14:gosub16:x=32:gosub16
+3082 ify=1thenforx=2to24step11:gosub16:next:x=31:gosub16
+3084 x=25:gosub16:close2:return
+3086 rn=rn-1:onrn+1goto3008:forx=kktorn:u%=x:v%=x+1:gosub3088:next:return
+3088 c%(u%)=c%(v%):d%(u%)=d%(v%):f%(u%)=f%(v%):dt$(u%)=dt$(v%)
+3090 nn$(u%)=nn$(v%):ed$(u%)=ed$(v%):return
+3092 a$="a":goto34
+3094 dt$(kk)=left$(dt$(kk),11)+d1$+mid$(dt$(kk),23):return
+3096 a%=bn:&"{f6}{green}U/D {pound}$h #{pound}%a: {lt. red}":a$=bb$(bn):gosub3006:lp=1:&:d2$=a$
+3098 onemgoto3100:dr=1:gosub3:a$="s.U/D"+str$(e%(bn))+str$(nl):gosub14
+3100 q=.:a=12:gosub11:b=a:a=8:gosub11:ifa+bthenq=1
+3102 ifid>.andid=so%(bn)orid=so%thenq=1:&"{f6}{$0f}{lt. red} - You Have{pound}$iAccess Here.{f6}"
+3104 rn=.:gosub3042:a$=a$+",s,r":forx=2to4:&,11,x:next
+3106 gosub4:ife%then3114
+3108 input#2,a$:rn=val(a$):ifrn=.then3114
+3110 forx=1torn:input#2,c%(x),nn$(x):&,2,2
+3112 dt$(x)=a$:&,2,2:ed$(x)=a$:input#2,d%(x),f%(x):next
+3114 close2:goto3004
+3116 a%=.:ifrn=.then3122
+3118 forx=1torn:ifmid$(dt$(x),2,10)>mid$(ld$,2)thena%=a%+1
+3120 next:ifa%then:&"{f6}{blue} -{lt. blue} New {pound}$js  {blue}:{white} {pound}%a"
+3122 a%=rn:&"{f6}{blue} -{lt. blue} Total {pound}$js{blue}:{white} {pound}%a":return
+3124 b=-(rc<>0)*int(rc/254+.999):return
+3126 b$="Bk's":ifco%>2thenb$="Kb's"
+3128 poke970,0:&"{pound}f1{white} ## {lt. red}{pound}$b   {green}Dl'd  {lt. blue}Name{f6}{orange}{pound}vj":return
+3130 &"{orange}{pound}vj":return
+3132 b=.:fori=.to9:a%=i:&"Group #{pound}%a?: ":gosub94:b=b+2^i*a:next:a=b:return
+3134 x=1000/qb/85/60
+3136 a=c%(kk)*254*x:a%=a:b%=(a-a%)*60:&"{lt. blue}Transfer Time: {white}{pound}#2{pound}%a:{pound}%b{lt. blue}":return
+3138 kk=a:gosub3060:iff%(a)>.thenc$="{lt. blue}{f5}{pound}$b{f5}":goto3142
+3140 c$="{yellow}(Unvalidated)":gosub3058:if(qora$=nn$(a))thenc$="{white}*{lt. blue}{f5}{pound}$b{f5}"
+3142 a%=a:b%=c%(a):c%=f%(a)-1:ifc%<.thenc%=.
+3144 ifco%>2thenb%=(b%*254)/1024:ifb%<1thenb%=1
+3146 &" {white}{pound}#2{pound}# {pound}%a {lt. red}[{white}{pound}#4{pound}%b{lt. red}] {green}{pound}#3[{white}{pound}%c{green}] {lt. blue}"+c$+"{pound}{back arrow}39"
+3148 s=rc:s=s+rc:&"{pound}q0":return
+3150 &"{f6}{lt. blue}Updating Directory...":a$="d.temp"+str$(e%(bn)):dr=4:gosub18
+3152 print#2,rn:ifrn=.thenclose2:goto3158
+3154 forx=1torn:print#2,c%(x)r$nn$(x)r$dt$(x)r$ed$(x)r$d%(x)r$f%(x)
+3156 next:close2
+3158 gosub3042:gosub3:print#15,"s"dr$a$:print#15,"r"dr$a$"="dr$"d.temp"str$(e%(bn))
+3160 &"{f6:2}":goto62
+3162 on-(rn=.)goto3018:kk=.:a=rn:&"{f6}":d$="New":ifz$="SU"thenfl=1:d$="Unvalidated"
+3164 rq=.
+3166 ifflthenon-(f%(a)<1)goto3170:goto3172
+3168 ifmid$(dt$(a),2,10)<mid$(ld$,2)thena=1:goto3172
+3170 &mid$(" {f6}",2+((rqand1)=1),1):gosub3138:rq=rq+1:kk=kk+1:ifs+rcthena=1
+3172 a=a-1:onsgn(a)goto3166:rq=.:fl=.:&"{f6}":onsgn(kk)goto3016:&"No {pound}$d {pound}$js.{f6}":return
+3174 bl=1:gosub3126:gosub3138:gosub3058:ifa$<>nn$(a)andq=.andf%(a)<1then:&"{f6}":return
+3176 a$=nn$(a):gosub3054:&"{f6} {lt. blue}User: {pound}v7{f6} {purple}Date: {$04}"+left$(dt$(a),11)+"{f6} {cyan}Last: {$04}"+mid$(dt$(a),12,11)
+3178 b$="Any Computer":ifd%(a)thenb$=co$(d%(a))
+3180 ifco%=2andd%(a)=1thenb$=co$(2)+" (In 64 Mode)"
+3182 c$=ed$(a):&"{f6} {green}Comp: {pound}$b{f6} ":kk=a:gosub3134:a=kk:lp=1:&"{f6} {yellow}Info:{lt. blue}{f6} {pound}$c{f6}{orange}{pound}vj":return
+3184 lm$="":r$=chr$(13):ontr%+1goto3262:q=.:a=8:gosub11:ifathenq=1
+3186 ifitthena=tr%:tr%=it+a:it=a
+3188 sy$="U/D"+"":gosub3394:onlmgoto3214,3264
+3190 a=ul:&,52,4,3:ifa%thena=2
+3192 im=5:gosub430:bn=.:r=abs(int(val(an$)))
+3194 a=r:ifr=.andbz>.thenan$="":gosub3312:p$="{f6}{lt. blue}Which U/D?":gosub6:gosub3012
+3196 on-(a=.)goto3256:r=a:bn=.
+3198 a=.:ifr<1orr>bzthenr=1:&"{f6} {orange}Unknown {pound}$h Number.{f6}":on-(bn<>.)goto3208:r=.:goto3194
+3200 a$=bb$(r):gosub3034:f2=b
+3202 if(f2and4)=4thena%=r:gosub3362:ifan$<>c$thenr=bn:goto3198
+3204 on-(mid$(oc$,r,1)="0")goto3210:&"{f6}":a$=bb$(r):gosub3006:lp=1:&
+3206 x=1:gosub390:ifid>.andid=so%(r)orid=so%orqthen3210
+3208 onsgn(bn)goto3214:a=1:onrgoto3210:r=1:goto3198
+3210 onagoto3264:ifr=bnthengosub3116:goto3214
+3212 bn=r:br=1:gosub3096:gosub3116
+3214 ontmgosub3497:im=1:gosub443:an$=str$(cr):a=7:gosub11:ifathenan$=" Unlimited"
+3216 gosub3004:gosub61:b$=str$(a):ifco%>2thena=int((a*254)/1024):b$=str$(a)
+3218 ifid>.andid=so%(bn)orid=so%thenq=1
+3220 d$="Blocks":ifco%>2thend$="Kbytes"
+3222 &"{f6}{blue} -{lt. blue} Protocol   {blue}:{white} {pound}vl{f6}{blue} -{lt. blue} Credit Pts {blue}:{white}{pound}v7{f6}{blue} -{lt. blue} {pound}$d Free{blue}:{white}{pound}$b"
+3223 gosub3485
+3224 f1=.:fl=.:bl=.:lc=5:gosub3026:im=6:gosub429:g$=right$(an$,1):iftr%<1then3264
+3226 ifan$="LD"thengosub3364:gosub3116:goto3214
+3228 gosub220:onf4goto3258:ifrsthenlm$="":goto3214
+3230 gosub3012:ifathenr=a:goto3198
+3232 ifz$=">>"orz$="<<"orz$="SG"thengosub3394:onlmgoto3214,3264:goto3194
+3234 lm=-(z$="AS")-2*(z$="MS")-3*(z$="AC")-4*(z$="ID")-5*(z$="VS"):iflmthen3398
+3238 ifa$=">"ora$="<"ora$="{f4}"ora$=";"thenr=bn+(a$="<"ora$=";")*2+1:goto3198
+3242 on-(z$="SA")-(a$="U")*2-(a$="M")*3-(z$="Q")*4goto3276,3346,3360,3264
+3244 x=2:on-(a$="V")-(a$="Z")*2-(a$="O")*3goto3352,3396,3494
+3246 gosub3036:ifrn=.thengosub3018:goto3214
+3248 on-(a$="R")-(a$="D")*2-(a$="E")*3goto3326,3348,3370
+3250 ifz$="SS"thenlm=3:goto3392
+3252 ifa$="K"thengosub3456:br=1:goto3214
+3254 on-(a$="S"ora$="{f7}"ora$="")-(a$="A")*2-(z$="V")*3goto3266,3292,3352:goto3214
+3256 on-(sg=.ortz=1)goto3264:sg=.:an$="":goto3188
+3258 s$="":lm$="":sg=-sg*(z$="SB"orz$="UX"):os=sg:sb$=left$(sb$,-2*(sg<>.))
+3260 on-(z$="O"orz$="O%")goto234:is=.:on-(it=.)goto216:tr%=it:goto216
+3262 s$="":lm$="":sg=.:os=.:sb$="":goto300
+3264 s$="":lm$="":sg=.:os=.:sb$="":on-(it=.ortr%=.)goto300:tr%=it:goto300
+3266 on-(z$="SA")goto3276:fl=.:ifz$="SN"ora$="{f7}"orz$="SU"thengosub3162:goto3214
+3268 gosub3010:rs=br:ifa>.anda<=rnthenrs=a
+3270 r%=(rsand1):ifrn=.thengosub3018:goto3214
+3272 gosub3126:fora=rstorn:gosub3014:gosub3138:&mid$(" {f6}",2+((aand1)=r%),1)
+3274 a=a+s*rn:next:&"{f6}":gosub3130:goto3214
+3276 on-(z$="VA")gosub3354:on-(z$="SA")gosub3162:g=bn
+3278 bn=bn+1:vl=.:gosub3026:gosub9:ifbn>bzorrcortr%<1thenbn=g:goto3214
+3280 a$=bb$(bn):gosub3034:f2=b
+3282 on-(mid$(oc$,bn,1)="1")goto3278
+3284 if(f2and4)=4thena%=bn:gosub3362:ifan$<>c$then:&"{f6}":goto3278
+3286 g=bn:gosub3096:on-(z$="VA")gosub3354:on-(z$="SA")gosub3162:goto3278
+3288 gosub3010:ifa<1ora>bzthena=bn
+3290 a%=a:&"{f6}{pound}$h #{pound}%a ":a$=bb$(a):gosub3006:lp=1:&:return
+3291 a=f2%:br=a:gosub3042:f2%=.:ifa<1 ora >rnthena=br:goto3294
+3292 gosub3010:ifa<1ora>rnthena=br
+3294 ifrn=.thengosub3018:goto3214
+3296 jm=.:bl=.:gosub3014
+3297 gosub3174:gosub3488:a%=.:&"{white}N-Next {pound}$j{f6}{cyan}L-Last {pound}$j":iff%(a)>.orq>.then:&"{f6}{lt. blue}M-Mail {pound}$ler":a%=1
+3298 gosub3058:on-((a$<>nn$(a))and(q=.andf%(a)<1))goto3304:&"{f6}{purple}D-{pound}$k {pound}$j":gosub3058:ifa$=nn$(a)orq=1then:&"{f6}{yellow}E-Edit {pound}$j":iff%(a)>.andq=1then:&"{f6}U-Unvalidate"
+3300 a$=dt$(a):gosub3028:&"{f6}{green}C-Comments Read/Add{f6}{lt. red}R-Read {pound}$j"
+3302 kk=.:ifq>.andf%(a)<1then:&"{f6}{yellow}V-Validate {pound}$j":kk=1
+3304 &"{f6:2}{lt. green} -> {lt. blue}{pound}g1{pound}v7{f6}":goto3480
+3306 on-(an$="N")-(an$="D")*2-(an$="R")*3-(an$="L")*4-(an$="C")*5goto3308,3348,3328,3310,3384
+3307 on-(an$="E")-(an$="M"anda%=1)*2-(an$="U"andq=1)*3gosub3372,3358,3374:onjmgoto3448:onblgoto3296:goto3214
+3308 a=a+1:on-(a<=rn)goto3296:ifa>rnthena=1:goto3296
+3310 a=a-1:on-(a=>1)goto3296:ifa<1thena=rn:goto3296
+3312 gosub3010:r%=(aand1):ifa<1ora>bzthena=1:r%=1
+3314 &"{f6}{purple}Available Libraries:{f6:2}{orange}{pound}vj":forx=atobz:c$=" ":ifid>.andso%(x)=idthenc$=">"
+3316 a$=bb$(x):gosub3034:b$=mid$("{lt. blue}Cred{green}DO-C{purple}Free{yellow}DO-F{purple}PwCr{lt. red}PwDC{lt. green}PwFr{blue}PwDF",b*5+1,5)
+3318 a%=x:a$=bb$(x):gosub3006:&" {white}{rvrs on}{pound}#2{pound}# {pound}%a{lt. red}{pound}$c{pound}$b {pound}$a{pound}{back arrow}38 {rvrs off}":a%=rc:ifa%thenx=bz
+3320 ifx<>bzthen:&mid$(" {f6}",2+((xand1)=r%),1)
+3322 next:&"{f6}{orange}{pound}vj":return
+3324 gosub3312:&"{cyan}  {rvrs on} To Change, Enter New {pound}$h Number. {f6}":return
+3326 gosub3010:ifa<1ora>rnthen3214
+3328 kk=a:ifq<1andf%(a)<1then3336
+3330 y%=.:a=7:gosub11:ifa+q+(f2and2)=.thenon-(cr<c%(kk))goto3344:y%=yy%
+3332 &"{pound}q0":a$=dt$(kk):gosub3028:ifright$(a$,1)<>"s"then3338
+3334 a$=left$(a$,len(a$)-2):gosub3004:gosub13:a%=c%(kk):ifs=.thena%=.
+3336 &"{f6}<Any Key> {pound}g0":cr=cr-a%*y%:a=kk:onblgoto3296:goto3214
+3338 a$="read":gosub28:ife%then3342
+3340 a$=dt$(kk):gosub3028:a$=left$(a$,len(a$)-2)+",p,r":gosub3004:gosub4:&,16,0,ll%
+3342 im=5:gosub430:goto3336
+3344 &"{f6}{orange}Sorry, Not Enough Credits!{f6}":goto3336
+3346 on-(an$="UM"andpr=2)goto3366:lm=2:goto3386
+3348 on-(pr=2)goto3368:lm=1:goto3400
+3350 lm=3:goto3386
+3352 lm=1:goto3390
+3354 lm=2:goto3390
+3356 lm=3:goto3390
+3358 lm=4:goto3390
+3360 lm=5:goto3390
+3362 lm=6:goto3390
+3364 b$="ld":goto3402
+3366 lm=1:goto3388
+3368 lm=2:goto3388
+3370 lm=1:goto3392
+3372 lm=2:goto3392
+3374 lm=7:goto3390
+3384 b$="u/d/c":goto3402
+3386 b$="ud-trans":goto3402
+3388 b$="ud-local":goto3402
+3390 b$="ud-misc":goto3402
+3392 b$="ud-edit":goto3402
+3394 b$="load":goto3402
+3396 b$="maint":onqgosub3402:goto3214
+3398 b$="subop":gosub3402:goto3214
+3400 b$="ud-download":goto3402
+3402 iflm$<>b$thenlm$=b$:dr=5:gosub3:loaddr$+"i/MM."+lm$,dv%
+3404 cm$="MM."+lm$:gosub9:goto4000
+3410 gosub3038:gosub3004:gosub2:a%=dv%:c$=dr$:&"{f6}Source: {pound}%a{f6}Target: {pound}i1"
+3412 d$="0:":c=dv%:ifan$=""thend=c+1:a%=d:&"{up}Target: {pound}%a{f6}":goto3416
+3414 an$="  "+an$:gosub350:d=dv%
+3416 gosub3060:f$=str$(r)
+3418 gosub3064:o$=b$
+3420 f%=.:a=c:gosub3044:on-(a<>.)goto3426:a=d:gosub3044:on-(a<>.)goto3426
+3422 gosub3020:gosub3022:ifan$<>""theno$=an$+right$(o$,2)
+3424 gosub3428:goto3214
+3426 on-(st<>.)gosub3487:&"ABORTED!{f6}":gosub3038:onf%goto3016:goto3214
+3428 poke142,.:gosub3038:open15,c,15:open14,d,15:open3,c,3,c$+b$+",r":gosub5
+3430 open2,d,2,d$+o$+",w":input#14,a$,f$:b=val(a$)
+3432 f%=1:onsgn(e%+b)goto3426:b$=o$:&"{f6:2}Copying {f5}{pound}$b{f5}...":sys49152
+3434 gosub5:input#14,a$,f$:gosub3038:&"Done!{f6}"
+3436 &,25:&"{f6}Status:{f6:2}Source: {pound}$e{f6}Target: {pound}$f{f6}":return
+3440 &"{f6:2}{lt. blue}Kill Which?: {pound}i1":gosub3012:ontr%+1goto300:ifa<1ora>a%thenreturn
+3442 a%=a%-1:ona%+1goto3008:fori=atoa%:tt$(i)=tt$(i+1):next:return
+3444 jm=a%:&,52,23,3:ifa%=.thena%=jm:jm=.:return
+3446 a%=jm:&"{f6}{lt. blue}Auto-Logoff when Completed?: ":gosub94:jm=a:return
+3448 ld$=lt$:f1=2:goto302
+3450 dt$(kk)=d1$+d1$+b$
+3452 c%(rn+1)=c%(kk):nn$(rn+1)=nn$(kk):dt$(rn+1)=dt$(kk):ed$(rn+1)=ed$(kk)
+3454 d%(rn+1)=d%(kk):f%(rn+1)=f%(kk):forx=kktorn:u%=x:v%=x+1:gosub3088:next:return
+3456 gosub3010:on-(a>rn)goto3016:a=a-(a=.):x%=a:gosub3072:gosub3014:&,11,5:tz=.
+3458 fori=x%torn:gosub3058:ifq=.anda$<>nn$(i)then3468
+3460 kk=i:gosub3060:gosub3062:tt$(i)=b$:a=i:gosub3174:&"{orange}Kill?: ":gosub7
+3462 on-(a$="A"ora$="S")goto3464:a=-(a$="Y"):gosub97:a%(i)=a:a$="":goto3466
+3464 a=.:i=rn:a$="Start":ifan$="A"thena$="Abort":tz=.
+3466 lp=1:&:ifathentz=tz+1:&"Scratch?: ":gosub94:ifathena%(i)=2
+3468 next:on-(tz=.)goto3016:i=-tz:gosub30:x=28:gosub16:close2:gosub3040
+3470 &"{f6}":u%=1:fori=1torn:ifa%(i)=.thenv%=i:gosub3088:u%=u%+1:goto3478
+3472 b$=tt$(i):&"Killing: {f5}{pound}$b{f5}{f6}":kk=i:a$=" Kill:"+b$:gosub50
+3473 z$="e.ss."+left$(tt$(i),13):lx=dr:dr=3:a$=z$:gosub19:dr=lx:lx=.
+3474 ona%(i)goto3478:a$=tt$(i):gosub3004:gosub19
+3476 gosub3058:ifa$=nn$(i)andq=.thena=2:gosub11:cr=cr-c%(i)*a:ifcr<1thencr=.
+3478 next:gosub62:rn=rn-tz:goto3150
+3480 on-(tr%<1)goto3264:bl=-(an$="E"oran$="M"oran$="U"oran$="V"oran$="R"oran$="D")
+3482 ifkkandq=1andan$="V"thenkk=a:gosub3356:a=kk:jm=.:goto3296
+3484 goto3306
+3485 &,40
+3486 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+3487 &"{f6}Sorry {pound}$b Limit Exceeded {f6}":return
+3488 lx$=mid$(dt$(a),23):lx$=left$(lx$,len(lx$)-2):f2%=a:f1%=.
+3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:get#2,a$:ifa$="!"then3492
+3490 ife%then:&"{up}    {yellow}Comment Status: {lt. red}{rvrs on} No Comments {rvrs off}{f6:2}{pound}q0"
+3491 close2:close1:return
+3492 close2:close1:&"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6:2}{pound}q0":return
+3493 x=1:gosub390:pf=.:f1=.:goto300
+3494 f1=2:goto302
+3495 &,52,$34,3:on-(a%=.)goto3496:poke53370,0:&,52,$35,0
+3496 return
+3497 &,52,$34,3:on-(a%=.)goto3498:poke53371,0:&,52,$35,1
+3498 return
+3499 copr.1990 new image 10/28/90
+3500 rem:"i.UD (c)nissa 211218 lh"

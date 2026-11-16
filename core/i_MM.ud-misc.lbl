@@ -1,0 +1,98 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ud-misc" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.UD's lines: i.UD is in memory when this module runs)
+{assign:3006	=3006	}
+{assign:3010	=3010	}
+{assign:3012	=3012	}
+{assign:3016	=3016	}
+{assign:3032	=3032	}
+{assign:3036	=3036	}
+{assign:3060	=3060	}
+{assign:3062	=3062	}
+{assign:3064	=3064	}
+{assign:3070	=3070	}
+{assign:3076	=3076	}
+{assign:3086	=3086	}
+{assign:3104	=3104	}
+{assign:3150	=3150	}
+{assign:3174	=3174	}
+{assign:3214	=3214	}
+{assign:3264	=3264	}
+{assign:3276	=3276	}
+{assign:3428	=3428	}
+{assign:3450	=3450	}
+
+4000 rem "i/MM.ud-misc"
+4002 onlmgoto4004,4016,4024,4036,4054,4104,4046
+4004 ifz$="VA"thenfl=1:goto3276
+4006 gosub3010:&"{f6}":on-(a>.anda<=rn)goto4016:ifz$="VN"then4016
+4008 b$="{lt. red}No":ifso%(bn)<1then4014
+4010 gosub35:x=so%(bn):gosub1:&,2,2:close2:ifa$="{^}"ora$="RES"then4014
+4012 an$=a$:&,15,1:b$=" UID#"+str$(so%(bn))+", "+an$+" Is The"
+4014 lp=1:&"{yellow}{pound}$b{pound}$iHere.":goto3214
+4016 &"{f6}":tz=1:on-(q=.andfl>.)goto3016:on-(q=.)goto3214:&"{f6}{yellow}  [Y]es  [N]o  [%]Percentage [A]bort{f6}{pound}q0{pound}vj":kk=a:ifkk=.thenkk=1
+4018 on-(kk>rn)goto4032:iff%(kk)>.thenkk=kk+1:goto4018
+4020 gosub3060:vl=1:a=kk:b=bl:gosub3174:bl=b:&"{lt. green}Validate?{lt. blue}: ":gosub7:ifan$="A"then:&"Abort!{f6}":kk=rn+1:rc=1:sh=1:goto4018
+4022 on-(an$="%")goto4124:a=-(a$="Y"):gosub97:ifa=.thenkk=kk+1:goto4018
+4024 onf%(kk)+1goto4030:gosub4122:on-(x=id)goto4118:gosub35:gosub1:fori=1to23:&,2,2:tt$(i)=a$
+4026 next:tt$(19)=str$(val(tt$(19))+c%(kk)*val(mid$(tt$(23),2,1)))
+4028 gosub1:a$=tt$(1):fori=2to23:a$=a$+r$+tt$(i):next:print#2,a$:close2
+4030 f%(kk)=1:gosub3060:gosub3450:tz=.:on-(bl=1)goto3150:goto4018
+4032 ontzandflgoto4034:ontzgoto3214:gosub3150:onflgoto3016:goto3214
+4034 on-(vl=1)goto3016:&"{yellow} - No Unvalidated {pound}$js{f6}":return
+4036 kk=a:gosub4122:on-(x=.)goto4044:gosub35:gosub1:&,2,2:an$=a$:close2
+4038 on-(an$="{^}"oran$="RES")goto4044:bl=kk:tt$=an$:&,15,1:b$=an$:&"{f6}{lt. blue}Send Mail to {pound}$b?: ":gosub94
+4040 ona+1goto4044:gosub3060:c$=b$:dr=2:gosub61:ifa<35then:x=2:gosub390:goto4044
+4042 bl=kk:gosub542:onkk+1goto4044:b$=tt$:&"{f6}{lt. blue}Filing Mail For {pound}$b...":gosub3076
+4044 a=bl:bl=1:&"{f6}":return
+4046 onq+1goto3016:kk=a:oncu+1goto4052:gosub4122:on-(x=id)goto4120:gosub35:gosub1:fori=1to23:&,2,2:tt$(i)=a$
+4048 next:tt$(19)=str$(val(tt$(19))-c%(kk)*val(mid$(tt$(23),2,1)))
+4050 gosub1:a$=tt$(1):fori=2to23:a$=a$+r$+tt$(i):next:print#2,a$:close2
+4052 f%(kk)=-cu:gosub3060:gosub3150:a=kk:return
+4054 gosub3010:ifathen4068
+4056 x=so%(bn):y=x:on-(x<1)goto4008:gosub35:gosub1:input#2,b$:tt$=b$:close2
+4058 on-(b$="{^}"orb$="RES")goto4008
+4060 an$=b$:&,15,1:&"{f6}{white}Send Mail To {pound}v7?: ":gosub94:ifa=.then3214
+4062 dr=2:gosub61:ifa<35then:x=2:gosub390:goto3214
+4064 gosub542:on-(kk=.)goto3214
+4066 a$="Feedback:":&"{f6}Filing{pound}$i{pound}$a":c$=a$+p$:gosub3076:goto3214
+4068 kk=a:e=bn:ifa<1ora>rnorq=.then3214
+4070 fl=.:&"{f6}Target UD?: {pound}i1":ontr%+1goto3264:a$=left$(an$,1)
+4072 on-(a$="")goto3214:fl=1:gosub3036:onflgoto4070
+4074 gosub3012:f=a:on-(a<1ora>bz)goto3214:gosub3060:gosub3062:&"{f6}Move: {f5}{pound}$b{f5}"
+4076 n$=b$:c$=bb$(e):b$=bb$(f):&"{f6}From: {pound}$c{f6}To  : {pound}$b":gosub3070
+4078 on-(a=.)goto3214:tt$(1)=str$(c%(kk)):tt$(2)=nn$(kk)
+4080 gosub3060:tt$(3)=d1$+d1$+b$:tt$(4)=ed$(kk):tt$(5)=str$(d%(kk))
+4082 tt$(6)=str$(f%(kk)):&"{f6}Moving...":bn=f:gosub3104
+4084 ifrn>58thengosub3032:bn=e:gosub3104:goto3214
+4086 rn=rn+1:c%(rn)=val(tt$(1)):nn$(rn)=tt$(2):dt$(rn)=tt$(3):ed$(rn)=tt$(4)
+4088 d%(rn)=val(tt$(5)):f%(rn)=val(tt$(6)):&"{f6}":gosub3150:bn=e:gosub3104:gosub3086:gosub3150
+4090 dr=bn+6:gosub2:h=dv%:q$=dr$:dr=f+6:gosub2:p=dv%:tt$=dr$
+4092 close15:ifh=pandq$=tt$then4102
+4094 b$=n$:ifh=pthenopen15,h,15:print#15,"c"tt$b$"="q$b$:close15:goto4098
+4096 b$=mid$(tt$(3),23):gosub3064:o$=b$:c=h:d=p:c$=q$:d$=tt$:gosub3428:b$=o$:gosub3062
+4098 a%=h:&"{f6:2}Scratch {f5}{pound}$b{f5} From {pound}%a:{pound}$q? ":gosub94
+4100 ifathendr=.:d1%=h:d2%=val(q$):a$=b$:gosub19:close15:gosub62
+4102 dr=.:d1%=p:d2%=val(tt$):gosub62:&"{f6:2}Done!{f6}":goto3214
+4104 a$=bb$(a%):gosub3006:b$=a$:c$="PASS":ifval(mid$(ba$,a%,1))thenan$=c$:return
+4106 a$="e.U/D":dr=3:gosub4:x=e%(a%)+1:gosub1:&,2,2:c$=a$
+4108 &"{f6}{green}U/D {pound}$h #{pound}#0{pound}%a: {lt. red}{pound}$b{f6:2}  Password?{f6:2}  PW: ":pl=1:&,6
+4110 on-(an$<>c$)goto4114:&"{f6}  YOU{shft space}GOT{shft space}IT!{pound}b5{f6}"
+4112 ba$=left$(ba$,a%-1)+"1"+mid$(ba$,a%+1):a=.:return
+4114 &"{f6:2}{shft space} Not This Time...Sorry!!!{f6:2}  Try Again?: "
+4116 gosub94:onagoto4108:r=bn:return
+4118 cr=cr+c%(kk)*val(mid$(fl$,2,1)):goto4030
+4120 cr=cr-c%(kk)*val(mid$(fl$,2,1)):goto4052
+4122 x=val(left$(nn$(kk),4)):return
+4124 iff%(kk)=.then4024
+4126 &"{f6:2}Enter %: {pound}i1":gosub3012:ifa=.thena=1:goto4024
+4128 a=a/100:goto4024
+4130 copr.1990 new image 10/28/90
+4132 rem:"i/MM.ud-misc (c)nissa 190201 lh"

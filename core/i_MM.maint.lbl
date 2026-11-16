@@ -1,0 +1,99 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.maint" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem i/mm.maint
+4002 on-(q=.)goto4032:zz%=0:lc=-(lc=5)-(lc=9)*2:f1=3:tz=1:goto4034
+4004 b=abs(val(a$)):f2=int(-10*b*(b<1)):iff2thena$=mid$(a$,4)
+4006 zz%=-(right$(a$,1)="{^}")-2*(right$(a$,1)="?"):a$=left$(a$,len(a$)+(zz%<>.)):return
+4008 a=abs(int(val(an$))):return
+4014 &"{f6:2}(RETURN To Keep Same){f6}":return
+4016 a$=bb$(bn):gosub4004:p$=sy$+"#"+mid$(str$(bn),2)+":{f6}"+a$:cm$=p$:return
+4018 onlc+1goto4020,4024,4024
+4020 a=(f2and3):a=a+(a>.):b$=mid$("Std AnonN-An",1+a*4,4)
+4022 a=-((f2and4)=4):return
+4024 a=(f2and3):b$=mid$("CredDO-CFreeDO-F",1+a*4,4):goto4022
+4026 bb$(bn)="":onf2+1goto4028:bb$(bn)="."+mid$(str$(f2),2,1)+"."
+4028 bb$(bn)=bb$(bn)+xx$+mid$("{^}?",zz%-3*(zz%=0),1):return
+4030 b=.:fori=.to9:a%=i:&"Group #{pound}%a?: ":gosub94:b=b+2^i*a:next:a=b:return
+4032 return
+4034 tz=1:e=1:a$="e."+sy$:dr=3:gosub4:x=e%(bn)+1:gosub1:&,2,2:yy$=a$:close2
+4036 lm=.:&"{clear}{f6:2}Maint Options:{f6:2}1) Edit {pound}$h Entry Files{f6}2) Edit {pound}$h Detail":gosub4144
+4038 &"{f6:2} : {pound}g1{pound}v7{f6}":gosub4008:on-(a>lm)goto4040:lm=-(a=3):onagoto4046,4062,4046,4156
+4040 r=bn:on(tzande)goto4032:dr=3:a$="e."+sy$:gosub4:x=e%(bn)+1:gosub1
+4042 a$=yy$+r$+str$(ac%(bn))+r$+bb$(bn)+r$+str$(so%(bn))+r$+str$(dv%(bn+6))+r$
+4044 a$=a$+str$(dr%(bn+6))+r$+mid$(oc$,bn,1):print#2,a$:close2:goto4032
+4046 &"{clear}{f6:2}Edit Entry Files:{f6:2}1) ASCII{f6}2) C/G{f6:2} : {pound}g1{pound}v7{f6}"
+4048 gosub4008:on-(a<1ora>2)goto4036:a=a-1:on-(lm=1)goto4148
+4050 kk=1:dr=1:o$="s."+sy$+str$(e%(bn))+str$(a)
+4051 a$=o$+",s,r":gosub4:ife%then:&:goto4056
+4052 &"{f6:2}Loading Text...{f6:2}"
+4054 &,2,2:ifa$<>"{^}"andkk<101thentt$(kk)=a$:kk=kk+1:&".":goto4054
+4056 close2:im=2:gosub440:on-(kk=.)goto4036
+4057 &"{f6:2}Saving...":dr=1:gosub3:print#15,"s"dr$o$:a$=o$+",s,w":gosub4
+4058 forx=1tokk-1:print#2,tt$(x):&".":next:print#2,"{^}":close2
+4060 &,11,.:goto4036
+4062 poke53252,38:gosub4016:&"{clear}{f6}Details - {pound}$p:{f6:2}":b$="":ifzz%thenb$=" (NetSub)"
+4064 a$=bb$(bn):gosub4004:xx$=a$:a%=ac%(bn):&" 1) Name  : {pound}$a{pound}$b{f6} 2) Access: {pound}%a"
+4066 a=1-val(mid$(oc$,bn,1)):&"{f6} 3) Open? : ":gosub97
+4068 gosub4018:&" 4) Type  : {pound}$b{f6} 5) Pswd? : ":gosub97:&" 6) Pswd  : ":&yy$
+4070 ifzz=.andso%<>idthen4078
+4072 b$="None":ifso%(bn)>.thenb$=cc$+mid$(str$(so%(bn)),2)
+4074 on-(zz=.)goto4078:a%=dv%(bn+6):&"{f6} 7){pound}$i: {pound}$b{f6} 8) Device: {pound}%a"
+4076 b$=str$(dr%(bn+6)):&"{f6} 9) Drive :{pound}$b"
+4078 &"{f6:2}Maint: {pound}g1{pound}v7{f6}":gosub4008:ifa<1ora>9then4036
+4080 onagoto4082,4088,4102,4120,4136,4138:on-(id=so%anda=7)goto4096:ona-zz*6goto4096,4108,4114
+4082 gosub4014:pl=.:p$="{pound}$h Name":w$=xx$:poke53252,27:&,1,32
+4084 iflen(an$)>2andan$<>xx$thenxx$=an$:tz=.:gosub4026
+4086 goto4062
+4088 gosub4014:pl=1:p$="Access Code":w$=mid$(str$(ac%(bn)),2):&,1,32:gosub4008
+4090 ifan$="{f2}"thengosub4030
+4092 ifan$<>""anda>.anda<1024thenac%(bn)=a:tz=.
+4094 goto4062
+4096 gosub4014:p$="Subop ID:"+cc$:w$=mid$(str$(so%(bn)),2):&,1,32:ifan$=""then4062
+4098 gosub4008:ifa<1ora>urthena=-1
+4100 so%(bn)=a:tz=.:goto4062
+4102 a=bn
+4104 a$=mid$(str$(-val(mid$(oc$,a,1))+1),2):oc$=left$(oc$,a-1)+a$+mid$(oc$,a+1)
+4106 e=1-e:goto4062
+4108 gosub4014:p$="Device":w$=mid$(str$(dv%(bn+6)),2):&,1,32:gosub4008
+4110 ifa<33anda>6anda<>dv%(bn+6)thendv%(bn+6)=a:tz=.
+4112 goto4062
+4114 gosub4014:poke53252,3:p$="Drive":w$=mid$(str$(dr%(bn+6)),2):&,1,32
+4116 ifan$=""orval(an$)<0orval(an$)=dr%(bn+6)then4062
+4118 dr%(bn+6)=val(an$):tz=.:goto4062
+4120 onlc+1goto4122,4128,4128
+4122 &"{clear}{f6}Type :{f6} (1) Standard{f6} (2) Anonymous{f6} (3) Non-Anonymous{f6:2}Type : {pound}g1{pound}v7{f6}"
+4124 a=val(an$):ifa<1ora>3then4062
+4126 a=-a*(a<>1):f2=(f2and4)ora:tz=.:gosub4026:goto4062
+4128 &"{clear}{f6}Type :{f6} (1) Standard (Cred){f6} (2) Download Only (Cred){f6}"
+4130 &" (3) Standard (Free){f6} (4) Download Only (Free){f6:2}Type : {pound}g1{pound}v7{f6}"
+4132 a=val(an$):ifa<1ora>4then4062
+4134 a=a-1:f2=(f2and4)ora:tz=.:gosub4026:goto4062
+4136 a=-4*((f2and4)<>4):f2=(f2and3)ora:tz=.:gosub4026:goto4062
+4138 gosub4014:pl=1:p$="Password":w$=yy$:poke53252,14:&,1,32
+4140 iflen(an$)>2andan$<>yy$thentz=.:yy$=an$
+4142 goto4062
+4144 gosub4152:iflm>2then:&"{f6}3) Edit SIG Entry Files{f6}4) Edit SIG Details"
+4146 return
+4148 kk=1:dr=1:o$="s.Sig"+str$(sg)+str$(a):goto4051
+4152 lm=2:ifsgthena=8:gosub11:lm=2-2*(a>0orso%=id)
+4154 return
+4156 &"{f6:2}Edit SIG Details:{f6:2}":dr=3:a$="e.Sig":gosub4:x=sg+1:gosub1:&,2,2
+4158 &,2,2:zz%=val(a$):&,2,2:xx%=val(a$)
+4160 p$="SIG Name":w$=sg$:a=27:b=.:gosub4172:sg$=an$
+4162 p$="SIG Access":c=zz%:a=4:b=1:gosub4172:a=val(an$):ifan$="{f2}"thengosub4030
+4164 ifa>0anda<1024thenzz%=a
+4166 a=8:gosub11:ifathenp$="SigOp":c=so%:a=4:b=1:gosub4172:so%=val(an$)
+4168 x=sg+1:gosub1:a$=sg$+r$+str$(zz%)+r$+str$(xx%)+r$+str$(so%)
+4170 print#2,a$:close2:goto4034
+4172 ifbthenw$=mid$(str$(c),2)
+4174 poke53252,a:poke53249,b:b$=w$:pl=b:&,1,32:&"{f6}":ifan$=""thenan$=b$
+4176 return
+4178 copr.1990 new image 12/13/90
+4180 rem:"i/MM.maint (c)nissa 210307 lh"

@@ -1,0 +1,85 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.sb-edit" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.SB's lines: i.SB is in memory when this module runs)
+{assign:3004	=3004	}
+{assign:3010	=3010	}
+{assign:3024	=3024	}
+{assign:3032	=3032	}
+{assign:3052	=3052	}
+{assign:3054	=3054	}
+{assign:3088	=3088	}
+{assign:3114	=3114	}
+{assign:3146	=3146	}
+{assign:3228	=3228	}
+{assign:3422	=3422	}
+{assign:3426	=3426	}
+{assign:3428	=3428	}
+{assign:3446	=3446	}
+{assign:3452	=3452	}
+{assign:3464	=3464	}
+{assign:3470	=3470	}
+{assign:3478	=3478	}
+
+4000 rem "i/MM.sb-edit
+4002 onlmgoto4004
+4004 rs=.:tz=.:qq=-1:gosub3010:ifa<1ora>rnorac%=.then3228
+4006 br=a:gosub3464:a$=ed$(br):gosub3024:gosub3004:gosub3470:ife%<>.orsh<>.then3228
+4008 on-(rs>.andrs<=xx%)goto4074:a=br:gosub3052:c$=nn$(a):xx=zz%:rs=.:rt$=""
+4010 n$=na$:gosub3054:ifq=.andc$<>a$andleft$(c$,4)+mid$(c$,6)<>a$then4072
+4012 gosub4068:ifqthena$="/(K)ill Old Resp."
+4014 &"(E)dit/(D)el/(Q)uit/(#x) Go To Resp. #x/(N)ext/(R)ead{pound}$a{f6:2}Edit: "
+4016 &"{pound}i1":iftr%=.thenreturn
+4018 on-(an$="Q")-2*(an$="E")-3*(an$="N")-4*(an$="K")goto4026,4050,4072,4084
+4020 on-(an$="D")-2*(an$="")goto4028,4012
+4021 ifan$="R"thenx=xx:gosub1:&"{f6:2}":gosub4078:goto4012
+4022 a=abs(int(val(an$))):ifa>xx%then:&"{f6}{pound}q0Out of Range!{f6}":goto4012
+4024 rs=a:ona+1goto4008:goto4074
+4026 ontzgosub3114:on-(qq>-1)goto3228:&"{f6:2}None of these messages were from you.{f6:2}":goto3228
+4028 ifrs=.then:&"{f6}{pound}q0Can't Delete Original Post!{f6}":goto4012
+4030 gosub4068:&"{pound}q0Delete (Y/N)? ":gosub94:ifa=.then4012
+4032 gosub4034:goto4046
+4034 &"{f6:2}Deleting...{f6}":qq=-1:m%=-(rs=.):k=1:x=xx:gosub1:l=.:kk=1
+4036 &,2,2:ifl+1+len(a$)>79thenl=.:k=k+1
+4038 l=l-(l>.)+len(a$):on-(a$<>"{^}")goto4036:gosub3426
+4040 tz=1:a$="10001011200":ifrs>1thenb%=rs-2:&,16,6:x=a%:gosub1:&,2,2:&,2,2
+4042 b%=rs-1:&,16,6:&,16,5:x=yy%-1:ifrs=xx%thendt$(br)=left$(dt$(br),11)+a$
+4044 return
+4046 gosub3452
+4048 &,16,10:d%(br)=a%:s=br:gosub3146:a=br:goto4006
+4050 x=xx:gosub1:kk=.:&,11,.:gosub4100:&"{f6}{pound}q0Reading Text Into Editor..."
+4052 &,2,2:kk=kk+1:ifa$<>"{^}"thentt$(kk)=a$:gosub4066:onagoto4064:goto4052
+4054 &"{f6:2}":gosub3422:ww=k:gosub4068:im=2:gosub440:ifkk=.thengosub92:a=br:goto4006
+4056 tt$(kk)="{^}":a$=ed$(br):gosub3024:gosub3004:gosub3470:xx=zz%:ifrsthenxx=rs:gosub3478:xx=a%+1
+4058 ifrs=.thenk=ww:gosub3426:gosub3428:zz%=x:gosub3446:goto4048
+4060 b%=rs:&,16,5:x=xx-1:gosub1:&,2,2:b$=a$:&,2,2:c$=a$:&,2,2:d$=a$:gosub4080
+4061 k=ww:gosub3426
+4062 gosub3428:yy=x:gosub1:print#2,b$r$c$r$d$r$rt$:b%=rs:a%=yy:&,16,4:x=yy+1
+4063 gosub3446:goto4048
+4064 &"{f6:2}{pound}q0Not Enough Memory!{f6:2}":&,11,.:goto4012
+4066 z%=(peek(51)+peek(52)*256)-(peek(49)+peek(50)*256):a=-(z%<300):return
+4068 qq=rs:a%=bn:b%=br:c%=rs:d%=xx%:a$=c$:gosub3088:&"{f6:2}{pound}q0{pound}#0B{pound}%a/P{pound}%b/R{pound}%c of {pound}%d By {pound}$a{f6}On {$04}"+b$:ifrt$<>""then:&"{f6:2}Subtopic: "+mid$(rt$,2)
+4070 &"{f6:2}":return
+4072 rs=rs+1:ifrs>xx%thenrs=qq:on-(rs>-1)goto4008:goto4026
+4074 gosub4076:goto4010
+4076 xx=rs:gosub3478:x=a%:xx=a%+1:gosub1:&,2,2:z$=a$:&,2,2:b$=a$:&,2,2:c$=a$:goto4080
+4078 rc=.:sh=.:&"{pound}q0":&,57,2:return
+4080 rt$="":&,2,2:ifleft$(a$,1)="*"thenrt$=a$
+4082 return
+4084 ifq=.orxx%=.then4012
+4086 a$=ld$:gosub3032:f$=a$:&"{f6}Auto Delete Old Responses? :":gosub94
+4088 z%=a:rs=1
+4090 gosub4076:ifz$>=f$then4046
+4092 gosub4068:ifz%=.then:&"{f6}Delete? :":gosub7:ifa$="A"then:&"Abort{f6}{pound}q0":goto4046
+4094 ifz%=.thena=-(a$="Y"):gosub97:ifa=.thenrs=rs+1:goto4098
+4096 gosub4034
+4098 &,16,10:xx%=a%:on-(xx%>=rs)goto4090:goto4046
+4100 &,40:a$=chr$(1):z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
+4102 copr.1990 new image 07/04/90
+4104 rem:"i/MM.sb-edit (c)nissa 210307 lh"

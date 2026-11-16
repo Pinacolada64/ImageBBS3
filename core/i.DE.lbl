@@ -1,0 +1,176 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.DE" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+{assign:3283	=3283	}
+
+3000 rem sysop direct edit program
+3002 fl=.:&,52,44,3:mm=a%:&,52,45,3:mm=mmanda%:ifmm=.thena$="DE2":goto70
+3004 &,18,.:gosub3448:a$="menu2":gosub28
+3006 &,28,1
+3008 n=7
+3010 dimm%(22,n)
+3012 &,16,.,46,m%(.,1),"A","","Add a D/L record"
+3014 &,16,.,46,m%(.,2),"D","","Delete a D/L Record"
+3016 &,16,.,46,m%(.,3),"E","","Edit a D/L Record"
+3018 &,16,.,46,m%(.,4),"L","","List Current Records"
+3020 &,16,.,46,m%(.,5),"W","","Weed Used Records"
+3022 &,16,.,46,m%(.,6),"R","","Read Log Files"
+3024 &,16,.,46,m%(.,7),"Q","","Quit to Main Prompt"
+3026 &"{clear}{blue}{rvrs on}{pound}{back arrow}39{f6}{rvrs on} {cyan}           Image BBS V3.0{pound}{back arrow}37{blue}  {f6}"
+3028 &"{rvrs on} {cyan}       Direct Transfer Editor{pound}{back arrow}37{rvrs off} {rvrs on}{blue} {f6}{rvrs on}  {rvrs off}{pound}{back arrow}38{rvrs on} {f6}"
+3030 &,16,2,46,m%(.,1),n,36,1,n,2,6,.:lm=a%+1:&,70,.,n+8:&"{white}"
+3032 iftr%<1orlm=norlm=.then3280
+3034 onlmgoto3040,3216,3136,3200,3254,3418,3280
+3040 nf=.:&"{clear}{f6:2}  {green}Add a File to be Downloaded{f6}":gosub3042:on-(fl<>.)goto3000:goto3068
+3042 hq$="":pd$="":p$="":&"{f6:2}{lt. green}Enter The User Handle or ID#.{f6:2}"
+3044 nn$="":poke53252,20:gosub6:gosub3284:ifan$=""then3064
+3046 ifa=.thennn$=an$:goto3058
+3048 ifa>urthen:&"{f6:2}Out Of Range. ":goto3042
+3050 i=a:gosub35:x=i
+3052 gosub1:&,2,2:nn$=a$:&,2,2:pd$=a$:on-(a$="{^}"ora$="RES")goto3062
+3054 b$=nn$:&"{f6}Is {f5}{pound}$b{f5} Correct?: ":gosub96:ifa=.then3042
+3056 close2:goto3066
+3058 im=10:gosub445:ifi=.then:lp=1:&"{f6}{f5}{pound}v7{f5} Not Found In User File.{f6}":goto3042
+3060 x=i:gosub35:gosub1:&,2,2:nn$=a$:&,2,2:pd$=a$:goto3066
+3062 &"{f6}":&nn$:&" Doesn't Exist.{f6}":goto3042
+3064 fl=1:close2:return
+3066 close2:hq$=nn$:return
+' 3068: 'on tr%+1 goto 3283' (carrier lost, or out of time) goes to a line that
+' isn't here, so it stops with ?undef'd statement error; 3282 may be meant
+3068 &"{f6}  {lt. red}Device   : {lt. blue}({white}8{lt. blue}) {white}{pound}i1":ontr%+1goto3283:vd$=an$:ifan$=""thenvd$="8"
+3070 &"{f6}  {lt. red}Drive    : {lt. blue}({white}0{lt. blue}) {white}{pound}i1":ontr%+1goto3280:rd$=an$:ifan$=""thenrd$="0"
+3072 &"{f6}{cyan} Pattern{white}(*): {pound}i0":ontr%+1goto3280
+3074 gosub290:ifan$=""thenan$="*"
+3076 t$=an$:f$=rd$+":":ontr%+1goto3280
+3078 &"{f6}{lt. red}Reading Directory...{f6:2}{white} [Y]es [N]o [A]bort{f6:2}":vd=val(vd$+chr$(.))
+3080 close1:open1,vd,.,"$"+f$+t$:get#1,a$,a$:t=.:&,8,1,1:lp=1:&a$+"{f6}"
+3082 &,8,1,1:s=st:ifmid$(a$,7,1)="b"thenb$=a$:&"{f6}{lt. green}{pound}$b{f6}":nf=1:goto3104
+3084 a=val(a$):c$=mid$(a$,8):a$=mid$(a$,26,1)
+3086 fori=2to17:ifmid$(c$,i,1)=qt$thenc$=left$(c$,i-1)
+3088 next:tt$=c$+","+a$:b$=a$
+3090 a%=a:&"{lt. green}{pound}#4{pound}# {pound}%a {f5}{pound}$c{f5},{pound}$b{pound}{back arrow}25"
+3092 &"? {pound}g1"
+3094 x=-(an$="Y")-(an$="N")*2-(an$="A")*3:ifx=.thenx=2
+3096 lp=1:&mid$("Yes  No   Abort",x*5-4,5):&"{f6}"
+3098 ifx=1thenfd$=c$:ft$=b$
+3100 ifx=2then3082
+3102 ifx=3thennf=1
+3104 close1
+3106 onnfgoto3000:df$="0":w$=hq$+r$+pd$+r$+fd$+r$+ft$+r$+vd$+r$+rd$+r$+df$+r$
+3108 gosub3454
+3110 x=x+1:ifx>20then3198
+3112 gosub1:input#2,hd$:ifhd$<>"empty"then3110
+3114 gosub1:print#2,w$:close2
+3116 an$="DL File"
+3118 tt$(.)="["+an$+"]"
+3120 tt$(1)="{white}You have a file to download.{f6:2}"
+3122 tt$(2)="Access it by typing the command{f6:2}{yellow}[{lt. green}DX{yellow}] {white}at the Main Menu prompt{f6:2}"
+3124 tt$(3)="The file title is:  {lt. green}"+fd$+"{f6}"
+3126 tt$(4)="{white}The password for that file is:  {lt. green}"+pd$+"{f6:2}"
+3128 &"{f6}Filing DL Notice For ":&nn$:&"...{f6}"
+3130 z=1:a$="w":tt$=nn$:gosub32:ife%thena$="a":z=.:gosub32
+3132 print#2,na$r$id;r$d1$:print#2,tt$(.)r$:fori=1to4:print#2,tt$(i):next
+3134 print#2,"{^}":close2:goto3000
+3136 &"{clear}{f6:2}  {white}Edit a Record{f6:2}{pound}w2":gosub3042:on-(fl<>.)goto3000
+3138 gosub3454
+3140 x=x+1:ifx>20thenclose2:&"{f6:2} {white}No match found!{pound}w2":goto3136
+3142 gosub1:input#2,hd$:ifhd$="empty"then3140
+3144 ifhd$<>hq$then3140
+3146 input#2,pd$,fd$,ft$,vd$,rd$,df$
+3148 d9$="Yes":&"{clear}{lt. green}{rvrs on} File Name {rvrs off}  {white}":&fd$:&"{f6}{lt. green}{rvrs on} File Type {rvrs off}  {white}":&ft$
+3150 &"{f6}{lt. green}{rvrs on}  Password {rvrs off}  {white}":&pd$:&"{f6}{lt. green}{rvrs on}    Device {rvrs off}  {white}":&vd$:ifdf$="0"thend9$="No"
+3152 &"{f6}{lt. green}{rvrs on}     Drive {rvrs off}  {white}":&rd$:&"{f6}{lt. green}{rvrs on}Downloaded {rvrs off}  {white}":&d9$
+3154 &"{f6:2}Edit this one? ":gosub96:onagoto3156:goto3140
+3156 bh=x:&"{clear}{f6:2} {green}User Name: ":&hq$:&"{f6} {lt. green}Change to: {pound}i1":ifan$=""then3160
+3158 on-(an$="N")goto3140:hq$=an$:hd$=hq$
+3160 &"{f6} {green}Password : ":&pd$:&"{f6} {lt. green}Change to: {pound}i1":ifan$=""then3164
+3162 on-(an$="N")goto3140:pd$=an$
+3164 &"{f6} {green}File Name: ":&fd$:&"{f6} {lt. green}Change to: {pound}i0":ifan$=""then3168
+3166 on-(an$="N"oran$="n")goto3140:fd$=an$
+3168 &"{f6} {green}File Type: ":&ft$:&"{f6} {lt. green}Change to: {pound}i1":ifan$=""then3172
+3170 on-(an$="N")goto3172:ft$=an$
+3172 &"{f6} {green}Device   : ":&vd$:&"{f6} {lt. green}Change to: {pound}i1":ifan$=""then3176
+3174 on-(an$="N")goto3176:vd$=an$
+3176 &"{f6} {green}Drive    : ":&rd$:&"{f6} {lt. green}Change to: {pound}i1":ifan$=""then3180
+3178 on-(an$="N")goto3180:rd$=an$
+3180 qz$="Not Downloaded":ifdf$="1"thenqz$="Completed"
+3182 &"{f6} {green}DL Status: ":&qz$:&"{f6} {lt. green}Toggle? ":gosub96:ona+1goto3186
+3184 df=val(df$):df=1-val(df$):df$=str$(df)
+3186 &"{clear}{f6:2} {green}User Name: {white}":&hd$:&"{f6} {green}Password : {white}":&pd$:&"{f6} {green}File Name: {white}":&fd$
+3188 &"{f6} {green}File Type: {white}":&ft$:&"{f6} {green}Device   : {white}":&vd$:&"{f6} {green}Drive    : {white}":&rd$
+3190 qz$="Not Downloaded":ifdf=1thenqz$="Completed"
+3192 &"{f6} {green}DL Status: {white}":&qz$:&"{f6:2}  Ok? ":gosub94:onagoto3194:goto3136
+3194 w$=hq$+r$+pd$+r$+fd$+r$+ft$+r$+vd$+r$+rd$+r$+df$+r$
+3196 x=bh:gosub1:print#2,w$:goto3140
+3198 &"{f6:2} {yellow}File is Full!!!":goto3282
+3200 &"{clear}{f6}{lt. green} Handle{pound}{back arrow}18File Name{pound}{back arrow}35Comp{f6} ------{pound}{back arrow}18---------{pound}{back arrow}35----{f6}"
+3202 qz$(.)="No":qz$(1)="Yes"
+3204 gosub3454
+3206 x=x+1:ifx>20then3214
+3208 gosub1:input#2,hq$:ifhq$="empty"then3206
+3210 input#2,pd$,fd$,ft$,vd$,rd$,df$:df=val(df$)
+3212 &"{f6}{cyan} ":&hq$:&"{pound}{back arrow}18":&fd$:&"{white}{pound}{back arrow}35":&qz$(df):goto3206
+3214 close2:&"{f6:2}{white} Hit Any Key! {pound}g1":goto3000
+3216 &"{clear}{f6:2} {lt. green}Delete a Download File"
+3218 gosub3042:on-(fl<>.)goto3000:gosub3454
+3220 x=x+1:ifx>20then3252
+3222 gosub1:input#2,hd$:ifhd$="empty"then3220
+3224 ifhd$<>hq$then3220
+3226 input#2,pd$,fd$,ft$,vd$,rd$,df$
+3228 bh=x:&"{f6:2} {green}User Handle - {lt. green}":&hd$:&"{f6} {green}Password    - {lt. green}":&pd$
+3230 &"{f6} {green}File Name   - {lt. green}":&fd$:&"{f6} {green}File Type   - {lt. green}":&ft$
+3232 &"{f6} {green}Device      - {lt. green}":&vd$:&"{f6} {green}Drive       - {lt. green}":&rd$
+3234 qz$="Not Downloaded":ifdf$="1"thenqz$="Completed"
+3236 &"{f6} {green}DL Status   - {lt. green}":&qz$
+3238 &"{f6:2} {white}Ok to Delete? ":gosub96:ona+1goto3220
+3240 ifdf$="0"then3248
+3242 &"{f6} {gray3}Scratch {white}":&fd$:&" {gray3}from disk? ":gosub96:ona+1goto3246
+3244 dr=.:d1%=val(vd$):d2%=val(rd$):a$=fd$:gosub19:gosub5:&
+3246 w$="empty":close2:gosub3454:x=bh:gosub1:print#2,w$:goto3220
+3248 &"{f6:2} {yellow}This record has not been completed!{f6} Do you want to {lt. red}Delete{yellow}? "
+3250 gosub94:ona+1goto3216:goto3242
+3252 close2:&"{f6:2} {white}No Match Was Found!{pound}w2":goto3216
+3254 &"{clear}{f6:2} {lt. green}Weed Completed Downloads"
+3256 &"{f6:2} {cyan}This module will delete {white}ALL {cyan}complete{f6} downloads stored in e.direct!"
+3258 &"{f6:2} {yellow}Continue? ":gosub96:ona+1goto3000
+3260 &"{f6:2} {lt. red}Last Chance {f6}":gosub93:ona+1goto3000
+3262 gosub3454
+3264 x=x+1:ifx>20then3278
+3266 gosub1:input#2,hd$:ifhd$="empty"then3264
+3268 bh=x:input#2,pd$,fd$,ft$,vd$,rd$,df$:ifdf$<>"1"then3264
+3270 &"{f6}{gray3} Scratch {white}":&fd$:&"{gray3} from disk? ":gosub96:ona+1goto3274
+3272 dr=.:d1%=val(vd$):d2%=val(rd$):a$=fd$:gosub19:gosub5:&
+3274 &"{f6} {green}Deleting: {lt. green}":&hd$:&"{pound}{back arrow}28{gray3}":gosub3454:w$="empty":x=bh:gosub1:print#2,w$
+3276 goto3264
+3278 close2:&"{f6:2} {white}Finished Deleting Complete DL's!{pound}w2":goto3000
+3280 &,18,1:close2:goto300
+3282 close2:goto3000
+3284 a=abs(int(val(an$))):return
+3418 gosub90:lp=1:&"{clear}{f6:2}{blue}{pound}vj {cyan}{pound}{back arrow}12{pound}$qDirect Log Files{pound}{back arrow}39{f6}{blue}{pound}vj{pound}q0"
+3420 &"{f6}{cyan} 1.{white} Read e.dirlog"
+3422 &"{f6}{cyan} 2.{white} Read e.dx log"
+3426 &"{f6:2}   {lt. blue}=> {pound}g1":a=val(an$):iftr%<1then3446
+3428 onagoto3432,3434
+3430 goto3446
+3432 &"{clear}{f6}Direct Download File{f6:2}":b$="dirlog":gosub3438:goto3418
+3434 &"{clear}{f6}Reserved Download File{f6:2}":b$="dx log":gosub3438:goto3418
+3438 a$="e."+b$:dr=3:gosub14:ife%then:&"{f6}No Log Found. {pound}w2":return
+3440 &"{lt. green}{pound}o{$c0}{pound}o{$c0}{cyan}{f6:2}Delete e."+b$+" ? ":gosub94:iftr%<1thenreturn
+3442 on-(a<>1)goto3445
+3444 print#15,"s"dr$"e."+b$
+3445 return
+3446 close15:goto3000
+3448 gosub3454:ife%=.thenreturn
+3450 close2:dr=3:a$="e.direct,l,"+chr$(60):gosub4
+3452 forx=1to20:gosub1:print#2,"empty":next:close2:goto3448
+3454 dr=3:a$="e.direct":x=.:goto4
+3500 rem"      +.directed by Nissa
+3502 "Rewritten by Der Deutscher"
+3504 copr. 1994 new image 9/20/94
+3506 rem:"i.DE (c)nissa 210307 lh"

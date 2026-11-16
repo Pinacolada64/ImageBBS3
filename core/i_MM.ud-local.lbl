@@ -1,0 +1,92 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ud-local" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in 3_0-preface.lbl; kept as the original's numbers:
+' (these are i.UD's lines: i.UD is in memory when this module runs)
+{assign:3004	=3004	}
+{assign:3010	=3010	}
+{assign:3012	=3012	}
+{assign:3020	=3020	}
+{assign:3022	=3022	}
+{assign:3032	=3032	}
+{assign:3038	=3038	}
+{assign:3044	=3044	}
+{assign:3058	=3058	}
+{assign:3060	=3060	}
+{assign:3064	=3064	}
+{assign:3072	=3072	}
+{assign:3150	=3150	}
+{assign:3174	=3174	}
+{assign:3214	=3214	}
+{assign:3296	=3296	}
+
+4000 rem "i/MM.ud-local"
+4002 onlmgoto4004,4064
+4004 f%=.:l=.:gosub3004:gosub3:close15:ifstthen3214
+4006 &"{lt. blue}{f6}Pattern: ":gosub289:b$="*"
+4008 fori=1tolen(an$):ifmid$(an$,i,1)="*"thenb$=""
+4010 next:an$=an$+b$:&"{f6}"
+4012 close1:open1,dv%,0,"$"+dr$+an$:get#1,a$,a$
+4014 gosub3072:&,8,1,1:lp=1:&a$+"{f6}"
+4016 &,8,1,1:s=st:ifmid$(a$,7,1)="b"thenb$=a$:&"{f6}{pound}$b{f6}":goto4034
+4018 b%=val(a$):f$=mid$(a$,8):t$=mid$(a$,26,1):g$=t$:ifg$="r"org$="u"org$="c"then4016
+4020 fori=2to17:ifmid$(f$,i,1)=qt$thenf$=left$(f$,i-1)
+4022 next:&" {pound}#4{pound}# {pound}%b: {f5}{pound}$f,{pound}$g{f5} {pound}{back arrow}30?: {pound}g1":a$=an$
+4024 x=-(a$="Y")-2*(a$="S")-3*(a$="A"):lp=1:&mid$("No   Yes  StartAbort",x*5+1,5)
+4026 &"{f6}":onx+1goto4036,4028,4034,4034
+4028 f%=f%+1:a%(f%)=b%:tt$(f%)=f$+"{f1}"+g$:a%(f%)=b%:l=l+b%
+4030 forkk=1torn:gosub3060:ifb$=tt$(f%)thenf%=f%-1:kk=rn:&"{pound}{back arrow}33{up}Exists{f6}":l=l-b%
+4032 next:goto4036
+4034 s=1:ifx=3thenf%=.
+4036 on-(s=.andf%+rn<60)goto4016:on-(f%+rn=60)gosub3032:close1:on-(f%=.)goto3214
+4038 fori=1tof%:c%=a%(i):b$=tt$(i):b%=i:&"{lt. blue}{f6}{pound}#2{pound}# {pound}%b-{pound}$b ({pound}#0{pound}%c blks.)":next
+4040 &"{f6:2}Correct?: ":gosub94:ona+1goto3214
+4042 f4=.:poke53252,78:&"{f6}{lt. blue}[{yellow}A{lt. blue}]uto or [{yellow}M{lt. blue}]anual Descriptions: {pound}g1":ontr%+1goto3214
+4044 on-(an$="M")goto4054:&"{yellow}Auto{lt. blue}{f6}":s$="Your Uploads":gosub4048:goto4056
+4046 s$="{white}{f5}"+tt$(i)+"{f5}"
+4048 &"{f6}{lt. green}Enter A Decription For {pound}$s{f6:2}:{lt. blue} {pound}i0"
+4050 ontr%+1goto3214:ifan$=""thenan$=" (sysop to lazy to add description)
+4052 return
+4054 &"{yellow}Manual{lt. blue}{f6}":f4=1
+4056 fori=1tof%:a=i+rn:c%(a)=a%(i):gosub3058:nn$(a)=a$:dt$(a)=d1$+d1$+tt$(i)
+4058 onf4gosub4046:ed$(a)=an$:d%(a)=co%:f%(a)=1:next:rn=rn+f%:gosub3150
+4060 uc=uc+f%:bu=bu+l:a=2:gosub11:cr=cr+(l*a):im=1:gosub445:gosub30
+4062 i=f%:x=6:gosub16:x=17:gosub16:x=28:gosub16:x=35:gosub16:close2:goto3214
+4064 onblgoto4066:gosub3010:on-(z$="DM")goto4072:ifa<1ora>rnthen3214
+4066 kk=a:&"{f6}{pound}$j Copy:{f6}":gosub3060:gosub3064:an$="{f5}"+b$+"{f5}"
+4068 &"{f6}{pound}$k {pound}v7?: ":gosub94:on-(a=.andbl=1)goto4070:ona+1goto3214:f%=.:i=1:gosub4094:onblgoto4070:goto3214
+4070 a=kk:goto3296
+4072 on-(pr<>2)goto3214:x=3:im=4:gosub443
+4073 &"{f6:2}{lt. blue}{pound}$m{pound}$j Copy:{f6:2}Start At #: {pound}i1":gosub3012:ifa<1ora>rnthen3214
+4074 gosub3072:f%=.:fori=atorn:a=i:gosub3174:&"{lt. blue}Copy?: ":gosub7
+4076 on-(an$="A"oran$="S")goto4080:a=-(a$="Y"):gosub97:on-(a=.)goto4084:kk=i
+4078 gosub3060:gosub3064:f%=f%+1:tt$(f%)=b$:goto4084
+4080 a$="Start":i=rn:ifan$="A"thena$="Abort":f%=.
+4082 lp=1:&:&"{f6}"
+4084 next:on-(f%=.)goto3214
+4086 fori=1tof%:b$=tt$(i):b%=i:&"{f6}{pound}#2{pound}# {pound}%b-{pound}$b":next
+4088 &"{f6:2}Correct?: ":gosub94:ona+1goto3214
+4090 forj=1tof%:b$=tt$(j):ifj=1thengosub4094:next:goto3214
+4092 c=bl:d=jm:c$=bl$:d$=jm$:gosub4100:next:goto3214
+4094 gosub3038:gosub3004:gosub2:a%=dv%:c$=left$(dr$,len(dr$)-1):&"{f6}Source: {pound}%a{f1}{pound}$c{f6}Target: {pound}i1"
+4096 c$=dr$:d$="0":c=dv%:ifan$=""thend=c+1:a%=d:&"{up}Target: {pound}%a{f1}{pound}$d{f6}":d$=d$+":":goto4100
+4098 an$="  "+an$:gosub350:d=dv%:d$=dr$
+4100 f$=str$(r):iff%>.thenbl=c:jm=d:bl$=c$:jm$=d$
+4102 gosub3064:o$=b$
+4104 a=c:gosub3044:on-(a<>.)goto4122:a=d:gosub3044:on-(a<>.)goto4122
+4106 iff%=.thengosub3020:gosub3022:ifan$<>""theno$=an$+right$(o$,2)
+4108 goto4112
+4110 on-(st<>.)gosub4120:&"ABORTED!{f6}":gosub3038:return
+4112 poke142,.:gosub3038:open15,c,15:open14,d,15:open3,c,3,c$+b$+",r":gosub5
+4114 open2,d,2,d$+o$+",w":input#14,a$,f$:b=val(a$)
+4116 on-(e%+b<>.)goto4110:b$=o$:&"{f6:2}Copying {f5}{pound}$b{f5}...":sys49152
+4118 gosub5:input#14,a$,f$:gosub3038:&"Done!{f6}"
+4120 &,25:&"{f6}Status:{f6:2}Source: {pound}$e{f6}Target: {pound}$f{f6}":return
+4122 x=6:gosub390:j=f%:return
+4124 copr.1990 new image 10/28/90
+4126 rem:"i/MM.ud-local (c)nissa 210307 lh"
