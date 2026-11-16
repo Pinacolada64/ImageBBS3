@@ -1008,17 +1008,35 @@ NOTE: This is currently being researched.
 
 === `&,14` Dump Array
 
-Write `tt$()` array elements to an already-open file, using the specified logical file number.
+Write lines of the text editor array, `tt$()`, to a file that is already open.
 
-`&,14,_array_`::
-Output from 1 to however many elements were ``dim``ensioned for _array_.
+.Syntax
+`&,14,_lfn_,_last_`
 
-`&,14,_array_,_end_`::
-Output elements of _array_ from 1-_end_.
+.Parameters
+_lfn_:: the logical file number of the open file (for example `2`, after <<prg-im-routines.adoc#line-18,`gosub 18`>>)
+_last_:: the last element to write: `&,14` writes `tt$(1)` to `tt$(__last__)`, each followed by a carriage return
+
+Both are byte values (`0`-`255`); a parameter that is left out counts as `0`.
+
+`&,14` always writes `tt$()`: it doesn`'t take an array number.
+It doesn`'t write an end marker; the modules write a `+^+` line after it (`print#2,"{^}"`), then close the file.
+Output goes back to the screen afterwards.
 
 ====
-NOTE: See <<table-array-numbers>> for the arrays which correspond to _array_.
+NOTE: It writes at least one element: with _last_ `0` (or left out), it writes `tt$(1)`.
+_last_ isn`'t checked against the array`'s size, so more than `254` writes whatever is in memory after `tt$()`.
 ====
+
+_Example:_
+
+.im
+[source]
+39 &,14,2,kk-1:print#2,"{^}":close 2:goto 62
+
+Write the `kk-1` lines in the editor to the file open on LFN 2, end it with `+^+`, close it, and check blocks free (<<prg-im-routines.adoc#line-39,`gosub 39`>>).
+
+`dumparr` (`source/dskio.s`) finds `tt$()` as the first array in memory (BASIC`'s array area starts at `$2f`/`$30`), which it is, because `im` ``dim``s it first (line 3070).
 
 '''
 
