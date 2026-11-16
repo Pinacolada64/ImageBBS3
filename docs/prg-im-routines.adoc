@@ -322,7 +322,7 @@ Note that `e.stats` should be opened first (`gosub 30`), prior to calling this r
 |
 | Scratches (deletes) the file named `a$` on drive `dr`: opens the command channel (line 3 <<line-3>>), then `print#15,"s"dr$a$`.
 
-| gosub&#160;28
+| [[line-28,Load protocol]]gosub&#160;28
 | gosub&#160;1750
 | Loads a `++` (protocol) file from Plus File drive--if it isn`'t already loaded--and checks the DOS error status.
 

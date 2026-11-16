@@ -117,7 +117,7 @@ Records 2 on hold one post each, as five lines (each ended with a carriage retur
 
 The examples are from a test post (which is frozen); like the release`'s test post, it has no responses, and its second date is `10001011200`.
 
-==== s.m.protos
+==== `s.m.protos` [[s-m-protos]]
 
 This is a file which describes the file transfer protocols available to a user.
 
@@ -140,16 +140,16 @@ This is a file which describes the file transfer protocols available to a user.
 | Offset | Purpose | Variable name
 
 | 1-6
-| `++ filename`
-| `pm$`: protocol module?
+| the protocol module`'s name: `{plus}{plus} __name__` is loaded (<<prg-im-routines.adoc#line-28,`gosub 28`>>)
+| `pm$` (in `sub.protos`)
 
 | 7
-| x
-| `f`: default function?
+| the protocol`'s options, a digit: `sub.protos` and `sub.param1` give it to the protocol with `&,16,4,f` (see <<prg-ampersand-calls.adoc#defflag,`defflag`>>)
+| `f`
 
 | 8
-| x
-| `nb`: ?
+| a digit, `1` for XMODEM in the sample; read, but nothing in 3.0 uses it
+| `nb`
 
 | 9
 | x
