@@ -258,13 +258,16 @@
 3486 z%=(peek(52)-peek(50))*256+peek(51)-peek(49):return
 3487 &"{f6}Sorry {pound}$b Limit Exceeded {f6}":return
 3488 lx$=mid$(dt$(a),23):lx$=left$(lx$,len(lx$)-2):f2%=a:f1%=.
-3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:&,2,2:ifa$="!"then3492
-3490 ife%then:&"{up}    {yellow}Comment Status: {lt. red}{rvrs on} No Comments {rvrs off}{f6:2}{pound}q0"
-3491 close2:close1:return
+' 11/15/2026: as Pinacolada's rewrite of 2.0's +.MM.ud-about did, print the
+' status's start once, then just the word; one exit (3491). A file without
+' "!" first now shows "No Comments" (it showed no status at all)
+3489 dr=3:z$="e.ss."+left$(lx$,11):a$=z$+",s,r":gosub4:&,2,2:&"{up}    {yellow}Comment Status: {rvrs on}":ifa$="!"then3492
+3490 &"{lt. red} No Comments {rvrs off}{f6}"
+3491 close2:close1:&"{f6}{pound}q0":return
 ' 11/15/2026: show the first comment, under the status: after the "!" line, the
 ' handle, account number and date, then lines until "^" (each read with &,2,2,
 ' as 3489 now reads the "!" line: get#2 left its carriage return to be read)
-3492 &"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6}":&,2,2:z$=a$:&,2,2:&,2,2:&"{lt. blue}    First comment from {white}{pound}$z{f6}{cyan}":gosub3483:close2:close1:&"{f6}{pound}q0":return
+3492 &"{lt. green} Commented {rvrs off}{f6}":&,2,2:z$=a$:&,2,2:&,2,2:&"{lt. blue}    First comment from {white}{pound}$z{f6}{cyan}":gosub3483:goto3491
 3493 x=1:gosub390:pf=.:f1=.:goto300
 3494 f1=2:goto302
 3495 &,52,$34,3:on-(a%=.)goto3496:poke53370,0:&,52,$35,0
