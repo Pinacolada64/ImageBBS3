@@ -1,0 +1,94 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.MU" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 goto3010
+3002 poke53252,l:&,1:a=abs(int(val(an$))):return
+3004 gosub1:fori=1to5:&,2,2:b$=b$+a$+r$:next:return
+3006 gosub3008:&,22,1
+3008 print#16,"p{stop}"chr$(xand255)chr$(x/256)"{$01}":return
+3010 &,5:iflp<1.3thengosub3020:goto3014
+3012 a$="copier":gosub28:gosub3052
+3014 goto300
+3016 a%=ng:lp=1:&"{f6}Quitting now would leave {pound}%a message(s) {f5}lost{f5}.{f6:2}"
+3018 return
+3020 lp=1:&"Sorry, this program will not run on versions of Image BBS less than "
+3022 lp=1:&"1.3{f6:2}":return
+3024 &"{f6}Grabbed Messages:{f6:2}"
+3026 fori=1tong:an$=tt$(i):&,15,6,13
+3028 a%=i:&"{pound}#3{pound}# {pound}%a) {pound}$a{f6}":ifrc=0thennext
+3030 return
+3032 &"{f6}Available Messages:{f6:2}"
+3034 fori=1ton:x=i+1:gosub1:&,2,2
+3036 a%=i:&"{pound}#3{pound}# {pound}%a) {pound}$a{f6}":ifrc=0thennext
+3038 return
+3040 &"{f6}Available Subs:{f6:2}"
+3042 fori=1ton:x=i+1:gosub1:&,2,2:&,2,2:&,2,2
+3044 ifleft$(a$,1)="."andmid$(a$,3,1)="."thena$=mid$(a$,4)
+3046 ifright$(a$,1)="?"thena$=left$(a$,len(a$)-1)
+3048 a%=i:&"{pound}#3{pound}# {pound}%a) {pound}$a{f6}":ifrc=0thennext
+3050 return
+3052 ng=0:l$="{clear}{$c0:20}{f6}Message Move Utility{f6}"
+3054 l$=l$+" Enter {f5}?{f5} for Help {f6}{$c0:20}{f6:2}":ng=0
+3056 dr=3:a$="e.Sub":gosub4:ife%thenclose2:&:return
+3058 x=1:gosub1:&,2,2:n=val(a$)
+3060 a%=n:b%=ng:&"{pound}$l{pound}%a Sub(s) Available{f6}{pound}%b Message(s) Grabbed{f6}"
+3062 p$="{f6}Which Sub (L=List)":l=3:gosub3002:ifan$="{f2}"thengosub3140:goto3062
+3064 ifan$="L"thengosub3040:goto3062
+3066 ifan$=""andng>0thengosub3016:goto3062
+3068 ifan$=""ortr%=0thenclose2:return
+3070 ifa<1ora>nthen3060
+3072 x=a+1:gosub1:&,2,2:&,2,2:&,2,2:&,2,2:&,2,2:d1%=val(a$):&,2,2:d2%=val(a$)
+3074 sb=a:close2:dr=4:a$="d.sub"+str$(sb):gosub4:ife%=0then:&,2,2:n=val(a$)
+3076 ife%thenclose2:a$="d.sub"+str$(sb)+",l,"+chr$(80):gosub4:print#2,0:n=0
+3078 a%=sb:b%=n:c%=ng:&"{pound}$lSub {pound}%a Selected{f6}{pound}%b Message(s), {pound}%c Grabbed{f6}"
+3080 p$="{f6}Which Message (L=List,D=Drop)":l=2:gosub3002:ifan$="{f2}"thengosub3148:goto3080
+3082 ifan$="L"andn>0thengosub3032:goto3080
+3084 ifan$=""ortr%=0thenclose2:goto3056
+3086 ifan$="D"andng>0andn<60then3100
+3088 ifa<1ora>nthen3078
+3090 m=a:x=m+1:gosub1:&,2,2:&"Grab {f5}{pound}$a{f5}? ":gosub94:ifa=0then3078
+3092 b$=right$(str$(sb),2):gosub3004:ng=ng+1:tt$(ng)=b$:a%(ng)=d1%:f%(ng)=d2%
+3094 &"Removing Message from Sub..."
+3096 ifm<nthenforj=m+1ton:x=j+1:b$="":gosub3004:x=j:gosub1:print#2,b$;:next
+3098 n=n-1:x=1:gosub1:print#2,n:gosub1:goto3078
+3100 a%=sb:b%=n:c%=ng:&"{pound}$lSub {pound}%a Selected{f6}{pound}%b Message(s), {pound}%c Grabbed{f6}"
+3102 p$="{f6}Drop Which (L=List)":l=2:gosub3002:ifan$="{f2}"thengosub3158:goto3102
+3104 ifan$="L"andng>0thengosub3024:goto3102
+3106 ifan$=""ortr%=0then3078
+3108 ifa<1ora>ngthen3100
+3110 an$=tt$(a):a%=a%(a):f%=f%(a):n=n+1:x=n+1:gosub1:print#2,mid$(an$,3)
+3112 x=1:gosub1:print#2,n:gosub1:close2
+3114 ifa<ngthenfori=atong-1:tt$(i)=tt$(i+1):a%(i)=a%(i+1):f%(i)=f%(i+1):next
+3116 tt$(ng)="":ng=ng-1
+3118 ifsb=val(left$(an$,2))then3138
+3120 &,15,6,13:a$=left$(a$,16):b$=right$(str$(sb),2)+mid$(a$,3):dr=0:gosub3
+3122 fr$=mid$(str$(f),2)+":"
+3124 ifa%=d1%andf%=d2%thenprint#15,"r"dr$b$"="dr$a$:goto3138
+3126 ifa%=d1%thenprint#15,"c"dr$b$"="fr$a$:goto3138
+3128 close15:open15,a%,15:close2:open2,a%,2,fr$+a$
+3130 close16:open16,dv%,16:close3:open3,dv%,3,dr$+b$+",l,"+chr$(81)
+3132 &,18,0:&"{clear}Copying...   ":x=1
+3134 b%=x:&"{pound}h3{pound}#3{pound}%b":gosub1:gosub5:gosub3006:ife%=0then:&,16:x=x+1:goto3134
+3136 close2:close3::print#15,"s"fr$a$
+3138 dr=4:a$="d.sub"+str$(sb):gosub4:goto3100
+3140 lp=1:&"At this prompt you may select a sub to grab messages from, or to "
+3142 lp=1:&"drop messages into. You may enter {f5}L{f5} to list the subs that are "
+3144 lp=1:&"available. Press RETURN to quit the program. Note that you cannot "
+3146 lp=1:&"quit while you still have messages that ara grabbed.{f6:2}":return
+3148 lp=1:&"At this prompt you may select a message to grab. Grabbed messages "
+3150 lp=1:&"are removed from the sub that you are in, and the header is kept "
+3152 lp=1:&"in memory until you drop it into another sub. You may enter {f5}D{f5} to "
+3154 lp=1:&"select messages to drop in this sub. You may also enter {f5}L{f5} to "
+3156 lp=1:&"list the messages that are in this sub.{f6:2}":return
+3158 lp=1:&"At this prompt you may select a message to drop. Dropped messages "
+3160 lp=1:&"will be added onto the end of the list of messages for this sub, "
+3162 lp=1:&"and the header will be removed from memory. Just press RETURN to "
+3164 lp=1:&"exit to Grab mode. You may also enter {f5}L{f5} to list the headers "
+3166 lp=1:&"that are currently in memory.{f6:2}":return
+3168 rem:"i.MU (c)nissa 210305 lh"

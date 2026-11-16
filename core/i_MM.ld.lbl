@@ -1,0 +1,36 @@
+' imported from the release disk (MASTER D1 231231.d81), "i/MM.ld" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+4000 rem "i/MM.ld"
+4002 nr=1:&"{f6}{cyan}Last Call: {$04}"+ld$+"{f6:2}Add Or Subtract How Many Days? {f6:2}Last: {pound}i1"
+4004 a=int(val(an$)):iftr%<1thenreturn
+4006 on-(a=.)goto4032:ifa<-999ora>999then:&"{f6}Out Of Range!{f6}":goto4002
+4008 b=val(left$(ld$,1))+a:c=val(mid$(ld$,2,2)):d=val(mid$(ld$,4,2))
+4010 e=val(mid$(ld$,6,2))+a:a$="{blue}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}{blue}"
+4012 ife<=asc(mid$(a$,d))then4018
+4014 e=e-asc(mid$(a$,d)):d=d+1:ifd<13then4012
+4016 d=1:c=c+1:goto4012
+4018 ife>.then4024
+4020 d=d-1:e=e+asc(mid$(a$,d-12*(d=.))):ifd>.then4018
+4022 d=12:c=c-1:goto4018
+4024 ifb>7thenb=b-7:goto4024
+4026 ifb<1thenb=b+7:goto4026
+4028 a$=right$("0"+mid$(str$(c),2),2)+right$("0"+mid$(str$(d),2),2)
+4030 ld$=chr$(48+b)+a$+right$("0"+mid$(str$(e),2),2)+right$(ld$,4)
+4032 &"{f6}Change Time?: ":gosub94:onagosub4036
+4034 &"{f6}Last Date: {$04}"+ld$:&"{f6:2}":return
+4036 &"{f6}Enter Time In This Format:{f6:2}Example:  9:20 AM--920A{f6}"
+4038 &"{pound}{back arrow}0911:23 PM--1123P{f6:2}Last: {pound}i1"
+4040 a$=right$(an$,1):ifan$=""thenreturn
+4042 an$=left$(an$,len(an$)-1):if(a$<>"A"anda$<>"P")orval(right$(an$,2))>59then4036
+4044 ifval(an$)>1259orval(an$)<100then4036
+4046 t=-(a$="P")*8000
+4048 ld$=left$(ld$,7)+right$("0"+mid$(str$(val(an$)+t),2),4):return
+4050 copr.1990 new image 01/02/90
+4052 rem:"i/MM.ld (c)nissa 190130 lh"

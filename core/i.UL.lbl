@@ -1,0 +1,71 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.UL" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 a$="4":gosub28:dr=6:gosub3:a$=dr$+"u.index":&,16,1:uh=a%:goto3008
+3002 forx=1tokk:a%=x:b$=nn$(x):d$=dt$(x):ifx=2thend$=co$(val(dt$(x)))
+3004 &"{white}{pound}%a> {lt. red}{pound}$b{pound}{back arrow}17: {lt. green}{pound}$d{f6}":next:return
+3006 a%=ur:&"{f6:2}{yellow}Out Of {pound}%a Users, Where Should{f6}The List Begin? (1){f6:2}{lt. blue}":return
+3008 p$="{lt. green}User List{lt. blue}":cm$=p$:gosub9:a=10:gosub11
+3010 ifa=.thenx=4:gosub390:close2:goto300
+3012 close2
+3014 &"{f6:2}{lt. green} [F]ast (ID# And Handle){f6}{lt. red} [R]eg. (All Info){f6:2}{cyan}User List: {pound}g1{pound}v7{f6}"
+3016 on-(an$="F")goto3074:ifan$<>"R"oran$="Q"ortr%<1then300
+3018 restore:forx=1to6:readnn$(x):dt$(x)="":next:qe=.
+3020 kk=3:a=8:gosub11:ifa+zzthenkk=6
+3022 &"{clear}{f6:2}{white} Select The Attributes To Search For.{cyan}"
+3024 &"{f6}{yellow} Press {rvrs on}RETURN{rvrs off} When Finished,  Or If"
+3026 &"{f6} No Attributes Are Needed. (All Users){f6:2}":gosub3002
+3028 &"{f6}{green} Attribute?: {yellow}{pound}g1{pound}v7{f6}":a=val(an$):ifa<1ora>kkthen3036
+3030 ifa=2thengosub3112
+3032 &"{f6}":a%=a:b$=nn$(a):ifdt$(a)<>""thenc$=dt$(a):&"{white}{pound}%a-  {lt. red}{pound}$b: {lt. green}{pound}$c{f6}"
+3034 ifa=3then:&"{pound}%a-  {pound}$b: {pound}i0":ontr%+1goto300:dt$(a)=an$:qe=qeor(an$<>""):goto3022
+3035 &"{pound}%a-  {pound}$b: {pound}i1":ontr%+1goto300:dt$(a)=an$:qe=qeor(an$<>""):goto3022
+3036 gosub3006:gosub6:c=int(val(left$(an$,4))):ifc<1orc>urthenc=1
+3038 &"{clear}{f6}{yellow}Searching For:{f6:2}":ifqe=.then:&"{white}(No Specifics){f6:2}":goto3042
+3040 gosub3002:&"{f6}"
+3042 &"{orange}(Hit Space Bar To Abort At Any Time){f6:2}":gosub35
+3044 ifc>urortr%<1then3114
+3046 x=c:gosub1:input#2,tt$(1),a$,tt$(4),tt$(5),tt$(3),a$,tt$(6),a$,a$,tt$(2)
+3048 input#2,a$,a$,a$,a$,a$,a$,a$,a$,a$,a$,a$,tt$(8):tt$(9)=tt$(4)+" "+tt$(5)
+3052 q=1:forx=1tokk:ifdt$(x)<>""thenifdt$(x)<>left$(tt$(x),len(dt$(x)))thenq=.
+3054 next:ifq=.ortt$(1)="{^}"ortt$(1)="RES"thenq=.:goto3072
+3056 ifkk<>1then:&"{f6}"
+3058 q=.:a%=c:an$=tt$(1):&,15,1:c$=an$:&"{lt. red}{pound}vn{pound}%a{pound}{back arrow}08: {white}{rvrs on}{pound}$c{f6}":q=q+rc
+3060 onkkgoto3072:lp=1:b$=left$(tt$(8),11):&"{lt. red}Last On : {lt. green}{$04}"+b$:q=q+rc
+3062 b$=co$(val(tt$(2))):&"{lt. red}Computer: {green}{pound}$b{f6}":q=q+rc
+3064 b$=tt$(3):a$="{lt. red}Email   : {white}{yellow}{pound}$b{white}{lt. red}":ifkk=3then3070
+3066 c$=tt$(3):an$=tt$(9):&,15,1:d$=an$:&"{lt. red}Email   : {lt. green}{pound}$c{f6}{lt. red}Name    : {green}{pound}$d{f6}"
+3068 c$=tt$(6):a$="{lt. red}Access  : {yellow}{pound}$c"
+3070 lp=1:&:q=q+rc
+3072 &"{white}.":on-(q+rc>.)goto3114:c=c+1:goto3044
+3074 &"{f6}{purple}Quick User List.{f6}"
+3076 &"{f6}{yellow}Would You Like To List:{f6:2} {lt. green}[N]umerically Or{f6} [A]lphabetically?: {yellow}{pound}g1{pound}v7{f6}"
+3078 ifan$<>"A"andan$<>"N"then3012
+3080 kk=1:dt$(1)="":on-(an$="N")goto3096:a%=uh:&"{f6:2}{white}{pound}%a {orange}Users.{f6}"
+3082 &"{f6}{yellow}Enter Beginning Char(s) Of The{f6}Handle You Want To Start At.{f6:2}"
+3084 gosub6:gosub35:&,16:ifa%=.andb%=1thenb%=.
+3086 rc=.:sh=.:&"{f6:2}":ifb%>1thenb%=b%-1
+3088 &,16,6:x=a%:gosub1:input#2,an$:&,15,1:b$=an$:c$=cc$:d$=mid$(str$(a%),2)
+3090 d$=left$(d$+"{white}----",6)
+3092 &"{yellow}{pound}$c{pound}$d{white}{rvrs on} {pound}$b {rvrs off}{f6}":ifrcthen3114
+3094 on-(b%<uh)goto3088:goto3114
+3096 gosub35:rc=.:sh=.:gosub3006:gosub6:iftr%<1then300
+3098 x=val(an$):ifx<1orx>urthenx=1
+3100 &"{f6:2}":forx=xtour:gosub1:&,2,2:ifa$="{^}"thena$="{orange}(Deleted Account)":goto3106
+3102 ifa$="RES"thena$="{purple}(Reserved Account)":goto3106
+3104 an$=a$:&,15,1:a$=an$
+3106 d$=mid$(str$(x),2):d$=left$(d$+"{white}----",6)
+3108 &"{lt. red}{pound}vn{pound}$d{yellow}{pound}$a{f6}":ifrcthenx=ur
+3110 next:goto3114
+3112 fori=1to9:b%=i:an$=co$(i):&"{f6} {white}{pound}%b> {lt. blue}{pound}v7":next:&"{f6:2}":return
+3114 &"{f6}{white}Listing Finished.{f6}":goto3012
+3116 data"Handle","Computer Type","Email Address","First Name","Last Name"
+3118 data"Access Group"
+3120 copr.1988 new image
+3122 rem:"i.UL (c)nissa 210807 lh"

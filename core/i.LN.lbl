@@ -1,0 +1,66 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.LN" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 &"{clear}Node List/Net Map"
+3002 dr=1:a$="s.netmenu":gosub14
+3004 ifzzthendr=1:a$="s.netmenuzz":gosub14
+3006 n=.:b%=.:&"{f6:2}1. List All Nodes{f6}2. List Active Nodes{f6}3. Information On Node"
+3008 &"{f6}4. Netmap{f6}5. Menu":ifzzthen:&"{f6}6. Read Transfer Log{f6}7. Read Sysop Log"
+3010 ifzzthen:&"{f6}8. Read Network Error Log{f6}9. Read Netsub Tracking #"
+3011 &"{f6}Q. Quit{f6:2}Opt: {pound}g1{pound}v7{f6}":ifan$="Q"then300
+3012 ifan$=""thenreturn
+3014 ontr%+1goto300:a=val(an$):onzz+1goto3016,3018
+3016 ifa<1ora>5then3006
+3018 ifa<1ora>9then3006
+3020 onagoto3040,3022,3050,3046,3002,3068,3080,3092,3098
+3022 dr=2:a$="nm.nodes":gosub4:input#2,n
+3024 b%=n:&"{f6:2}There Are {pound}%b Nodes{f6}List A)ll Or Start At Number? {pound}i1{f6:2}"
+3026 ontr%+1goto300:on-(an$="A")goto3034:a=val(an$):ifa<1ora>nthen3006
+3028 fori=aton:a%=i:x=i+1:gosub1:input#2,a$,b$,b$,c$,b
+3030 if(band1)=.then:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+3032 i=i+rc*n:next:close2:goto3006
+3034 fori=1ton:a%=i:x=i+1:gosub1:input#2,a$,b$,b$,c$,b
+3036 if(band1)=.then:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+3038 i=i+rc*n:next:close2:goto3006
+3040 &"{f6} All NetWork Nodes:{f6:2}":dr=2:a$="nm.nodes":gosub4:input#2,n
+3042 fori=1ton:a%=i:x=i+1:gosub1:input#2,a$,b$,b$:&"{pound}#2{pound}%a:/{pound}$a/{pound}{back arrow}10{pound}$b{f6}"
+3044 i=i+rc*n:next:close2:goto3006
+3046 ifll%>40thena$="nm.map 80":dr=2:gosub13:on-(e%<>.)goto3048:close2:goto3006
+3048 dr=2:a$="nm.map":gosub13:close2:goto3006
+3050 dr=2:a$="nm.nodes":gosub4:input#2,n:b%=n
+3052 &"{f6:2}There Are {pound}%b Nodes{f6}Information On Which? {pound}i1{f6:2}":ontr%+1goto300
+3054 a=abs(val(an$)):ifa<1ora>nthen3066
+3056 x=a+1:gosub1:input#2,a$,b$,c$,d$,o%,a%,b%,c%,d%:n%=a
+3058 f$="Active":if(o%and1)thenf$="Inactive"
+3060 &"{f6}#{pound}#2{pound}%n ({pound}$a) {f5}{pound}$c{f5}{pound}{back arrow}25<{pound}$f>{f6} Sysop:{pound}$d{f6} Phone:{pound}$b{f6}"
+3062 &" Connected To #{pound}%a":ifb%then:&",#{pound}%b":ifc%then:&",#{pound}%c":ifd%then:&",#{pound}%d"
+3064 &"{f6:2}Another? (Number Or RETURN) {pound}i1":ontr%+1goto300:on-(an$="")goto3006:goto3054
+3066 close2:&"Unknown Node #!{f6}":goto3006
+3068 &"{f6} Read This Month's NetLog{f6}":dr=2:l$="nm.log "+mid$(d1$,2,4):a$=l$+",s,r"
+3070 gosub4:a%=.:sh=.:ife%thenclose2:goto3006
+3072 a%=a%+1:input#2,a$,b$:&"{f6}#{pound}%a: {pound}$a{f6}    {$04}"+right$(b$,11)
+3074 iflen(b$)>11then:&"{f6} To {$04}"+left$(b$,11)
+3076 &"{f6}Files Transferred:":&,3,2:ifst=.andsh=.then3072
+3078 close2:goto3006
+3080 &"{f6}Read Net Sysop Log{f6}":dr=2:l$="nm.sylog":a$=l$+",s,r":gosub4:a%=.:sh=.
+3082 ife%thenclose2:goto3006
+3084 a%=a%+1:&,2,2:f$=a$:&,2,2:b$=a$:&,2,2:c$=a$:a$=f$:s=st
+3086 &"{f6}#{pound}%a: Sent By {f5}{pound}$a{f5}{f6} On {$04}"+b$:&"{f6} File:{pound}$c{f6}":ifs+sh=.then3084
+3088 close2:&"{f6}Delete?":gosub94:ifa=.then3006
+3090 a$=l$:gosub19:close2:goto3006
+3092 &"{f6} Read Network Error Log{f6}":dr=2:l$="nm.errors":a$=l$
+3093 gosub14:ife%thenclose2:goto3006
+3094 close2:&"{f6}Delete?":gosub94:ifa=.then3006
+3095 a$=l$:gosub19:close2:goto3006
+3098 &"{f6} Read Network Tracking #{f6}":dr=2:l$="nm.P.count":a$=l$
+3100 gosub14:ife%thenclose2:goto3006
+3102 close2:&"{f6}Delete?":gosub94:ifa=.then3006
+3104 a$=l$:gosub19:close2:goto3006
+3198 copr. 1994 new image 9/12/94
+3199 rem"i.LN (c)nissa 210821 lh"

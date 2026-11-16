@@ -27,7 +27,7 @@
 # Afterwards, the listing is built again and compared with the original (with
 # the same rem capitals changed to $61-$7a): the script fails unless the two
 # are byte-for-byte identical, or differ only by trailing ":"s, which C64List's
-# -crunch removes.
+# -crunch removes, or trailing spaces, which C64List drops from every line.
 #
 # Environment (defaults as in the Makefile): C64LIST, WINE, C1541, RELEASE_ZIP,
 # RELEASE_D81
@@ -149,21 +149,34 @@ open(dst, "wb").write(p); print(n)
 cp "$repo/core/3_0-preface.lbl" "$tmp/"
 c64list new.lbl -prg:new.prg $crunch_opt > "$tmp/build.log" 2>&1 \
 	|| { cat "$tmp/build.log" >&2; exit 1; }
-# C64List's -crunch drops a line's trailing ":" (an empty statement), which
-# shifts every later byte. If that is the only difference (compared as
-# listings, with trailing colons ignored), the program still behaves the same.
+# C64List's -crunch drops a line's trailing ":" (an empty statement), and
+# C64List drops trailing spaces from every line; either shifts every later
+# byte. If that is the only difference (compared as listings, with trailing
+# colons and spaces ignored), the program still behaves the same. A line that
+# ends inside an open quote keeps them: there they are part of the string.
 caps=$(remcaps "$tmp/orig.prg" "$tmp/want.prg")
 same="rebuilds byte-for-byte identical"
 if ! cmp -s "$tmp/want.prg" "$tmp/new.prg"; then
 	listing() { petcat -2 -o /dev/stdout -- "$1" 2> /dev/null; }
+	# a line's trailing ":"s and spaces, unless it ends inside a quote
+	untrail() {
+		python3 -I -c '
+import sys, re
+for line in sys.stdin:
+    line = line.rstrip("\n")
+    if line.count("\"") % 2 == 0:
+        line = re.sub(r"[: ]+$", "", line)
+    print(line)
+'
+	}
 	if ! command -v petcat > /dev/null \
-		|| ! diff -q <(listing "$tmp/want.prg" | sed 's/:*$//') \
-			<(listing "$tmp/new.prg" | sed 's/:*$//') > /dev/null; then
+		|| ! diff -q <(listing "$tmp/want.prg" | untrail) \
+			<(listing "$tmp/new.prg" | untrail) > /dev/null; then
 		echo "The listing doesn't rebuild identically ($(cmp -l "$tmp/want.prg" "$tmp/new.prg" 2>/dev/null | wc -l) bytes differ); not writing $out" >&2
 		exit 1
 	fi
 	n=$(diff <(listing "$tmp/want.prg") <(listing "$tmp/new.prg") | grep -c '^<' || true)
-	same="rebuilds identically except for $n trailing \":\" removed by -crunch"
+	same="rebuilds identically except for $n lines' trailing \":\" or spaces, which C64List removes"
 fi
 [ "$caps" -gt 0 ] && same="$caps capitals in rem text converted to ASCII; otherwise $same"
 

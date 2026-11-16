@@ -1,0 +1,18 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.MM" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 rem:memory management
+3002 a=45:b=43:a$="{f6}Program":gosub3020
+3004 a=47:b=45:a$="Variables":gosub3020
+3006 a=49:b=47:a$="Arrays":gosub3020
+3008 a=51:b=49:a$="Free RAM":gosub3020
+3010 a=55:b=51:a$="Strings":gosub3020
+3012 goto300
+3020 c=peek(a)-peek(b)+(peek(a+1)-peek(b+1))*256:&"{pound}$a:{pound}{back arrow}10{pound}!c{f6}":return
+3022 rem:"i.MM (c)nissa 181227 lh
