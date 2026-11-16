@@ -91,6 +91,12 @@
 
 // start - jump table
 ml:
+		cpx #4			// 0-3: transfers, at 1 MHz on a SuperCPU (scpu.s)
+		bcs ml1
+		jsr scpu_slow
+		jsr ml1
+		jmp scpu_turbo
+ml1:
 		lda defflag
 		and #2
 		inx
@@ -1492,3 +1498,5 @@ displcl4:
 		sta pbuf3+tcount,x
 		inx
 		rts
+
+#import "scpu.s"

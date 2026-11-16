@@ -126,6 +126,10 @@
 .label protostart = $c000
 .label protoend = $ca80
 
+// SuperCPU: a write to either sets the speed (scpu.s)
+.label scpu_1mhz = $d07a
+.label scpu_20mhz = $d07b
+
 .label mainline = 1000
 .label trapline = 2000
 .label imodline = 2300

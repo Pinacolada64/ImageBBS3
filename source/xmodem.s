@@ -30,6 +30,12 @@
 // 4 =
 
 ml:
+		cpx #4			// 0-3: transfers, at 1 MHz on a SuperCPU (scpu.s)
+		bcs ml1
+		jsr scpu_slow
+		jsr ml1
+		jmp scpu_turbo
+ml1:
 		inx
 		beq protonum
 		dex
@@ -1023,5 +1029,9 @@ displcl4:
 		inx
 		rts
 
+#import "scpu.s"
+
+// the 1K buffer runs past protoend, into the free space before the
+// swapper ($cb00)
 xbuf:
 
