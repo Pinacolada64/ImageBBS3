@@ -78,6 +78,8 @@
 {assign:96	=96	} ' im.msg_yes
 {assign:97	=97	} ' im: print Yes/No from a
 
+{assign:128	=128	} ' im: SuperCPU to 1 MHz (if there is one)
+{assign:130	=130	} ' im: SuperCPU turbo on (if there is one)
 {assign:200	=200	} '
 {assign:216	=216	} '
 {assign:220	=220	} '

@@ -1,3 +1,4 @@
+{uses:3_0-preface.lbl}
 {alpha:alt}
 {include:quoters.lbl}
 {step:2}
@@ -18,7 +19,8 @@
 	c=val(an$):if c<1 or c>2 then {:60012}
 	b$="{f6}{cyan}Turbo{colon} ":on c goto {:60020},{:60022}
 {:60020}
-	poke 53370,0:&"{pound}$b{lt. red}Off":&,52,$35,.:tm=.:return
+' 11/15/2026: the speed is set with im 128 and 130, which every module uses
+	gosub 128:&"{pound}$b{lt. red}Off":tm=.:return
 {:60022}
-	poke 53371,0:&"{pound}$b{green}On":&,52,$35,1:tm=1:return
+	gosub 130:&"{pound}$b{green}On":tm=1:return
 	rem sub.turbo (c)nissa 2020-03-06 lh 2026-10-15 rs

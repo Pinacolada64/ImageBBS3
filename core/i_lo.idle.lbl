@@ -138,8 +138,8 @@
 4462 &,40:goto 4204
 4464 mm=6:gosub 3000:goto 4204
 4465 on xgosub,4420,4430,4400:goto 4204
-4480 &,52,$34,3:on-(a%=.) goto 4482:poke 53371,0:&,52,$35,1:goto 4482
-4481 &,52,$34,3:on-(a%=.) goto 4482:poke 53370,0:&,52,$35,0
+4480 goto 130:rem SuperCPU turbo on (im 130); i.lo calls this line too
+4481 goto 128:rem SuperCPU 1 MHz (im 128)
 4482 return
 4484 gosub 33:x=40:gosub 1:&,2,2:n=val(a$):close 2:return
 4486 gosub 33:x=40:gosub 1:print# 2,n:close 2:df%=n:poke 646,df%:&,16:return
