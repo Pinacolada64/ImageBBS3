@@ -20,7 +20,9 @@
 ' colon. At the end of the file, &,2,2 gives "^" and sets st to 64
 4006 a$=z$+",s,r":gosub4:&,2,2
 4008 &,2,2:nn$=a$:&,2,2:nx$=a$:&,2,2:da$=a$
-4010 an$=nn$:&"{clear}{pound}cm{pound}vz {pound}co{pound}r1 From: {pound}r0  {pound}cn{pound}v7"
+' 11/15/2026: reset the More? line count (usrlin, 970) before each comment's
+' first separator line, so a comment starts counting from the top
+4010 poke970,.:an$=nn$:&"{clear}{pound}cm{pound}vz {pound}co{pound}r1 From: {pound}r0  {pound}cn{pound}v7"
 4012 an$=nx$:&"  {pound}co[ {pound}c1#{pound}v7{pound}co]":an$=da$:&"{f6} {pound}r1 Date: {pound}r0  {pound}co{$04}"+an$
 4014 &"{f6}{pound}cm{pound}vz{pound}n1{pound}c7":an$=""
 4016 &,2,2:ifa$<>"{^}"andrc=0then:&a$:&"{f6}":goto4016
