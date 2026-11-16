@@ -225,6 +225,14 @@
 	p2$="sub."+a$:dr=5:gosub {:2}:im$=a$:cm$=p2$:gosub {:9}:a$=dr$+cm$:load a$,dv%
 {:112}
 	return
+' 11/15/2026: SuperCPU speed, for every module (was copied into i.t, i.UD, i.UX,
+' i/lo.idle and sub.turbo). If lightbar checkmark $34 (SuperCPU present) is set,
+' 128 slows it to 1 MHz (for file transfers and the modem) and clears checkmark
+' $35 (turbo on); 130 turns turbo on again and sets $35. Uses a%.
+{:128}
+	&,52,$34,3:on -(a%=.) goto {:999}:poke 53370,.:&,52,$35,.:return
+{:130}
+	&,52,$34,3:on -(a%=.) goto {:999}:poke 53371,.:&,52,$35,1:return
 {:200}
 	on tr%+1 goto {:240}:&,52,17,lf:&,52,20,em:poke 951,ll%:poke 971,mp%:poke 970,.
 {:202}
