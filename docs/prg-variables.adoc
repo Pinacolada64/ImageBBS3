@@ -521,7 +521,8 @@ Modules also use it as a "`done`" flag.
 | `lc`
 | BBS
 | icon:times-circle[role=red]
-| Current menu level, for `sub.menus`: `1` main, `2` sub-boards, `6` e-mail, `7` General Files, `0` waiting for a call.
+| Current menu level, for `sub.menus`: `1` main, `2` sub-boards, `5` upload/download, `6` e-mail, `7` General Files and `i.NF`, `9` `i.UX`, `0` none (waiting for a call).
+See <<prg-im-routines.adoc#line-250,line 250>>.
 
 | `le`
 | User

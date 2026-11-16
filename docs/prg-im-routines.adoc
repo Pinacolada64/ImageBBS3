@@ -824,23 +824,40 @@ Anything else sets `rs=0`: not an `im` command.
 
 | [[line-250,Show the menu]]goto&#160;250
 |
-| Displays local/level `lc` menu (`sub.menus` with `im=1`).
+| Shows the menu for the current level, `lc` (`sub.menus` with `im=1`), when kbd:[?] or kbd:[Return] alone is typed at a prompt.
 
-.Menu numbers
+`sub.menus` shows menu number `lc`: the access-aware menu `e.menu` _n_ on the Etcetera drive if there is one, which lists only what the caller can use, or else the screen `s.menu` _n_ on the System drive.
+Then, unless the caller is at the main prompt (`lc=1`) or stopped the output, it shows the main menu (menu 1) as well.
+(`im=2` shows only menu `lc`; `im=3` shows the `e.menu` file named in `b$`.)
+
+The modules set `lc` as follows (`i.NF`, `i.UD`, `i.UX` and `i.VB` are on the release disk, but not in this repository):
+
+.Menu levels
+[%autowidth]
+[%header]
+!===
+! `lc` ! Menu ! Set by
+! `0` ! none ! `i/lo.idle` (waiting for a call); `i.VB`, which shows its own menu
+! `1` ! Image BBS Sub-Systems (the main menu) ! `i.main`
+! `2` ! Message Commands ! `i.SB`
+! `5` ! Upload/Download Commands ! `i.UD`
+! `6` ! Electronic Mail Commands ! `i.EM`
+! `7` ! Directory System Commands ! `i.GF`, `i.NF`
+! `9` ! Exchange Up/Download Commands ! `i.UX`
+!===
+
+Other `s.menu` files are shown by the modules that use them, not through `lc`:
 
 [%autowidth]
 [%header]
 !===
-! `lc` ! Menu ! Accessed Via
-!  `1` ! Main menu ! kbd:[?]
-!  `2` ! Message Base Menu ! kbd:[SB]
-!  `3` ! Editor Menu/Help ! kbd:[.?] or kbd:[.H]
-!  `4` ! Local Mode Menu ! kbd:[??]
-!  `5` ! File Transfer Menu ! kbd:[UD]
-!  `6` ! E-mail Menu ! kbd:[EM]
-!  `7` ! General Files Menu ! kbd:[GF]
-!  `8` ! End of Bulletin Menu ! kbd:[SB]
-!  `9` ! Disk Transfer Menu ! kbd:[UX]
+! Menu ! Title ! Shown by
+! `s.menu 3` ! Image Text Editor Commands ! `sub.editor` (kbd:[.?]), `i.NW`
+! `s.menu 4` ! Main-Level Local Commands ! `sub.local` (kbd:[??], line 550)
+! `s.menu 8` ! End-of-message Commands ! `i.SB`
+! `s.menu 10` ! Which day ! `i/lo.misc`
+! `s.menu 12` ! Log-In Commands ! nothing in 3.0 (`i/lo.login` draws its own "`Login Options Menu`")
+! `s.menu t1`-`t3` ! Image Term ! `i.t`
 !===
 
 &#13;
