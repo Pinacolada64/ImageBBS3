@@ -4,6 +4,7 @@
 #   tools/detok.sh "<C64 filename>" <out.lbl>   take the file from the release disk
 #   tools/detok.sh <file.prg> <out.lbl>          or from a .prg file
 #   tools/detok.sh --keep-spaces ...             keep the original's spacing
+#   tools/detok.sh --assign 68,814 ...           jumps to lines that exist nowhere
 #
 #   e.g. tools/detok.sh "i/MM.load" core/i_MM.load.lbl
 #
@@ -18,6 +19,12 @@
 # example "poke 53252,50"), which -crunch would remove: the listing is left
 # spaced as the original is, without -autospace or {crunch:on}, so it rebuilds
 # identically.
+#
+# --assign N,N,... is for a program that jumps to lines that are neither in it
+# nor in im (dead code left from an older version, for example): C64List
+# can't find them, and writes "goto [68]" as text. The listing gets an
+# {assign:N=N} for each, with a comment, so they build as the original's
+# numbers. (A line of im belongs in 3_0-preface.lbl instead.)
 #
 # Shifted PETSCII capitals ($c1-$da) in rem text are copied by C64List as raw
 # bytes, which editors can't show; they're converted to ASCII A-Z. C64List
@@ -41,9 +48,16 @@ RELEASE_ZIP=${RELEASE_ZIP:-$HOME/Documents/c64/image30-231231.zip}
 RELEASE_D81=${RELEASE_D81:-MASTER D1 231231.d81}
 
 keep_spaces=0
-[ "${1:-}" = --keep-spaces ] && { keep_spaces=1; shift; }
-if [ $# -ne 2 ]; then
-	echo "usage: $0 [--keep-spaces] \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
+assigns=
+while [ $# -gt 0 ]; do
+	case "$1" in
+	--keep-spaces) keep_spaces=1; shift;;
+	--assign) assigns=${2:-}; shift 2 || true;;
+	*) break;;
+	esac
+done
+if [ $# -ne 2 ] || ! [[ "$assigns" =~ ^([0-9]+(,[0-9]+)*)?$ ]]; then
+	echo "usage: $0 [--keep-spaces] [--assign N,N,...] \"<C64 filename>\"|<file.prg> <out.lbl>" >&2
 	exit 2
 fi
 src=$1
@@ -117,6 +131,10 @@ c64list orig.prg -txt:orig.txt "${detok_opts[@]}" > "$tmp/detok.log" 2>&1 \
 		"{uses:3_0-preface.lbl}" \
 		"{alpha:alt}"
 	[ -n "$crunch_line" ] && printf '%s\r\n' "$crunch_line"
+	if [ -n "$assigns" ]; then
+		printf '%s\r\n' "' jumps to lines that are neither here nor in im; kept as the original's numbers:"
+		for n in ${assigns//,/ }; do printf '{assign:%s\t=%s\t}\r\n' "$n" "$n"; done
+	fi
 	printf '\r\n'
 	sed -E 's/\[([0-9]+)\]/\1/g' "$tmp/orig.txt" | tidy_listing
 } > "$tmp/new.lbl"

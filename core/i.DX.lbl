@@ -1,0 +1,130 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.DX" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+' jumps to lines that are neither here nor in im; kept as the original's numbers:
+{assign:68	=68	}
+{assign:814	=814	}
+
+3000 bh$="Direct System":a=1:im=5:gosub430
+3002 dr=5:gosub2:d1%=dv%:d2%=val(dr$)
+3004 goto3028
+3006 f$="":a$="Seq":b$="s":poke53252,16:&"  FileName:{pound}i0":ifan$=""thenreturn
+3008 f$=an$:&"  FileType:{pound}g1":ifan$<>"S"thenan$="P":a$="Prg":b$="p"
+3010 &"{pound}$a{f6}":f$=f$+","+b$:return
+3012 a$="a":b$="dirlog":gosub36:ife%thena$="w":b$="dirlog":gosub36
+3013 print#2,"{lt. green}{pound}o{$c0}{pound}o{$c0}{white}":hl$=d1$:&,15
+3014 print#2,na$r$idr$"{$04}"hl$r$"Acs"ac%;r$ph$r$rn$r$co$(co%)r$bh$
+3016 tt$=f$+" Was "+hr$+"ed,"+r$+ad$+" Device"+str$(d1%)+" Drive"+str$(d2%)
+3018 print#2,tt$:close2:return
+3020 close15:open15,d1%,15:close15:s=st:open15,d1%,15
+3022 ifsthen:&"Device Not Present"
+3024 return
+3026 &"{f6:2}Press a key...{pound}g1{f6}"
+3028 onzzgoto3032
+3030 goto3132
+3032 a%=d1%:b%=d2%:a$=d4$:&"{clear}{f6:2} Direct Access 3.0{f6:2}"
+3034 &"1. Download{f6}2. Proto:{pound}$a{f6}"
+3036 ifzzthen:&"3. Upload{f6}4. Device/Drive:{pound}%a,{pound}%b{f6}5. DOS Commands{f6}6. Read File{f6}"
+3038 ifzzthen:&"7. Directory{f6}"
+3040 &"0. Quit{f6}> {pound}g1":a=val(an$)
+3042 ifathen:&"{pound}v7{f6}":onagosub3074,514,3066,3046,3058,3082,3092:goto3026
+3044 &"  Quit{f6:2}":goto300
+3046 a%=d1%:&"{f6:2}Device#  : {pound}%a{f6}New #?   : {pound}i1{f6}":a=val(an$)
+3048 ifa>0anda<7thendr=a:gosub2:d1%=dv%:d2%=val(dr$):return
+3050 ifa>=8anda<=29thend1%=a
+3052 a%=d2%:&"Drive#   : {pound}%a{f6}New #?   : {pound}i1":a=val(an$)
+3054 ifan$<>""anda>=.anda<=254thend2%=val(an$)
+3056 return
+3058 gosub3020:ifsthenreturn
+3060 &"{f6:2} Dos: {pound}i0":gosub290:ifan$>""thenprint#15,an$
+3062 gosub5
+3064 &:return
+3066 gosub3020:ifsthenreturn
+3068 &" Upload A File{f6}":hr$="Upload":ad$="To":gosub3006:iff$=""thenreturn
+3070 dr=0:a$=f$+",w":gosub4:ife%then:&:&"{f6:2}":close2:return
+3072 &"{clear}Upload Now!{f6:16}":an$=f$
+3073 gosub3196:x=2:gosub3200:&,16,1:close2:&"{pound}w1":gosub3192:im=1:gosub443:gosub3012:return
+3074 gosub3020:ifsthenreturn
+3076 &" Download A File{f6}":hr$="Download":ad$="From":gosub3006:iff$=""thenreturn
+3078 dr=0:a$=f$+",r":gosub4:ife%then:&:&"{f6:2}":close2:return
+3080 &"{clear}Download of ":&f$:&"{f6}Begins in 20 Seconds!{f6:15}":gosub3196
+3081 x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":gosub3192:im=1:gosub443:gosub3012:return
+3082 gosub3020:ifsthenreturn
+3084 &" Read A File{f6}":gosub3006:iff$=""thenreturn
+3085 ifb$="p"then3202
+3086 dr=0:a$=f$+",r":gosub4:ife%then:&:&"{f6:2}":close2:return
+3088 &,3,2:ifrc=0andst=0then3088
+3090 close2:return
+3092 gosub3020:ifsthenreturn
+3094 &" Pattern: {pound}i0":ifan$=""thenan$="*"
+3096 close2:gosub290:open2,d1%,0,"$"+str$(d2%)+":"+an$:&,8,2:close2:return
+' 3098-3100 (Multi-Download) aren't reached: nothing goes to them. 3100 calls the
+' protocol the old way (sys 49161) and jumps to im lines 68 and 814, which 3.0's
+' im (and 2.0's) doesn't have
+3098 fl=1:&"{clear}{f6:6}Multi-Download: Waiting For Start...{f6}":a%=100
+3100 dv%=d1%:dr$=chr$(48+d2%)+":":gosub68:sys49161:goto814
+3102 &"{clear}":gosub38
+3104 poke53252,40:b$=an$
+3106 open2,d1%,0,"$"+chr$(d2%+48)+":"+an$:a%=.:get#2,a$,a$:&,8,2,1:lp=1
+3108 &,8,2,1:a$=left$(a$,28):b$=a$:ifstthen3128
+3110 ifmid$(a$,26,1)<>"p"andmid$(a$,26,1)<>"s"thenlp=1:&:goto3108
+3112 &:&"{pound}{back arrow}30Y/N/S/A:{pound}g1{pound}h9"
+3114 fori=26to8step-1:ifmid$(b$,i,1)<>chr$(34)thennext
+3116 f$=mid$(b$,8,i-8)+","+mid$(b$,26,1)
+3118 ifan$="A"then:&" Abort{f6}":close2:goto3064
+3120 if(an$="S")then:&" Start{f6}":goto3128
+3122 if(an$="Y")then:&" Yes{f6}":a%=a%+1:tt$(a%)=f$:goto3108
+3124 if(an$="N")then:&" No{f6}":goto3108
+3126 goto3110
+3128 close2:ifa%=.then:&"{f6}No Files Selected.{f6}{pound}w2":return
+3130 dv%=d1%:dr$=chr$(48+d2%)+":":gosub68:sys49158:goto814
+3132 rem ** non-zz access
+3134 a%=d1%:b%=d2%:a$=d4$:&"{clear}{f6:2} Direct Access 3.0{f6:2}"
+3136 &"1. Download{f6}2. Proto:{pound}$a{f6}"
+3138 &"0. Quit{f6}> {pound}g1":a=val(an$)
+3140 ifathen:&"{pound}v7{f6}":onagosub3144,514:goto3026
+3142 &"  Quit{f6:2}":goto300
+3144 rem ** download with password
+3146 x=0
+3148 dr=3:a$="e.direct":gosub4
+3150 x=x+1:ifx>20then3178
+3152 gosub1:input#2,hd$:ifhd$="empty"then3150
+3154 ifhd$<>na$then3150
+3156 bh=x:input#2,pd$,fd$,ft$,vd$,rd$,df$:ifdf$<>"0"then3150
+3158 close2:d1%=val(vd$):gosub3020:ifsthenreturn
+3160 f$=fd$:b$=ft$:fd$=f$:f$=f$+","+b$
+3162 &"{f6} Download "+f$+"{f6:2} Enter Password: ":&,6:ifan$=""then3180
+3164 ifan$=pd$then3168
+3166 &"{f6:2} Password Rejected!{pound}w2":goto300
+3168 dr=0:a$=f$+",r":d2%=val(rd$):gosub4
+3170 ife%then:&"{f6:2} Error Finding File!":close2:return
+3172 &"{clear}Download of ":&fd$:&"{f6}Begins in 20 Seconds!{f6:15}"
+3173 gosub3196:x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":gosub3192:im=1:gosub443
+3174 dr=3:a$="e.direct":gosub4:x=bh:gosub1:input#2,hd$,pd$,fd$,ft$,vd$,rd$
+3176 w$=hd$+r$+pd$+r$+fd$+r$+ft$+r$+vd$+r$+rd$+r$+"1"+r$:gosub1:print#2,w$
+3178 close2:goto3182
+3180 x=bh:goto3148
+3182 a$="a":b$="dx log":gosub36:ife%thena$="w":gosub36
+3184 hr$=d1$:&,15
+3186 print#2,"{lt. green}{pound}o{$c0}{pound}o{$c0}{white}"
+3188 print#2,na$+"{cyan} Downloaded "+fd$+"{f6}On {white}{$04}"+hr$
+3190 close2:return
+3192 &,52,$34,3:on-(a%=.)goto3194:&,52,$35,1:poke53371,0:rem on
+3194 return
+3196 &,52,$34,3:on-(a%=.)goto3198:&,52,$35,.:poke53370,0:rem off
+3198 return
+3200 an$=f$:im=5:goto443
+3202 a$="read":gosub28:ife%then3210
+3203 gosub349:gosub350
+3204 a$=f$+","+b$+",r"
+3206 gosub4:&"{clear}":&,16,0,ll%:close2:close15
+3210 a=1:im=5:gosub430:return
+3292 rem "REL file non zz access"
+3294 rem "(C) NISSA 7/21/91 Dr Moffett"
+3296 rem "copr. New Image 1990"
+3299 rem:"i.DX (c)nissa 210307 lh"
