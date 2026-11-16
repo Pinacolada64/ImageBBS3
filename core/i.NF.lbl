@@ -1,0 +1,73 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.NF" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 goto3026
+3002 dr=4:a$="d.n.Main,s,"+a$:goto4
+3004 an$=mid$(an$,2)
+3006 rn=int(val(an$)):d=-(rn<1orrn>br):return
+3008 tt$="n."+left$(ed$(c),14):return
+3010 p$=b$:w$=an$:pl=.:&,1,32:return
+3012 &"{f6:2}{pound}$bFiling:{f6}{f5}{pound}v7{f5}{f6}":return
+3014 dr=1:a$=tt$+",s,"+a$:goto4
+3016 a$="d.n.Main":dr=4:gosub19:ifbr=.thenreturn
+3018 a$="w":gosub3002:print#2,br
+3020 forx=1tobr:print#2,ed$(x)r$nn$(x)r$c%(x):next:close2:goto62
+3022 a$=tt$:dr=1:goto19
+3024 b=.:fori=.to9:a%=i:&"Group #{pound}%a?: ":gosub96:b=b+2^i*a:next:a=b:return
+3026 q=.:&"{clear}{f6}{purple}News Subsystem:{f6}":a=13:gosub11:b=a:a=8:gosub11:&,52,5,3:c=a%
+3027 ifaandbandcthenq=1
+3028 m$=left$("-Maint",q*6)+""
+3030 br=.:t=.:a$="r":gosub3002:onsgn(e%)goto3040:input#2,br
+3032 onbr+1goto3040:forx=1tobr:input#2,ed$(x),nn$(x),d%(x):onqgoto3036
+3034 d%(x)=d%(x)*-((d%(x)and2^ac%)<>.)
+3036 ifd%(x)thent=t+1:ed$(t)=ed$(x):nn$(t)=nn$(x):c%(t)=d%(x)
+3038 next:br=t
+3040 close2
+3042 ifbr=.then:&"{f6}Currently No System News Files.{f6}":goto3058
+3044 v=int(val(mid$(an$,2))):ifv<1orv>brthenv=1
+3046 sh=.:forx=vtobr:b$=ed$(x):onqgoto3050
+3048 a$=left$(b$,1):ifa$="{f7}"ora$="$"thenb$=mid$(b$,2)
+3050 a%=x:&"{f6:2}{white}#{pound}# {pound}#2{pound}%a Subj: {pound}$b{f6}{cyan}    Date: {$04}"+nn$(x)
+3052 ifqthens=rc:a%=c%(x):&"{f6}{yellow}    Accs: {pound}%a"
+3054 ifs+rcthensh=.:x=br
+3056 next:a%=4
+3058 lc=7:p$="{f6:2}News"+m$:im=6:gosub429:ontr%+1goto300
+3060 gosub220:onf4goto216:onrsgoto3058:gosub3006:on-(d=.)goto3066
+3062 onq+1goto3064:on-(a$="A")-(a$="K")*2-(a$="E")*3goto3068,3112,3086
+3064 x=3:on-(a$="L")-(a$="Q")*2-(a$="{f2}")*3-(a$="O")*4goto3042,300,3120,234:goto3058
+3066 c=rn:gosub3008:a$=tt$:dr=1:gosub13:goto3058
+3068 dr=1:gosub61:ifa<35thenx=2:gosub390:goto3058
+3070 &"{f6}":b$="Title ":an$="":pl=.:gosub3010:le=len(p$):ifan$=""then3058
+3072 br=br+1:ed$(br)=an$:c=br:gosub3008:nn$(br)=d1$
+3074 b$="Access":an$="":pl=1:gosub3010:a=val(an$):iftr%<1then300
+3076 on-(an$="{f2}")gosub3024:ifa=.thena=1023
+3078 on-(a>1023)goto3074:c%(br)=a:gosub542:ifkk=.thenbr=br-1:goto3058
+3080 an$=ed$(br):b$="":gosub3012:a$="w":gosub3014
+3082 fori=1tokk-1:print#2,tt$(i):&".":next:print#2,"{^}":close2:&,11,.:gosub62
+3084 gosub3016:goto3058
+3086 gosub3004:ondgoto3058:b$=ed$(rn):&"{f6}Loading {f5}{pound}$b{f5}..."
+3088 c=rn:gosub3008:a$="r":gosub3014:kk=1
+3090 &,2,2:ifa$<>"{^}"andkk<101thentt$(kk)=a$:kk=kk+1:goto3090
+3092 close2:&"{f6:2}(RETURN To Keep Original Values){f6:2}"
+3094 b$="Title ":an$=ed$(rn):pl=.:gosub3010:ifan$<>""thened$(rn)=an$
+3096 &"{f6}":an$=mid$(str$(c%(rn)),2)
+3098 b$="Access":pl=1:gosub3010:a=val(an$):iftr%<1then300
+3100 on-(an$="{f2}")gosub3024:ifa=.then3104
+3102 on-(a>1023)goto3096:c%(rn)=a
+3104 im=2:gosub440:ifkk=.then3058
+3106 &"{f6:2}Up-Date Date Of News?: ":gosub96:ifathennn$(rn)=d1$
+3108 an$=ed$(rn):b$="Re-":gosub3012:gosub3022
+3110 a$="n."+left$(an$,14)+",s,w":dr=1:gosub4:goto3082
+3112 gosub3004:ondgoto3058:c=rn:gosub3008:an$=mid$(tt$,3)
+3114 &"{f6}Removing {f5}{pound}v7{f5} News...{f6:2}":gosub3022
+3116 forx=rntobr:ed$(x)=ed$(x+1):nn$(x)=nn$(x+1):c%(x)=c%(x+1):next
+3118 br=br-1:gosub3016:goto3058
+3120 gosub250:goto3058
+3122 copr.1989 new image 3/24/89
+3200 rem:"i.NF (c)nissa 210307 lh"

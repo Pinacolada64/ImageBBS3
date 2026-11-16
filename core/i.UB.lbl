@@ -1,0 +1,32 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.UB" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 &"{f6}{cyan} {$c0:15}{f6} {rvrs on}{purple} User Bio v2.0 {f6}{cyan} {$c0:15}{f6}":a=8:gosub11:q=a
+3002 gosub3008:one%+1goto3010:ifq=.then:&"{f6}Sorry, No Biographies Available Today.{f6}":goto3042
+3004 &"{f6}Creating {f5}u.biographies{f5} Now...":dr=6:a$="u.biographies,l,"+chr$(125):gosub4
+3006 x=ur:gosub1:print#2,"{^}":close2:&"!{f6}":goto3010
+3008 dr=6:a$="u.biographies":goto4
+3010 i=.:x=.:a=.:poke53252,20:&"{f6}{cyan}Enter The Handle Or{f1} User{f6}ID# Of User To View{f6}: {white}{pound}i1"
+3012 on-(tr%<1oran$=""oran$=r$)goto3042:a=abs(val(an$)):ifathen3016
+3014 gosub505:a=i:ifathenn$=an$:i=1:goto3018
+3016 ifa<1ora>urthen:&"{f6}{white}Invalid User Account!{f6}":goto3010
+3018 gosub35:x=a:gosub1:&,2,2:onigoto3020:n$=a$:ifa$="{^}"ora$="RES"thena=.:goto3016
+3020 input#2,a$,f$,l$:close2:gosub3008:x=a:gosub1:&,2,2
+3022 ifn$<>a$thenan$=n$:&,15,1:lp=1:&"{f6}{cyan}There Is No Biography Available For {pound}v7.{f6}":goto3010
+3024 input#2,b$,c$,d$:close2
+3026 a%=a:an$=n$:&,15,1:&"{f6} {pound}vn{pound}#0{pound}%a - {cyan}{pound}v7":ifqthenan$=f$+" "+l$:&,15,1:&"{f6}{cyan} Real Name: {white}{pound}v7"
+3028 an$=b$:&,15,1:&"{f6} {gray3}From:{lt. green} {pound}v7{f1} {pound}$c{f6} {purple}Biography:{cyan}{f6:2} {pound}$d{f6}":ifq=.ora<>idthen3010
+3030 i=a:&"{f6}{yellow}Edit This Bio?:{white} ":gosub94:ona+1goto3010
+3032 &"{f6}":tf=.:gosub3008:x=a%:gosub1:input#2,aa$,b$,c$,d$:close2
+3034 poke53252,20:pl=1:w$=b$:p$="City":&,1,32:ifan$<>w$oran$<>""thenb$=an$:tf=1
+3036 &"{f6}":poke53252,2:pl=1:w$=c$:p$="State":&,1,32:ifan$<>w$oran$<>""thenc$=an$:tf=.
+3038 &"{f6}":poke53252,79:pl=.:w$=d$:p$="Bio":&,1,32:ifan$<>w$oran$<>""thend$=an$:tf=1
+3040 ontf+1goto3010:gosub3008:x=i:gosub1:tt$=aa$+r$+b$+r$+c$+r$+d$:print#2,tt$:close2:goto3010
+3042 goto300
+3044 copr. 1994 new image 9/14/94

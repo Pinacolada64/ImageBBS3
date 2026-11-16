@@ -1,0 +1,44 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.RS" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 gosub3058:a%=ur+1:&"{f6:2}{pound}r1 Add RES Account:{f6:2}Start From What Account Number?"
+3002 &"{f6}({f5}E{f5} Will Put Account{f6}On End Of User File.){f6:2}RES: {pound}i1"
+3004 c=int(val(an$)):on-(tr%<1oran$="Q"oran$="")goto3052
+3006 ifan$="E"thenlh=1:c=a%:l=l1:ifl1>urthenl=c+1
+3008 ifc<2orc>ur+1then:&"{f6}Invalid Account Number.":goto3000
+3010 kk=.:sh=.:gosub35:forx=ctour:gosub1:&,2,2:ifa$<>"{^}"then3016
+3012 a%=x:&"{f6}Account {pound}%a Is Open. Use?: ":gosub94
+3014 ifathenkk=1:on-(a%=l1)gosub3046:x=ur:goto3018
+3016 &".":ifx=rcthenx=ur:next:goto3052
+3018 next:ifkkthenx=a%:goto3022
+3020 x=ur+6:gosub1:print#2,0:ur=ur+1:x=ur:l=ur+1
+3022 fori=1to23:tt$(i)="0":next
+3024 tt$(1)="RES":&"{f6}Password?: {pound}i1":ifan$=""thenan$="PASS"
+3026 tt$(2)=an$
+3028 &"{f6}Access?: {pound}g1{pound}v7{f6}":a$=an$:iftr%<1thenur=ur+(kk=.):goto3052
+3030 b=val(an$):ifan$<"0"oran$>"9"thenb=.
+3032 tt$(7)=str$(b)
+3034 &"Credits? : {pound}i1":a=val(an$)
+3036 tt$(19)=str$(a):gosub3056
+3038 f$="":fori=1to23:f$=f$+tt$(i)+r$:next:gosub35:x=a%
+3040 gosub1:print#2,f$:close2:a%=x:gosub33
+3041 iflh=1thenur=ur
+3042 x=12:gosub1:print#2,ur+1:x=31:gosub1:print#2,l:l1=l:close2
+3044 &"{f6:2}Account {pound}vn{pound}%a Has Been Reserved.{f6}":x%=id:id=a%
+3045 im=8:gosub445:id=x%:goto3054
+3046 l=ur+1:forx=a%+1tour:ifx/3=int(x/3)then:&"."
+3048 gosub1:&,2,2:ifa$="{^}"thenl=x:x=ur
+3050 next:return
+3052 gosub3060
+3054 close2:goto300
+3056 gosub31:x=b+1:gosub1:&,2,2:&,2,2:tt$(23)=a$:close2:return
+3058 gosub33:x=31:gosub1:&,2,2:l1=val(a$):rc=l1:close2:lh=.:return
+3060 &"{f6} Aborted!{f6}":return
+3062 copr.1988 new image
+3099 rem:"i.RS (c)nissa 210307 lh"

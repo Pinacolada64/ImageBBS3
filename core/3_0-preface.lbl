@@ -84,6 +84,7 @@
 {assign:216	=216	} '
 {assign:220	=220	} '
 {assign:234	=234	} '
+{assign:250	=250	} ' im: show the menu (sub.menus)
 {assign:289	=289	} ' input an$, fall through:
 {assign:290	=290	} ' convert special characters in an$
 {assign:300	=300	} ' im.main_prompt

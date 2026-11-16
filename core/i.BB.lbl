@@ -1,0 +1,171 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.BB" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 rem bbs lister
+3002 a$="s.nubbslist":dr=1:gosub14
+3004 a$="e.nubbslist":dr=3:gosub4:ife%then3008
+3006 gosub3264:goto3010
+3008 &"{f6:2}Creating New BBS{shft space}List File...{f6}":gosub3280:gosub3264
+3010 &"{f6:2}{blue}BBS{shft space}Lister v2.0 By The Instigist{f6:2}     {cyan}Telnet by: {white}X-Tec 3/13/19{f6:2}
+3012 &"{f6}{blue}L {lt. green}- {white}Full Length BBS{shft space}List{f6}{blue}F {lt. green}- {white}Quick BBS List":ifac%>8thengosub3248
+3014 ifac%>1then:&"{f6}{blue}A {lt. green}- {white}Add A Number To List":ifac%>8then:&"{f6}{blue}R {lt. green}- {white}Reset List
+3016 &"{f6}{blue}N {lt. green}- {white}Normal List{f6}{blue}Q {lt. green}- {white}Quit BBS List":ifac%>8then:&"{f6}{blue}K {lt. green}- {white}Kill A BBS"
+3018 on-(tr%<1)goto3278:&"{f6:2}{cyan}BBS Lister -> {pound}i1":ifan$="Q"then3278
+3020 on-(an$="L")-(an$="N")*2-(an$="A"andac%>1)*3-(an$="{f2}"oran$="")*4goto3030,3076,3100,3012
+3022 on-(an$="R"andac%>8)-(an$="K"andac%>8)*2gosub3300,3146
+3024 on-(an$="F")-(an$="E"andac%>8)*2goto3224,3252:goto3018
+3026 &"{f6:2}{cyan}Are You Sure ?{pound}v1{pound}g7":ifan$<>"Y"then3018
+3028 goto3006
+3030 gosub3160:&"{f6}{yellow}Complete BBS List{white}{f6}":a$="e.nubbslist":dr=3:gosub4:x=zp
+3032 gosub1:ifrcthenx=150
+3034 input#2,ze$(1):input#2,ze$(2):input#2,ze$(3):input#2,ze$(4):ifzd>0thengosub3190
+3036 ifrcthenx=150:goto3072
+3038 ifzq>0then3072
+3040 ifze$(1)="{^}"orze$(1)="0"then3072
+3042 input#2,ze$(5):input#2,ze$(6):input#2,ze$(7):input#2,ze$(8)
+3044 input#2,ze$(9):input#2,zf$
+3046 gosub3048:goto3066
+3048 q$=ze$(1):&"{f6:2}{yellow}{rvrs on}BBS{shft space}Name    : {rvrs off}{white}{pound}$q"
+3050 q$=ze$(2):&"{f6}{yellow}{rvrs on}BBS{shft space}Address : {rvrs off}{white}{pound}$q"
+3052 q$=ze$(4):&"{f6}{yellow}{rvrs on}Baud Rate   : {rvrs off}{white}{pound}$q"
+3054 q$=ze$(5):&"{f6}{yellow}{rvrs on}Sysop       : {rvrs off}{white}{pound}$q"
+3056 q$=ze$(6):&"{f6}{yellow}{rvrs on}RPG's       : {rvrs off}{white}{pound}$q"
+3058 q$=ze$(7):&"{f6}{yellow}{rvrs on}Require Fee : {rvrs off}{white}{pound}$q"
+3060 q$=ze$(8):&"{f6}{yellow}{rvrs on}U/D's       : {rvrs off}{white}{pound}$q"
+3062 q$=ze$(9):&"{f6}{yellow}{rvrs on}BBS Program : {rvrs off}{white}{pound}$q"
+3064 q$=zf$:&"{f6}{yellow}{rvrs on}Comments    : {rvrs off}{white}{pound}$q":return
+3066 ifza<1then3072
+3068 &"{f6}{white}More (Y/N): {pound}g1":ifan$<>"N"then:&"Yes":goto3072
+3070 &"No":goto3074
+3072 x=x+1:ifx<150andx<znthen3032
+3074 close2:&"{f6}{white}Listing Complete.{f6}":goto3018
+3076 gosub3160:&"{f6}{yellow}BBS List{white}{f6}":a$="e.nubbslist":dr=3:gosub4:x=zp
+3078 dr=3:gosub1:ifrcthenx=150
+3080 input#2,ze$(1):input#2,ze$(2):input#2,ze$(3):input#2,ze$(4):input#2,ze$(5):input#2,ze$(6)
+3082 input#2,ze$(7):input#2,ze$(8):zd$="":ifzd>0thengosub3190
+3084 on-(zq>0)goto3094:goto3196
+3086 a$=ze$(1):b$=ze$(2):d$="":gosub3302
+3088 c$=ze$(4):&"{f6}{yellow}"+str$(x)+"{green} {pound}$a{f6}{yellow}   {pound}$b{f6}{lt. blue}   {pound}$c {pound}$d":ifza=0then3094
+3090 &"{f6}{white}More (Y/N): {pound}g1":ifan$<>"N"then:&"Yes":goto3094
+3092 &"No":goto3098
+3094 ifrcthenx=150
+3096 x=x+1:ifx<150andx<znthen3078
+3098 close2:&"{f6}{yellow}Listing Complete{white}{f6}":goto3018
+3100 zs=0
+3102 &"{f6:2}{cyan}Add A BBS To Listing{f6}
+3104 poke53252,24:&"{f6}BBS Name   -> {pound}i0":ifan$=""oran$="Q"then3018
+3106 poke53252,40:ze$(1)=an$:&"BBS Address -> {pound}i0":ifan$=""oran$="Q"then3018
+3108 rem:ifleft$(an$,1)="("orlen(an$)>10then:&"‹9 Digits Format Only!‹":goto77
+3110 ze$(2)=an$:zg$=an$:ze$(3)=zg$
+3112 poke53252,6:&"Baud Rate  -> {pound}i1":ifan$=""oran$="Q"then3018:an=val(an$):ze$(4)=an
+3114 an=val(an$):ifan<300oran>38400then:&"{f6}Invalid Baud Rate.{f6}":goto3112
+3116 poke53252,15:ze$(4)=an$:&"Sysop Name -> {pound}i0":on-(an$=""oran$="Q")goto3018
+3118 ze$(5)=an$:&"Program    -> {pound}i0":ifan$=""oran$="Q"then3018
+3120 poke53252,24:ze$(9)=an$:&"Comments   -> {pound}i0":ifan$=""oran$="Q"then3018
+3122 zf$=an$
+3124 &"Does it have RPG's ? {pound}g1":ifan$<>"Y"then:&"No":ze$(6)="No":goto3128
+3126 &"Yes":ze$(6)="Yes"
+3128 &"{f6}Does it have U/D's ? {pound}g1":ifan$<>"N"then:&"Yes":ze$(8)="Yes":goto3132
+3130 &"No":ze$(8)="No"
+3132 &"{f6}Does it Require A Fee ? {pound}g1":ifan$<>"Y"then:&"No":ze$(7)="No":goto3136
+3134 &"Yes":ze$(7)="Yes"
+3136 &"{f6}BBS{shft space}Listing v3.0":gosub3048
+3138 &"{f6}{cyan}Is This Correct (y/N/q)? {pound}g1":ifan$="Q"then:&"Quit":goto3018
+3140 ifan$<>"Y"then:&"No":goto3102
+3142 &"Yes":ifzs<1thengosub3210:goto3018
+3144 x=g3:gosub3204:goto3018
+3146 &"{f6:2}{cyan}Delete{shft space}A Bulletin Board{f6}"
+3148 &"{f6}Wich BBS{shft space}#: {pound}i1":an=val(an$):ifan<1oran>150thenreturn
+3150 a$="e.nubbslist":dr=3:gosub4:x=an:gosub1
+3152 forzh=1to9:input#2,ze$(zh):nextzh:input#2,zf$:gosub3048
+3154 &"{f6}Delete This BBS ? {pound}g1":ifan$<>"Y"then:&"No":return
+3156 x=an:g3=x:gosub1
+3158 &"Yes":print#2,"{^}":c$="":forzh=1to11:c$=c$+"0"+r$:nextzh:print#2,c$:close2:return
+3160 zd=0:za=0:&"{f6:2}{cyan}C) {cyan}Complete List{f6}B) {cyan}Baud Rate{f6}":zp=1:zq=0
+3162 &"{f6}{white}Wild Card -> {pound}i1":ifan$=""oran$="Q"then3010
+3164 ifan$="C"thenzd=0:goto3180
+3166 ifan$="B"then3172
+3168 rem:ifan$="A"then208
+3170 goto3160
+3172 poke53252,7:&"{f6}{cyan}Wich Baud Rate -> {pound}i1":ifan$=""oran$="Q"then3160
+3174 zc$=an$:zd=1:goto3180
+3176 rem:poke53252,4:&"‹ŸWich Area Code -> \i1":ifan$=""oran$="Q"then200
+3178 zd=2
+3180 &"{f6:2}{cyan}Start At beginning Of File ?{pound}g1":ifan$<>"N"then:&" Yes":zp=1:goto3186
+3182 &" No":&"{f6:2}Start at wich #: {pound}i1":zp=val(an$):ifzp<1orzp>150thenzp=1:goto3186
+3184 x=zp
+3186 &"{f6}Pause Between BBS Numbers  ? {pound}g1":ifan$<>"Y"then:&"No":za=0:return
+3188 &"Yes":za=1:return
+3190 ifzd=1andze$(4)=zc$thenzq=0:return
+3192 ifzd=2andze$(2)=zc$thenzq=0:return
+3194 zq=1:return
+3196 ifze$(1)="{^}"orze$(1)="0"then3096
+3198 goto3086
+3200 ifze$(1)="{^}"orze$(1)="0"then3244
+3202 goto3234
+3204 a$="e.nubbslist":dr=3:gosub4:x=g3:gosub1
+3206 c$="":forzw=1to9:c$=c$+ze$(zw)+r$:nextzw:c$=c$+zf$+r$:print#2,c$:close2:zt=0:zn=zn+1
+3208 return
+3210 &"{f6}Checking For Duplicates...{f6}":x=1:a$="e.nubbslist":dr=3:gosub4:&"{f6}"
+3212 &".":gosub1:&,2,2:on-(a$=ze$(1))goto3222:x=x+1:ifx<znthen3212
+3214 &"{f6}No Duplicates...{f6}"
+3216 &"{f6}Updating List...{f6}":x=1
+3218 gosub1:&,2,2:g3=x:on-(a$="{^}"ora$="0")goto3204:x=x+1:on-(x<150)goto3218
+3220 close2:&"{f6}Listing Full...":zt=1:return
+3222 &"{f6}Duplicate Found...{f6}":return
+3224 &"{f6}{yellow}Quick BBS List{white}{f6}":a$="e.nubbslist":dr=3:gosub4:x=1:zd=0:za=0:zq=0
+3226 dr=3:gosub1:ifrcthenx=150
+3228 input#2,ze$(1):input#2,ze$(2)
+3230 ifzd>0thengosub3190
+3232 on-(zq>0)goto3242:goto3200
+3234 a$=ze$(1):b$=ze$(2)
+3236 &"{f6}{yellow}"+str$(x)+"{green} {pound}$a{f6}":&"{yellow}   {pound}$b":ifza=0then3242
+3238 &"{f6}{white}More (Y/N): {pound}g1":ifan$<>"N"then:&"Yes":goto3242
+3240 &"No":goto3246
+3242 ifrcthenx=150
+3244 x=x+1:ifx<150andx<znthen3226
+3246 close2:&"{f6}{yellow}Listing Complete{white}{f6}":goto3018
+3248 &"{f6}{blue}E {lt. green}- {white}Edit A BBS"
+3250 return
+3252 &"{f6:2}{cyan}Edit A Bulletin Board{f6}"
+3254 &"{f6}Wich BBS{shft space}#: {pound}i1":an=val(an$):ifan<1oran>150thenreturn
+3256 a$="e.nubbslist":dr=3:gosub4:x=an:g3=x:gosub1
+3258 forzh=1to9:input#2,ze$(zh):nextzh:input#2,zf$:gosub3048
+3260 &"{f6}Do You Wish To Edit This BBS? {pound}g1":ifan$<>"Y"then:&"No":goto3018
+3262 &"Yes":zs=1:goto3102
+3264 a$="e.nubbspt":dr=3:gosub4:ife%thengosub3270
+3266 x=1:gosub1:&,2,2:zn=val(a$):ifzn>150thenzn=150:close2:return
+3268 return
+3270 &"{f6}Creating New Pointer File...{f6}"
+3272 a$="e.nubbspt,l,"+chr$(5):dr=3:gosub4:ife%then:&"{f6}Error":return
+3274 zn=2:x=1:gosub1:print#2,"2":close2:&"{f6}Created."
+3276 close2:a$="e.nubbspt":dr=3:gosub4:return
+3278 a$="e.nubbspt":dr=3:gosub4:x=1:gosub1:print#2,str$(zn)+r$:close2:goto3310
+3280 &"{f6}Are You Sure (y/N): {pound}g1":ifan$<>"Y"then:&"No":zy=0:return
+3282 &"Yes":a$="e.nubbslist":dr=3:gosub19:zy=1
+3284 &"{f6}":c$="{^}"+r$:fora=1to11:c$=c$+"0"+r$:nexta
+3286 a$="e.nubbslist,l,"+chr$(250):dr=3:gosub4:ife%then:&"{f6}Error":return
+3288 forx=1to150:gosub1:print#2,c$:&".":next
+3290 x=1:gosub1:c$="The Devil's Playpin"+r$+"213"+r$+"7737235"+r$
+3292 c$=c$+"2400"+r$+"Mene Gene"+r$+"No"+r$+"No"+r$+"Yes"+r$+"Image"+r$
+3294 c$=c$+"40 Meg LTK. Great BBS":print#2,c$:close2
+3296 &"File Created.":return
+3298 iftr%<1then3310
+3300 gosub3280:on-(zy=1)gosub3270:return
+3302 ifze$(7)="Yes"thend$=d$+" FEE"
+3304 ifze$(8)="Yes"thend$=d$+"{shft space}U/D"
+3306 ifze$(6)="Yes"thend$=d$+" RPG"
+3308 return
+3310 close2:close15:goto300
+3312 rem bbs lister v2(from scratch)
+3314 rem written by the instigist
+3316 rem dpbbs: 213-773-7235 2400
+3318 rem telnet mods 7-30-15 by x-tec
+3320 rem ver 2.0 mod 6-25-16 by x-tec
+3322 rem"i.BB (c)nissa 190313 lh"

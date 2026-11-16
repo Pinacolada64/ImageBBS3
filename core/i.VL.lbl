@@ -1,0 +1,37 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.VL" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 rem:"Display Image 3.0 Variables List"
+3001 h$="Usually contains the 'nm.wall header' but crashes with string too long"
+3002 &,18,0:gosub3004:poke53248,0:&,18,1:goto300
+3004 &"{clear}{f6} Variable List 3.0{f6:2}":x=peek(45)+peek(46)*256:y=x:kk=.
+3006 &" Simple Variables:{f6}":sh=.
+3008 a$=chr$(peek(x)and127):if(peek(x+1)and127)thena$=a$+chr$(peek(x+1)and127)
+3010 t=.:ifpeek(x)>127andpeek(x+1)>127thena$=a$+"%":t=1
+3012 ifpeek(x)<128andpeek(x+1)>127thena$=a$+"$":t=2
+3014 &left$(a$+"   ",4)+"="
+3016 ift=.thengosub3046
+3018 ift=1thena=peek(x+3)+peek(x+2)*256:a=a+65536*(a>32767):&str$(a)
+3020 ift=2thenpokey+2,peek(x+2):pokey+3,peek(x+3):pokey+4,peek(x+4):gosub3058
+3022 ift=3then:&" ?"
+3024 ifrcthen3028
+3026 &"{f6}":x=x+7:ifx<(peek(47)+peek(48)*256)then3008
+3028 &"{f6}<Hit Any Key> {pound}g1{clear}{f6}":return
+3046 ifpeek(x)=65andpeek(x+1)=.then3056
+3048 ifpeek(x+2)=.thena=.:goto3056
+3050 a=(128+(peek(x+3)and127))*256^3+peek(x+4)*65536+peek(x+5)*256+peek(x+6)
+3052 a=a/256^4*2:ifpeek(x+3)>127thena=-a
+3054 a=a*val(str$(2^((peek(x+2)and127)-1)))
+3056 &str$(a):return
+3058 b$="":ifa$=""then3066
+3060 fora=1tolen(a$):an$=mid$(a$,a,1):b=asc(an$):ifan$="{pound}"thenan$="{pound:2}"
+3062 ifb<32or(b>127andb<160)thenan$="{pound}r1"+chr$(b+64)+"{pound}r0"
+3064 b$=b$+an$:next
+3066 &"{f5}":&b$:&"{f5}":return
+3099 rem:"i.VL (c)nissa 201016 lh"

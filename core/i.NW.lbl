@@ -1,0 +1,99 @@
+' imported from the release disk (MASTER D1 231231.d81), "i.NW" with:
+'   tools/detok.sh (C64List4_04.exe -txt -keycase -varcase -alpha:alt)
+' line numbers are kept as they were; jumps to lines in im (gosub 3, goto 5, ...)
+' resolve through 3_0-preface.lbl. unchanged, this builds a program identical
+' to the original, except that capitals in rem text are $61-$7a, not $c1-$da.
+
+{uses:3_0-preface.lbl}
+{alpha:alt}
+
+3000 gosub3004:goto300
+3002 rem "i.NW  03-07-2019"
+3004 &"{f6}{lt. blue}View {lt. green}Netwall? ":gosub94:ifa=.thenreturn
+3006 &,5:v=lp:onzzgoto3062
+3008 dr=2:a$="nm.config":gosub4:ife%thennn=0:goto3022
+3010 input#2,nn,a%:q=sgn(a%and2^ac%):ifnn<1then3036
+3012 x=4:gosub1:&,2,2:kk$="In "+a$:&,2,2:kk$=kk$+"{f1} "+a$:close2
+3014 dr=2:a$="nm.wall header,s,r":gosub4:h$="":ife%then3018
+3016 &,2,2:iflen(a$)+len(h$)<254thenh$=h$+a$+r$:on-(st=0)goto3016
+3018 dr=2:a$="nm.nodes":gosub4:onsgn(e%)goto3036:&,2,2:a=val(a$):ifnn>athen3036
+3020 x=nn+1:gosub1:&,2,2:nn$=a$:&,2,2:&,2,2:bb$=a$:close2
+3022 gosub90:lp=1:&"{clear}{f6}{blue}{pound}vj{pound}$q{pound}{back arrow}09 {cyan}Network Graffiti V3.0{pound}{back arrow}39 {blue}{pound}vj{pound}q0{f6:2}":goto3038
+3024 poke2024,255:&,3,2:return
+3026 ifh$<>""thenprint#2,h$:print#2,"{lt. blue}By{white} "na$"{blue} @ {white}"nn$:goto3030
+3028 print#2,"{lt. blue}By{white} "na$"{blue} @ {white}"nn$:ifnnthenprint#2,"{lt. blue}At {white}"bb$r$kk$
+3030 print#2,"{pound}q0":fori=1tokk-1:print#2,tt$(i):next:print#2,"{^}":close2:return
+3032 dr=2:a$=o$+",s,w":gosub4:ife%thena$=o$+",s,a":gosub4
+3034 return
+3036 close2:return
+3038 dr=2:a$="nm.wall,s,r":gosub4:ife%then:&"{f6}{pound}vjIt's Empty!{f6}":goto3048
+3040 &"{lt. blue}Scanning For {lt. green}New Messages{yellow}...{pound}q0"
+3042 sh=0:&,2,2:ifmid$(a$,2,6)<mid$(ld$,2,6)then:&"{yellow}.{pound}q0":gosub3024:goto3046
+3044 lp=1:&"{f6}{pound}vj{f6}{$04}"+a$:&,3,2:ifrcanda$<>"{^}"thengosub3024
+3046 gosub12:ifst=.andsh=0then3042
+3048 close2:&"{f6}{pound}vj":ifqthen:&"{f6:2} Add your comments? ":gosub94:onagosub3052
+3050 goto3036
+3052 gosub3126:ifkk<1thenreturn
+3054 &"Filing..."
+3056 o$="nm.wall":gosub3032:print#2,d1$:gosub3026
+3058 ifnntheno$="nm.G.temp":gosub3032:gosub3026
+3060 &"{pound}h6ed on the NetWall.{f6}":return
+3062 &"{f6:2} (E)dit (K)ill (V)iew (W)eed: {pound}g1{pound}v7{f6}":iftr%<1oran$=chr$(13)thenreturn
+3064 on-(an$="V")-2*(an$="E")-3*(an$="K")-4*(an$="W")gosub3008,3096,3066,3070:goto3062
+3066 &"{f6}Are You Sure? ":gosub94:ifathendr=2:gosub3:print#15,"s"dr$"nm.wall"
+3068 return
+3070 &"How Many Days Back? {pound}i1":a=val(an$):a$=d1$:ifa<1ora>99thenreturn
+3072 a=val(mid$(a$,6,2))-a:b=val(mid$(a$,4,2)):c=val(mid$(a$,2,2))
+3074 ifa<1thena=a+asc(mid$("{blue:2}{red}{blue}{green}{blue}{green}{blue:2}{green}{blue}{green}",b,1)):b=b-1:ifb<1thenb=12:c=c-1
+3076 tt$=right$(str$(100+c),2)+right$(str$(100+b),2)+right$(str$(100+a),2)
+3078 a$=tt$:&"Weed writings older than {pound}$a? ":gosub94:ifa=0thenreturn
+3080 dr=2:gosub3:print#15,"s"dr$"nm.temp"
+3082 close2:open2,dv%,2,dr$+"nm.wall,s,r":close3:open3,dv%,3,dr$+"nm.temp,s,w"
+3084 &,2,2:s=st:&"{$04}"+a$:ifmid$(a$,2,6)<tt$then:&" Kill{f6}":goto3090
+3086 &" Keep{f6}"
+3088 print#3,a$:&,2,2:s=st:on-(a$<>"{^}"ands=0)goto3088:print#3,"{^}":goto3092
+3090 &,2,2:s=st:on-(a$<>"{^}"ands=0)goto3090
+3092 on-(s=0)goto3084:close2:close3
+3094 print#15,"s"dr$"nm.wall":print#15,"r"dr$"nm.wall="dr$"nm.temp":return
+3096 dr=2:gosub3:print#15,"s"dr$"nm.temp"
+3098 close2:open2,dv%,2,dr$+"nm.wall,s,r":close3:open3,dv%,3,dr$+"nm.temp,s,w"
+3100 a%=0:b%=0:s=0
+3102 &"{clear}":on-(s<>0)goto3120:n=0:a%=a%+1
+3104 &,2,2:s=st:n=n+1:tt$(n)=a$:ifa$<>"{^}"ands=0then3104
+3106 lp=1:&"{pound}vj{f6}{$04}"+tt$(1):fori=2ton-1:lp=1:&tt$(i):next:&"{f6}{pound}vj"
+3108 &"{f6:2}#{pound}%a ({pound}%b Kept) Delete Keep Abort -->"
+3110 &"{pound}g1":iftr%<1thenan$="A"
+3112 ifan$="K"then:&"Keep{f6:2}":fori=1ton:print#3,tt$(i):next:b%=b%+1:goto3102
+3114 ifan$="A"then:&"Abort{f6:2}":close2:close3:print#15,"s"dr$"nm.temp":goto3124
+3116 ifan$<>"D"then3110
+3118 &"Delete{f6:2} Are you sure? ":gosub94:onagoto3102:goto3108
+3120 close2:close3
+3122 print#15,"s"dr$"nm.wall":print#15,"r"dr$"nm.wall="dr$"nm.temp"
+3124 return
+3126 kk=1:gosub3144:dr=1:a$="s.editor":gosub14:b%=.:gosub3170:a=0
+3128 &,54,a:a=peek(781):an$=chr$(peek(780)or128):remifv<>1.3then966
+3130 kk=peek(1016):onagoto3132,3138,3136:&"{f6:2}":b%=kk-1:kk=.:return
+3132 poke2031,0:b%=kk-1:&"{f6}{pound}%b Lines Used.{f6}":ifkk=1thena=0:goto3130
+3134 b%=kk:return
+3136 poke2031,0:gosub3142:goto3128
+3138 b%=kk-1:a=2:goto3128
+3140 b%=kk-1:gosub3144:gosub3170:poke2031,1:a=1:goto3128
+3142 dr=1:a$="s.menu 3":goto13
+3144 remifv<>1.3then963
+3146 poke53249,0:poke1016,kk:poke1018,4:poke1019,kk:poke1023,87
+3148 pl=.:poke1022,11:poke53252,ll%-2
+3150 return
+3152 poke53249,0:poke1016,kk:poke1018,4:poke1019,kk:poke1023,87
+3154 pl=.:poke1022,11:poke53252,ll%-2
+3156 return
+3158 kk=peek(1016):onagoto3160,3166,3164:&"{f6:2}":b%=kk-1:kk=.:return
+3160 poke2031,0:b%=kk-1:&"{f6}{pound}%b Lines Used.{f6}":ifkk=1thena=0:goto3158
+3162 b%=kk:return
+3164 poke2031,0:gosub3142:goto3128
+3166 b%=kk-1:a=2:goto3128
+3168 b%=kk-1:gosub3172:gosub3170:poke2031,1:a=1:goto3128
+3170 a%=peek(1022)-1:c%=a%-b%:&"{pound}q0{f6:2}Total Lines:{f6}Available  : {pound}%a"
+3172 &"{f6}In Memory  : {pound}%b{f6}Remaining  : {pound}%c":ifzzthen:&"{f6}Free Memory: {pound}%z"
+3174 &"{f6:2}":return
+3176 copr. 1990 new image 01-29-95
+3178 rem:"i.NW (c)nissa 190307 lh"
