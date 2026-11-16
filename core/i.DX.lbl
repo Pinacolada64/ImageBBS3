@@ -48,12 +48,12 @@
 3068 &" Upload A File{f6}":hr$="Upload":ad$="To":gosub3006:iff$=""thenreturn
 3070 dr=0:a$=f$+",w":gosub4:ife%then:&:&"{f6:2}":close2:return
 3072 &"{clear}Upload Now!{f6:16}":an$=f$
-3073 gosub3196:x=2:gosub3200:&,16,1:close2:&"{pound}w1":gosub3192:im=1:gosub443:gosub3012:return
+3073 x=2:gosub3200:&,16,1:close2:&"{pound}w1":im=1:gosub443:gosub3012:return
 3074 gosub3020:ifsthenreturn
 3076 &" Download A File{f6}":hr$="Download":ad$="From":gosub3006:iff$=""thenreturn
 3078 dr=0:a$=f$+",r":gosub4:ife%then:&:&"{f6:2}":close2:return
-3080 &"{clear}Download of ":&f$:&"{f6}Begins in 20 Seconds!{f6:15}":gosub3196
-3081 x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":gosub3192:im=1:gosub443:gosub3012:return
+3080 &"{clear}Download of ":&f$:&"{f6}Begins in 20 Seconds!{f6:15}"
+3081 x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":im=1:gosub443:gosub3012:return
 3082 gosub3020:ifsthenreturn
 3084 &" Read A File{f6}":gosub3006:iff$=""thenreturn
 3085 ifb$="p"then3202
@@ -104,7 +104,7 @@
 3168 dr=0:a$=f$+",r":d2%=val(rd$):gosub4
 3170 ife%then:&"{f6:2} Error Finding File!":close2:return
 3172 &"{clear}Download of ":&fd$:&"{f6}Begins in 20 Seconds!{f6:15}"
-3173 gosub3196:x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":gosub3192:im=1:gosub443
+3173 x=1:gosub3200:&,22,200:&,16,0:close2:&"{pound}w1":im=1:gosub443
 3174 dr=3:a$="e.direct":gosub4:x=bh:gosub1:input#2,hd$,pd$,fd$,ft$,vd$,rd$
 3176 w$=hd$+r$+pd$+r$+fd$+r$+ft$+r$+vd$+r$+rd$+r$+"1"+r$:gosub1:print#2,w$
 3178 close2:goto3182
@@ -114,10 +114,9 @@
 3186 print#2,"{lt. green}{pound}o{$c0}{pound}o{$c0}{white}"
 3188 print#2,na$+"{cyan} Downloaded "+fd$+"{f6}On {white}{$04}"+hr$
 3190 close2:return
-3192 &,52,$34,3:on-(a%=.)goto3194:&,52,$35,1:poke53371,0:rem on
-3194 return
-3196 &,52,$34,3:on-(a%=.)goto3198:&,52,$35,.:poke53370,0:rem off
-3198 return
+' 11/15/2026: the transfer protocols (punter, xmodem) slow a SuperCPU to 1 MHz
+' themselves and turn turbo on again (source/scpu.s), so this module doesn't
+' (3196 slowed it, 3192 turned turbo on again)
 3200 an$=f$:im=5:goto443
 3202 a$="read":gosub28:ife%then3210
 3203 gosub349:gosub350
