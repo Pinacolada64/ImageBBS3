@@ -17,7 +17,7 @@
 3014 return
 3016 &"{f6} (RETURN To Keep Same){f6:2}":return
 3018 &"{pound}$jname?: {pound}i0":return
-3020 &"{clear}{f6}{pound}q0End Of Transfer.{f6}":gosub3510:im=1:goto443
+3020 &"{clear}{f6}{pound}q0End Of Transfer.{f6}":im=1:goto443
 3022 a$=bb$(bn):gosub3006:p$="U/D Ex#"+mid$(str$(bn),2)+": "+a$:cm$=p$:on-(sg=.)goto3008:p$=sg$+" SIG{f6:2}"+p$:return
 3024 &"{f6}Sorry, No Such File.{f6}":return
 3026 &"{f6}Go To {pound}v7 {pound}$js Mode!{f6}":return
@@ -147,7 +147,7 @@
 3270 &"{f6:2}{pound}$k {f5}{pound}$f{f5}?: ":gosub94:ifa=.then3154
 3272 gosub3366:an$="Receive":gosub3026
 3274 poke2043,1-(t$="s"):gosub3004:an$=f$:a$=f$+","+t$+",r":gosub4
-3276 an$=f$+","+t$:gosub3520:x=1:im=4:gosub443:&,16,0:close2:gosub3088
+3276 an$=f$+","+t$:x=1:im=4:gosub443:&,16,0:close2:gosub3088
 3278 ifb=.thengosub92:a$=" Transfer Aborted!":gosub50:goto3154
 3280 gosub3020:gosub3050:onxgoto3192
 3282 gosub30:i=1:x=7:gosub16:x=18:gosub16:x=36:gosub16:close2
@@ -156,7 +156,7 @@
 3288 gosub3050:onxgoto3192:onjmgoto3370:goto3154
 3290 f=1:bb%=0
 3292 an$=tt$(f):&,15,2:a$=an$+",r":gosub3004:gosub4:ife%then3298
-3294 gosub3520:x=1:im=4:gosub443:&,16,2:&,22,10:&,16:gosub3050
+3294 x=1:im=4:gosub443:&,16,2:&,22,10:&,16:gosub3050
 3295 onxgoto3302:gosub3088:ifb=1then3302
 3296 &,22,10:on-(f>=f%)goto3304:f=f+1:goto3292
 3298 close2:on-(f=f%)goto3300:forx=ftof%-1:a%(x)=a%(x+1):tt$(x)=tt$(x+1):next
@@ -203,7 +203,7 @@
 3378 rs=tr%:onflgoto3392
 3380 gosub3108:ond%goto3154:ife%=.then:&"{pound}$b":goto3154
 3382 gosub3366:an$="Send":gosub3026:gosub3004:a$=f$+","+t$+",w":tt$=f$+","+t$:gosub4
-3384 an$=f$+","+t$:gosub3520:x=2:im=4:gosub443:&,16,1:gosub3088:d=b
+3384 an$=f$+","+t$:x=2:im=4:gosub443:&,16,1:gosub3088:d=b
 3385 gosub3426:gosub3020:ife%orb=.then3390
 3386 gosub3036:c$=l$:a%=1:tt$(1)=tt$:gosub3052
 3388 a%=1:goto3406
@@ -223,7 +223,7 @@
 3414 f=.
 3416 on-(rn+f>=60)goto3424:&,16,3:on-(an$="")goto3424:f=f+1:tt$(f)=an$:a$=an$+",w"
 3417 gosub3004:gosub4:ife%thenclose2:f=f-1:goto3424
-3418 gosub3520:x=2:im=4:gosub443:&,16,1:gosub3088:gosub3050:onxgoto3424
+3418 x=2:im=4:gosub443:&,16,1:gosub3088:gosub3050:onxgoto3424
 3420 ifb=.thena$=left$(tt$(f),len(tt$(f))-2):jm=.:f=f-1:gosub3004:goto19
 3422 tt$(f)=chr$(band255)+chr$(b/256)+tt$(f):gosub3050:onxgoto3424:goto3416
 3424 print#131,"{$18:3}";:goto3050
@@ -250,8 +250,7 @@
 3502 cm$="MM."+lm$:gosub9:goto4000
 3504 dr=1:a$="s.UX"+str$(nl):ifll%=80thena$=a$+" 80"
 3506 gosub13:return
-3510 &,52,$34,3:on-(a%=.)goto3512:&,52,$35,1:poke53371,0
-3512 return
-3520 &,52,$34,3:on-(a%=.)goto3522:&,52,$35,.:poke53370,0
-3522 return
+' 11/15/2026: the transfer protocols (punter, xmodem) slow a SuperCPU to 1 MHz
+' themselves and turn turbo on again (source/scpu.s), so this module doesn't
+' (3510 turned turbo on again, 3520 slowed it)
 3599 rem:"i.UX (c)nissa 210306 lh"

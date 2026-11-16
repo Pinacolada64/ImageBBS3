@@ -20,7 +20,7 @@
 3018 &"{f6}{white}No {pound}$js In This {pound}$h.{f6}":return
 3020 &"{f6}{lt. green} (RETURN To Keep Same){f6:2}":return
 3022 &"{green}{pound}$jname?{lt. blue}: {pound}i0":return
-3024 &"{clear}{f6}{pound}q0End Of Transfer.{f6}":gosub3497:im=1:goto443
+3024 &"{clear}{f6}{pound}q0End Of Transfer.{f6}":im=1:goto443
 3026 a$=bb$(bn):gosub3006:p$="{green}U/D#"+mid$(str$(bn),2)+": {lt. blue}"+a$+"{white}":cm$=p$
 3027 on-(sg=0)goto3008:p$=sg$+" SIG{f6:2}"+p$:return
 3028 a$=mid$(a$,23):return
@@ -119,7 +119,7 @@
 3208 onsgn(bn)goto3214:a=1:onrgoto3210:r=1:goto3198
 3210 onagoto3264:ifr=bnthengosub3116:goto3214
 3212 bn=r:br=1:gosub3096:gosub3116
-3214 ontmgosub3497:im=1:gosub443:an$=str$(cr):a=7:gosub11:ifathenan$=" Unlimited"
+3214 im=1:gosub443:an$=str$(cr):a=7:gosub11:ifathenan$=" Unlimited"
 3216 gosub3004:gosub61:b$=str$(a):ifco%>2thena=int((a*254)/1024):b$=str$(a)
 3218 ifid>.andid=so%(bn)orid=so%thenq=1
 3220 d$="Blocks":ifco%>2thend$="Kbytes"
@@ -261,9 +261,10 @@
 3492 close2:close1:&"{up}    {yellow}Comment Status: {lt. green}{rvrs on} Commented {rvrs off}{f6:2}{pound}q0":return
 3493 x=1:gosub390:pf=.:f1=.:goto300
 3494 f1=2:goto302
-3495 &,52,$34,3:on-(a%=.)goto3496:poke53370,0:&,52,$35,0
-3496 return
-3497 &,52,$34,3:on-(a%=.)goto3498:poke53371,0:&,52,$35,1
-3498 return
+' 11/15/2026: the transfer protocols (punter, xmodem) slow a SuperCPU to 1 MHz
+' themselves and turn turbo on again (source/scpu.s), so this module doesn't
+' (3495 slowed it, 3497 turned turbo on again). 3495 is kept: i/MM.ud-download
+' and i/MM.ud-trans call it before each transfer
+3495 return
 3499 copr.1990 new image 10/28/90
 3500 rem:"i.UD (c)nissa 211218 lh"

@@ -162,12 +162,12 @@
 3484 a$=f$+","+t$:on xgoto 3486,3492:goto 3120
 3486 b$=a$:a$=b$+",r":dr=0:gosub 4:if e%then close 2:goto 3500
 3488 a$=b$:poke 2043,1:if right$(a$,1)<>"p" then poke 2043,2
-3490 an$=a$:x=1:gosub 3034:gosub 3654:&,16,0:close 2:poke 670,peek(669):goto 3498
+3490 an$=a$:x=1:gosub 3034:&,16,0:close 2:poke 670,peek(669):goto 3498
 3492 b$=a$:a$=b$+",w":dr=0:gosub 4
 3494 a$=b$:if e%then close 2:goto 3500
-3496 an$=a$:x=2:gosub 3034:gosub 3654:&,16,1:close 2:&,22,5:poke 668,peek(667)
+3496 an$=a$:x=2:gosub 3034:&,16,1:close 2:&,22,5:poke 668,peek(667)
 3498 gosub 3016:a=rc:&"{f6}{pound}!a Bytes{f6}{pound}%a Good Blks{f6}{pound}%b Bad Blks{f6}"
-3500 x=3:gosub 3004:gosub 3656:goto 3014
+3500 x=3:gosub 3004:goto 3014
 3502 dr=0:gosub 3
 3504 &"{f6}{lt. blue}Pattern: ":gosub 289:b$="*"
 3506 for i=1 to len(an$):if mid$(an$,i,1)="*" then b$=""
@@ -188,7 +188,7 @@
 3536 &"{f6} Press {white}{rvrs on}RETURN{rvrs off}{lt. blue} To Begin: {pound}g1{f6}":f=1:bb%=0:gosub 3540:gosub 3016:gosub 3012
 3538 x=4:gosub 3004:goto 3014
 3540 an$=tt$(f):&,15,2:a$=an$+",r":dr=0:gosub 4:if e%then 3546
-3542 x=1:gosub 3034:gosub 3654:&,16,2:&,22,10:&,16,0:gosub 3048:if b=.then 3550
+3542 x=1:gosub 3034:&,16,2:&,22,10:&,16,0:gosub 3048:if b=.then 3550
 3544 &,22,10:on-(f>=f%) goto 3552:f=f+1:bl=bl+rc:goto 3540
 3546 close 2:on-(f=f%) goto 3548:for x=fto f%-1:tt$(x)=tt$(x+1):next
 3548 f%=f%-1:f=f-1:goto 3542
@@ -196,7 +196,7 @@
 3552 an$="":&,16,2:a%=f:return
 3554 &"{clear}{f6:3}Multi-Download: Waiting For Start...{f6}"
 3556 f=.:bl%=mn%:bl=.:gosub 3558:gosub 3016:gosub 3012:x=4:gosub 3004:goto 3014
-3558 on-(f=>100) goto 3564:an$="":gosub 3654:&,16,3:on-(an$="") goto 3564:f=f+1
+3558 on-(f=>100) goto 3564:an$="":&,16,3:on-(an$="") goto 3564:f=f+1
 3559 tt$(f)=an$:x=2:gosub 3034:a$=an$+",w":dr=0:gosub 4:if e%then close 2:f=f-1:goto 3564
 3560 &,16,1:gosub 3048:if b=.then a$=left$(tt$(f),len(tt$(f))-2):f=f-1:goto 19
 3562 tt$(f)=chr$(band 255)+chr$(b/256)+tt$(f):bl=bl+rc:goto 3558
@@ -213,8 +213,7 @@
 3608 on-(t>0) goto 3606
 3610 &"{f6}Connection Failed":a=0:return
 3650 rem copr. 1991 new image
-3654 &,52,$34,3:on-(a%=.) goto 3655:poke 53370,0:&,52,$35,0
-3655 return
-3656 &,52,$34,3:on-(a%=.) goto 3657:poke 53371,0:&,52,$35,1
-3657 return
+' 11/15/2026: the transfer protocols (punter, xmodem) slow a SuperCPU to 1 MHz
+' themselves and turn turbo on again (source/scpu.s), so this module doesn't
+' (3654-3657 slowed it and turned turbo on again around each transfer)
 3699 rem:"i.t (c)nissa 230310 lh"
