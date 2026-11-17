@@ -17,15 +17,17 @@
 ' im=7: use the last AutoMaint date and time (e.data record 35)
 ' im=8: save the method ck and parameter cp to e.data record 37
 ' im=9: write the BBS clock to the clock saved in e.data record 37: a CMD
-'       device or a DS12C887 (the others can't be written from here)
+'       device, a DS12C887 or an Ultimate (the others can't be written from here)
 ' im=10: as im=0, but without a word, for im at boot: nothing (e%=1) if the
 '       saved method is manual, and no messages
 ' im=11: the same, for the idle screen's periodic re-read (lightbar Trc
 '       right, Time: Reset Clock): also nothing for the last AutoMaint date,
 '       which would set the clock back every time
+' im=16: write the BBS clock to a 1541 Ultimate/Ultimate 64's clock (Command
+'       Interface SET_TIME), whatever record 37 says
 '
-' After im=1 sets the BBS clock, if record 37 names a CMD device or a
-' DS12C887, it offers to write the time to that clock too (as im=9 does).
+' After im=1 sets the BBS clock, if record 37 names a CMD device, a DS12C887
+' or an Ultimate, it offers to write the time to that clock too (as im=9 does).
 '
 ' On return from im=0-7:
 '   e%=0: the BBS clock was set from z$ (an 11-digit Image date string)
@@ -55,6 +57,7 @@
 {include:quoters.lbl}
 {:60000}
 {step:2}
+	if im=16 then {:sub.ultimate_write}
 	on im+1 goto {:sub.from_record_37},{:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint},{:sub.save_method},{:sub.write},{:sub.auto},{:sub.auto}
 	return
 
@@ -126,8 +129,9 @@
 	tr%=u:gosub {:sub.set_clock}:gosub 33:x=19:gosub 1:print# 2,d1$:close 2
 ' 10/13/2026: if record 37 names a clock that can be written, offer to set it
 ' too, so it's right at the next boot. The BBS clock is set either way (e%=0)
-	gosub {:sub.read_record_37}:if ck<>2 and ck<>4 then e%=.:return
+	gosub {:sub.read_record_37}:if ck<>2 and ck<>4 and ck<>5 then e%=.:return
 	b$="DS12C887 clock":if ck=2 then b$="CMD clock (device"+str$(cp)+")"
+	if ck=5 then b$="Ultimate's clock"
 	&"{f6}{cyan}Also set the "+b$+"? ":gosub {:sub.manual_key}:if e% then e%=.:return
 	gosub 96:if a then gosub {:sub.write_clock}
 	e%=.:return
@@ -208,22 +212,49 @@
 
 {nice:100}
 {:sub.ultimate}
-' $df1d reads $c9 (or $49) when the Command Interface is enabled
-	u=57116:a=peek(57117):if a<>201 and a<>73 then e%=1:on -(im>9) goto {:sub.return}:&"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
-	if peek(u) and 8 then poke u,8
+	gosub {:sub.uci_check}:if e% then on -(im>9) goto {:sub.return}:&"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
 ' DOS target ($01), GET_TIME ($26), format 0: "yyyy/mm/dd hh:mm:ss"
-	poke 57117,1:poke 57117,38:poke 57117,.:poke u,1:i=.
-{:sub.ultimate_wait}
-	i=i+1:if (peek(u) and 48)<32 and i<2000 then {:sub.ultimate_wait}
-	a$=""
-{:sub.ultimate_data}
-	if peek(u) and 128 then a$=a$+chr$(peek(57118)):goto {:sub.ultimate_data}
-{:sub.ultimate_status}
-	if peek(u) and 64 then a=peek(57119):goto {:sub.ultimate_status}
-	poke u,2:if len(a$)<19 then e%=1:on -(im>9) goto {:sub.return}:&"{f6}{lt. red}The Ultimate didn't send the time.{f6}":return
+	c$=chr$(1)+chr$(38)+chr$(.):gosub {:sub.uci}
+	if len(a$)<19 then e%=1:on -(im>9) goto {:sub.return}:&"{f6}{lt. red}The Ultimate didn't send the time.{f6}":return
 	y=val(mid$(a$,3,2)):n=val(mid$(a$,6,2)):d=val(mid$(a$,9,2))
 	h=val(mid$(a$,12,2)):m=val(mid$(a$,15,2))
 	gosub {:sub.build_z$}:goto {:sub.set_clock}
+
+{:sub.uci_check}
+' $df1d reads $c9 (or $49) when the Command Interface is enabled: e%=0. If
+' it is, u=57116 ($df1c), and an earlier error flag is cleared
+	u=57116:a=peek(57117):e%=1:if a<>201 and a<>73 then return
+	e%=.:if peek(u) and 8 then poke u,8
+	return
+
+{:sub.uci}
+' send c$ (the target, the command and its parameters) to the Command
+' Interface, wait for it, and read the response data into a$ and the status
+' (e.g. "00,OK") into b$
+	for i=1 to len(c$):poke 57117,asc(mid$(c$,i,1)):next:poke u,1:i=.
+{:sub.uci_wait}
+	i=i+1:if (peek(u) and 48)<32 and i<2000 then {:sub.uci_wait}
+	a$="":b$=""
+{:sub.uci_data}
+	if peek(u) and 128 then a$=a$+chr$(peek(57118)):goto {:sub.uci_data}
+{:sub.uci_status}
+	if peek(u) and 64 then b$=b$+chr$(peek(57119)):goto {:sub.uci_status}
+	poke u,2:return
+
+' --- 16: write the BBS clock to an Ultimate ---
+
+{nice:100}
+{:sub.ultimate_write}
+' DOS target ($01), SET_TIME ($27) and 6 bytes, binary: the year - 1900, month
+' (1-12), date, hour (0-23), minute, second (UCI DOS target 1.2 and up;
+' the firmware's software/filemanager/dos.cc: exactly 8 bytes, or an error).
+' Its reply is the clock read back, "www yyyy/mm/dd hh:mm:ss", and "00,OK".
+' The BBS clock has no seconds: 0
+	gosub {:sub.uci_check}:if e% then &"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
+	gosub {:sub.bbs_time}
+	c$=chr$(1)+chr$(39)+chr$(y-100*(y<80))+chr$(n)+chr$(d)+chr$(j)+chr$(m)+chr$(.):gosub {:sub.uci}
+	if left$(b$,2)<>"00" then e%=1:&"{f6}{lt. red}The Ultimate didn't set its clock{colon} {white}{pound}$b{f6}":return
+	e%=.:&"{f6}{lt. blue}Ultimate clock{colon} {white}{pound}$a{f6}":return
 
 ' --- 6: TeensyROM (time only) ---
 
@@ -263,7 +294,7 @@
 	if ck>4 then b$="4,"+mid$("uta",ck-4,1)
 	gosub 33:x=37:gosub 1:print# 2,b$:close 2:return
 
-' --- 9: write the BBS clock to a CMD device or DS12C887 ---
+' --- 9: write the BBS clock to a CMD device, DS12C887 or Ultimate ---
 
 {nice:100}
 {:sub.write}
@@ -272,6 +303,7 @@
 ' ck, cp as read from record 37
 	if ck=2 then {:sub.cmd_write}
 	if ck=4 then {:sub.ds_write}
+	if ck=5 then {:sub.ultimate_write}
 	e%=1:&"{f6}{lt. red}The saved clock can't be written from here.{f6}":return
 
 {:sub.bbs_time}

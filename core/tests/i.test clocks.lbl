@@ -3,6 +3,11 @@
 '
 ' Each choice calls sub.clocks (im=<n>:a$="clocks":gosub 74), then shows
 ' e% (0 = the BBS clock was set), z$ (the date string it used), ck and cp.
+' W writes the BBS clock to the clock saved in record 37 (im=9), U to an
+' Ultimate (im=16). I talks to the Ultimate's Command Interface itself, to
+' show what sub.clocks doesn't keep: the ID register, the DOS target's
+' identify string (GET_TIME and SET_TIME need "V1.2"), and GET_TIME's raw
+' reply and status (11/17/2026)
 ' VICE: DS12C887 with -ds12c887rtc -ds12c887rtcbase 0xd500
 {alpha:alt}
 {include:../quoters.lbl}
@@ -10,11 +15,16 @@
 	pr$="i."+"test clocks":rem "i.test clocks" {usedef:__BuildDate} {usedef:__BuildTime}
 	&"{clear}{f6}{yellow}sub.clocks test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
 	&"{cyan}0{white} Saved method (e.data record 37){f6}{cyan}1{white} Manual{f6}{cyan}2{white} CMD device{f6}"
-	&"{cyan}3{white} Lt. Kernal{f6}{cyan}4{white} DS12C887{f6}{cyan}5{white} 1541 Ultimate{f6}{cyan}6{white} TeensyROM{f6}"
-	&"{cyan}7{white} Last AutoMaint date{f6}{cyan}S{white} Save a method to record 37{f6}{cyan}Q{white} Quit{f6:2}Which{question} {pound}g1{f6}"
+	&"{cyan}3{white} Lt. Kernal{f6}{cyan}4{white} DS12C887{f6}{cyan}5{white} Read the Ultimate{f6}{cyan}6{white} TeensyROM{f6}"
+	&"{cyan}7{white} Last AutoMaint date{f6}{cyan}S{white} Save a method to record 37{f6}"
+	&"{cyan}W{white} Write the BBS clock to the saved clock{f6}{cyan}U{white} Write the BBS clock to the Ultimate{f6}"
+	&"{cyan}I{white} Ultimate Command Interface info{f6}{cyan}Q{white} Quit{f6:2}Which{question} {pound}g1{f6}"
 	if an$="Q" or an$="q" then a$="tests":on -(peek(5988)=165) goto 70:goto 300
+	if an$="I" or an$="i" then {:info}
 	t=-1:if an$>="0" and an$<="7" then t=val(an$)
 	if an$="S" or an$="s" then t=8
+	if an$="W" or an$="w" then t=9
+	if an$="U" or an$="u" then t=16
 	if t<. then {:3000}
 	if t=8 then poke 53252,1:pl=1:w$="4":p$="Method (1-7)"+"":&,1,32:ck=val(an$):if an$="" then ck=4
 	if t=8 and (ck<1 or ck>7) then {:3000}
@@ -29,4 +39,30 @@
 {:ask}
 	v=val(w$):poke 53252,5:pl=1:&,1,32:cp=val(an$):if an$="" then cp=v
 	return
+
+{:info}
+' $df1c control/status, $df1d the ID ($c9, or $49 with its interrupt on) and
+' the command bytes, $df1e response data, $df1f status
+	u=57116:a=peek(57117):&"{f6}{lt. blue}ID ($df1d){colon} {white}{pound}!a{f6}"
+	if a<>201 and a<>73 then &"{lt. red}No Command Interface (201 or 73 expected).{f6}":goto {:info_end}
+	if peek(u) and 8 then poke u,8
+' the DOS target ($01): IDENTIFY ($01), then GET_TIME ($26), format 1 (the
+' weekday too)
+	c$=chr$(1)+chr$(1):gosub {:uci}:&"{lt. blue}DOS{colon} {white}{pound}$a  {lt. blue}{pound}$b{f6}"
+	c$=chr$(1)+chr$(38)+chr$(1):gosub {:uci}:&"{lt. blue}Ultimate{colon} {white}{pound}$a  {lt. blue}{pound}$b{f6}"
+	an$=d1$:&,15:&"{lt. blue}BBS clock{colon} {white}"+an$+"M{f6}"
+{:info_end}
+	&"{f6}{yellow}>Hit a Key<{pound}g1":goto {:3000}
+
+{:uci}
+' as sub.clocks' sub.uci: send c$; the response data -> a$, the status -> b$
+	for i=1 to len(c$):poke 57117,asc(mid$(c$,i,1)):next:poke u,1:i=.
+{:uci_wait}
+	i=i+1:if (peek(u) and 48)<32 and i<2000 then {:uci_wait}
+	a$="":b$=""
+{:uci_data}
+	if peek(u) and 128 then a$=a$+chr$(peek(57118)):goto {:uci_data}
+{:uci_status}
+	if peek(u) and 64 then b$=b$+chr$(peek(57119)):goto {:uci_status}
+	poke u,2:return
 	rem "i.test clocks (c)nissa 2026-10-09 rs"
