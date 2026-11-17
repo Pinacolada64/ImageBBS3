@@ -79,10 +79,19 @@ Call it with ``im=``__n__``:a$="clocks":gosub 74``.
 | `6` | TeensyROM (time only; the date is `e.data` record 19) |
 | `7` | Last AutoMaint date (`e.data` record 35) |
 | `8` | Save method `ck` and parameter `cp` to `e.data` record 37 |
+| `9` | Write the BBS clock to the clock saved in `e.data` record 37: a CMD device (`T-WD`), a DS12C887 or an Ultimate |
+| `10` | As `0`, quietly, for `im` at boot: nothing (`e%=1`) if the saved method is manual |
+| `11` | As `10`, for the lightbar's `Trc` right check (Time: Reset Clock); also nothing for the last AutoMaint date |
+| `16` | Write the BBS clock to a 1541 Ultimate/Ultimate 64 (Command Interface `SET_TIME`, `$27`) |
 |===
 
 On return from `im=0`-`7`, `e%` is `0` if the BBS clock was set (from `z$`, an 11-digit <<prg-ampersand-calls.adoc#date-format,date string>>), and non-zero if not.
 They also set the "`time set`" flag (`poke 1010,1`).
+After `im=9` and `16`, `e%` is `0` if the hardware clock was written.
+
+The Ultimate's `SET_TIME` takes six binary bytes after the target (`$01`) and command (`$27`): the year less 1900, the month (1-12), date, hour (0-23), minute and second.
+The BBS clock has no seconds, so `sub.clocks` sends `0`.
+The Ultimate replies with its clock read back (`www yyyy/mm/dd hh:mm:ss`), which `im=16` shows.
 
 .`e.data` Record 37 (Clock Set Method)
 Image BBS 3.0's `im` reads this record with `val()`, and treats `4` like `0` (manual), so the methods added in `sub.clocks` are stored after `4,`:

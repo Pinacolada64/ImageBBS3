@@ -165,9 +165,10 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
   (`im=8`). The idle screen's 1) Set Time (`i/lo.misc`) uses the saved method
   (10/13/2026).
 - [ ] **Writing hardware clocks:** `sub.clocks` `im=9` writes the BBS time to
-  a CMD device (`T-WD`) or a DS12C887; try the CMD one on real hardware.
-  The Lt. Kernal and Ultimate can't be written yet (their commands are
-  unknown here); the TeensyROM sets itself from the network.
+  a CMD device (`T-WD`), a DS12C887 or an Ultimate (`SET_TIME` `$27`, also
+  `im=16` on its own) (11/17/2026); try the CMD and Ultimate ones on real
+  hardware (VICE has neither). The Lt. Kernal can't be written yet (its
+  command is unknown here); the TeensyROM sets itself from the network.
 - [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` (`im`'s is gone).
 - [ ] `IM` N) Base Editors (`i.SM`, Larry's fixed copy from `fixes 231231.d81`):
   remove H) Set Time Dv # and I) Set CMD Clock (`i/SM.cmdclock`); K) Set

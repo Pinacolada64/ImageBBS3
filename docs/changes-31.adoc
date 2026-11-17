@@ -36,7 +36,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 3.0 only read CMD and Lt. Kernal clocks at boot.
 * The lightbar's `Trc` right check (Time: Reset Clock) re-reads the clock source every few hours, whichever it is (3.0: CMD only).
 * `IM` K (Set Time) is a menu: set the clock from the clock source, set it by hand, or choose a different clock source.
-Setting it by hand can also set a CMD or DS12C887 clock, so it's right at the next boot.
+Setting it by hand can also set a CMD, DS12C887 or Ultimate clock, so it's right at the next boot.
 * Setting the clock by hand gives up after 5 minutes without an answer, so the idle screen comes back (3.0 waited for ever).
 * The idle screen's 1) Set Time uses the clock source.
 
@@ -113,7 +113,7 @@ Handles of 13 characters or fewer aren't affected.
 * `&,9` shows number variables as digits (3.0 showed garbage).
 * `&,1` clears its password flags when input ends.
 * `++ copier` has `&,16,3`, which compares two files.
-* `sub.clocks`: reads (and for CMD and DS12C887, writes) every supported clock; `im=0`-`11`.
+* `sub.clocks`: reads (and for CMD, DS12C887 and Ultimate, writes) every supported clock; `im=0`-`11`, and `16` (write the Ultimate's clock).
 * `++ visual`: Image 2.0's unfinished visual editor, converted.
 * `im`:
 ** Line 28 copies `a$` into `cm$` (`cm$=a$+""`); modules set `pr$`, `cm$` and `p$` as copies, not pointers into the program.
