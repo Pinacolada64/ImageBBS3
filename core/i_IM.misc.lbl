@@ -81,15 +81,17 @@
 	&"{f6:2}Changes Saved.{f6:2}":goto {:4102}
 {:4106}
 	gosub 33:x=20:gosub 10:print#2,p1%","p2%","p3%:close 2:return
+' 11/15/2026: Prime Time's hours are 0-23 (p2%, p3%; im line 84). They're shown
+' and typed 12-hour (sub.hour_out, sub.hour_in): 12A is 0 and 12P is 12 (12P was
+' stored as 24, which never matched, and noon and midnight showed as 12A/0A)
 {:4108}
 	b$="Prime Time":gosub {:4152}
-	b=p2%-4*(p2%>12):d=p3%-4*(p3%>12)
 	a%=1
-	b$="Minutes/Call: "+mid$(str$(p1%),2):gosub {:4148}:if p1%<1then p2%=.:p3%=.:b=.:d=.
+	b$="Minutes/Call: "+mid$(str$(p1%),2):gosub {:4148}:if p1%<1then p2%=.:p3%=.
 	a%=2
-	b$="Start Time  :"+str$(band15)+mid$("AMPM",(band16)/8+1,2):gosub {:4148}
+	pa=p2%:gosub {:sub.hour_out}:b$="Start Time  : "+c$+"M":gosub {:4148}
 	a%=3
-	b$="End Time    :"+str$(dand15)+mid$("AMPM",(dand16)/8+1,2):gosub {:4148}
+	pa=p3%:gosub {:sub.hour_out}:b$="End Time    : "+c$+"M":gosub {:4148}
 	if p1%=.then:&"{pound}{back arrow}08-(No Prime Time Set)-{f6}"
 	gosub {:4150}:r=-(a<1ora>3):onagosub {:4130},{:4136},{:4142}:if r=.then gosub{:4106}:c=1:goto {:4108}
 	oncgoto {:4104}:return
@@ -99,12 +101,12 @@
 	return
 {:4136}
 ' TODO: prompt: 'Enter times like "4A" or "11P"'
-	p$="Start Time"+"":w$=mid$(str$(b and 15)+mid$("AP",(band16)/16+1,1),2):gosub {:4156}
-	if an$<>"" then p2%=a-12*(right$(an$,1)="P")
+	pa=p2%:gosub {:sub.hour_out}:p$="Start Time"+"":w$=c$:gosub {:4156}
+	if an$<>"" then gosub {:sub.hour_in}:if a<24 then p2%=a
 	return
 {:4142}
-	p$="End Time"+"":w$=mid$(str$(d and 15)+mid$("AP",(dand16)/16+1,1),2):gosub {:4156}
-	if an$<>"" then p3%=a-12*(right$(an$,1)="P")
+	pa=p3%:gosub {:sub.hour_out}:p$="End Time"+"":w$=c$:gosub {:4156}
+	if an$<>"" then gosub {:sub.hour_in}:if a<24 then p3%=a
 	return
 {:4148}
 	&"{pound}{back arrow}08{yellow}{pound}%a>{cyan} {pound}$b{f6}":return
@@ -142,6 +144,13 @@
 {:sub.write_e_data}
 ' call with 'x'=record number, 'an$'=data
 	gosub 33:gosub 1:print#2,an$:close 2:return
+{:sub.hour_out}
+' hour pa (0-23) as 12-hour text in c$: 0 12A, 11 11A, 12 12P, 13 1P
+	c$=mid$(str$(pa+11-12*int((pa+11)/12)+1),2)+mid$("AP",1-(pa>11),1):return
+{:sub.hour_in}
+' an hour as typed (a: its number): with A or P, 12-hour (12A 0, 12P 12)
+	a$=right$(an$,1):if a$="A" or a$="P" then a=a-12*int(a/12)-12*(a$="P")
+	return
 {crunch:off}
 	rem "i/IM.misc (c)nissa 200519 lh"
 	rem 2021-06-28 pinacolada

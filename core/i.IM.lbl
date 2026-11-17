@@ -248,8 +248,11 @@
 ' Prime Time in b$, e.g. "Not Set", " 60, 1A-9A", "240, 12A-11P": p1% minutes a
 ' call, p2% to p3% the hours (0-23), shown 12-hour: (h+11) mod 12+1, A before noon
 ' (i.IM-2021 showed 12 noon as 12A, and midnight as 0A)
-3365 b$="Not Set":on -(p1%<1) goto 999:b$=right$(str$(p1%),3)+", ":pa=p2%:for pb=1 to 2:b$=b$+mid$(str$(pa+11-12*int((pa+11)/12)+1),2)+mid$("AP",1-(pa>11),1)+mid$("-",pb,1):pa=p3%:next:return
+3365 b$="Not Set":on -(p1%<1) goto 999:pa=p2%:gosub 3367:b$=right$(str$(p1%),3)+", "+c$+"-"
+3366 pa=p3%:gosub 3367:b$=b$+c$:return
+' hour pa (0-23) as 12-hour text in c$: 0 12A, 11 11A, 12 12P, 13 1P
+3367 c$=mid$(str$(pa+11-12*int((pa+11)/12)+1),2)+mid$("AP",1-(pa>11),1):return
 ' copyright line: plain text, not a rem; -crunch would take out its spaces, so
-' they're written as {$20}
-3366 copr.{$20}1994{$20}new{$20}image{$20}9/18/94
-3368 rem:"i.IM (c)nissa 200519 lh"
+' they're written as {$20}. 11/15/2026: was 3366, and the rem 3368
+3370 copr.{$20}1994{$20}new{$20}image{$20}9/18/94
+3372 rem:"i.IM (c)nissa 200519 lh"
