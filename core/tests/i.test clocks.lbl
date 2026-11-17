@@ -43,13 +43,13 @@
 {:info}
 ' $df1c control/status, $df1d the ID ($c9, or $49 with its interrupt on) and
 ' the command bytes, $df1e response data, $df1f status
-	u=57116:a=peek(57117):&"{f6}{lt. blue}ID ($df1d){colon} {white}"+mid$(str$(a),2)+"{f6}"
+	u=57116:a=peek(57117):&"{f6}{lt. blue}ID ($df1d){colon} {white}{pound}!a{f6}"
 	if a<>201 and a<>73 then &"{lt. red}No Command Interface (201 or 73 expected).{f6}":goto {:info_end}
 	if peek(u) and 8 then poke u,8
 ' the DOS target ($01): IDENTIFY ($01), then GET_TIME ($26), format 1 (the
 ' weekday too)
-	c$=chr$(1)+chr$(1):gosub {:uci}:&"{lt. blue}DOS{colon} {white}"+a$+"  {lt. blue}"+b$+"{f6}"
-	c$=chr$(1)+chr$(38)+chr$(1):gosub {:uci}:&"{lt. blue}Ultimate{colon} {white}"+a$+"  {lt. blue}"+b$+"{f6}"
+	c$=chr$(1)+chr$(1):gosub {:uci}:&"{lt. blue}DOS{colon} {white}{pound}$a  {lt. blue}{pound}$b{f6}"
+	c$=chr$(1)+chr$(38)+chr$(1):gosub {:uci}:&"{lt. blue}Ultimate{colon} {white}{pound}$a  {lt. blue}{pound}$b{f6}"
 	an$=d1$:&,15:&"{lt. blue}BBS clock{colon} {white}"+an$+"M{f6}"
 {:info_end}
 	&"{f6}{yellow}>Hit a Key<{pound}g1":goto {:3000}

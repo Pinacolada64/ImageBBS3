@@ -253,8 +253,8 @@
 	gosub {:sub.uci_check}:if e% then &"{f6}{lt. red}No Ultimate Command Interface.{f6}":return
 	gosub {:sub.bbs_time}
 	c$=chr$(1)+chr$(39)+chr$(y-100*(y<80))+chr$(n)+chr$(d)+chr$(j)+chr$(m)+chr$(.):gosub {:sub.uci}
-	if left$(b$,2)<>"00" then e%=1:&"{f6}{lt. red}The Ultimate didn't set its clock{colon} {white}"+b$+"{f6}":return
-	e%=.:&"{f6}{lt. blue}Ultimate clock{colon} {white}"+a$+"{f6}":return
+	if left$(b$,2)<>"00" then e%=1:&"{f6}{lt. red}The Ultimate didn't set its clock{colon} {white}{pound}$b{f6}":return
+	e%=.:&"{f6}{lt. blue}Ultimate clock{colon} {white}{pound}$a{f6}":return
 
 ' --- 6: TeensyROM (time only) ---
 
