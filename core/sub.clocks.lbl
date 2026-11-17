@@ -57,8 +57,8 @@
 {include:quoters.lbl}
 {:60000}
 {step:2}
-	if im=16 then {:sub.ultimate_write}
-	on im+1 goto {:sub.from_record_37},{:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint},{:sub.save_method},{:sub.write},{:sub.auto},{:sub.auto}
+' im=12-15 aren't used here (Image BBS 128's daylight saving time): return
+	on im+1 goto {:sub.from_record_37},{:sub.manual},{:sub.cmd},{:sub.ltk},{:sub.ds12c887},{:sub.ultimate},{:sub.teensyrom},{:sub.automaint},{:sub.save_method},{:sub.write},{:sub.auto},{:sub.auto},{:sub.return},{:sub.return},{:sub.return},{:sub.return},{:sub.ultimate_write}
 	return
 
 {nice:100}
@@ -380,7 +380,7 @@
 	an$=z$:&,15:on -(im>9) goto {:sub.return}:&"{f6}{lt. blue}BBS clock: {white}"+an$+"M{f6}":return
 
 {:sub.return}
-' im=10 and 11 jump here past a message
+' im=10 and 11 jump here past a message; im=12-15 (unused) come here too
 	return
 
 {:sub.to_bcd}
