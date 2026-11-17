@@ -168,7 +168,14 @@ Applying Left "Alt" and not seeing the last 10 callers color change after quitti
   a CMD device (`T-WD`), a DS12C887 or an Ultimate (`SET_TIME` `$27`, also
   `im=16` on its own) (11/17/2026); try the CMD and Ultimate ones on real
   hardware (VICE has neither). The Lt. Kernal can't be written yet (its
-  command is unknown here); the TeensyROM sets itself from the network.
+  command is unknown here). The TeensyROM can't be written from the BBS
+  (11/17/2026, from its firmware source): its TR BASIC I/O handler, the one
+  active while the BBS runs, only reads the RTC (`TISet`, `$0c`). Its RTC
+  (kept in UTC; the TR's time zone setting, half hours and no DST, applied on
+  reading) is set by NTP ("Sync RTC" in the TR menu), by hand on the TR
+  menu's Time/RTC settings page, or from a PC with the remote command
+  `SetRTCToken` (`$6474`, after FW 0.9), which the TR refuses unless its
+  menu is running. A write method needs a set-time command in TR BASIC.
 - [ ] Remove the old CMD/Lt. Kernal clock code in `i/su.config` (`im`'s is gone).
 - [ ] `IM` N) Base Editors (`i.SM`, Larry's fixed copy from `fixes 231231.d81`):
   remove H) Set Time Dv # and I) Set CMD Clock (`i/SM.cmdclock`); K) Set
