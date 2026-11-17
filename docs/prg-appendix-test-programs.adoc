@@ -59,7 +59,7 @@ Choose a call to see its name; some have a demonstration, for example <<prg-ampe
 | _none_
 
 | `i.test clocks`
-| Each way `sub.clocks` can set the BBS clock at boot (the eight methods of "`Part II: Set Clock`" in the setup chapter), showing what it read; `U` writes the BBS clock to an Ultimate (`im=16`).
+| Each way `sub.clocks` can set the BBS clock at boot (the eight methods of "`Part II: Set Clock`" in the setup chapter), showing what it read; `W` writes the BBS clock to the saved clock (`im=9`), `U` to an Ultimate (`im=16`), and `I` shows the Ultimate's Command Interface directly (ID, DOS version, raw `GET_TIME` reply and status).
 | `sub.clocks`
 
 | `i.test convert`
