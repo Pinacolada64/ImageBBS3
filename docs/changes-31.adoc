@@ -16,7 +16,7 @@ Sections of the guides that describe something new or changed in 3.1 are marked 
 | | Files
 
 | Changed
-| `im`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `sub.local`, `sub.param1`, `++ copier`; the ML (`ml 3.1`)
+| `im`, `im.emul13`, `i.lo`, `i/lo.idle`, `i/lo.misc`, `i/lo.login`, `i/lo.on`, `i.IM`, `i/IM.misc`, `i/IM.modem`, `i.UU`, `i/su.config`, `i/MM.sb-post`, `i.EM`, `i/EM.extra`, `i.FM`, `i/lo-fmail`, `i.ED`, `i.ED 3.1`, `i.VF`, `i/NM.mail`, `i/NM.update`, `i/NM.sort`, `i/SM.fixer`, `sub.local`, `sub.param1`, `++ copier`; the ML (`ml 3.1`)
 
 | New
 | `sub.clocks`, `++ visual`, `i.rename mail`; the test programs (`i.tests`, `i.test ...`, `i.btmvar table`)
@@ -54,6 +54,9 @@ Setting it by hand can also set a CMD, DS12C887 or Ultimate clock, so it's right
 * The last item of `IM`'s sub-menus is called Main Menu (3.0: Quit), as it goes back to `IM`'s main menu; the main menu's Q is still Quit.
 * `IM` J (Modem Config): modem profiles in `nimodem.dat` can be imported, created and edited, with a 19.2k tcpser profile for VICE.
 * `IM` C (Payroll Editor): Edit with an entry number out of range no longer stops with `?undef'd statement error`.
+* `IM` I (Misc. Features) shows Prime Time as its minutes and hours (`60, 1P-11P`, or `Not Set`), as changed, not as the module was loaded.
+* Prime Time's hours are typed and shown right: `12A` is midnight and `12P` noon (3.0 showed them as `0AM` and `12AM`, and stored a typed `12P` as 24, which never came on); an hour 0-23 without kbd:[A] or kbd:[P] is taken as 24-hour (`i/IM.misc`).
+* Prime Time can run past midnight: an end earlier than the start (`10P` to `2A`, or `12P` to `12A`) is on from the start until the end the next morning (3.0 never turned it on; `im`, `im.emul13`).
 * `i.UU`: the user account editor has a cursor menu.
 
 ==== Other Changes

@@ -173,8 +173,10 @@
 	for i=1 to 4:&,11,i:next
 {:83}
 	&,11,.:return
+' Prime Time (pt%) from the hour: from p2% until p3%; an end earlier than the
+' start runs past midnight (11/17/2026: 10P-2A, or 12P-12A, never came on)
 {:84}
-	a=int(mn%/60):pt%=-(a>=p2% and a<p3%)*sgn(p1%):return
+	a=int(mn%/60):pt%=-((a>=p2% and a<p3%) or ((a>=p2% or a<p3%) and p3%<p2%))*sgn(p1%):return
 {:85}
 	&"{f6}Would You Like To Leave Feedback? ":gosub {:96}:if a=. then return
 {:86}
