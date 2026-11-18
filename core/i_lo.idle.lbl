@@ -33,8 +33,9 @@
 4042 cm$="Connected":gosub 9:&,69,5,21,cm$,$85:return
 4044 gosub 84:&,52,7,3:if a%then pt%=1-pt%:if p1%<1 then p1%=30
 4046 b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):on pt%+1 goto 4050
-4048 for y=1 to 5:&,69,26,y+16,mid$("PRIME",y,1),135:next:goto 4052
-4050 for y=1 to 5:&,69,26,y+16,mid$("     ",y,1),140:next
+' 11/17/2026: PRIME down the right edge, column 39, as sub.display has it (was 26)
+4048 for y=1 to 5:&,69,39,y+16,mid$("PRIME",y,1),135:next:goto 4052
+4050 for y=1 to 5:&,69,39,y+16,mid$("     ",y,1),140:next
 4052 return
 4100 a=.:gosub 375:b$="logoff":x=10:mm=4:gosub 3000:&,52,4:&,52,5:tr%=.
 4102 f1=.:&,28,1:dr=3:b$="e.idle cmds":a$=b$:gosub 4:if e%then wc=.:close 2:goto 4106
