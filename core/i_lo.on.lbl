@@ -71,7 +71,7 @@
 4160 gosub 50
 4162 a=1:gosub 375:pt%=.:gosub 84:&,52,7,3:if a%then pt%=1-pt%:if p1%<1 then p1%=30
 4164 b%=val(mid$(fl$,18,2)):b%=b%-101*(b%=.):on pt%+1 goto 4172
-4166 for y=1 to 5:&,69,26,y+16,mid$("PRIME",y,1),135:next
+4166 for y=1 to 5:&,69,39,y+16,mid$("PRIME",y,1),135:next
 4168 on-(b%<p1%) goto 4172:b%=p1%:&"{f6}{green}{pound}vj{yellow}   Please Note: It is now PRIME TIME."
 4170 &"      all callers limited to {white}{pound}%b {yellow}minutes!{f6}{green}{pound}vj":goto 4174
 4172 if b%<101 then:&"{f6}{green}{pound}vj   {yellow}Time allowed for this call{white}: {pound}%b {yellow}Min.{f6}{green}{pound}vj"
