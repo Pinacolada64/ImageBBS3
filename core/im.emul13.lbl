@@ -32,8 +32,9 @@
 	a$=dr$+"+."+a$:loada$,dv%:pr$=cm$:lm$="":goto {:1012}
 {:1016}
 	gosub {:1013}:goto 3000
+' 11/17/2026: Prime Time past midnight (an end earlier than the start), as im
 {:1019}
-	a=int(mn%/60):pt%=-(a>=p2%anda<p3%)*sgn(p1%):return
+	a=int(mn%/60):pt%=-((a>=p2%anda<p3%)or((a>=p2%ora<p3%)andp3%<p2%))*sgn(p1%):return
 {:1023}
 	goto 18
 {:1024}

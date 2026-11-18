@@ -318,7 +318,7 @@ kbd:[Return] leaves a setting as it was ("`(No Change.)`").
 | kbd:[I] | BBS Name | Up to 30 characters (47)
 | kbd:[J] | System ID | 2 characters, before each user's ID (51)
 | kbd:[K] | New User Credits | The credits a new user starts with, 1-65000 (58)
-| kbd:[L] | Prime Time | The minutes a call may last during prime time (0 for no prime time), and when it starts and ends: an hour and kbd:[A] or kbd:[P], _e.g._ `4P` (20)
+| kbd:[L] | Prime Time | The minutes a call may last during prime time (0 for no prime time), and when it starts and ends: an hour and kbd:[A] or kbd:[P], _e.g._ `4P` (`12A` is midnight, `12P` noon), or an hour 0-23 alone. It runs until the end hour starts, and past midnight if the end is earlier than the start: `10P` to `2A` is 10:00 PM to 2:00 AM (20)
 | kbd:[M] | Chat Messages | The messages a caller sees when you enter chat (_Entry_) and leave it (_Exit_), up to 30 characters each (48, 49)
 | kbd:[N] | Quit |
 |===
