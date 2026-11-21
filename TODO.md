@@ -239,6 +239,22 @@ only items not already here are listed from it. Locations are
   columns (`core/i_IM.misc.lbl:18`, `:23`).
 - [ ] `i/MM.subop`: increment both BAR records whether writing or appending
   (`core/i_MM.subop.lbl:15`).
+- [ ] `i/lo.on`: the reversed banners "Good <time of day>, <name>!" (line
+  4108) and "Xpress Login Active!" (4140) lose the reversed bar after their
+  text on a screen wider than 40 columns: `q$` (the margin that centers 40
+  columns on a wider screen, `im` 185) is inside the bar, so the text ends
+  past column 39 and the closing `{pound}{back arrow}39` (pad to column 39)
+  does nothing. "Welcome New User" (4156) isn't reversed, but is centered
+  the same way; Image 128 made it a bar too ("Welcome, New User!"). A pad
+  from `ll%` won't do here: 3.0's `{pound}{back arrow}nn` (`ctab`,
+  `source/mcicm.s`) ignores any column of 40 or more, so build the bar from
+  spaces instead, e.g. `left$("{space:78}",n)` before and after the text,
+  `n` from `ll%` and the text's length (`core/i_lo.on.lbl`, lines
+  4106-4108, 4140, 4156). Image 128 fixed it with `{pound}{back arrow}` from
+  `ll%` (its `mtab` pads up to the caller's last column): its
+  `modules/i_lo.on.lbl` 4090/4092, branch `lo-on-banners`;
+  `tests/standin/banners.bas` there shows the result to aim for (reversed
+  from column 1 to `ll%`-2, the text centered).
 
 ### Shared routines (less copy-and-paste)
 
