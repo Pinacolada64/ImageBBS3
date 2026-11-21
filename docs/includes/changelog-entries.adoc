@@ -2,6 +2,10 @@
 // Reference Guide (prg-appendix-changelog.adoc) and by CHANGELOG.adoc.
 // Add new entries at the top, under a === YYYY-MM-DD heading.
 
+=== 2026-11-20
+
+* Variables: `fl$` is the user flags (the 20-digit access flags `gosub 11` checks); `uf$` is the user's terminal settings (linefeeds, the "`More?`" prompt, graphic menus) and time zone. `uf$`'s entry described the access flags.
+
 === 2026-10-14
 
 * `im` routines: line 300 goes back to `GF` when `pf` is set (a module run from a General Files library).

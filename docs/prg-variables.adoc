@@ -591,7 +591,9 @@ The ML (`fkey`, `source/irqhn.s`) copies the text to `fkeybuf` (`$02A7`), and ke
 | `fl$`
 | User
 | icon:times-circle[role=red]
-| 20-character string which determines the user`'s status flags.
+| User flags: a string of 20 digits holding 19 access flags (flag 18 is two digits), which determine what the user may do.
+They start as the user`'s access group`'s (`im` lines 320-323 take the group`'s when the access group changes, and add any flags the user`'s string is missing).
+Check one with <<prg-im-routines.adoc#line-11,`gosub 11`>>; see <<prg-im-routines.adoc#user-flags,User Flags>>.
 
 | `hx$`
 | BBS
@@ -787,8 +789,16 @@ Used to determine whether a message is new or not.
 | `uf$`
 | User
 | icon:times-circle[role=red]
-| User flags: a string of 20 characters containing 19 separate access flags (flag 18 is two characters).
-See <<prg-im-routines.adoc#user-flags,User Flags>>.
+a| The user`'s terminal settings, one digit each, then their time zone (not the access flags: those are `fl$`):
+
+. linefeeds (1 on; `sub.param1`)
+. the "`More?`" prompt: 0 off, 1 on, 2 messages only (lightbar flag 34)
+. graphic (cursor) menus (lightbar flag 44)
+. _not used in 3.0_
+. _not used in 3.0_
+
+From position 6, the time zone (`sub.info`).
+`im` line 371 flips position `b` and shows it on or off.
 
 | `uu$`
 | BBS
