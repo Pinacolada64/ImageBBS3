@@ -2,6 +2,10 @@
 // Reference Guide (prg-appendix-changelog.adoc) and by CHANGELOG.adoc.
 // Add new entries at the top, under a === YYYY-MM-DD heading.
 
+=== 2026-11-20
+
+* `&,27` Save Variable Pointers and `&,28` Restore Variable Pointers: what a level holds (two offsets from `VARTAB`, 4 bytes at `$13d0` + 4 × level), with two diagrams; the levels Image uses; levels 4-6 write over `daysofm` (the days in each month); two levels don't make two arrays: a second `dim` of the same name is a `?redim\'d array` error. New test program `i.test arrays`.
+
 === 2026-10-14
 
 * `im` routines: line 300 goes back to `GF` when `pf` is set (a module run from a General Files library).

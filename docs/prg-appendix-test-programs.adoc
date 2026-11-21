@@ -53,6 +53,12 @@ To add a test program to the menu, add its name (without `i.test`) to the `data`
 |===
 | Program | What it tries | Also needs
 
+| `i.test arrays`
+| <<prg-ampersand-calls.adoc#save-variable-pointers,`&,27` Save Variable Pointers>> and <<prg-ampersand-calls.adoc#restore-variable-pointers,`&,28` Restore Variable Pointers>> at levels 3 and 4: that two levels share one array (a second `dim` of the same name is a `?redim\'d array` error), that `&,28` drops the variables made since `&,27`, that levels nest, and that saving levels 4-6 changes `daysofm`.
+Prints "`ok`" or "`wrong`" for each step.
+At the end, kbd:[Y] tries the second `dim`, which Image's error trap stops with `[Error#19...]`.
+| _none_
+
 | `i.test calls`
 | The `&` calls, `&,0` to `&,70`, a page of 10 at a time.
 Choose a call to see its name; some have a demonstration, for example <<prg-ampersand-calls.adoc#amp-9-bottom-variable,`&,9` Bottom Variable>> (show a variable), <<prg-ampersand-calls.adoc#convan,`&,15` Convert `an$`>> (convert a date, title case, and more), <<prg-ampersand-calls.adoc#amp-22-wait,`&,22` Wait _x_ Tenths of a Second>> (wait), and <<prg-ampersand-calls.adoc#ecschk,`&,26` Find Record by Flags and Name>> (find a record by flags and name).

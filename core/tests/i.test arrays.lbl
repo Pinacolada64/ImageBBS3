@@ -1,0 +1,90 @@
+' i.test arrays: &,27 / &,28, save and restore the variable pointers, at
+' levels 3 and 4. A level is two offsets from VARTAB (where the arrays
+' start and end), not arrays of its own. Tests the idea that
+'	&,27,3:dim ta$(10):&,27,4:dim ta$(10)
+' keeps two independent ta$() arrays (it doesn't: the second DIM is a
+' ?REDIM'D ARRAY error), then that &,28 drops the variables made since
+' &,27, that levels nest, and that levels 4-6 write over daysofm ($13e0,
+' the days in each month; see the &,27 section of the guide).
+' ta$(), not tt$(): tt$() is im's, so DIM tt$() is a ?REDIM'D ARRAY error at
+' any level.
+' Only variables im makes at boot (x, i, e%, x%, a$, b$, z$): a variable made
+' after an &,27 is dropped by its &,28.
+' The same steps on Image 128: tests/standin/arrays27.bas there.
+{alpha:alt}
+{include:../quoters.lbl}
+
+' out-of-module line numbers
+{assign:300=300}	' main prompt
+{assign:70=70}	' im.prep_load_i.file
+
+{number:3000}
+{step:2}
+	pr$="i."+"test arrays":rem "i.test arrays" {usedef:__BuildDate} {usedef:__BuildTime}
+' a$: daysofm as it was; x%: steps not as modelled
+	&,18,0:x%=.:a$="":for i=0 to 11:a$=a$+chr$(peek(5088+i)):next
+	&"{clear}&{comma}27 / &{comma}28 levels{f6:2}"
+	&,27,3:dim ta$(10):ta$(1)="level 3"
+	&"1 &{comma}27{comma}3{colon}dim ta$(10){colon}ta$(1){equal}{quotation}level 3{quotation}{f6}"
+	&,27,4:gosub {:count}
+	&"2 &{comma}27{comma}4{colon} ta$() arrays{colon} {pound}%e"
+	if e%<>1 then x%=x%+1:&" wrong{f6}":goto {:step3}
+	&"{comma} ok{f6}"
+{:step3}
+	ta$(1)="level 4":&,28,4:z$=ta$(1)
+	&"3 ta$(1){equal}{quotation}level 4{quotation}{colon}&{comma}28{comma}4{colon} ta$(1){equal}{quotation}{pound}$z{quotation}{f6}"
+	if z$<>"level 4" then x%=x%+1:&"  two arrays{comma} hypothesis holds{f6}":goto {:step4}
+	&"  one array{comma} hypothesis fails{comma} ok{f6}"
+{:step4}
+	&,28,3:z$=ta$(1)
+	&"4 &{comma}28{comma}3{colon} ta$(1){equal}{quotation}{pound}$z{quotation}"
+	if z$<>"" then x%=x%+1:&"{comma} kept{comma} wrong{f6}":goto {:step5}
+	&"{comma} dropped{comma} ok{f6}"
+{:step5}
+' n9 is made after &,27,3, so &,28,3 drops it: reading it again makes a new one, 0
+	&,27,3:n9=9:&,28,3:e%=n9
+	&"5 &{comma}27{comma}3{colon}n9{equal}9{colon}&{comma}28{comma}3{colon} n9{equal}{pound}%e"
+	if e% then x%=x%+1:&"{comma} kept{comma} wrong{f6}":goto {:step6}
+	&"{comma} dropped{comma} ok{f6}"
+{:step6}
+	&"6 nested{colon} a$() at 3{comma} b$() at 4{f6}"
+	&,27,3:dim a$(5):a$(1)="a":&,27,4:dim b$(5):b$(1)="b"
+	&,28,4:z$=a$(1)+"/"+b$(1):&"  &{comma}28{comma}4{colon} a/b{equal}{pound}$z"
+	if z$<>"a/" then x%=x%+1:&" wrong{f6}":goto {:step6b}
+	&" ok{f6}"
+{:step6b}
+	&,28,3:z$=a$(1)+"/"+b$(1):&"  &{comma}28{comma}3{colon} a/b{equal}{pound}$z"
+	if z$<>"/" then x%=x%+1:&" wrong{f6}":goto {:step7}
+	&" ok{f6}"
+{:step7}
+' each level from 0 to 7: does &,27,x change daysofm? 4-6 should
+	gosub {:daysofm}:&"7 daysofm after &{comma}27{comma}x{colon}{f6}"
+	for x=0 to 7:&,27,x:b$="":for i=0 to 11:b$=b$+chr$(peek(5088+i)):next
+	e%=-(b$<>a$):z$=mid$("same   changed",1+7*e%,7):&" {pound}!x {pound}$z"
+	if e%<>-(x>3 and x<7) then x%=x%+1:&"{question}"
+	gosub {:daysofm}:next:&"{f6:2}"
+' the arrays and variables this test made: gone
+	&,28,1
+	if x% then:&"{pound}%x not as modelled{f6}":goto {:redim}
+	&"All as modelled.{f6}"
+{:redim}
+	&"{f6}Try the second DIM? Image's error trap stops the test with{f6}"
+	&"Error#19 ({question}REDIM'D ARRAY). Y/N{colon} {pound}i0"
+	if an$<>"Y" then {:quit}
+	&,27,3:dim ta$(10):&,27,4:&,18,1:dim ta$(10)
+	&"No error{colon} two ta$() arrays.{f6}"
+{:quit}
+	&,28,1:&,18,1:a$="tests":on -(peek(5988)=165) goto 70:goto 300
+
+' e%: how many arrays are named ta$ (T, A+128: a string array), walking the
+' arrays from ARYTAB ($2f) to STREND ($31). Each one's bytes 2-3: its length
+{:count}
+	e%=.:x=peek(47)+256*peek(48)
+{:count1}
+	if x>=peek(49)+256*peek(50) then return
+	if peek(x)=84 and peek(x+1)=193 then e%=e%+1
+	x=x+peek(x+2)+256*peek(x+3):goto {:count1}
+
+' put daysofm back as it was
+{:daysofm}
+	for i=0 to 11:poke 5088+i,asc(mid$(a$,i+1)):next:return

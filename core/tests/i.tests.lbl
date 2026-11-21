@@ -28,6 +28,6 @@
 	poke 5988,.:&,18,1:goto 300
 
 ' the tests, without "i.test "; "" ends the list
-	data "calls","clocks","convert","copier","date","frame","string","structs"
+	data "arrays","calls","clocks","convert","copier","date","frame","string","structs"
 	data "tagscan","visual",""
 	rem "i.tests 2026-10-12 rs"

@@ -1,0 +1,150 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="508" viewBox="0 0 760 508">
+<rect x="0" y="0" width="760" height="508" fill="#ffffff"/>
+<rect x="20" y="8" width="14" height="12" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="39" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#1a1a1a">simple variables</text>
+<rect x="140" y="8" width="14" height="12" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="159" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#1a1a1a">arrays made earlier</text>
+<rect x="275" y="8" width="14" height="12" fill="#f2b36b" stroke="#444444" stroke-width="1"/>
+<text x="294" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#1a1a1a">tt$()</text>
+<rect x="335" y="8" width="14" height="12" fill="#c9a6e3" stroke="#444444" stroke-width="1"/>
+<text x="354" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#1a1a1a">n9 (7 bytes)</text>
+<rect x="440" y="8" width="14" height="12" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="459" y="18" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#1a1a1a">free</text>
+<text x="500" y="18" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="start" fill="#555555">V VARTAB   A ARYTAB   S STREND</text>
+<text x="20" y="56" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">1</text>
+<text x="38" y="56" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">&amp;,27,3</text>
+<text x="38" y="72" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">level 3 saved: a and s of this moment</text>
+<rect x="250" y="42" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="42" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="430.0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="510" y="42" width="230" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="625.0" y="58" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="66" x2="250" y2="73" stroke="#444444" stroke-width="1"/>
+<text x="250" y="84" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="350" y1="66" x2="350" y2="73" stroke="#444444" stroke-width="1"/>
+<text x="350" y="84" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="510" y1="66" x2="510" y2="73" stroke="#444444" stroke-width="1"/>
+<text x="510" y="84" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="510" y1="37" x2="510" y2="66" stroke="#2a6f2a" stroke-width="2"/>
+<text x="514" y="44" font-family="Helvetica, Arial, sans-serif" font-size="9.5" text-anchor="start" fill="#2a6f2a" font-weight="bold">level 3: s</text>
+<line x1="20" y1="96" x2="740" y2="96" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="120" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">2</text>
+<text x="38" y="120" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">dim tt$(10)</text>
+<text x="38" y="136" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">BASIC puts tt$() after the last array</text>
+<rect x="250" y="106" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="122" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="106" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="430.0" y="122" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="510" y="106" width="80" height="24" fill="#f2b36b" stroke="#444444" stroke-width="1"/>
+<text x="550.0" y="122" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">tt$()</text>
+<rect x="590" y="106" width="150" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="665.0" y="122" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="130" x2="250" y2="137" stroke="#444444" stroke-width="1"/>
+<text x="250" y="148" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="350" y1="130" x2="350" y2="137" stroke="#444444" stroke-width="1"/>
+<text x="350" y="148" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="590" y1="130" x2="590" y2="137" stroke="#444444" stroke-width="1"/>
+<text x="590" y="148" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="20" y1="160" x2="740" y2="160" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="184" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">3</text>
+<text x="38" y="184" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">&amp;,27,4</text>
+<text x="38" y="200" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">level 4 saved: its s ends after tt$().</text>
+<text x="38" y="213" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">Nothing is copied: still one tt$()</text>
+<rect x="250" y="170" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="186" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="170" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="430.0" y="186" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="510" y="170" width="80" height="24" fill="#f2b36b" stroke="#444444" stroke-width="1"/>
+<text x="550.0" y="186" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">tt$()</text>
+<rect x="590" y="170" width="150" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="665.0" y="186" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="194" x2="250" y2="201" stroke="#444444" stroke-width="1"/>
+<text x="250" y="212" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="350" y1="194" x2="350" y2="201" stroke="#444444" stroke-width="1"/>
+<text x="350" y="212" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="590" y1="194" x2="590" y2="201" stroke="#444444" stroke-width="1"/>
+<text x="590" y="212" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="590" y1="165" x2="590" y2="194" stroke="#2a6f2a" stroke-width="2"/>
+<text x="594" y="172" font-family="Helvetica, Arial, sans-serif" font-size="9.5" text-anchor="start" fill="#2a6f2a" font-weight="bold">level 4: s</text>
+<line x1="20" y1="224" x2="740" y2="224" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="248" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">4</text>
+<text x="38" y="248" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">n9=9</text>
+<text x="38" y="264" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">a new simple variable: BASIC moves</text>
+<text x="38" y="277" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">every array up 7 bytes</text>
+<rect x="250" y="234" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="250" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="234" width="16" height="24" fill="#c9a6e3" stroke="#444444" stroke-width="1"/>
+<text x="358.0" y="250" font-family="Courier New, Courier, monospace" font-size="9.5" text-anchor="middle" fill="#1a1a1a">n9</text>
+<rect x="366" y="234" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="446.0" y="250" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="526" y="234" width="80" height="24" fill="#f2b36b" stroke="#444444" stroke-width="1"/>
+<text x="566.0" y="250" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">tt$()</text>
+<rect x="606" y="234" width="134" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="673.0" y="250" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="258" x2="250" y2="265" stroke="#444444" stroke-width="1"/>
+<text x="250" y="276" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="366" y1="258" x2="366" y2="265" stroke="#444444" stroke-width="1"/>
+<text x="366" y="276" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="606" y1="258" x2="606" y2="265" stroke="#444444" stroke-width="1"/>
+<text x="606" y="276" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="20" y1="288" x2="740" y2="288" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="312" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">5</text>
+<text x="38" y="312" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#b3261e" font-weight="bold">dim tt$(10)</text>
+<text x="38" y="328" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#b3261e">?REDIM&#x27;D ARRAY ERROR: BASIC finds the</text>
+<text x="38" y="341" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#b3261e">tt$() above. A level hides nothing</text>
+<rect x="250" y="298" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="314" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="298" width="16" height="24" fill="#c9a6e3" stroke="#444444" stroke-width="1"/>
+<text x="358.0" y="314" font-family="Courier New, Courier, monospace" font-size="9.5" text-anchor="middle" fill="#1a1a1a">n9</text>
+<rect x="366" y="298" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="446.0" y="314" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="526" y="298" width="80" height="24" fill="#f2b36b" stroke="#b3261e" stroke-width="2.5"/>
+<text x="566.0" y="314" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">tt$()</text>
+<rect x="606" y="298" width="134" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="673.0" y="314" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="322" x2="250" y2="329" stroke="#444444" stroke-width="1"/>
+<text x="250" y="340" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="366" y1="322" x2="366" y2="329" stroke="#444444" stroke-width="1"/>
+<text x="366" y="340" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="606" y1="322" x2="606" y2="329" stroke="#444444" stroke-width="1"/>
+<text x="606" y="340" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="20" y1="352" x2="740" y2="352" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="376" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">6</text>
+<text x="38" y="376" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">&amp;,28,4</text>
+<text x="38" y="392" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">arrays copied down 7 bytes over n9:</text>
+<text x="38" y="405" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">n9 dropped, tt$() kept</text>
+<rect x="250" y="362" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="378" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="362" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="430.0" y="378" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="510" y="362" width="80" height="24" fill="#f2b36b" stroke="#444444" stroke-width="1"/>
+<text x="550.0" y="378" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">tt$()</text>
+<rect x="590" y="362" width="150" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="665.0" y="378" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="386" x2="250" y2="393" stroke="#444444" stroke-width="1"/>
+<text x="250" y="404" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="350" y1="386" x2="350" y2="393" stroke="#444444" stroke-width="1"/>
+<text x="350" y="404" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="590" y1="386" x2="590" y2="393" stroke="#444444" stroke-width="1"/>
+<text x="590" y="404" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="20" y1="416" x2="740" y2="416" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="440" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#555555" font-weight="bold">7</text>
+<text x="38" y="440" font-family="Courier New, Courier, monospace" font-size="12.5" text-anchor="start" fill="#1a1a1a" font-weight="bold">&amp;,28,3</text>
+<text x="38" y="456" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">STREND back to level 3&#x27;s: tt$() dropped,</text>
+<text x="38" y="469" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="start" fill="#555555">its bytes free again</text>
+<rect x="250" y="426" width="100" height="24" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="300.0" y="442" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<rect x="350" y="426" width="160" height="24" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="430.0" y="442" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays made earlier</text>
+<rect x="510" y="426" width="230" height="24" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="625.0" y="442" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#555555">free</text>
+<line x1="250" y1="450" x2="250" y2="457" stroke="#444444" stroke-width="1"/>
+<text x="250" y="468" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">V</text>
+<line x1="350" y1="450" x2="350" y2="457" stroke="#444444" stroke-width="1"/>
+<text x="350" y="468" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">A</text>
+<line x1="510" y1="450" x2="510" y2="457" stroke="#444444" stroke-width="1"/>
+<text x="510" y="468" font-family="Courier New, Courier, monospace" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">S</text>
+<line x1="20" y1="482" x2="740" y2="482" stroke="#bbbbbb" stroke-width="0.5"/>
+<text x="20" y="498" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#1a1a1a" font-weight="bold">One tt$(), not two: a level saves where the arrays end, not the arrays. Tested: i.test arrays (Image 3.0), arrays27 (Image 128).</text>
+</svg>

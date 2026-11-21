@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="760" height="440" viewBox="0 0 760 440">
+<rect x="0" y="0" width="760" height="440" fill="#ffffff"/>
+<text x="20" y="20" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" fill="#1a1a1a" font-weight="bold">What a level holds: two offsets from VARTAB</text>
+<line x1="170" y1="44" x2="330" y2="44" stroke="#444444" stroke-width="1"/>
+<line x1="170" y1="39" x2="170" y2="49" stroke="#444444" stroke-width="1"/>
+<line x1="330" y1="39" x2="330" y2="49" stroke="#444444" stroke-width="1"/>
+<text x="250.0" y="39" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">a = ARYTAB - VARTAB</text>
+<line x1="170" y1="66" x2="520" y2="66" stroke="#444444" stroke-width="1"/>
+<line x1="170" y1="61" x2="170" y2="71" stroke="#444444" stroke-width="1"/>
+<line x1="520" y1="61" x2="520" y2="71" stroke="#444444" stroke-width="1"/>
+<text x="345.0" y="61" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">s = STREND - VARTAB</text>
+<rect x="20" y="78" width="150" height="34" fill="#e6e6e6" stroke="#444444" stroke-width="1"/>
+<text x="95.0" y="99" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">program (im + module)</text>
+<rect x="170" y="78" width="160" height="34" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="250.0" y="93" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">simple variables</text>
+<text x="250.0" y="106" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">7 bytes each</text>
+<rect x="330" y="78" width="190" height="34" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="425.0" y="99" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">arrays</text>
+<rect x="520" y="78" width="100" height="34" fill="#ffffff" stroke="#444444" stroke-width="1"/>
+<text x="570.0" y="99" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">free</text>
+<rect x="620" y="78" width="120" height="34" fill="#e6e6e6" stroke="#444444" stroke-width="1"/>
+<text x="680.0" y="99" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="middle" fill="#1a1a1a">strings</text>
+<line x1="20" y1="112" x2="20" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="20" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="start" fill="#555555">TXTTAB</text>
+<line x1="170" y1="112" x2="170" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="170" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a" font-weight="bold">VARTAB</text>
+<text x="170" y="147" font-family="Courier New, Courier, monospace" font-size="10" text-anchor="middle" fill="#555555">C64 $2d, 128 $2f</text>
+<line x1="330" y1="112" x2="330" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="330" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a" font-weight="bold">ARYTAB</text>
+<text x="330" y="147" font-family="Courier New, Courier, monospace" font-size="10" text-anchor="middle" fill="#555555">C64 $2f, 128 $31</text>
+<line x1="520" y1="112" x2="520" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="520" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a" font-weight="bold">STREND</text>
+<text x="520" y="147" font-family="Courier New, Courier, monospace" font-size="10" text-anchor="middle" fill="#555555">C64 $31, 128 $33</text>
+<line x1="620" y1="112" x2="620" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="620" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">FRETOP</text>
+<line x1="740" y1="112" x2="740" y2="119" stroke="#444444" stroke-width="1"/>
+<text x="740" y="133" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="end" fill="#555555">MEMSIZ</text>
+<text x="20" y="182" font-family="Helvetica, Arial, sans-serif" font-size="13" text-anchor="start" fill="#1a1a1a" font-weight="bold">&amp;,27,n stores s and a at $13d0 + 4 * (n AND 7)</text>
+<text x="20" y="199" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#1a1a1a">&amp;,28,n puts them back: STREND = VARTAB + s, ARYTAB = VARTAB + a, and moves the saved arrays down to the new ARYTAB.</text>
+<text x="20" y="213" font-family="Helvetica, Arial, sans-serif" font-size="11" text-anchor="start" fill="#1a1a1a">Everything made since, simple variables and arrays alike, is dropped.</text>
+<line x1="22" y1="238" x2="378" y2="238" stroke="#1a1a1a" stroke-width="1"/>
+<line x1="22" y1="238" x2="22" y2="244" stroke="#1a1a1a" stroke-width="1"/>
+<line x1="378" y1="238" x2="378" y2="244" stroke="#1a1a1a" stroke-width="1"/>
+<text x="200.0" y="233" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="middle" fill="#1a1a1a" font-weight="bold">arryptrs $13d0-$13df: 16 bytes reserved</text>
+<line x1="382" y1="238" x2="648" y2="238" stroke="#b3261e" stroke-width="1"/>
+<line x1="382" y1="238" x2="382" y2="244" stroke="#b3261e" stroke-width="1"/>
+<line x1="648" y1="238" x2="648" y2="244" stroke="#b3261e" stroke-width="1"/>
+<text x="515.0" y="233" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="middle" fill="#b3261e" font-weight="bold">daysofm $13e0-$13eb: days in each month</text>
+<line x1="652" y1="238" x2="738" y2="238" stroke="#555555" stroke-width="1"/>
+<line x1="652" y1="238" x2="652" y2="244" stroke="#555555" stroke-width="1"/>
+<line x1="738" y1="238" x2="738" y2="244" stroke="#555555" stroke-width="1"/>
+<text x="695.0" y="233" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="middle" fill="#555555" font-weight="bold">emptym2</text>
+<rect x="20" y="250" width="90" height="44" fill="#dbe8f5" stroke="#444444" stroke-width="1"/>
+<text x="65" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">level 0</text>
+<text x="65" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13d0</text>
+<text x="65" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">im 304: after</text>
+<text x="65" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">the 1.2 arrays</text>
+<rect x="110" y="250" width="90" height="44" fill="#dbe8f5" stroke="#444444" stroke-width="1"/>
+<text x="155" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">level 1</text>
+<text x="155" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13d4</text>
+<text x="155" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">boot; &amp;,28,1 at</text>
+<text x="155" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">main prompt</text>
+<text x="155" y="336" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">and low memory</text>
+<rect x="200" y="250" width="90" height="44" fill="#dbe8f5" stroke="#444444" stroke-width="1"/>
+<text x="245" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">level 2</text>
+<text x="245" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13d8</text>
+<text x="245" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">i/MM.load</text>
+<rect x="290" y="250" width="90" height="44" fill="#dbe8f5" stroke="#444444" stroke-width="1"/>
+<text x="335" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">level 3</text>
+<text x="335" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13dc</text>
+<text x="335" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">idle screen,</text>
+<text x="335" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">i/IM.modem</text>
+<rect x="380" y="250" width="90" height="44" fill="#f6d5d1" stroke="#b3261e" stroke-width="1.5"/>
+<text x="425" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold">level 4</text>
+<text x="425" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13e0</text>
+<text x="425" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">overwrites</text>
+<text x="425" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">Jan-Apr</text>
+<rect x="470" y="250" width="90" height="44" fill="#f6d5d1" stroke="#b3261e" stroke-width="1.5"/>
+<text x="515" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold">level 5</text>
+<text x="515" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13e4</text>
+<text x="515" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">overwrites</text>
+<text x="515" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">May-Aug</text>
+<rect x="560" y="250" width="90" height="44" fill="#f6d5d1" stroke="#b3261e" stroke-width="1.5"/>
+<text x="605" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#b3261e" font-weight="bold">level 6</text>
+<text x="605" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13e8</text>
+<text x="605" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">overwrites</text>
+<text x="605" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#b3261e">Sep-Dec</text>
+<rect x="650" y="250" width="90" height="44" fill="#e3eedd" stroke="#444444" stroke-width="1"/>
+<text x="695" y="268" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="middle" fill="#1a1a1a" font-weight="bold">level 7</text>
+<text x="695" y="284" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#555555">$13ec</text>
+<text x="695" y="310" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">sub.menus</text>
+<text x="695" y="323" font-family="Helvetica, Arial, sans-serif" font-size="10" text-anchor="middle" fill="#555555">(4 spare bytes)</text>
+<text x="20" y="372" font-family="Helvetica, Arial, sans-serif" font-size="12" text-anchor="start" fill="#1a1a1a" font-weight="bold">Each level: 4 bytes, low byte first</text>
+<rect x="20" y="380" width="95" height="28" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="67.5" y="399" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">+0  s low</text>
+<rect x="115" y="380" width="95" height="28" fill="#c9d6e3" stroke="#444444" stroke-width="1"/>
+<text x="162.5" y="399" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">+1  s high</text>
+<rect x="210" y="380" width="95" height="28" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="257.5" y="399" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">+2  a low</text>
+<rect x="305" y="380" width="95" height="28" fill="#8fb3d9" stroke="#444444" stroke-width="1"/>
+<text x="352.5" y="399" font-family="Courier New, Courier, monospace" font-size="11" text-anchor="middle" fill="#1a1a1a">+3  a high</text>
+<text x="420" y="376" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#555555">Offsets, not addresses: when a module of another</text>
+<text x="420" y="390" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#555555">length loads, the variables move and VARTAB with</text>
+<text x="420" y="404" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#555555">them, and the saved levels still fit.</text>
+<text x="420" y="418" font-family="Helvetica, Arial, sans-serif" font-size="10.5" text-anchor="start" fill="#555555">&amp;,27 with no level is level 0; only n AND 7 counts.</text>
+</svg>

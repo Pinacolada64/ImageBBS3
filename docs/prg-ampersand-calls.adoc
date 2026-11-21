@@ -1794,11 +1794,72 @@ Test program: `core/tests/i.test calls.lbl`, line `{:4500}`.
 
 === `&,27` Save Variable Pointers [[save-variable-pointers]]
 
-This saves pointers that tell BASIC where variables and arrays start and end.
-When modules introduce arrays not already defined in `im`, the variable pointers can be restored with `&,28`.
-This erases unnecessary variables after they're done being used.
+This saves where BASIC's simple variables and arrays end, as a numbered _level_.
+<<restore-variable-pointers,`&,28` Restore Variable Pointers>> with the same level puts them back, which drops every variable and array made since.
+When a module ``dim``s arrays not already defined in `im`, this frees their memory when it's done with them.
 
-#FIXME#
+_Parameters:_
+
+`&,27[,level]`: `level` = 0-7.
+Leaving it out is level 0, and only `level AND 7` counts: `&,27,9` is level 1.
+
+A level is two numbers, not a copy of anything:
+
+* _a_, where the arrays start (BASIC's `ARYTAB` pointer), and
+* _s_, where they end (`STREND`, the start of free memory),
+
+each saved as an offset from where the simple variables start (`VARTAB`).
+They are offsets, not addresses, so a saved level still fits after a module of another length loads and moves the variables (and `VARTAB` with them).
+`&,27,_n_` stores the two offsets, 4 bytes, at `$13d0` + 4 × _n_.
+
+.What `&,27` Saves
+image::images/amp27-save-table.svg["Memory layout of BASIC's variables and arrays above the program, with the offsets a and s from VARTAB, and the 8 four-byte levels stored from $13d0 to $13ef",760]
+
+[WARNING]
+====
+Only 16 bytes, `$13d0`-`$13df`, are set aside for levels 0-3 (`arryptrs` in `source/equat.s`).
+Levels 4-6 land on `daysofm` (`$13e0`-`$13eb`), the number of days in each month, which the time zone date change uses (`source/swap3.s`).
+Saving level 4, 5 or 6 changes January-April, May-August or September-December until the BBS boots again.
+Level 7 (`$13ec`-`$13ef`) uses `emptym2`, four bytes nothing else uses.
+
+Use levels 2 and 3 in modules.
+====
+
+.Levels Image Uses
+[%header,cols="1,5,5"]
+|===
+| Level | Saved | Restored
+
+| 0
+| `im` 304: `&,28,1`, the Image 1.2 arrays (`bb$()`, `dt$()`, `ed$()`, `nn$()`), then `&,27`
+| _(not by Image 3.0)_
+
+| 1
+| At boot (`im` 711, 730), once ``im``'s own arrays are made
+| At the main prompt (`im` 300, 302), by the error trap (`im` 2004), and by the ML when fewer than 256 bytes are free after a garbage collection, just before it stops with `?out of memory error`
+
+| 2
+| `i/MM.load`
+| `i/MM.load`
+
+| 3
+| The idle screen (`i/lo.idle`), `i/IM.modem`
+| the same
+
+| 7
+| `sub.menus`
+| `sub.menus`
+|===
+
+Things to know:
+
+* Make every simple variable you still need after `&,28` _before_ `&,27`.
+A variable first used after `&,27` is dropped by the matching `&,28`; using it again just makes a new one (0, or `""`).
+`im` makes all of its own variables at boot, so a module that only uses those is safe.
+* A level doesn't hide arrays: BASIC looks for an array from `ARYTAB` to `STREND`, whatever level it was made at.
+So ``dim``ming an array that already exists is a `?redim\'d array` error, even at a new level, and `dim tt$(10)` is always one, because `tt$()` is ``im``'s.
+* Levels nest: `&,27,3`, ``dim``s, `&,27,4`, more ``dim``s, `&,28,4` (drops the second set), `&,28,3` (drops the first).
+* Restoring a level that was never saved uses whatever its 4 bytes hold.
 
 ==== Creating New Arrays
 
@@ -1825,8 +1886,6 @@ Image 1.3 and above adds multiple levels of save and restore with an additional 
 
 <3> <<restore-variable-pointers,`&,28,2` Restore Variable Pointers>>: restore level 2 array pointers (this frees up memory used by the array but preserves level 1 system variables still needed by the BBS). `goto 300`: go to main prompt.
 
-#TODO#: I would like a diagram of array pointers, creating new arrays, restoring old pointers here.
-
 ====
 TIP: The main prompt restores level 1 array pointers and already does a <<restore-variable-pointers,`&,28,1` Restore Variable Pointers>> there.
 
@@ -1834,13 +1893,39 @@ If you substitute `&,27,1` for `&,27,2` and <<restore-variable-pointers,`&,28,1`
 This causes a `?redim\'d array&#160;&#160;error in 306` (_i.e._, redimensioned array error; an array can't be ``dim``ensioned twice).
 ====
 
+==== Two Levels, One Array
+
+Does saving level 3, ``dim``ming `tt$(10)`, saving level 4 and ``dim``ming `tt$(10)` again give two independent `tt$()` arrays, one for each level?
+No.
+Saving level 4 copies nothing: the second `dim` finds the first `tt$()` and stops with a `?redim\'d array` error, and both levels see the same array.
+
+.`&,27,3`, `&,27,4`, then `&,28,4` and `&,28,3`, Step by Step
+image::images/amp27-levels-example.svg["Seven steps: &,27,3; dim tt$(10); &,27,4; a new variable n9 moves the arrays up 7 bytes; a second dim tt$(10) is a redim'd array error; &,28,4 moves the arrays back down and drops n9; &,28,3 drops tt$()",760]
+
+Test program: `core/tests/i.test arrays.lbl` (with `ta$()` in place of `tt$()`, which is ``im``'s).
+It checks each step above, and which levels change `daysofm`.
+
 '''
 
 === `&,28` Restore Variable Pointers [[restore-variable-pointers]]
 
-#FIXME#
+This puts back the variable pointers a <<save-variable-pointers,`&,27` Save Variable Pointers>> saved as the same level, which drops every simple variable and array made since.
 
-// array pointers: $13D0-$13DF, is that 16 1-byte pointers (levels 0-15) or 8 2-byte pointers (levels 0-7)?
+_Parameters:_
+
+`&,28[,level]`: `level` = 0-7, as for `&,27`; leaving it out is level 0.
+
+It:
+
+. sets `STREND` to `VARTAB` + _s_, and `ARYTAB` to `VARTAB` + _a_ (the level's two offsets), then
+. moves the arrays that were there when the level was saved down to the new `ARYTAB`, over any simple variables made since (BASIC moved the arrays up 7 bytes for each of them).
+
+Arrays made since the level was saved are past the new `STREND`: their memory is free again.
+Their strings stay in string memory until the next garbage collection.
+
+See <<save-variable-pointers>> for the levels Image uses, and the diagrams.
+
+// Source: source/wedge.s: arrayoff, arraysv0 (&,27) and arrayrs0 (&,28).
 
 '''
 

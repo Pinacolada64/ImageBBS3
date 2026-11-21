@@ -314,7 +314,7 @@
 
 .label chktbl = $1300 //$10
 .label bartbl = $1310 //$c0
-.label arryptrs=$13d0 //$10
+.label arryptrs=$13d0 //$10: &,27/&,28 levels 0-3, 4 bytes each; levels 4-6 land on daysofm, 7 on emptym2
 .label daysofm= $13e0 //$0c
 .label emptym2= $13ec //$04
 .label sndtbl = $13f0 //$60
