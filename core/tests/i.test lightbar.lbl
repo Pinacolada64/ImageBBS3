@@ -1,0 +1,43 @@
+{uses:../3_0-preface.lbl}
+' i.test lightbar: try sub.lightbar on a running BBS
+'
+' Each choice fills tt$(1)-tt$(n) and calls sub.lightbar
+' (im=1:a$="lightbar":gosub 74), then shows a (the entry chosen, 0 for none),
+' x (where the bar was) and the entry. Logged on at the console (lightbar
+' Loc left), it's a highlight bar; as a caller (ZZ too), a numbered list.
+'   S: 30 sample entries (3 pages)
+'   F: 5 entries (a short page)
+'   D: the files on the system disk (drive 1), up to 254: what a file
+'      reader would offer instead of asking for a filename (11/25/2026)
+{alpha:alt}
+{include:../quoters.lbl}
+{:3000}
+	pr$="i."+"test lightbar":rem "i.test lightbar" {usedef:__BuildDate} {usedef:__BuildTime}
+	x=1
+{:menu}
+	&"{clear}{f6}{yellow}sub.lightbar test {gray3}"+{usedef:__BuildDate}+" "+{usedef:__BuildTime}+"{f6:2}"
+	&"{cyan}S{white} 30 sample entries{f6}{cyan}F{white} 5 entries{f6}{cyan}D{white} Files on the system disk{f6}"
+	&"{cyan}Q{white} Quit{f6:2}Which{question} {pound}g1{f6}"
+	if an$="Q" or an$="q" then a$="tests":on -(peek(5988)=165) goto 70:goto 300
+	if an$="D" or an$="d" then {:dir}
+	n=.:if an$="S" or an$="s" then n=30
+	if an$="F" or an$="f" then n=5
+	if n=. then {:menu}
+	for i=1 to n:tt$(i)="Entry"+str$(i):next:b$="Sample entries"+""
+{:choose}
+	im=1:a$="lightbar":gosub 74
+	a%=a:b%=x:b$="(none)":if a then b$=tt$(a)
+	&"{f6}{white}a{equal}{pound}%a  x{equal}{pound}%b  {pound}$b{f6:2}Press a key{colon} {pound}g1":goto {:menu}
+
+{:dir}
+' as i.CP reads a directory: &,8,1,1 reads a line into a$. Skip the header
+' (the disk name); the name is between the last two quotes; "blocks free"
+' has none
+	dr=1:gosub 3:n=.:open 1,dv%,0,"$"+dr$+"*":get#1,a$,a$:&,8,1,1
+{:dir_next}
+	&,8,1,1:s=st:p=.:q=.:for i=1 to len(a$):if mid$(a$,i,1)=qt$ then q=p:p=i
+	next:if q then n=n+1:tt$(n)=mid$(a$,q+1,p-q-1)
+	if s=. and q>. and n<254 then {:dir_next}
+	close 1:b$="Files on the system disk"+"":if n then {:choose}
+	&"{f6}No files{f6:2}Press a key{colon} {pound}g1":goto {:menu}
+	rem "i.test lightbar 2026-11-25 rs"

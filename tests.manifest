@@ -13,6 +13,8 @@ tests/i.test tagscan.prg	i.test tagscan
 asm/copier.prg	++ copier
 tests/i.test copier.prg	i.test copier
 tests/i.test frame.prg	i.test frame
+tests/i.test lightbar.prg	i.test lightbar
+basic/sub.lightbar.prg	sub.lightbar
 tests/i.test string.prg	i.test string
 tests/i.tests.prg	i.tests
 basic/i.UU.prg	i.UU

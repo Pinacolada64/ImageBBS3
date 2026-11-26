@@ -1,0 +1,90 @@
+{uses:3_0-preface.lbl}
+' sub.lightbar: choose one entry from a list (a filename, a phone book entry...)
+'
+' Call it from any module with:  im=1:a$="lightbar":gosub 74
+'
+' im=1: choose one of tt$(1)-tt$(n)
+'
+' Enter:
+'   tt$(1)-tt$(n): the entries; up to 38 characters of each are shown
+'   n: how many entries (1-254, the size of tt$()); a=0 at once if n<1
+'   b$: a title for the list ("" for none)
+'   x: the entry to start on (1 if it isn't 1-n)
+'
+' Exit:
+'   a: the entry chosen (1-n), or 0 if none was
+'   x: the entry the bar was on, to start there next time
+'   tt$() and n are unchanged. Also changes a$, a%, an$ and k1-k6, k$
+'
+' At the console in true local mode (lightbar Loc left), it's a highlight bar,
+' drawn with &,69 (sysop's screen only):
+'   CRSR up/down    move one entry (wrapping around the ends)
+'   CRSR left/right a page back/forward
+'   CLR (shift-HOME) the first entry (HOME doesn't come through {pound}g1);
+'                   CRSR up from the first is the last
+'   RETURN          choose the entry under the bar
+'   Q, left arrow   choose nothing
+' &,69 can't draw on row 0, and with the screen mask off, rows 16-23 go to
+' the mask's buffer (screentb, source/intro.s), not the screen. So it uses
+' rows 1-15 either way: the title on row 1, 13 entries a page on rows 2-14,
+' and the help line on row 15. It leaves the list on the screen, blanks the
+' help line, and leaves the cursor at the start of row 15.
+'
+' Otherwise (a caller, ZZ pseudo-local too), it prints a numbered list, which
+' the caller can abort with the space bar or /, and asks for a number.
+'
+' 11/25/2026: the cursor-driven phone book in +.t (Image BBS git 0d61093,
+' v2/core/plus_t.lbl), which never got a way to choose the entry, made into
+' a sub for any module.
+{alpha:alt}
+{include:quoters.lbl}
+{:60000}
+{step:2}
+	on im goto {:sub.choose}:return
+
+{:sub.choose}
+	a=.:if n<1 then return
+	k1=x:if k1<1 or k1>n then k1=1
+	&,52,4,3:if a%=. then {:sub.list}
+' k3: entries a page; k4: the help line's row
+	k$="{space:40}":k3=13:k4=15:&"{clear}"
+	&,69,.,1,left$(" "+b$+k$,40),$8e
+{:sub.draw}
+' the page holding k1: k2 is its first entry
+	k2=int((k1-1)/k3)*k3+1:for k5=k2 to k2+k3-1:gosub {:sub.row}:next
+{:sub.key}
+	a$=mid$(str$(k1),2)+"/"+mid$(str$(n),2)
+	&,69,.,k4,left$(" "+a$+"  CRSR move  RETURN choose  Q quit"+k$,40),15
+	&,61,39,k4:&"{pound}g1":a$=an$:k5=k1
+	if a$="{down}" then k1=k1+1+n*(k1=n)
+	if a$="{up}" then k1=k1-1-n*(k1=1)
+	if a$="{right}" then k1=k1+k3:if k1>n then k1=n
+	if a$="{left}" then k1=k1-k3:if k1<1 then k1=1
+	if a$="{clear}" then k1=1
+	if a$=chr$(13) then a=k1:goto {:sub.done}
+	if a$="Q" or a$="q" or a$="{back arrow}" then {:sub.done}
+	if k1=k5 then {:sub.key}
+' another page: draw it all; on this one, only the rows the bar left and is on
+	if k1<k2 or k1>=k2+k3 then {:sub.draw}
+	gosub {:sub.row}:k5=k1:gosub {:sub.row}:goto {:sub.key}
+
+{:sub.row}
+' entry k5 on its row: reversed white under the bar, cyan if not, blank past n
+	a$="":if k5<=n then a$=tt$(k5)
+	&,69,.,k5-k2+2,left$(" "+a$+k$,40),3-126*(k5=k1):return
+
+{:sub.done}
+	x=k1:&,69,.,k4,k$,15:&,61,.,k4:return
+
+{:sub.list}
+' a numbered list; k6: how much of each entry fits on the caller's line
+	k6=ll%-6:if k6<1 then k6=34
+	&"{f6}{white}{pound}$b{f6}":for k5=1 to n:a%=k5:a$=left$(tt$(k5),k6)
+	&"{lt. blue}{pound}#3{pound}# {pound}%a{white}) {cyan}{pound}$a{f6}":k5=k5+n*rc:next
+	a%=n:k6=peek(53252):poke 53252,3
+	&"{f6}{white}Which (1-{pound}%a{comma} RETURN for none){question} {pound}i1":poke 53252,k6
+	a=int(val(an$)):if a<1 or a>n then a=.
+	if a then x=a
+	return
+
+	rem "sub.lightbar (c)nissa 2026-11-25 rs"

@@ -45,6 +45,7 @@ basic/i_NM.update.prg	i/NM.update
 basic/i_NM.sort.prg	i/NM.sort
 basic/sub.clocks.prg	sub.clocks
 basic/sub.turbo.prg	sub.turbo
+basic/sub.lightbar.prg	sub.lightbar
 basic/im.emul13.prg	im.emul13
 basic/i_ED-pina-mod.prg	i.ED 3.1
 
@@ -58,5 +59,6 @@ tests/i.test visual.prg	i.test visual
 tests/i.test tagscan.prg	i.test tagscan
 tests/i.test copier.prg	i.test copier
 tests/i.test frame.prg	i.test frame
+tests/i.test lightbar.prg	i.test lightbar
 tests/i.test string.prg	i.test string
 tests/i.tests.prg	i.tests
