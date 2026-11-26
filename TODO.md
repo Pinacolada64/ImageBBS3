@@ -255,6 +255,9 @@ only items not already here are listed from it. Locations are
   `modules/i_lo.on.lbl` 4090/4092, branch `lo-on-banners`;
   `tests/standin/banners.bas` there shows the result to aim for (reversed
   from column 1 to `ll%`-2, the text centered).
+  11/25/2026 (user): left for a 3.1 ML improvement: make `ctab` pad up to
+  the caller's last column, as Image 128's `mtab` does; then the banners
+  can use `{pound}{back arrow}` from `ll%` as Image 128's do.
 
 ### Shared routines (less copy-and-paste)
 
